@@ -1,112 +1,47 @@
 package br.com.arml.cep.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import br.com.arml.cep.MainActivity
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 
-private val DarkColorScheme = darkColorScheme(
-    primary = primaryDark,
-    onPrimary = onPrimaryDark,
-    primaryContainer = primaryContainerDark,
-    onPrimaryContainer = onPrimaryContainerDark,
-    secondary = secondaryDark,
-    onSecondary = onSecondaryDark,
-    secondaryContainer = secondaryContainerDark,
-    onSecondaryContainer = onSecondaryContainerDark,
-    tertiary = tertiaryDark,
-    onTertiary = onTertiaryDark,
-    tertiaryContainer = tertiaryContainerDark,
-    onTertiaryContainer = onTertiaryContainerDark,
-    surface = surfaceDark,
-    onSurface = onSurfaceDark,
-    surfaceVariant = surfaceVariantDark,
-    onSurfaceVariant = onSurfaceVariantDark,
-    background = backgroundDark,
-    onBackground = onBackgroundDark,
-    error = errorDark,
-    onError = onErrorDark,
-    errorContainer = errorContainerDark,
-    onErrorContainer = onErrorContainerDark,
-    outline = outlineDark,
-    outlineVariant = outlineVariantDark
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = primaryLight,
-    onPrimary = onPrimaryLight,
-    primaryContainer = primaryContainerLight,
-    onPrimaryContainer = onPrimaryContainerLight,
-    secondary = secondaryLight,
-    onSecondary = onSecondaryLight,
-    secondaryContainer = secondaryContainerLight,
-    onSecondaryContainer = onSecondaryContainerLight,
-    tertiary = tertiaryLight,
-    onTertiary = onTertiaryLight,
-    tertiaryContainer = tertiaryContainerLight,
-    onTertiaryContainer = onTertiaryContainerLight,
-    surface = surfaceLight,
-    onSurface = onSurfaceLight,
-    surfaceVariant = surfaceVariantLight,
-    onSurfaceVariant = onSurfaceVariantLight,
-    background = backgroundLight,
-    onBackground = onBackgroundLight,
-    error = errorLight,
-    onError = onErrorLight,
-    errorContainer = errorContainerLight,
-    onErrorContainer = onErrorContainerLight,
-    outline = outlineLight,
-    outlineVariant = outlineVariantLight
-)
+val LocalAppDimens = compositionLocalOf { compactDimens }
+val LocalWindowWidthSizeClass = compositionLocalOf { WindowWidthSizeClass.Compact }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 fun CEPTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    activity: Activity = LocalActivity.current as MainActivity,
-    dynamicColor: Boolean = true,
+    activity: Activity? = LocalActivity.current,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    val appWidthSizeClass = activity?.let {
+        calculateWindowSizeClass(it).widthSizeClass
+    } ?: WindowWidthSizeClass.Compact
 
-    val windowInfo = calculateWindowSizeClass(activity = activity)
+    val (appDimens, appTypography) = getDimensAndTypographyByWindowsSize(appWidthSizeClass)
 
-    val (appDimens, appTypography) = when(windowInfo.widthSizeClass) {
-        WindowWidthSizeClass.Compact -> compactDimens to compactTypography
-        WindowWidthSizeClass.Medium -> mediumDimens to mediumTypography
-        else -> expandedDimens to expandedTypography
-    }
-
-    AppUtils(
-        appDimens = appDimens,
+    CompositionLocalProvider(
+        LocalAppDimens provides appDimens,
+        LocalWindowWidthSizeClass provides appWidthSizeClass
     ) {
         MaterialTheme(
-            colorScheme = colorScheme,
+            colorScheme = getColorScheme(darkTheme = darkTheme),
             typography = appTypography,
             content = content
         )
     }
-
 }
+val MaterialTheme.currentWindowWidthSize
+    @Composable
+    get() = LocalWindowWidthSizeClass.current
 
 val MaterialTheme.dimens
     @Composable
