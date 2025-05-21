@@ -27,7 +27,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         text = "Hello $name!",
         modifier = modifier,
         color = MaterialTheme.colorScheme.tertiary,
-        style = MaterialTheme.typography.headlineLarge,
+        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.Bold
     )
 }
