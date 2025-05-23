@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.common
+package br.com.arml.cep.ui.screen.component.common
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.systemGestures
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -39,9 +40,21 @@ private fun calculateEndPadding(padding: PaddingValues) =
         .calculateEndPadding(LocalLayoutDirection.current)
 
 @Composable
-fun calculatePadding(padding: PaddingValues = PaddingValues(0.dp)) = PaddingValues(
+fun calculatePaddingInsets(padding: PaddingValues = PaddingValues(0.dp)) = PaddingValues(
     top = calculateTopPadding(padding),
     bottom = calculateBottomPadding(padding),
     start = calculateStartPadding(padding),
     end = calculateEndPadding(padding),
 )
+
+@Composable
+fun PaddingValues.changeTop(newTop: Dp) =
+    PaddingValues(
+        top = newTop,
+        bottom = this.calculateBottomPadding(),
+        start = this.calculateStartPadding(LocalLayoutDirection.current),
+        end = this.calculateEndPadding(LocalLayoutDirection.current)
+    )
+
+
+

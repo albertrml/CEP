@@ -47,9 +47,9 @@ val compactDimens = Dimens(
     mediumPadding = 16.dp,
     largePadding = 24.dp,
     // Spacing
-    smallSpacing = 8.dp,
-    mediumSpacing = 16.dp,
-    largeSpacing = 24.dp,
+    smallSpacing = 4.dp,
+    mediumSpacing = 8.dp,
+    largeSpacing = 12.dp,
     // Thickness
     smallThickness = 1.dp,
     mediumThickness = 2.dp,
@@ -71,9 +71,9 @@ val mediumDimens = Dimens(
     largeMargin = 32.dp,
     xLargeMargin = 48.dp,
     // Padding
-    smallPadding = 12.dp,
-    mediumPadding = 20.dp,
-    largePadding = 28.dp,
+    smallPadding = 8.dp,
+    mediumPadding = 12.dp,
+    largePadding = 16.dp,
     // Spacing
     smallSpacing = 16.dp,
     mediumSpacing = 24.dp,
@@ -105,9 +105,9 @@ val expandedDimens = Dimens(
     mediumPadding = 24.dp,
     largePadding = 32.dp,
     // Spacing
-    smallSpacing = 16.dp,
-    mediumSpacing = 24.dp,
-    largeSpacing = 32.dp,
+    smallSpacing = 12.dp,
+    mediumSpacing = 16.dp,
+    largeSpacing = 20.dp,
     // Thickness
     smallThickness = 3.dp,
     mediumThickness = 4.dp,

@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">CEP</string>
+    <string name="display_address_title">Endereço</string>
+    <string name="display_city_field">"Cidade: "</string>
+    <string name="display_complement_field">"Complemento: "</string>
+    <string name="display_country_field">"País: "</string>
+    <string name="display_ddd_field">"DDD: "</string>
+    <string name="display_neighborhood_field">"Bairro: "</string>
+    <string name="display_region_field">"Região: "</string>
+    <string name="display_state_field">"Estado: "</string>
+    <string name="display_street_field">"Rua: "</string>
+    <string name="display_uf_field">"UF: "</string>
+    <string name="search_button_label">Buscar</string>
+    <string name="search_cep_field_name">CEP</string>
+    <string name="search_cep_hint">Digite o CEP</string>
 </resources>

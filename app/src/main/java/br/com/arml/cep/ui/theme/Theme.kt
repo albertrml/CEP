@@ -1,18 +1,19 @@
 package br.com.arml.cep.ui.theme
 
 import android.app.Activity
+import android.content.res.Configuration
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.platform.LocalConfiguration
 
 val LocalAppDimens = compositionLocalOf { compactDimens }
-val LocalWindowWidthSizeClass = compositionLocalOf { WindowWidthSizeClass.Compact }
+val LocalScreenOrientation = compositionLocalOf { Configuration.ORIENTATION_PORTRAIT }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -22,15 +23,16 @@ fun CEPTheme(
     content: @Composable () -> Unit
 ) {
 
-    val appWidthSizeClass = activity?.let {
-        calculateWindowSizeClass(it).widthSizeClass
-    } ?: WindowWidthSizeClass.Compact
+    val appOrientation = LocalConfiguration.current.orientation
 
-    val (appDimens, appTypography) = getDimensAndTypographyByWindowsSize(appWidthSizeClass)
+    val (appDimens, appTypography) = getDimensAndTypographyByScreenOrientation(
+        screenOrientation = appOrientation,
+        windowSizeClass = calculateWindowSizeClass(activity ?: return)
+    )
 
     CompositionLocalProvider(
         LocalAppDimens provides appDimens,
-        LocalWindowWidthSizeClass provides appWidthSizeClass
+        LocalScreenOrientation provides appOrientation
     ) {
         MaterialTheme(
             colorScheme = getColorScheme(darkTheme = darkTheme),
@@ -39,9 +41,10 @@ fun CEPTheme(
         )
     }
 }
-val MaterialTheme.currentWindowWidthSize
+
+val MaterialTheme.currentScreenOrientation
     @Composable
-    get() = LocalWindowWidthSizeClass.current
+    get() = LocalScreenOrientation.current
 
 val MaterialTheme.dimens
     @Composable

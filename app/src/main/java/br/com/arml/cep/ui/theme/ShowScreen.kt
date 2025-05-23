@@ -1,18 +1,32 @@
 package br.com.arml.cep.ui.theme
 
+import android.content.res.Configuration
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalConfiguration
 
 @Composable
-fun ShowScreen(
-    compact: @Composable () -> Unit,
-    medium: @Composable () -> Unit,
-    expanded: @Composable () -> Unit
+fun ShowScreenByOrientation(
+    portrait: @Composable () -> Unit,
+    landscape: @Composable () -> Unit
 ){
-    when(MaterialTheme.currentWindowWidthSize){
-        WindowWidthSizeClass.Compact -> compact()
-        WindowWidthSizeClass.Medium -> medium()
-        else -> expanded()
+    when(MaterialTheme.currentScreenOrientation){
+        Configuration.ORIENTATION_PORTRAIT -> portrait()
+        Configuration.ORIENTATION_LANDSCAPE -> landscape()
+        else -> portrait()
+    }
+}
+
+@Composable
+fun PreviewInLandscape(content: @Composable () -> Unit) {
+    val landscapeConfiguration = Configuration(LocalConfiguration.current)
+    landscapeConfiguration.setToDefaults()
+    landscapeConfiguration.orientation = Configuration.ORIENTATION_LANDSCAPE
+
+    CEPTheme {
+        CompositionLocalProvider(LocalConfiguration provides landscapeConfiguration) {
+            content()
+        }
     }
 }
