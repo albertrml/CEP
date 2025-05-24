@@ -21,7 +21,7 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.entity.CEP
 
 @Composable
-fun CEPField(
+fun CepField(
     modifier: Modifier = Modifier,
     onQueryChange: (String) -> Unit
 ){

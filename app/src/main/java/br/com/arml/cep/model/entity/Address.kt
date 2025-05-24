@@ -4,7 +4,7 @@ data class Address (
     val zipCode: String,
     val street: String,
     val complement: String,
-    val neighborhood: String,
+    val district: String,
     val city: String,
     val state: String,
     val uf: String,

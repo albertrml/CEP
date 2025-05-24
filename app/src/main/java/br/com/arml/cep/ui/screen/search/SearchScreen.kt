@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,7 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.search.CEPField
+import br.com.arml.cep.ui.screen.component.common.Header
+import br.com.arml.cep.ui.screen.component.search.CepField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -27,19 +30,29 @@ fun SearchScreen(
     onSearchCep: (String) -> Unit = {}
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    Column(
+    Box(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.Center
     ) {
-        CEPField(
-            modifier = Modifier,
-            onQueryChange = { query = it }
+        Header(
+            modifier = Modifier.align(Alignment.TopCenter),
+            title = stringResource(R.string.search_title),
+            backImgVec = Icons.Default.Search
         )
-        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
-        Button(
+        Column(
             modifier = Modifier,
-            onClick = { onSearchCep(query) }
-        ) { Text(text = stringResource(R.string.search_button_label)) }
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CepField(
+                modifier = Modifier,
+                onQueryChange = { query = it }
+            )
+            Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
+            Button(
+                modifier = Modifier,
+                onClick = { onSearchCep(query) }
+            ) { Text(text = stringResource(R.string.search_button_label)) }
+        }
     }
 }
 
@@ -76,10 +89,5 @@ fun SearchScreen(
 )
 @Composable
 fun Greeting() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        SearchScreen()
-    }
+    SearchScreen(modifier = Modifier.fillMaxSize())
 }

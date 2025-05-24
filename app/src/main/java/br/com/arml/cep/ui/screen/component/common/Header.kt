@@ -20,7 +20,7 @@ import br.com.arml.cep.ui.theme.dimens
 @Composable
 fun Header(
     modifier: Modifier = Modifier,
-    backImgVec: ImageVector?,
+    backImgVec: ImageVector? = null,
     title: String,
     onBackClick: () -> Unit = {}
 ){
@@ -34,7 +34,6 @@ fun Header(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             backImgVec?.let {
                 IconButton(
                     onClick = onBackClick
@@ -46,14 +45,12 @@ fun Header(
                     )
                 }
             }
-
             Text(
                 text = title,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
         }
-
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth(),

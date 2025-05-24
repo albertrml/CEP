@@ -1,7 +1,6 @@
 package br.com.arml.cep.ui.theme
 
 import android.app.Activity
-import android.content.res.Configuration
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -13,7 +12,6 @@ import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
 
 val LocalAppDimens = compositionLocalOf { compactDimens }
-val LocalScreenOrientation = compositionLocalOf { Configuration.ORIENTATION_PORTRAIT }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
@@ -32,7 +30,6 @@ fun CEPTheme(
 
     CompositionLocalProvider(
         LocalAppDimens provides appDimens,
-        LocalScreenOrientation provides appOrientation
     ) {
         MaterialTheme(
             colorScheme = getColorScheme(darkTheme = darkTheme),
@@ -41,10 +38,6 @@ fun CEPTheme(
         )
     }
 }
-
-val MaterialTheme.currentScreenOrientation
-    @Composable
-    get() = LocalScreenOrientation.current
 
 val MaterialTheme.dimens
     @Composable

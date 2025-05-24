@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,17 +19,18 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.entity.Address
 import br.com.arml.cep.model.mock.mockAddress
 import br.com.arml.cep.ui.screen.component.common.Header
-import br.com.arml.cep.ui.screen.component.display.DisplayScreenLandscape
-import br.com.arml.cep.ui.screen.component.display.DisplayScreenPortrait
-import br.com.arml.cep.ui.theme.PreviewInLandscape
-import br.com.arml.cep.ui.theme.ShowScreenByOrientation
+import br.com.arml.cep.ui.screen.component.display.AddressScreen
 import br.com.arml.cep.ui.theme.dimens
+import br.com.arml.cep.util.exception.CepException
+import br.com.arml.cep.util.type.Response
+import br.com.arml.cep.util.type.ShowResults
 
 @Composable
 fun DisplayScreen(
     modifier: Modifier = Modifier,
-    address: Address
-){
+    response: Response<Address>,
+    onBackPress: () -> Unit
+) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing),
@@ -36,21 +39,35 @@ fun DisplayScreen(
         Header(
             modifier = Modifier,
             backImgVec = Icons.AutoMirrored.Filled.ArrowBack,
-            title = stringResource(R.string.display_address_title)
+            title = stringResource(R.string.display_address_title),
+            onBackClick = onBackPress
         )
 
-        ShowScreenByOrientation(
-            portrait = {
-                DisplayScreenPortrait(
+        response.ShowResults(
+            successContent = {
+                AddressScreen(
                     modifier = modifier,
-                    address = address
+                    address = it
                 )
             },
-            landscape = {
-                DisplayScreenLandscape(
-                    modifier = modifier,
-                    address = address
-                )
+            loadingContent = {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            },
+            failureContent = {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        style = MaterialTheme.typography.titleLarge,
+                        text = it.message ?: CepException.NotFoundCepException().message
+                    )
+                }
             }
         )
     }
@@ -72,22 +89,6 @@ fun DisplayScreen(
     showBackground = true,
     device = "spec:width=800dp,height=1280dp"
 )
-@Composable
-fun DisplayScreenPreview() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(MaterialTheme.dimens.mediumPadding),
-        contentAlignment = Alignment.Center
-    ){
-        DisplayScreen(
-            modifier = Modifier,
-            address = mockAddress
-        )
-    }
-}
-
-
 @Preview(
     name = "Smart Phone Landscape",
     showBackground = true,
@@ -104,18 +105,12 @@ fun DisplayScreenPreview() {
     device = "spec:width=1280dp,height=800dp"
 )
 @Composable
-fun DisplayScreenPreviewInLandscape(){
-    PreviewInLandscape {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(MaterialTheme.dimens.mediumPadding),
-            contentAlignment = Alignment.Center
-        ){
-            DisplayScreen(
-                modifier = Modifier,
-                address = mockAddress
-            )
-        }
-    }
+fun DisplayScreenPreview() {
+    DisplayScreen(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(MaterialTheme.dimens.mediumMargin),
+        response = Response.Success(mockAddress),
+        onBackPress = {}
+    )
 }

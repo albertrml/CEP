@@ -13,4 +13,5 @@
     <string name="search_button_label">Buscar</string>
     <string name="search_cep_field_name">CEP</string>
     <string name="search_cep_hint">Digite o CEP</string>
+    <string name="search_title">CEP</string>
 </resources>
