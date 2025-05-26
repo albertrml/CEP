@@ -3,14 +3,14 @@ package br.com.arml.cep.model.entity
 import br.com.arml.cep.util.exception.CepException
 
 @ConsistentCopyVisibility
-data class CEP private constructor(
+data class Cep private constructor(
     val text: String
 ){
 
     companion object{
-        fun build(input: String): CEP {
+        fun build(input: String): Cep {
             validate(input)
-            return CEP(input)
+            return Cep(input)
         }
 
         private fun validate(text: String){
@@ -23,8 +23,10 @@ data class CEP private constructor(
             if (digitsOnly.isEmpty()) return ""
             val builder = StringBuilder()
             digitsOnly.forEachIndexed { index, char ->
-                builder.append(char)
-                if (index == 4 && digitsOnly.length > 5) {
+                if(builder.length < 9 && char.isDigit())
+                    builder.append(char)
+
+                if (builder.length == 5) {
                     builder.append('-')
                 }
             }
@@ -32,7 +34,21 @@ data class CEP private constructor(
         }
 
         fun unFormat(formattedCep: String): String {
-            return formattedCep.filter { it.isDigit() }
+            val onlyDigits = formattedCep.filter { it.isDigit() }
+            return onlyDigits.filterIndexed { index, _ -> index < 8 }
         }
     }
+}
+
+fun updateCepField(
+    oldValue: String,
+    newValue: String
+): String{
+    return if(
+        Cep.unFormat(newValue).length == 5  &&
+        Cep.unFormat(oldValue).length == 5 &&
+        oldValue.last() == '-')
+        Cep.unFormat(newValue.dropLast(1))
+    else
+        Cep.unFormat(newValue)
 }

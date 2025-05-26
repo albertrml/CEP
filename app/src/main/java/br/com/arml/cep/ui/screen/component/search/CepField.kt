@@ -18,7 +18,8 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import br.com.arml.cep.R
-import br.com.arml.cep.model.entity.CEP
+import br.com.arml.cep.model.entity.Cep
+import br.com.arml.cep.model.entity.updateCepField
 
 @Composable
 fun CepField(
@@ -35,16 +36,15 @@ fun CepField(
         },
         value = cepFieldValue,
         onValueChange = { newFieldValue ->
-            val newText = newFieldValue.text
-            val digitsOnly = CEP.unFormat(newText)
-            if (digitsOnly.length <= 8) {
-                val formattedCep = CEP.format(digitsOnly)
-                onQueryChange(digitsOnly)
-                cepFieldValue = newFieldValue.copy(
-                    text = formattedCep,
-                    selection = TextRange(formattedCep.length)
-                )
-            }
+            val digitsOnly = updateCepField(
+                oldValue = cepFieldValue.text,
+                newValue = newFieldValue.text
+            )
+            onQueryChange(digitsOnly)
+            cepFieldValue = newFieldValue.copy(
+                text = Cep.format(digitsOnly),
+                selection = TextRange(Cep.format(digitsOnly).length)
+            )
         },
         label = {
             Text(

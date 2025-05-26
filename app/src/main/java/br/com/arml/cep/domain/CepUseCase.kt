@@ -1,7 +1,7 @@
 package br.com.arml.cep.domain
 
 import br.com.arml.cep.model.entity.Address
-import br.com.arml.cep.model.entity.CEP
+import br.com.arml.cep.model.entity.Cep
 import br.com.arml.cep.model.repository.CepRepository
 import br.com.arml.cep.util.exception.CepException
 import br.com.arml.cep.util.type.Response
@@ -14,7 +14,7 @@ class CepUseCase @Inject constructor(
 ){
     fun searchCep(code: String): Flow<Response<Address>> {
         return try {
-            val cep = CEP.build(code)
+            val cep = Cep.build(code)
             repository.getAddressByCep(cep)
         } catch (e: CepException){
             flowOf(Response.Failure(e))

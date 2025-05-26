@@ -3,7 +3,7 @@ package br.com.arml.cep.model.entity
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class CepDTO(
+data class AddressDTO(
     val cep : String? = null,
     val logradouro: String? = null,
     val complemento: String? = null,
