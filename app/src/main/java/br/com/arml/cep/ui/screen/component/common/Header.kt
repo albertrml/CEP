@@ -14,7 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import br.com.arml.cep.R
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -36,6 +39,7 @@ fun Header(
         ) {
             backImgVec?.let {
                 IconButton(
+                    modifier = Modifier.testTag(stringResource(R.string.icon_button_tag)),
                     onClick = onBackClick
                 ) {
                     Icon(

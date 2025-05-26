@@ -42,6 +42,8 @@ android {
     }
     packaging { // Add this block
         resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
+        resources.excludes.add("META-INF/LICENSE.md")
+        resources.excludes.add("META-INF/LICENSE-notice.md")
     }
 }
 
@@ -89,10 +91,12 @@ dependencies {
     testImplementation(libs.mockk)
 
     // Android Test Dependencies
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit)
+    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 
     // Debug Dependencies
     debugImplementation(libs.androidx.ui.test.manifest)

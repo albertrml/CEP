@@ -10,8 +10,10 @@
     <string name="display_state_field">"Estado: "</string>
     <string name="display_street_field">"Rua: "</string>
     <string name="display_uf_field">"UF: "</string>
-    <string name="search_button_label">Buscar</string>
+    <string name="search_button_label">Pesquisar</string>
     <string name="search_cep_field_name">CEP</string>
     <string name="search_cep_hint">Digite o CEP</string>
-    <string name="search_title">CEP</string>
+    <string name="search_title">Busca</string>
+    <string name="display_loading_indicator">loading_indicator</string>
+    <string name="icon_button_tag">back_button</string>
 </resources>

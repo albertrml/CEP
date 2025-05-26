@@ -56,7 +56,6 @@ fun SearchScreen(
     }
 }
 
-
 @Preview(
     name = "Smart Phone Portrait",
     showBackground = true,
@@ -88,6 +87,6 @@ fun SearchScreen(
     device = "spec:width=1280dp,height=800dp"
 )
 @Composable
-fun Greeting() {
+fun SearchScreenPreview() {
     SearchScreen(modifier = Modifier.fillMaxSize())
 }
