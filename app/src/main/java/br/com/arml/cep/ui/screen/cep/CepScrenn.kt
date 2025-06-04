@@ -3,6 +3,8 @@
 package br.com.arml.cep.ui.screen.cep
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
@@ -16,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.ui.screen.display.DisplayScreen
 import br.com.arml.cep.ui.screen.search.SearchScreen
+import br.com.arml.cep.ui.theme.dimens
 import kotlinx.coroutines.launch
 
 @Composable
@@ -32,7 +35,9 @@ fun CepScreen(
         navigator = navigator,
         listPane = {
             SearchScreen(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = MaterialTheme.dimens.smallMargin),
                 onSearchCep = {
                     scope.launch {
                         viewModel.onEvent(CepEvent.SearchCep(it))
@@ -46,7 +51,9 @@ fun CepScreen(
         detailPane = {
             AnimatedPane {
                 DisplayScreen(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = MaterialTheme.dimens.smallMargin),
                     response = uiState.address,
                     onBackPress = {
                         scope.launch {

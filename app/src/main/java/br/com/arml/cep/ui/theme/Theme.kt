@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.platform.LocalConfiguration
+import br.com.arml.cep.MainActivity
 
 val LocalAppDimens = compositionLocalOf { compactDimens }
 
@@ -17,15 +18,14 @@ val LocalAppDimens = compositionLocalOf { compactDimens }
 @Composable
 fun CEPTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    activity: Activity? = LocalActivity.current,
+    activity: Activity = LocalActivity.current as MainActivity,
     content: @Composable () -> Unit
 ) {
 
     val appOrientation = LocalConfiguration.current.orientation
-
     val (appDimens, appTypography) = getDimensAndTypographyByScreenOrientation(
         screenOrientation = appOrientation,
-        windowSizeClass = calculateWindowSizeClass(activity ?: return)
+        windowSizeClass = calculateWindowSizeClass(activity)
     )
 
     CompositionLocalProvider(

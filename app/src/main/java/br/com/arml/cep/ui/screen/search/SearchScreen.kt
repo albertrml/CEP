@@ -17,6 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -30,6 +31,8 @@ fun SearchScreen(
     onSearchCep: (String) -> Unit = {}
 ) {
     var query by rememberSaveable { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current // Obtenha o controlador
+
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -50,8 +53,13 @@ fun SearchScreen(
             Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
             Button(
                 modifier = Modifier,
-                onClick = { onSearchCep(query) }
-            ) { Text(text = stringResource(R.string.search_button_label)) }
+                onClick = {
+                    keyboardController?.hide()
+                    onSearchCep(query)
+                }
+            ) {
+                Text(text = stringResource(R.string.search_button_label))
+            }
         }
     }
 }

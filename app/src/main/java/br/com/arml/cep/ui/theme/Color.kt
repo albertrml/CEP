@@ -113,5 +113,6 @@ private val LightColorScheme = lightColorScheme(
 internal fun getColorScheme(darkTheme: Boolean): ColorScheme {
     return if (darkTheme)
         DarkColorScheme
-    else LightColorScheme
+    else
+        LightColorScheme
 }
