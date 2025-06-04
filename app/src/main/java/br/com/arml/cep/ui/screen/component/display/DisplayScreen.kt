@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.display
+package br.com.arml.cep.ui.screen.component.display
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,6 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.entity.Address
 import br.com.arml.cep.model.mock.mockAddress
 import br.com.arml.cep.ui.screen.component.common.Header
-import br.com.arml.cep.ui.screen.component.display.AddressScreen
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.util.exception.CepException
 import br.com.arml.cep.util.type.Response

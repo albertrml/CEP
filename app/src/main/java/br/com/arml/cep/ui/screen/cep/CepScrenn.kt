@@ -16,8 +16,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.arml.cep.ui.screen.display.DisplayScreen
-import br.com.arml.cep.ui.screen.search.SearchScreen
+import br.com.arml.cep.ui.screen.component.display.DisplayScreen
+import br.com.arml.cep.ui.screen.component.search.SearchScreen
 import br.com.arml.cep.ui.theme.dimens
 import kotlinx.coroutines.launch
 

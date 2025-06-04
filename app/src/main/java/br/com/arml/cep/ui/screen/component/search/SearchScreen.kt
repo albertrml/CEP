@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.search
+package br.com.arml.cep.ui.screen.component.search
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.ui.screen.component.common.Header
-import br.com.arml.cep.ui.screen.component.search.CepField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -31,7 +30,7 @@ fun SearchScreen(
     onSearchCep: (String) -> Unit = {}
 ) {
     var query by rememberSaveable { mutableStateOf("") }
-    val keyboardController = LocalSoftwareKeyboardController.current // Obtenha o controlador
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Box(
         modifier = modifier,

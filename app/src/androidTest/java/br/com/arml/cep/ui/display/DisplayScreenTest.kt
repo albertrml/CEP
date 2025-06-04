@@ -12,7 +12,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.model.entity.Address
 import br.com.arml.cep.model.mock.mockAddress
-import br.com.arml.cep.ui.screen.display.DisplayScreen
+import br.com.arml.cep.ui.screen.component.display.DisplayScreen
 import br.com.arml.cep.ui.theme.CEPTheme
 import br.com.arml.cep.util.exception.CepException
 import br.com.arml.cep.util.type.Response
