@@ -16,4 +16,5 @@
     <string name="search_title">Busca</string>
     <string name="display_loading_indicator">loading_indicator</string>
     <string name="icon_button_tag">back_button</string>
+    <string name="search_cep_clear_button">Limpar campo cep</string>
 </resources>

@@ -7,7 +7,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.search.SearchScreen
+import br.com.arml.cep.ui.screen.component.search.SearchScreen
 import br.com.arml.cep.ui.theme.CEPTheme
 import io.mockk.every
 import org.junit.Rule
