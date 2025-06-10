@@ -10,15 +10,15 @@ sealed class NoteException(override val message: String): Exception(){
     )
 
     class TitleTooLongException: NoteException(
-        message = "Título não pode ter mais de ${MAX_TITLE_LENGTH} caracteres"
+        message = "Título não pode ter mais de $MAX_TITLE_LENGTH caracteres"
     )
 
     class TitleTooShortException: NoteException(
-        message = "Título não pode ter menos de ${MIN_TITLE_LENGTH} caracteres"
+        message = "Título não pode ter menos de $MIN_TITLE_LENGTH caracteres"
     )
 
     class ContentTooLongException: NoteException(
-        message = "Conteúdo não pode ter mais de ${MAX_CONTENT_LENGTH} caracteres"
+        message = "Conteúdo não pode ter mais de $MAX_CONTENT_LENGTH caracteres"
     )
 
     class ConversionRoomNoteException(val value: String, val errorMsg: String): NoteException(

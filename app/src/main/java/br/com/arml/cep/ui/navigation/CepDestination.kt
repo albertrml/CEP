@@ -10,7 +10,6 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.ImageVector
 import br.com.arml.cep.R
 
-
 sealed class CepDestination(
     @StringRes val label: Int,
     val icon: ImageVector,
@@ -34,7 +33,7 @@ sealed class CepDestination(
 
     companion object {
         private const val SEARCH_DEST_ID = "search"
-        private const val HISTORY_DEST_ID = "history"
+        private const val HISTORY_DEST_ID = "log"
         private const val FAVORITE_DEST_ID = "favorite"
 
         val Saver: Saver<CepDestination, String> = Saver(

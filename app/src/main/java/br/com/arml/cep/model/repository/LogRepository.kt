@@ -11,7 +11,6 @@ import javax.inject.Inject
 class LogRepository @Inject constructor(
     private val logDao: LogDao
 ) {
-
     fun getAllLogs(): Flow<Response<List<LogEntry>>> = logDao.readAll().toResponseFlow()
 
     fun filterLogsByCep(query: String) = logDao.filterByCep(query).toResponseFlow()

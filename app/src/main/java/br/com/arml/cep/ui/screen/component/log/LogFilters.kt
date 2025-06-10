@@ -82,7 +82,6 @@ fun PeriodFilter(
     }
     val isButtonActive = initialDate != null && finalDate != null && !isError
 
-
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         DatePickerFieldToModal(
             modifier = modifier,

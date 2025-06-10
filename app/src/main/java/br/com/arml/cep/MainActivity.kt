@@ -36,14 +36,6 @@ class MainActivity : ComponentActivity() {
                                 .windowInsetsPadding(WindowInsets.navigationBars)
                                 .windowInsetsPadding(WindowInsets.systemGestures)
                         )
-
-                        /*CepScreen(
-                            modifier = Modifier
-                                .windowInsetsPadding(WindowInsets.systemBars)
-                                .windowInsetsPadding(WindowInsets.displayCutout)
-                                .windowInsetsPadding(WindowInsets.navigationBars)
-                                .windowInsetsPadding(WindowInsets.systemGestures)
-                        )*/
                     }
                 }
             }

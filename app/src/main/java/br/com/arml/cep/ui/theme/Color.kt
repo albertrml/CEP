@@ -55,7 +55,6 @@ val onBackgroundDark = Color(0xFFE2E2E9)
 val outlineDark = Color(0xFF8D9199)
 val outlineVariantDark = Color(0xFF43474E)
 
-
 private val DarkColorScheme = darkColorScheme(
     primary = primaryDark,
     onPrimary = onPrimaryDark,
@@ -111,8 +110,5 @@ private val LightColorScheme = lightColorScheme(
 )
 
 internal fun getColorScheme(darkTheme: Boolean): ColorScheme {
-    return if (darkTheme)
-        DarkColorScheme
-    else
-        LightColorScheme
+    return if (darkTheme) DarkColorScheme else LightColorScheme
 }

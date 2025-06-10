@@ -35,5 +35,9 @@
     <string name="date_picker_confirm_cancel">Cancel</string>
     <string name="date_picker_description">Select date</string>
     <string name="display_zipcode_field">"CEP: "</string>
+    <string name="log_error_unknown">Erro desconhecido</string>
+    <string name="log_title">Histórico</string>
+    <string name="scrollable_button_up">Topo</string>
+    <string name="scrollable_button_down">Fim</string>
 
 </resources>

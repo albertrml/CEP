@@ -25,8 +25,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.arml.cep.R
 import br.com.arml.cep.ui.screen.component.common.Header
 import br.com.arml.cep.ui.screen.component.log.LogFilterComponent
 import br.com.arml.cep.ui.screen.component.log.LogList
@@ -36,9 +38,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun HistoryScreen(
-    modifier: Modifier = Modifier,
-) {
+fun LogScreen(modifier: Modifier = Modifier) {
     val navigator = rememberListDetailPaneScaffoldNavigator()
     val scope = rememberCoroutineScope()
     var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
@@ -48,7 +48,7 @@ fun HistoryScreen(
         modifier = modifier,
         navigator = navigator,
         listPane = {
-            HistoryListScreen {
+            LogListScreen {
                 scope.launch {
                     isDetailPaneExpanded = true
                     navigator.navigateTo(
@@ -57,9 +57,10 @@ fun HistoryScreen(
                 }
             }
         },
+
         detailPane = {
             if (isDetailPaneExpanded) {
-                HistoryEntryScreen(
+                LogEntryScreen(
                     onNavigateToExtra = {
                         isExtraPaneExpanded = true
                         scope.launch {
@@ -77,24 +78,24 @@ fun HistoryScreen(
                 )
             }
         },
+
         extraPane = {
             if (isDetailPaneExpanded == false) isExtraPaneExpanded = false
             if (isExtraPaneExpanded) {
-                HistoryExtraScreen {
+                LogExtraScreen {
                     isExtraPaneExpanded = false
                     scope.launch {
                         navigator.navigateBack()
                     }
                 }
             }
-
         }
     )
 
 }
 
 @Composable
-fun HistoryListScreen(
+fun LogListScreen(
     modifier: Modifier = Modifier,
     onNavigateToList: () -> Unit
 ) {
@@ -106,13 +107,11 @@ fun HistoryListScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header(
-            title = "Histórico",
+            title = stringResource(R.string.log_title),
             modifier = Modifier,
             backImgVec = Icons.AutoMirrored.Filled.List
         )
-
         Spacer(modifier = Modifier.padding(vertical = MaterialTheme.dimens.smallPadding))
-
         LogFilterComponent(
             modifier = Modifier,
             onFilterByCep = { query -> viewModel.onEvent(LogEvent.FilterByCep(query)) },
@@ -123,16 +122,11 @@ fun HistoryListScreen(
             },
             onNoneFilter = { viewModel.onEvent(LogEvent.FetchAllLogs) }
         )
-
         HorizontalDivider(
             modifier = Modifier.padding(vertical = MaterialTheme.dimens.smallPadding),
             thickness = MaterialTheme.dimens.mediumThickness
         )
-
-        Box(
-            modifier = Modifier.weight(1f)
-        )
-        {
+        Box(modifier = Modifier.weight(1f)){
             state.fetchLog.ShowResults(
                 successContent = { logList ->
                     LogList(
@@ -144,26 +138,27 @@ fun HistoryListScreen(
                         onClickToDetail = { onNavigateToList() }
                     )
                 },
+
                 loadingContent = {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 },
+
                 failureContent = {
                     Text(
                         modifier = Modifier.align(Alignment.Center),
-                        text = it.message ?: "Erro desconhecido",
+                        text = it.message ?: stringResource(R.string.log_error_unknown),
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
             )
         }
-
     }
 }
 
 @Composable
-fun HistoryEntryScreen(
+fun LogEntryScreen(
     modifier: Modifier = Modifier,
     onNavigateToExtra: () -> Unit,
     onNavigateBack: () -> Unit
@@ -175,14 +170,14 @@ fun HistoryEntryScreen(
         contentAlignment = Alignment.Center
     ) {
         Column {
-            Button(onClick = onNavigateToExtra) { Text("To History Extra") }
-            Button(onClick = onNavigateBack) { Text("Back to History List") }
+            Button(onClick = onNavigateToExtra) { Text("To Log Extra") }
+            Button(onClick = onNavigateBack) { Text("Back to Log List") }
         }
     }
 }
 
 @Composable
-fun HistoryExtraScreen(
+fun LogExtraScreen(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit
 ) {
@@ -192,6 +187,6 @@ fun HistoryExtraScreen(
             .background(MaterialTheme.colorScheme.tertiary),
         contentAlignment = Alignment.Center
     ) {
-        Button(onClick = onNavigateBack) { Text("Back to History Entry") }
+        Button(onClick = onNavigateBack) { Text("Back to Log Entry") }
     }
 }

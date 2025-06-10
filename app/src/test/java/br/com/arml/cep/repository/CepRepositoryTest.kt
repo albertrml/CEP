@@ -2,7 +2,6 @@ package br.com.arml.cep.repository
 
 import br.com.arml.cep.model.dto.AddressDTO
 import br.com.arml.cep.model.domain.Cep
-import br.com.arml.cep.model.mock.mockCepSearchEntry
 import br.com.arml.cep.model.repository.PlaceRepository
 import br.com.arml.cep.model.source.local.PlaceDao
 import br.com.arml.cep.model.source.remote.CepApiService
@@ -148,7 +147,7 @@ class CepRepositoryTest {
 
     @Test
     fun `should emit success entry when the cep does not exists in the database but exists in the api`() = runTest{
-        val entry = mockCepSearchEntry[0]
+        val entry = mockPlaceEntries[0]
         coEvery { placeDao.read(any()) } returns null
         coEvery { service.getAddressByCep(any()) } returns entry.address.toAddressDTO()
         coEvery { placeDao.create(any()) } returns Unit
@@ -173,7 +172,7 @@ class CepRepositoryTest {
 
     @Test
     fun `should emit failure entry when the cep does not exists in the database and the api`() = runTest{
-        val entry = mockCepSearchEntry[0]
+        val entry = mockPlaceEntries[0]
         coEvery { placeDao.read(any()) } returns null
         coEvery { service.getAddressByCep(any()) } returns AddressDTO(erro = "true")
 
@@ -195,7 +194,7 @@ class CepRepositoryTest {
 
     @Test
     fun `should emit failure when http exception occurs`() = runTest{
-        val entry = mockCepSearchEntry[0]
+        val entry = mockPlaceEntries[0]
         val errorJson = """{"message": "Formato de CEP inválido"}"""
         val errorResponseBody = errorJson.toResponseBody("application/json".toMediaTypeOrNull())
         val mockHttpErrorResponse = retrofit2
@@ -225,7 +224,6 @@ class CepRepositoryTest {
                 }
             }
         }
-
     }
 
 }

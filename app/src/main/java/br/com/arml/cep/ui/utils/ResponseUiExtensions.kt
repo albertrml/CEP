@@ -12,20 +12,10 @@ fun <T> Response<T>.ShowResults(
     failureContent: @Composable (Exception) -> Unit = {},
     delay: Long = 500
 ) {
-    LaunchedEffect(Unit) {
-        delay(delay)
-    }
+    LaunchedEffect(Unit) { delay(delay) }
     when (this) {
-        is Response.Success -> {
-            successContent(this.result)
-        }
-
-        is Response.Loading -> {
-            loadingContent()
-        }
-
-        is Response.Failure -> {
-            failureContent(this.exception)
-        }
+        is Response.Success -> { successContent(this.result) }
+        is Response.Loading -> { loadingContent() }
+        is Response.Failure -> { failureContent(this.exception) }
     }
 }

@@ -21,13 +21,11 @@ fun CEPTheme(
     activity: Activity = LocalActivity.current as MainActivity,
     content: @Composable () -> Unit
 ) {
-
     val appOrientation = LocalConfiguration.current.orientation
     val (appDimens, appTypography) = getDimensAndTypographyByScreenOrientation(
         screenOrientation = appOrientation,
         windowSizeClass = calculateWindowSizeClass(activity)
     )
-
     CompositionLocalProvider(
         LocalAppDimens provides appDimens,
     ) {
@@ -40,5 +38,4 @@ fun CEPTheme(
 }
 
 val MaterialTheme.dimens
-    @Composable
-    get() = LocalAppDimens.current
+    @Composable get() = LocalAppDimens.current

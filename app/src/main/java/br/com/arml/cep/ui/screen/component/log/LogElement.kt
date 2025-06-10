@@ -56,9 +56,7 @@ fun LogInfo(
     modifier: Modifier = Modifier,
     logEntry: LogEntry
 ){
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.log_cep_field, Cep.format(logEntry.cep.text)),
             style = MaterialTheme.typography.titleMedium

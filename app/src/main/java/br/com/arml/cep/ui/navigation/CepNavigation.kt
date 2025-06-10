@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import br.com.arml.cep.ui.screen.cep.CepScreen
 import br.com.arml.cep.ui.screen.favorite.FavoriteScreen
-import br.com.arml.cep.ui.screen.log.HistoryScreen
+import br.com.arml.cep.ui.screen.log.LogScreen
 
 @Composable
 fun CepNavigation(
@@ -41,7 +41,7 @@ fun CepNavigation(
     ) {
         currentDestination.SelectDestination(
             onSearch = { CepScreen(modifier = modifier) },
-            onHistory = { HistoryScreen(modifier = modifier) },
+            onHistory = { LogScreen(modifier = modifier) },
             onFavorite = { FavoriteScreen(modifier = modifier) }
         )
     }

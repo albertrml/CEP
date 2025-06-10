@@ -25,9 +25,7 @@ fun LogList(
     onClickToDelete: (LogEntry) -> Unit,
     onClickToDetail: (LogEntry) -> Unit
 ){
-
     val listState = rememberLazyListState()
-
     ScrollableFab(listState = listState) {
         LazyColumn(
             modifier = modifier,

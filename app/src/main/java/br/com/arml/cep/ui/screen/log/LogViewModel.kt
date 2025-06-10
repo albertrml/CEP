@@ -19,9 +19,7 @@ class LogViewModel @Inject constructor(
     val _state = MutableStateFlow(LogState())
     val state = _state.asStateFlow()
 
-    init {
-        fetchAllLogs()
-    }
+    init { fetchAllLogs() }
 
     fun onEvent(event: LogEvent) {
         when (event) {

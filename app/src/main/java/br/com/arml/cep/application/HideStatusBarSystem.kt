@@ -22,6 +22,7 @@ fun HideStatusBarSystem(
         SideEffect {
             // Draw behind the status bar
             WindowCompat.setDecorFitsSystemWindows(currentWindow, false)
+
             // Make the status bar transparent
             //currentWindow.statusBarColor = Color.Transparent.hashCode()
             view.setBackgroundColor(Color.Transparent.hashCode())
@@ -37,8 +38,8 @@ fun HideStatusBarSystem(
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
             // Optional: Set the status bar icons to be light or dark
-            windowInsetsController.isAppearanceLightStatusBars =
-                true // Set to true if your background is dark, false if it's light
+            // Set to true if your background is dark, false if it's light
+            windowInsetsController.isAppearanceLightStatusBars = true
         }
     }
 

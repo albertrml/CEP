@@ -44,6 +44,7 @@ fun FavoriteScreen(
                 }
             }
         },
+
         detailPane = {
             if (isDetailPaneExpanded) {
                 FavoriteEntryScreen(
@@ -55,6 +56,7 @@ fun FavoriteScreen(
                             )
                         }
                     },
+
                     onNavigateBack = {
                         scope.launch {
                             isDetailPaneExpanded = false
@@ -64,6 +66,7 @@ fun FavoriteScreen(
                 )
             }
         },
+
         extraPane = {
             if (isDetailPaneExpanded == false) isExtraPaneExpanded = false
             if (isExtraPaneExpanded) {
@@ -76,7 +79,6 @@ fun FavoriteScreen(
             }
         }
     )
-
 }
 
 @Composable
