@@ -1,10 +1,10 @@
 package br.com.arml.cep.domain
 
-import br.com.arml.cep.model.entity.Cep
+import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.mock.mockAddress
-import br.com.arml.cep.model.repository.CepRepository
-import br.com.arml.cep.util.exception.CepException
-import br.com.arml.cep.util.type.Response
+import br.com.arml.cep.model.repository.PlaceRepository
+import br.com.arml.cep.model.exception.CepException
+import br.com.arml.cep.model.domain.Response
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertTrue
@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Test
 
 class CepUseCaseTest {
-    private val repository = mockk<CepRepository>()
+    private val repository = mockk<PlaceRepository>()
     private lateinit var useCase: CepUseCase
 
     private val mockZipCode = mockAddress.zipCode
@@ -31,7 +31,7 @@ class CepUseCaseTest {
             repository.getAddressByCep(mockCep)
         } returns flowOf(Response.Success(mockAddress))
 
-        useCase.searchCep(mockZipCode).collect{ response ->
+        useCase.fetchEntry(mockZipCode).collect{ response ->
             when(response){
                 is Response.Success -> {
                     assertTrue(
@@ -56,7 +56,7 @@ class CepUseCaseTest {
             "12345-789","a1234-567", "1234567@", "teste123"
         )
         invalidZipCodes.forEachIndexed { index, invalidZipCode ->
-            useCase.searchCep(invalidZipCode).collect{ response ->
+            useCase.fetchEntry(invalidZipCode).collect{ response ->
                 when(response){
                     is Response.Success -> {
                         assertTrue(
@@ -82,7 +82,7 @@ class CepUseCaseTest {
             "1234567","123456789"
         )
         invalidZipCodes.forEachIndexed { index, invalidZipCode ->
-            useCase.searchCep(invalidZipCode).collect{ response ->
+            useCase.fetchEntry(invalidZipCode).collect{ response ->
                 when(response){
                     is Response.Success -> {
                         assertTrue(
@@ -104,7 +104,7 @@ class CepUseCaseTest {
 
     @Test
     fun`should emit failure when zipcode is empty`() = runTest{
-        useCase.searchCep("").collect{ response ->
+        useCase.fetchEntry("").collect{ response ->
             when(response){
                 is Response.Success -> {
                     assertTrue(
@@ -130,7 +130,7 @@ class CepUseCaseTest {
             repository.getAddressByCep(Cep.build(invalidZipCode))
         } returns flowOf(Response.Failure(CepException.NotFoundCepException()))
 
-        useCase.searchCep(invalidZipCode).collect { response ->
+        useCase.fetchEntry(invalidZipCode).collect { response ->
             when(response){
                  is Response.Success -> {
                      assertTrue("Should emmit failure, not success",false)

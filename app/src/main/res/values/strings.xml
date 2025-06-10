@@ -17,4 +17,23 @@
     <string name="display_loading_indicator">loading_indicator</string>
     <string name="icon_button_tag">back_button</string>
     <string name="search_cep_clear_button">Limpar campo cep</string>
+    <string name="destination_search">Procurar</string>
+    <string name="destination_search_description">Procurar CEP</string>
+    <string name="destination_history">Log</string>
+    <string name="destination_history_description">Histórico de pesquisa</string>
+    <string name="destination_favorite">Favorito</string>
+    <string name="destination_favorite_description">Ceps favoritos</string>
+    <string name="log_cep_field">CEP: %1$s</string>
+    <string name="log_timestamp_field">Pesquisado em: %1$s</string>
+    <string name="log_filter_button">Filtrar</string>
+    <string name="log_filter_initial_date_label">De</string>
+    <string name="log_filter_final_date_label">Até</string>
+    <string name="log_filter_final_date_support_text">A data inicial deve ser menor que a final</string>
+    <string name="log_selected_filter_description">Selected %1$s</string>
+    <string name="date_time_pattern_from_brazil">DD/MM/YYYY</string>
+    <string name="date_picker_confirm_button">OK</string>
+    <string name="date_picker_confirm_cancel">Cancel</string>
+    <string name="date_picker_description">Select date</string>
+    <string name="display_zipcode_field">"CEP: "</string>
+
 </resources>

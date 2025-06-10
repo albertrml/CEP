@@ -12,12 +12,15 @@ import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneSca
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.arml.cep.ui.screen.component.display.DisplayScreen
-import br.com.arml.cep.ui.screen.component.search.SearchScreen
+import br.com.arml.cep.ui.screen.component.cep.display.DisplayScreen
+import br.com.arml.cep.ui.screen.component.cep.search.SearchScreen
 import br.com.arml.cep.ui.theme.dimens
 import kotlinx.coroutines.launch
 
@@ -29,39 +32,46 @@ fun CepScreen(
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val navigator = rememberListDetailPaneScaffoldNavigator()
     val scope = rememberCoroutineScope()
+    var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
 
     NavigableListDetailPaneScaffold(
         modifier = modifier,
         navigator = navigator,
         listPane = {
-            SearchScreen(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = MaterialTheme.dimens.smallMargin),
-                onSearchCep = {
-                    scope.launch {
-                        viewModel.onEvent(CepEvent.SearchCep(it))
-                        navigator.navigateTo(
-                            pane = ListDetailPaneScaffoldRole.Detail
-                        )
-                    }
-                }
-            )
-        },
-        detailPane = {
             AnimatedPane {
-                DisplayScreen(
+                SearchScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = MaterialTheme.dimens.smallMargin),
-                    response = uiState.address,
-                    onBackPress = {
+                    onSearchCep = {
                         scope.launch {
-                            viewModel.onEvent(CepEvent.ClearCep)
-                            navigator.navigateBack()
+                            viewModel.onEvent(CepEvent.SearchCep(it))
+                            isDetailPaneExpanded = true
+                            navigator.navigateTo(
+                                pane = ListDetailPaneScaffoldRole.Detail
+                            )
                         }
                     }
                 )
+            }
+        },
+        detailPane = {
+            if (isDetailPaneExpanded){
+                AnimatedPane {
+                    DisplayScreen(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = MaterialTheme.dimens.smallMargin),
+                        response = uiState.entry,
+                        onBackPress = {
+                            scope.launch {
+                                viewModel.onEvent(CepEvent.ClearCep)
+                                isDetailPaneExpanded = false
+                                navigator.navigateBack()
+                            }
+                        }
+                    )
+                }
             }
         }
     )

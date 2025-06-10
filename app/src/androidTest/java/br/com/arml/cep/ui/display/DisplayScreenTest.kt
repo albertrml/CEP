@@ -10,12 +10,12 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.model.entity.Address
-import br.com.arml.cep.model.mock.mockAddress
-import br.com.arml.cep.ui.screen.component.display.DisplayScreen
+import br.com.arml.cep.ui.screen.component.cep.display.DisplayScreen
 import br.com.arml.cep.ui.theme.CEPTheme
-import br.com.arml.cep.util.exception.CepException
-import br.com.arml.cep.util.type.Response
+import br.com.arml.cep.model.exception.CepException
+import br.com.arml.cep.model.domain.Response
+import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.mock.mockPlaceEntries
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -33,7 +33,7 @@ class DisplayScreenTest {
     private val mockOnBackPress: () -> Unit = mockk()
 
     private lateinit var displayAddressTitle: String
-    private lateinit var mockAddressData: Address
+    private lateinit var mockPlaceEntry: PlaceEntry
     private lateinit var backButton: String
 
     @Before
@@ -41,13 +41,13 @@ class DisplayScreenTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         displayAddressTitle = context.getString(R.string.display_address_title)
         backButton = context.getString(R.string.icon_button_tag)
-        mockAddressData = mockAddress // Use seu mockAddress
+        mockPlaceEntry = mockPlaceEntries[0] // Use seu mockAddress
         every { mockOnBackPress() } answers {
             println("mockOnBackPress CALLED")
         }
     }
 
-    private fun setDisplayScreenContent(response: Response<Address>) {
+    private fun setDisplayScreenContent(response: Response<PlaceEntry>) {
         composeTestRule.setContent {
             CEPTheme {
                 DisplayScreen(
@@ -81,17 +81,18 @@ class DisplayScreenTest {
 
     @Test
     fun displayScreen_whenSuccess_showsAddressScreenWithCorrectData() {
-        setDisplayScreenContent(Response.Success(mockAddressData))
-        composeTestRule.onNodeWithText(mockAddressData.zipCode).assertIsDisplayed()
-        composeTestRule.onNodeWithText(mockAddressData.street).assertIsDisplayed()
-        composeTestRule.onNodeWithText(mockAddressData.complement).assertIsDisplayed()
-        composeTestRule.onNodeWithText(mockAddressData.district).assertIsDisplayed()
-        composeTestRule.onNodeWithText(mockAddressData.city).assertIsDisplayed()
-        composeTestRule.onNodeWithText(mockAddressData.state).assertIsDisplayed()
-        composeTestRule.onNodeWithText(mockAddressData.uf).assertIsDisplayed()
-        composeTestRule.onNodeWithText(mockAddressData.region).assertIsDisplayed()
-        composeTestRule.onNodeWithText(mockAddressData.country).assertIsDisplayed()
-        composeTestRule.onNodeWithText(mockAddressData.ddd).assertIsDisplayed()
+        setDisplayScreenContent(Response.Success(mockPlaceEntry))
+        val address = mockPlaceEntry.address
+        composeTestRule.onNodeWithText(address.zipCode).assertIsDisplayed()
+        composeTestRule.onNodeWithText(address.street).assertIsDisplayed()
+        composeTestRule.onNodeWithText(address.complement).assertIsDisplayed()
+        composeTestRule.onNodeWithText(address.district).assertIsDisplayed()
+        composeTestRule.onNodeWithText(address.city).assertIsDisplayed()
+        composeTestRule.onNodeWithText(address.state).assertIsDisplayed()
+        composeTestRule.onNodeWithText(address.uf).assertIsDisplayed()
+        composeTestRule.onNodeWithText(address.region).assertIsDisplayed()
+        composeTestRule.onNodeWithText(address.country).assertIsDisplayed()
+        composeTestRule.onNodeWithText(address.ddd).assertIsDisplayed()
     }
 
     @Test

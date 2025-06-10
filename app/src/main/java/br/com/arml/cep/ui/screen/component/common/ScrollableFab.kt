@@ -4,12 +4,16 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -19,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import br.com.arml.cep.ui.theme.dimens
 import kotlinx.coroutines.launch
 
 @Composable
@@ -46,7 +51,10 @@ fun ScrollableFab(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .size(buttonSize)
-                    .padding(bottom = 16.dp, end = 16.dp),
+                    .padding(
+                        bottom = MaterialTheme.dimens.mediumMargin,
+                        end = MaterialTheme.dimens.mediumMargin
+                    ),
                 onClick = {
                     coroutineScope.launch {
                         if (canScrollForward) {
@@ -64,5 +72,77 @@ fun ScrollableFab(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ScrollableFab(
+    modifier: Modifier = Modifier,
+    listState: LazyListState,
+    content: @Composable () -> Unit
+){
+    val scope = rememberCoroutineScope()
+    val canScrollBackward by remember {
+        derivedStateOf { listState.canScrollBackward}
+    }
+    val canScrollForward by remember {
+        derivedStateOf { listState.canScrollForward }
+    }
+    val shouldShowFab by remember {
+        derivedStateOf { canScrollBackward || canScrollForward }
+    }
+    val isScrolledPastFirstItem by remember {
+        derivedStateOf { listState.firstVisibleItemIndex > 0 }
+    }
+
+
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.TopCenter
+    ) {
+        content()
+        if(shouldShowFab){
+            Button(
+                modifier = Modifier
+                    .align(if (canScrollForward) Alignment.BottomCenter else Alignment.TopCenter),
+                onClick = {
+                    scope.launch {
+                        if (isScrolledPastFirstItem) {
+                            listState.animateScrollToItem(0) // Ir para o topo
+                        } else {
+                            val totalItemsCount = listState.layoutInfo.totalItemsCount
+                            if (totalItemsCount > 0 && canScrollForward) {
+                                listState.animateScrollToItem(totalItemsCount - 1) // Ir para o fim
+                            }
+                        }
+                    }
+                },
+
+                ) {
+                Icon(
+                    imageVector = if (isScrolledPastFirstItem) Icons.Filled.KeyboardArrowUp
+                    else Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null
+                )
+                Text(
+                    text = if (isScrolledPastFirstItem) "Topo" else "Fim",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+
+        /*AnimatedVisibility(
+            visible = shouldShowFab,
+            modifier = Modifier
+                .align(
+                    if (canScrollForward) Alignment.BottomCenter else Alignment.TopCenter
+                )
+                .padding(MaterialTheme.dimens.mediumPadding),
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+
+
+        }*/
     }
 }

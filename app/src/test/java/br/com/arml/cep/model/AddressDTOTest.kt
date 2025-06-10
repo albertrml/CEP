@@ -1,6 +1,6 @@
 package br.com.arml.cep.model
 
-import br.com.arml.cep.model.entity.AddressDTO
+import br.com.arml.cep.model.dto.AddressDTO
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

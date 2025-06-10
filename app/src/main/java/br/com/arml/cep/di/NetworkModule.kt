@@ -1,6 +1,6 @@
 package br.com.arml.cep.di
 
-import br.com.arml.cep.model.source.CepApiService
+import br.com.arml.cep.model.source.remote.CepApiService
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module

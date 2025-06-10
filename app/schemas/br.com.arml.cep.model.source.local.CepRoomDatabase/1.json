@@ -1,0 +1,156 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "eb3c074386635a05f79c316e4a2d966b",
+    "entities": [
+      {
+        "tableName": "place_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`cep` TEXT NOT NULL, `favorite_status` INTEGER NOT NULL, `note` TEXT, `address_zipCode` TEXT NOT NULL, `address_street` TEXT NOT NULL, `address_complement` TEXT NOT NULL, `address_district` TEXT NOT NULL, `address_city` TEXT NOT NULL, `address_state` TEXT NOT NULL, `address_uf` TEXT NOT NULL, `address_region` TEXT NOT NULL, `address_country` TEXT NOT NULL, `address_ddd` TEXT NOT NULL, PRIMARY KEY(`cep`))",
+        "fields": [
+          {
+            "fieldPath": "cep",
+            "columnName": "cep",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFavorite",
+            "columnName": "favorite_status",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "address.zipCode",
+            "columnName": "address_zipCode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address.street",
+            "columnName": "address_street",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address.complement",
+            "columnName": "address_complement",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address.district",
+            "columnName": "address_district",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address.city",
+            "columnName": "address_city",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address.state",
+            "columnName": "address_state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address.uf",
+            "columnName": "address_uf",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address.region",
+            "columnName": "address_region",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address.country",
+            "columnName": "address_country",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "address.ddd",
+            "columnName": "address_ddd",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "cep"
+          ]
+        }
+      },
+      {
+        "tableName": "log_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `cep` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, FOREIGN KEY(`cep`) REFERENCES `place_table`(`cep`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cep",
+            "columnName": "cep",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_log_table_cep",
+            "unique": false,
+            "columnNames": [
+              "cep"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_log_table_cep` ON `${TABLE_NAME}` (`cep`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "place_table",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "cep"
+            ],
+            "referencedColumns": [
+              "cep"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'eb3c074386635a05f79c316e4a2d966b')"
+    ]
+  }
+}

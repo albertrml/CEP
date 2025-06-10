@@ -15,10 +15,24 @@ android {
         applicationId = "br.com.arml.cep"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        defaultConfig {
+            // ...
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    arguments["room.schemaLocation"] = "$projectDir/schemas"
+                }
+            }
+        }
+
+    }
+
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
     }
 
     buildTypes {
@@ -52,6 +66,7 @@ dependencies {
     implementation(libs.androidx.compose.adaptive)
     implementation(libs.androidx.compose.adaptive.layout)
     implementation(libs.androidx.compose.adaptive.navigation)
+    implementation(libs.androidx.compose.adaptive.navigation.suite)
 
     // Core
     implementation(libs.androidx.core.ktx)
@@ -85,7 +100,13 @@ dependencies {
     implementation(libs.squareup.moshi.kotlin)
     implementation(libs.squareup.logging.interceptor)
 
+    // Room
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
     // Test Dependencies
+    testImplementation(libs.androidx.ui.test.junit)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)

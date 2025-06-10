@@ -30,8 +30,8 @@ class CepViewModel @Inject constructor(
 
     private fun searchCep(code: String){
         viewModelScope.launch {
-            useCase.searchCep(code).collect { response ->
-                _state.update { it.copy(address = response) }
+            useCase.fetchEntry(code).collect { response ->
+                _state.update { it.copy(entry = response) }
             }
         }
     }

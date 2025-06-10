@@ -1,8 +1,8 @@
 package br.com.arml.cep.model
 
-import br.com.arml.cep.model.entity.Cep
-import br.com.arml.cep.model.entity.updateCepField
-import br.com.arml.cep.util.exception.CepException
+import br.com.arml.cep.model.domain.Cep
+import br.com.arml.cep.model.domain.updateCepField
+import br.com.arml.cep.model.exception.CepException
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test

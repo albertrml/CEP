@@ -13,7 +13,7 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.search.CepField
+import br.com.arml.cep.ui.screen.component.cep.search.CepField
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith

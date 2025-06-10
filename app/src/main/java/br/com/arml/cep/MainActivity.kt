@@ -16,7 +16,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.ui.Modifier
 import br.com.arml.cep.application.HideStatusBarSystem
-import br.com.arml.cep.ui.screen.cep.CepScreen
+import br.com.arml.cep.ui.navigation.CepNavigation
 import br.com.arml.cep.ui.theme.CEPTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,13 +29,21 @@ class MainActivity : ComponentActivity() {
             HideStatusBarSystem {
                 CEPTheme {
                     Surface {
-                        CepScreen(
+                        CepNavigation(
                             modifier = Modifier
                                 .windowInsetsPadding(WindowInsets.systemBars)
                                 .windowInsetsPadding(WindowInsets.displayCutout)
                                 .windowInsetsPadding(WindowInsets.navigationBars)
                                 .windowInsetsPadding(WindowInsets.systemGestures)
                         )
+
+                        /*CepScreen(
+                            modifier = Modifier
+                                .windowInsetsPadding(WindowInsets.systemBars)
+                                .windowInsetsPadding(WindowInsets.displayCutout)
+                                .windowInsetsPadding(WindowInsets.navigationBars)
+                                .windowInsetsPadding(WindowInsets.systemGestures)
+                        )*/
                     }
                 }
             }
