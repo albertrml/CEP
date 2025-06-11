@@ -47,4 +47,5 @@
     <string name="search_title">Busca</string>
     <string name="display_saved_entry">Salvo</string>
     <string name="display_not_save_entry">Salvar</string>
+    <string name="log_list_clipboard_msg">CEP %1$s copied ao clipboard</string>
 </resources>

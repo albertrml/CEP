@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.R
+import br.com.arml.cep.model.entity.LogEntry
 import br.com.arml.cep.ui.screen.component.common.Header
 import br.com.arml.cep.ui.screen.log.LogEvent
 import br.com.arml.cep.ui.screen.log.LogViewModel
@@ -35,7 +36,7 @@ import br.com.arml.cep.ui.utils.ShowResults
 @Composable
 fun LogListComponent(
     modifier: Modifier = Modifier,
-    onNavigateToList: () -> Unit
+    onCopyToClipboard: (LogEntry) -> Unit
 ) {
     val viewModel = hiltViewModel<LogViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -100,7 +101,7 @@ fun LogListComponent(
                         modifier = Modifier,
                         logEntries = logList,
                         onClickToDelete = { entry -> viewModel.onEvent(LogEvent.DeleteLog(entry)) },
-                        onClickToDetail = { onNavigateToList() }
+                        onCopyToClipboard = { entry -> onCopyToClipboard(entry) }
                     )
                 },
 

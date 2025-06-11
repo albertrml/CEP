@@ -19,7 +19,7 @@ data class Cep private constructor(
         if(text.length != 8) throw CepException.SizeCepException()
     }
 
-
+    fun toFormattedCep(): String = format(text)
 
     companion object{
         fun build(input: String): Cep {

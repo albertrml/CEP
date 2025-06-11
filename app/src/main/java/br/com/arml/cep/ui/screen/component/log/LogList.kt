@@ -23,7 +23,7 @@ fun LogList(
     modifier: Modifier = Modifier,
     logEntries: List<LogEntry>,
     onClickToDelete: (LogEntry) -> Unit,
-    onClickToDetail: (LogEntry) -> Unit
+    onCopyToClipboard: (LogEntry) -> Unit
 ){
     val listState = rememberLazyListState()
     ScrollableFab(listState = listState) {
@@ -37,7 +37,7 @@ fun LogList(
                 LogElement(
                     logEntry = it,
                     onClickToDelete = onClickToDelete,
-                    onClickToDetail = onClickToDetail
+                    onClickToDetail = onCopyToClipboard
                 )
                 Spacer(modifier = Modifier.height(MaterialTheme.dimens.smallPadding))
                 HorizontalDivider()
@@ -52,6 +52,6 @@ fun LogListPreview(){
     LogList(
         logEntries = mockLogEntry,
         onClickToDelete = {},
-        onClickToDetail = {}
+        onCopyToClipboard = {}
     )
 }
