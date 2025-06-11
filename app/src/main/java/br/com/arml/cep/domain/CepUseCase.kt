@@ -26,7 +26,7 @@ class CepUseCase @Inject constructor(
     *       - filterByCepAndFavorite
     */
 
-    fun insertEntry(entry: PlaceEntry) = repository.insertPlace(entry)
+    fun favoriteEntry(entry: PlaceEntry) = repository.updatePlace(entry)
     fun fetchEntry(code: String): Flow<Response<PlaceEntry>>{
         return try {
             val cep = Cep.build(code)

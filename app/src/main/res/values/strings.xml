@@ -45,4 +45,6 @@
     <string name="search_cep_field_name">CEP</string>
     <string name="search_cep_hint">Digite o CEP</string>
     <string name="search_title">Busca</string>
+    <string name="display_saved_entry">Salvo</string>
+    <string name="display_not_save_entry">Salvar</string>
 </resources>

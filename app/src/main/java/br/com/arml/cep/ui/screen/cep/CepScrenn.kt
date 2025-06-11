@@ -69,6 +69,11 @@ fun CepScreen(
                                 isDetailPaneExpanded = false
                                 navigator.navigateBack()
                             }
+                        },
+                        onFavoriteClick = {
+                            scope.launch {
+                                viewModel.onEvent(CepEvent.FavoriteCep(it))
+                            }
                         }
                     )
                 }

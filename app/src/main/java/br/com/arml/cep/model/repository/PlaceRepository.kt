@@ -2,14 +2,14 @@ package br.com.arml.cep.model.repository
 
 import br.com.arml.cep.model.domain.Address
 import br.com.arml.cep.model.domain.Cep
+import br.com.arml.cep.model.domain.Response
+import br.com.arml.cep.model.domain.asResponse
 import br.com.arml.cep.model.entity.LogEntry
 import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.exception.CepException
 import br.com.arml.cep.model.source.local.LogDao
 import br.com.arml.cep.model.source.local.PlaceDao
 import br.com.arml.cep.model.source.remote.CepApiService
-import br.com.arml.cep.model.exception.CepException
-import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.domain.asResponse
 import kotlinx.coroutines.flow.Flow
 import java.sql.Timestamp
 import javax.inject.Inject
@@ -25,8 +25,6 @@ class PlaceRepository @Inject constructor(
         if (cepDAO.erro == "true") throw CepException.NotFoundCepException()
         cepDAO.toAddress()
     }
-
-    fun insertPlace(entry: PlaceEntry) = asResponse { placeDao.create(entry) }
 
     fun getPlace(cep: Cep): Flow<Response<PlaceEntry>> = asResponse {
         /* get the entry from the database */
