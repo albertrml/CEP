@@ -47,15 +47,15 @@ fun LogListComponent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header(
+            modifier = modifier,
             title = stringResource(R.string.log_title),
-            modifier = Modifier,
-            backImgVec = Icons.AutoMirrored.Filled.List
+            logo = Icons.AutoMirrored.Filled.List
         )
 
         Spacer(modifier = Modifier.padding(vertical = MaterialTheme.dimens.smallPadding))
 
         LogFilterComponent(
-            modifier = Modifier,
+            modifier = modifier,
             onFilterByCep = { query -> viewModel.onEvent(LogEvent.FilterByCep(query)) },
             onFilterByInitialDate = { from -> viewModel.onEvent(LogEvent.FilterByInitialDate(from)) },
             onFilterByFinalDate = { until -> viewModel.onEvent(LogEvent.FilterByFinalDate(until)) },
@@ -66,7 +66,7 @@ fun LogListComponent(
         )
 
         Row(
-            modifier = Modifier.padding(vertical = MaterialTheme.dimens.smallPadding),
+            modifier = modifier.padding(vertical = MaterialTheme.dimens.smallPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             HorizontalDivider(
@@ -94,7 +94,7 @@ fun LogListComponent(
             }
         }
 
-        Box(modifier = Modifier.weight(1f)){
+        Box(modifier = modifier.weight(1f)){
             state.fetchLog.ShowResults(
                 successContent = { logList ->
                     LogList(
@@ -122,7 +122,10 @@ fun LogListComponent(
         DeleteAllLogAlert(
             showDialog = showDeleteAlert,
             onDismissRequest = { showDeleteAlert = false },
-            onConfirmation = { viewModel.onEvent(LogEvent.DeleteAllLogs) }
+            onConfirmation = {
+                viewModel.onEvent(LogEvent.DeleteAllLogs)
+                showDeleteAlert = false
+            }
         )
     }
 }

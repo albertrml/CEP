@@ -10,6 +10,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import br.com.arml.cep.ui.screen.cache.CacheScreen
 import br.com.arml.cep.ui.screen.cep.CepScreen
 import br.com.arml.cep.ui.screen.favorite.FavoriteScreen
 import br.com.arml.cep.ui.screen.log.LogScreen
@@ -42,7 +43,8 @@ fun CepNavigation(
         currentDestination.SelectDestination(
             onSearch = { CepScreen(modifier = modifier) },
             onHistory = { LogScreen(modifier = modifier) },
-            onFavorite = { FavoriteScreen(modifier = modifier) }
+            onFavorite = { FavoriteScreen(modifier = modifier) },
+            onCache = { CacheScreen(modifier = modifier) }
         )
     }
 

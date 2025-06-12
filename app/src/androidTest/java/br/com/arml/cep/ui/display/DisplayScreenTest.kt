@@ -45,6 +45,7 @@ class DisplayScreenTest {
         every { mockOnBackPress() } answers {
             println("mockOnBackPress CALLED")
         }
+
     }
 
     private fun setDisplayScreenContent(response: Response<PlaceEntry>) {
@@ -53,7 +54,8 @@ class DisplayScreenTest {
                 DisplayScreen(
                     modifier = Modifier.fillMaxSize(),
                     response = response,
-                    onBackPress = mockOnBackPress
+                    onBackPress = mockOnBackPress,
+                    onFavoriteClick = {}
                 )
             }
         }
@@ -61,7 +63,7 @@ class DisplayScreenTest {
 
     @Test
     fun displayScreen_header_showsCorrectTitle() {
-        setDisplayScreenContent(Response.Loading) // Pode ser qualquer estado para testar o header
+        setDisplayScreenContent(Response.Loading)
         composeTestRule.onNodeWithText(displayAddressTitle).assertIsDisplayed()
     }
 

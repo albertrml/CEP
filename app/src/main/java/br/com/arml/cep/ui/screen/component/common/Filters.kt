@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.log
+package br.com.arml.cep.ui.screen.component.common
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import br.com.arml.cep.R
 import br.com.arml.cep.ui.screen.component.cep.search.CepField
-import br.com.arml.cep.ui.screen.component.common.DatePickerFieldToModal
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -32,10 +31,38 @@ fun CepFilter(
             modifier = modifier,
             onQueryChange = { zipCode = it }
         )
-        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.mediumSpacing))
+        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
         Button(
             enabled = isButtonActive,
             onClick = { onFilterByCep(zipCode) },
+        ) {
+            Text(text = stringResource(R.string.log_filter_button))
+        }
+    }
+}
+
+@Composable
+fun FieldFilter(
+    modifier: Modifier = Modifier,
+    nameFilter: String,
+    maxSize: Int,
+    onFilterByCep: (String) -> Unit,
+){
+    var text by remember { mutableStateOf("") }
+    val isButtonActive = text.length >= 3
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        CepTextField(
+            modifier = modifier,
+            nameField = nameFilter,
+            text = text,
+            onChangeText = { newText -> text = newText },
+            maxSize = maxSize,
+        )
+        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
+        Button(
+            enabled = isButtonActive,
+            onClick = { onFilterByCep(text) },
         ) {
             Text(text = stringResource(R.string.log_filter_button))
         }
@@ -56,7 +83,7 @@ fun SingleDateFilter(
             label = stringResource(R.string.log_filter_initial_date_label),
             onSelectDate = { initialDate = it }
         )
-        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.mediumSpacing))
+        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
         Button(
             enabled = isButtonActive,
             onClick = { initialDate?.let{ onFilterByInitialDate(it) } },
@@ -100,7 +127,7 @@ fun PeriodFilter(
             },
             onSelectDate = { finalDate = it }
         )
-        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.mediumSpacing))
+        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
         Button(
             enabled = isButtonActive,
             onClick = { onFilterByInitialDate(initialDate!!,finalDate!!) },

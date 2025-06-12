@@ -45,9 +45,9 @@ fun DisplayScreen(
     ) {
         Header(
             modifier = Modifier,
-            backImgVec = Icons.AutoMirrored.Filled.ArrowBack,
+            logo = Icons.AutoMirrored.Filled.ArrowBack,
             title = stringResource(R.string.display_address_title),
-            onBackClick = onBackPress
+            onClickLogo = onBackPress
         )
 
         response.ShowResults(
@@ -80,7 +80,7 @@ fun DisplayScreen(
                         }
                         Icon(
                             imageVector = Icons.Filled.Favorite,
-                            contentDescription = stringResource(R.string.icon_button_tag),
+                            contentDescription = stringResource(R.string.display_favorite_button_description),
                             tint = colorIcon
                         )
                         Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallPadding))

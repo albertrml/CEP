@@ -40,8 +40,7 @@ fun CepScreen(
         listPane = {
             AnimatedPane {
                 SearchScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
+                    modifier = modifier
                         .padding(horizontal = MaterialTheme.dimens.smallMargin),
                     onSearchCep = {
                         scope.launch {

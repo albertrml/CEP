@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.log
+package br.com.arml.cep.ui.screen.component.place
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -28,40 +29,35 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.arml.cep.R
+import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
 import br.com.arml.cep.ui.screen.component.common.CepFilter
-import br.com.arml.cep.ui.screen.component.common.PeriodFilter
-import br.com.arml.cep.ui.screen.component.common.SingleDateFilter
+import br.com.arml.cep.ui.screen.component.common.FieldFilter
 import br.com.arml.cep.ui.theme.dimens
-import br.com.arml.cep.ui.utils.LogFilterOption
+import br.com.arml.cep.ui.utils.FavoriteFilterOption
+import br.com.arml.cep.ui.utils.favoriteFilterOptions
 import br.com.arml.cep.ui.utils.filterEnterTransition
 import br.com.arml.cep.ui.utils.filterExitTransition
-import br.com.arml.cep.ui.utils.logFilterOptions
-
-const val oneSecondForTomorrow = 86399000L
 
 @Composable
-fun LogFilterComponent(
+fun PlaceFilterComponent(
     modifier: Modifier = Modifier,
     onFilterByCep: (String) -> Unit,
-    onFilterByInitialDate: (Long) -> Unit,
-    onFilterByFinalDate: (Long) -> Unit,
-    onFilterByRangeDate: (Long, Long) -> Unit,
-    onNoneFilter: () -> Unit
+    onFilterByTitle: (String) -> Unit,
+    onNoneFilter: () -> Unit,
+    selectedFilter: FavoriteFilterOption,
+    onChangeFilter: (FavoriteFilterOption) -> Unit
 ) {
-    val filters = logFilterOptions
-    var selectedFilter by rememberSaveable(stateSaver = LogFilterOption.saver) {
-        mutableStateOf<LogFilterOption>(LogFilterOption.None)
-    }
+    val filters = favoriteFilterOptions
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LogFilterChips(
+        PlaceFilterChips(
             filters = filters,
             selectedFilter = selectedFilter,
-            onSelectedFilter = { selectedFilter = it }
+            onSelectedFilter = { onChangeFilter(it) }
         )
         AnimatedContent(
             targetState = selectedFilter,
@@ -71,7 +67,7 @@ fun LogFilterComponent(
             }
         ) { targetFilter ->
             when (targetFilter) {
-                LogFilterOption.ByCep -> {
+                FavoriteFilterOption.ByCep -> {
                     CepFilter(
                         onFilterByCep = {
                             keyboardController?.hide()
@@ -79,34 +75,17 @@ fun LogFilterComponent(
                         }
                     )
                 }
-
-                LogFilterOption.ByInitialDate -> {
-                    SingleDateFilter(
-                        onFilterByInitialDate = {
+                FavoriteFilterOption.ByTitle -> {
+                    FieldFilter(
+                        nameFilter = stringResource(R.string.favorite_title_field_filter),
+                        maxSize = MAX_TITLE_LENGTH,
+                        onFilterByCep = {
                             keyboardController?.hide()
-                            onFilterByInitialDate(it)
+                            onFilterByTitle(it)
                         }
                     )
                 }
-
-                LogFilterOption.ByFinalDate -> {
-                    SingleDateFilter(
-                        onFilterByInitialDate = {
-                            keyboardController?.hide()
-                            onFilterByFinalDate(it + oneSecondForTomorrow)
-                        }
-                    )
-                }
-
-                LogFilterOption.ByRangeDate -> {
-                    PeriodFilter(
-                        onFilterByInitialDate = { start, end ->
-                            keyboardController?.hide()
-                            onFilterByRangeDate(start, end + oneSecondForTomorrow)
-                        }
-                    )
-                }
-                LogFilterOption.None -> {
+                FavoriteFilterOption.None -> {
                     keyboardController?.hide()
                     onNoneFilter()
                 }
@@ -116,18 +95,19 @@ fun LogFilterComponent(
 }
 
 @Composable
-fun LogFilterChips(
+fun PlaceFilterChips(
     modifier: Modifier = Modifier,
-    filters: List<LogFilterOption>,
-    selectedFilter: LogFilterOption,
-    onSelectedFilter: (LogFilterOption) -> Unit
+    filters: List<FavoriteFilterOption>,
+    selectedFilter: FavoriteFilterOption,
+    onSelectedFilter: (FavoriteFilterOption) -> Unit
 ) {
     LazyRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         items(filters) { topic ->
-            LogFilterChip(
+            PlaceFilterChip(
                 labelFilter = topic,
                 isSelected = topic === selectedFilter,
                 onSelected = { onSelectedFilter(it) }
@@ -137,11 +117,11 @@ fun LogFilterChips(
 }
 
 @Composable
-fun LogFilterChip(
+fun PlaceFilterChip(
     modifier: Modifier = Modifier,
-    labelFilter: LogFilterOption,
+    labelFilter: FavoriteFilterOption,
     isSelected: Boolean,
-    onSelected: (LogFilterOption) -> Unit
+    onSelected: (FavoriteFilterOption) -> Unit
 ) {
     FilterChip(
         modifier = modifier,
@@ -170,19 +150,23 @@ fun LogFilterChip(
 
 @Preview(showBackground = true)
 @Composable
-fun LogFilterPreview() {
+fun PlaceFilterPreview() {
+    var filter by rememberSaveable(stateSaver = FavoriteFilterOption.saver) {
+        mutableStateOf<FavoriteFilterOption>(FavoriteFilterOption.None)
+    }
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        LogFilterComponent(
+        PlaceFilterComponent(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(top = MaterialTheme.dimens.largeMargin * 2)
                 .padding(horizontal = MaterialTheme.dimens.mediumMargin),
+            selectedFilter = filter,
             onFilterByCep = {},
-            onFilterByInitialDate = {},
-            onFilterByFinalDate = {},
-            onFilterByRangeDate = { _, _ -> },
-            onNoneFilter = {}
+            onFilterByTitle = {},
+            onNoneFilter = {},
+            onChangeFilter = { filter = it }
         )
     }
 }

@@ -2,9 +2,9 @@ package br.com.arml.cep.model.domain
 
 import br.com.arml.cep.model.exception.NoteException
 
-const val MIN_TITLE_LENGTH = 30
-const val MAX_TITLE_LENGTH = 3
-const val MAX_CONTENT_LENGTH = 200
+const val MIN_TITLE_LENGTH = 3
+const val MAX_TITLE_LENGTH = 30
+const val MAX_CONTENT_LENGTH = 300
 
 @ConsistentCopyVisibility
 data class Note private constructor(
@@ -16,11 +16,11 @@ data class Note private constructor(
     }
 
     private fun isTitleTooLong() {
-        if(title.length <= MAX_TITLE_LENGTH) throw NoteException.TitleTooLongException()
+        if(title.length > MAX_TITLE_LENGTH) throw NoteException.TitleTooLongException()
     }
 
     private fun isTitleTooShort() {
-        if(title.length >= MIN_TITLE_LENGTH) throw NoteException.TitleTooShortException()
+        if(title.length < MIN_TITLE_LENGTH) throw NoteException.TitleTooShortException()
     }
 
     private fun isContentTooLong() {
@@ -37,4 +37,8 @@ data class Note private constructor(
             return note
         }
     }
+}
+
+fun String.isValidTitleNoteSize(): Boolean {
+    return this.length >= MIN_TITLE_LENGTH && this.length <= MAX_TITLE_LENGTH
 }

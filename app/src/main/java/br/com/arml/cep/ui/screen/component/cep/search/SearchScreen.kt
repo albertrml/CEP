@@ -37,12 +37,12 @@ fun SearchScreen(
         contentAlignment = Alignment.Center
     ) {
         Header(
-            modifier = Modifier.align(Alignment.TopCenter),
+            modifier = modifier.align(Alignment.TopCenter),
             title = stringResource(R.string.search_title),
-            backImgVec = Icons.Default.Search
+            logo = Icons.Default.Search
         )
         Column(
-            modifier = Modifier,
+            modifier = modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CepField(

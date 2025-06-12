@@ -84,44 +84,61 @@ fun ScrollableFab(
     content: @Composable () -> Unit
 ) {
     val scope = rememberCoroutineScope()
-    val canScrollBackward by remember { derivedStateOf { listState.canScrollBackward } }
-    val canScrollForward by remember { derivedStateOf { listState.canScrollForward } }
-    val shouldShowFab by remember { derivedStateOf { canScrollBackward || canScrollForward } }
-    val isScrolledPastFirstItem by remember { derivedStateOf { listState.firstVisibleItemIndex > 0 } }
+    val scrollDirectionState by remember {
+        derivedStateOf {
+            val layoutInfo = listState.layoutInfo
+            val firstVisibleItemIndex = listState.firstVisibleItemIndex
+            val totalItemsCount = layoutInfo.totalItemsCount
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            val isListCanScroll = listState.run { (canScrollBackward || canScrollForward) }
+
+            if(!isListCanScroll || totalItemsCount == 0){
+                false to false
+            } else {
+                val itemsBeforeFirstVisible = firstVisibleItemIndex
+                val itemsAfterLastVisible = totalItemsCount - lastVisibleItem - 1
+
+                if (itemsBeforeFirstVisible == 0 && itemsAfterLastVisible == 0) {
+                    false to false
+                } else {
+                    true to (itemsAfterLastVisible >= itemsBeforeFirstVisible)
+                }
+            }
+        }
+    }
+    val (isFabVisible, isFabPointsDown) = scrollDirectionState
 
     Box(
         modifier = modifier,
         contentAlignment = Alignment.TopCenter
     ) {
         content()
-        if (shouldShowFab) {
+        if (isFabVisible) {
             Button(
                 modifier = Modifier.align(
-                    if (canScrollForward) Alignment.BottomCenter else Alignment.TopCenter
+                    if (isFabPointsDown) Alignment.BottomCenter else Alignment.TopCenter
                 ),
                 onClick = {
                     scope.launch {
-                        if (isScrolledPastFirstItem) {
-                            listState.animateScrollToItem(0)
+                        if (isFabPointsDown) {
+                            val lastItem = listState.layoutInfo.totalItemsCount-1
+                            listState.animateScrollToItem(lastItem)
                         } else {
-                            val totalItemsCount = listState.layoutInfo.totalItemsCount
-                            if (totalItemsCount > 0 && canScrollForward) {
-                                listState.animateScrollToItem(totalItemsCount - 1)
-                            }
+                            listState.animateScrollToItem(0)
                         }
                     }
                 },
             ) {
                 Icon(
-                    imageVector = if (isScrolledPastFirstItem) Icons.Filled.KeyboardArrowUp
-                    else Icons.Filled.KeyboardArrowDown,
+                    imageVector = if (isFabPointsDown) Icons.Filled.KeyboardArrowDown
+                    else Icons.Filled.KeyboardArrowUp,
                     contentDescription = null
                 )
                 Text(
-                    text = if (isScrolledPastFirstItem) {
-                        stringResource(R.string.scrollable_button_up)
-                    } else {
+                    text = if (isFabPointsDown) {
                         stringResource(R.string.scrollable_button_down)
+                    } else {
+                        stringResource(R.string.scrollable_button_up)
                     },
                     style = MaterialTheme.typography.bodyMedium
                 )

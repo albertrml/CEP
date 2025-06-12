@@ -1,7 +1,10 @@
 package br.com.arml.cep.ui.screen.log
 
 import android.content.ClipData
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -16,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.toClipEntry
 import br.com.arml.cep.R
 import br.com.arml.cep.ui.screen.component.log.LogListComponent
+import br.com.arml.cep.ui.theme.dimens
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -27,26 +31,34 @@ fun LogScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Scaffold(
-        modifier = modifier,
+        modifier = Modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
-        LogListComponent(
-            modifier = Modifier.padding(innerPadding),
-            onCopyToClipboard = { entry ->
-                scope.launch {
-                    val clippedCep: String = entry.cep.text
-                    val clipData = ClipData.newPlainText("cep", clippedCep)
-                    clipboardManager.setClipEntry(clipData.toClipEntry())
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            contentAlignment = androidx.compose.ui.Alignment.Center
+        ){
+            LogListComponent(
+                modifier = modifier
+                    .padding(horizontal = MaterialTheme.dimens.smallMargin),
+                onCopyToClipboard = { entry ->
+                    scope.launch {
+                        val clippedCep: String = entry.cep.text
+                        val clipData = ClipData.newPlainText("cep", clippedCep)
+                        clipboardManager.setClipEntry(clipData.toClipEntry())
 
-                    snackbarHostState.showSnackbar(
-                        message = context.getString(
-                            R.string.log_list_clipboard_msg,
-                            entry.cep.toFormattedCep()
-                        ),
-                        duration = SnackbarDuration.Short
-                    )
+                        snackbarHostState.showSnackbar(
+                            message = context.getString(
+                                R.string.log_list_clipboard_msg,
+                                entry.cep.toFormattedCep()
+                            ),
+                            duration = SnackbarDuration.Short
+                        )
+                    }
                 }
-            }
-        )
+            )
+        }
     }
 }
