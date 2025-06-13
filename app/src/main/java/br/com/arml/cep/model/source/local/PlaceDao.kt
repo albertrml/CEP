@@ -24,6 +24,9 @@ interface PlaceDao {
     @Query("SELECT * FROM place_table WHERE favorite_status = 1")
     fun readFavorites(): Flow<List<PlaceEntry>>
 
+    @Query("SELECT * FROM place_table WHERE favorite_status = 0")
+    fun readUnwanted(): Flow<List<PlaceEntry>>
+
     @Update
     suspend fun update(placeEntry: PlaceEntry)
 

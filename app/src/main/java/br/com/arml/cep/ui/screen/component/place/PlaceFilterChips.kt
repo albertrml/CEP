@@ -41,13 +41,14 @@ import br.com.arml.cep.ui.utils.filterExitTransition
 @Composable
 fun PlaceFilterComponent(
     modifier: Modifier = Modifier,
-    onFilterByCep: (String) -> Unit,
-    onFilterByTitle: (String) -> Unit,
-    onNoneFilter: () -> Unit,
-    selectedFilter: FavoriteFilterOption,
-    onChangeFilter: (FavoriteFilterOption) -> Unit
+    filters: List<FavoriteFilterOption> = favoriteFilterOptions,
+    onFilterByCep: (String) -> Unit = {},
+    onFilterByTitle: (String) -> Unit = {},
+    onNoneFilter: () -> Unit = {}
 ) {
-    val filters = favoriteFilterOptions
+    var selectedFilter by rememberSaveable(stateSaver = FavoriteFilterOption.saver) {
+        mutableStateOf<FavoriteFilterOption>(FavoriteFilterOption.None)
+    }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
@@ -57,7 +58,7 @@ fun PlaceFilterComponent(
         PlaceFilterChips(
             filters = filters,
             selectedFilter = selectedFilter,
-            onSelectedFilter = { onChangeFilter(it) }
+            onSelectedFilter = { selectedFilter = it }
         )
         AnimatedContent(
             targetState = selectedFilter,
@@ -151,9 +152,6 @@ fun PlaceFilterChip(
 @Preview(showBackground = true)
 @Composable
 fun PlaceFilterPreview() {
-    var filter by rememberSaveable(stateSaver = FavoriteFilterOption.saver) {
-        mutableStateOf<FavoriteFilterOption>(FavoriteFilterOption.None)
-    }
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -162,11 +160,9 @@ fun PlaceFilterPreview() {
                 .fillMaxWidth()
                 .padding(top = MaterialTheme.dimens.largeMargin * 2)
                 .padding(horizontal = MaterialTheme.dimens.mediumMargin),
-            selectedFilter = filter,
             onFilterByCep = {},
             onFilterByTitle = {},
-            onNoneFilter = {},
-            onChangeFilter = { filter = it }
+            onNoneFilter = {}
         )
     }
 }

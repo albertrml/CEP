@@ -12,20 +12,6 @@ import javax.inject.Inject
 class CepUseCase @Inject constructor(
     private val repository: PlaceRepository
 ){
-    /*
-    *  CepViewModel: fetchEntry
-    *  HistoryViewModel:
-    *       - fetchAllEntries
-    *       - delete: EntryIsNotFavorite,and AllNotFavorite
-    *       - filters: ByCep, ByInitialTimestamp, ByEndTimestamp, ByTimestamp
-    *       - update: MarkEntryAsFavorite
-    *   FavoriteViewModel:
-    *       - fetchFavoriteEntries
-    *       - deleteEntry
-    *       - updateEntry
-    *       - filterByCepAndFavorite
-    */
-
     fun favoriteEntry(entry: PlaceEntry) = repository.updatePlace(entry)
     fun fetchEntry(code: String): Flow<Response<PlaceEntry>>{
         return try {
@@ -35,11 +21,5 @@ class CepUseCase @Inject constructor(
             flowOf(Response.Failure(e))
         }
     }
-    fun fetchAllEntries() = repository.getAllPlaces()
-    fun deleteEntry(entry: PlaceEntry) = repository.deletePlace(entry)
-    fun deleteAllNotFavorite() = repository.deleteAllNotFavoritePlaces()
     fun filterByCep(query: String) = repository.filterPlacesByCep(query)
-    fun fetchFavoriteEntries() = repository.getFavoritePlaces()
-    fun updateEntry(entry: PlaceEntry) = repository.updatePlace(entry)
-    fun filterByCepAndFavorite(query: String) = repository.filterPlacesByCepAndFavorite(query)
 }

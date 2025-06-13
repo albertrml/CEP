@@ -22,7 +22,7 @@ import br.com.arml.cep.ui.theme.dimens
 fun ShowDeleteAlert(
     modifier: Modifier = Modifier,
     typeName: String,
-    showDeleteAlert: (Boolean) -> Unit,
+    showDeleteAlert: () -> Unit,
 ){
     Row(
         modifier = modifier,
@@ -40,7 +40,7 @@ fun ShowDeleteAlert(
                 disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
                 disabledContentColor = MaterialTheme.colorScheme.onErrorContainer
             ),
-            onClick = { showDeleteAlert(true) }
+            onClick = { showDeleteAlert() }
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,

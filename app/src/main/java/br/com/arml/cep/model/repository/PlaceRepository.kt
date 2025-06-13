@@ -53,19 +53,15 @@ class PlaceRepository @Inject constructor(
         entry
     }
 
-    fun getAllPlaces() = placeDao.readAll()
-
-    fun getFavoritePlaces() = placeDao.readFavorites()
-
     fun updatePlace(entry: PlaceEntry) = asResponse { placeDao.update(entry) }
-
     fun deletePlace(entry: PlaceEntry) = asResponse { placeDao.delete(entry) }
 
-    fun deleteAllNotFavoritePlaces() = asResponse { placeDao.deleteAllNotFavorite() }
-
+    fun getFavoritePlaces() = placeDao.readFavorites()
     fun filterPlacesByCep(query: String) = placeDao.filterByCep(query)
-
     fun filterPlacesByCepAndFavorite(query: String) = placeDao.filterByCepAndFavorite(query)
 
+    fun getUnwantedPlaces() = placeDao.readUnwanted()
+    fun getUnwantedPlacesByCepAndUnwanted(query: String) = placeDao.filterByCepAndUnwanted(query)
+    fun deleteAllUnwantedPlaces() = asResponse { placeDao.deleteAllNotFavorite() }
 }
 
