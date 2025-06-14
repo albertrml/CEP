@@ -96,7 +96,8 @@ fun CacheScreen(
                             onFavoriteClick = {
                                 scope.launch {
                                     viewModel.onEvent(CacheEvent.OnUpdate(it))
-                                    viewModel.onEvent(CacheEvent.OnSelectEntryForDetails(null))
+                                    isDetailPaneExpanded = false
+                                    navigator.navigateBack()
                                 }
                             }
                         )

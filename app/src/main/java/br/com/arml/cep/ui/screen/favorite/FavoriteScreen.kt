@@ -1,5 +1,6 @@
 package br.com.arml.cep.ui.screen.favorite
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -8,7 +9,6 @@ import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
@@ -17,10 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.arml.cep.ui.screen.component.favorite.PlaceDetailsComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceDetailsComponent
 import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceAlert
 import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceListComponent
-import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnFetchFavorites
+import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceExtraComponent
 import br.com.arml.cep.ui.theme.dimens
 import kotlinx.coroutines.launch
 
@@ -33,12 +33,9 @@ fun FavoriteScreen(
     val state by viewmodel.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val navigator = rememberListDetailPaneScaffoldNavigator()
-    var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
     var isUnlikeAlertShown by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        viewmodel.onEvent(OnFetchFavorites)
-    }
+    var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
+    var isExtraPaneExpanded by rememberSaveable { mutableStateOf(false) }
 
     NavigableListDetailPaneScaffold(
         modifier = modifier,
@@ -90,18 +87,42 @@ fun FavoriteScreen(
             if (isDetailPaneExpanded) {
                 AnimatedPane {
                     state.placeForEdit?.let {
-                        PlaceDetailsComponent(
+                        FavoritePlaceDetailsComponent(
                             modifier = modifier
+                                .padding(horizontal = MaterialTheme.dimens.smallMargin),
+                            placeEntry = it,
+                            onNavigateBackToList = {
+                                isDetailPaneExpanded = false
+                                viewmodel.onEvent(FavoriteEvent.OnSelectEntryToEdit(null))
+                                scope.launch { navigator.navigateBack() }
+                            },
+                            onNavigateToExtra = {
+                                isExtraPaneExpanded = true
+                                scope.launch { navigator.navigateTo(pane = ListDetailPaneScaffoldRole.Extra) }
+                            }
+                        )
+                    }
+                }
+            }
+        },
+
+        extraPane = {
+            AnimatedPane {
+                if (isDetailPaneExpanded == false) isExtraPaneExpanded = false
+                if (isExtraPaneExpanded) {
+                    state.placeForEdit?.let{
+                        FavoritePlaceExtraComponent(
+                            modifier = modifier
+                                .fillMaxSize()
                                 .padding(horizontal = MaterialTheme.dimens.smallMargin),
                             placeEntry = it,
                             onClickToUpdate = { entry ->
                                 viewmodel.onEvent(FavoriteEvent.OnUpdateFavorite(entry))
-                                isDetailPaneExpanded = false
+                                isExtraPaneExpanded = false
                                 scope.launch { navigator.navigateBack() }
                             },
-                            onNavigateBack = {
-                                viewmodel.onEvent(FavoriteEvent.OnSelectEntryToEdit(null))
-                                isDetailPaneExpanded = false
+                            onNavigateBackToDetails = {
+                                isExtraPaneExpanded = false
                                 scope.launch { navigator.navigateBack() }
                             }
                         )

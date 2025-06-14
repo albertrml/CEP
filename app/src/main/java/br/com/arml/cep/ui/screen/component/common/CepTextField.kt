@@ -29,6 +29,7 @@ fun CepTextField(
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     isError: Boolean = false,
     errorMessage: String = "",
+    minLines: Int = 1,
     maxSize: Int,
     maxLines: Int = 1,
 ){
@@ -57,6 +58,7 @@ fun CepTextField(
                 unfocusedContainerColor = MaterialTheme.colorScheme.background,
                 focusedContainerColor = MaterialTheme.colorScheme.background
             ),
+            minLines = minLines,
             maxLines = maxLines,
             isError = isError,
             supportingText = {
