@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.place
+package br.com.arml.cep.ui.screen.component.favorite
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,8 +23,6 @@ import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.mock.mockFavoritePlaceEntries
 import br.com.arml.cep.ui.screen.component.cep.display.AddressScreen
 import br.com.arml.cep.ui.screen.component.common.CepTextField
-import br.com.arml.cep.ui.screen.component.place.favorite.FavoritePlaceHeaderDetails
-import br.com.arml.cep.ui.screen.component.place.favorite.FavoritePlaceUpdateButton
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -78,8 +76,6 @@ fun PlaceDetailsComponent(
         )
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

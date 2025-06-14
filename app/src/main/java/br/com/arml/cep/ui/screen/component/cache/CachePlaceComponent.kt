@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.place.cache
+package br.com.arml.cep.ui.screen.component.cache
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,7 +15,7 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
-import br.com.arml.cep.ui.screen.component.place.ShowDeleteAlert
+import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
 
@@ -40,7 +40,7 @@ fun CachePlaceListComponent(
             onFilterByCep = { query -> onCepFilter(query) },
             onNoneFilter = { onClearFilter() }
         )
-        ShowDeleteAlert(
+        DeleteAllComponent(
             typeName = stringResource(R.string.show_delete_alert_cache),
             showDeleteAlert = { onDeleteCacheClick() }
         )

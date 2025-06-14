@@ -17,9 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.arml.cep.ui.screen.component.place.PlaceDetailsComponent
-import br.com.arml.cep.ui.screen.component.place.favorite.FavoritePlaceAlert
-import br.com.arml.cep.ui.screen.component.place.favorite.FavoritePlaceListComponent
+import br.com.arml.cep.ui.screen.component.favorite.PlaceDetailsComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceAlert
+import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceListComponent
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnFetchFavorites
 import br.com.arml.cep.ui.theme.dimens
 import kotlinx.coroutines.launch

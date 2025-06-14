@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.place.favorite
+package br.com.arml.cep.ui.screen.component.favorite
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding

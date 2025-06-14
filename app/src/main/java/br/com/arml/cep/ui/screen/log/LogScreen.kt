@@ -31,18 +31,18 @@ fun LogScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Scaffold(
-        modifier = Modifier,
+        modifier = modifier,
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         Box(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding)
-                .fillMaxSize(),
+                .padding(horizontal = MaterialTheme.dimens.mediumMargin),
             contentAlignment = androidx.compose.ui.Alignment.Center
         ){
             LogListComponent(
-                modifier = modifier
-                    .padding(horizontal = MaterialTheme.dimens.smallMargin),
+                modifier = Modifier,
                 onCopyToClipboard = { entry ->
                     scope.launch {
                         val clippedCep: String = entry.cep.text

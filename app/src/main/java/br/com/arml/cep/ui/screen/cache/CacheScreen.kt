@@ -21,8 +21,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.ui.screen.component.cep.display.DisplayScreen
-import br.com.arml.cep.ui.screen.component.place.cache.CachePlaceAlert
-import br.com.arml.cep.ui.screen.component.place.cache.CachePlaceListComponent
+import br.com.arml.cep.ui.screen.component.cache.CachePlaceAlert
+import br.com.arml.cep.ui.screen.component.cache.CachePlaceListComponent
 import br.com.arml.cep.ui.theme.dimens
 import kotlinx.coroutines.launch
 

@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.place.cache
+package br.com.arml.cep.ui.screen.component.cache
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

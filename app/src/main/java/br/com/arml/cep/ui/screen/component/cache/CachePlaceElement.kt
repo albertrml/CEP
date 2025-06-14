@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.place.cache
+package br.com.arml.cep.ui.screen.component.cache
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons

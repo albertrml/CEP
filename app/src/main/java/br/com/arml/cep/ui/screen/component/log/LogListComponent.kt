@@ -1,18 +1,12 @@
 package br.com.arml.cep.ui.screen.component.log
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +21,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.R
 import br.com.arml.cep.model.entity.LogEntry
+import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
+import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
 import br.com.arml.cep.ui.screen.component.common.Header
 import br.com.arml.cep.ui.screen.log.LogEvent
 import br.com.arml.cep.ui.screen.log.LogViewModel
@@ -44,63 +40,40 @@ fun LogListComponent(
 
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
     ) {
         Header(
-            modifier = modifier,
             title = stringResource(R.string.log_title),
             logo = Icons.AutoMirrored.Filled.List
         )
-
-        Spacer(modifier = Modifier.padding(vertical = MaterialTheme.dimens.smallPadding))
-
         LogFilterComponent(
-            modifier = modifier,
-            onFilterByCep = { query -> viewModel.onEvent(LogEvent.FilterByCep(query)) },
-            onFilterByInitialDate = { from -> viewModel.onEvent(LogEvent.FilterByInitialDate(from)) },
-            onFilterByFinalDate = { until -> viewModel.onEvent(LogEvent.FilterByFinalDate(until)) },
+            onFilterByCep = { query -> viewModel.onEvent(LogEvent.OnFilterByCep(query)) },
+            onFilterByInitialDate = { from -> viewModel.onEvent(LogEvent.OnFilterByInitialDate(from)) },
+            onFilterByFinalDate = { until -> viewModel.onEvent(LogEvent.OnFilterByFinalDate(until)) },
             onFilterByRangeDate = { from, until ->
-                viewModel.onEvent(LogEvent.FilterByRangeDate(from, until))
+                viewModel.onEvent(LogEvent.OnFilterByRangeDate(from, until))
             },
-            onNoneFilter = { viewModel.onEvent(LogEvent.FetchAllLogs) }
+            onNoneFilter = { viewModel.onEvent(LogEvent.OnFilterByNone) }
         )
 
-        Row(
-            modifier = modifier.padding(vertical = MaterialTheme.dimens.smallPadding),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            HorizontalDivider(
-                modifier = Modifier.weight(1f),
-                thickness = MaterialTheme.dimens.mediumThickness
-            )
-            Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.smallPadding))
-            Button(
-                colors = ButtonColors(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError,
-                    disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
-                    disabledContentColor = MaterialTheme.colorScheme.onErrorContainer
-                ),
-                onClick = { showDeleteAlert = true }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = stringResource(R.string.log_list_delete_all_button_description),
-                )
-                Text(
-                    text = stringResource(R.string.log_list_delete_all_button),
-                    style = MaterialTheme.typography.titleLarge,
-                )
-            }
-        }
+        DeleteAllComponent(
+            typeName = stringResource(R.string.log_title),
+            showDeleteAlert = { showDeleteAlert = true }
+        )
 
-        Box(modifier = modifier.weight(1f)){
-            state.fetchLog.ShowResults(
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.TopCenter
+        ){
+            state.fetchEntries.ShowResults(
                 successContent = { logList ->
                     LogList(
-                        modifier = Modifier,
+                        modifier = Modifier.align(Alignment.TopCenter),
                         logEntries = logList,
-                        onClickToDelete = { entry -> viewModel.onEvent(LogEvent.DeleteLog(entry)) },
+                        onClickToDelete = { entry -> viewModel.onEvent(LogEvent.OnDeleteEntry(entry)) },
                         onCopyToClipboard = { entry -> onCopyToClipboard(entry) }
                     )
                 },
@@ -109,11 +82,12 @@ fun LogListComponent(
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 },
 
-                failureContent = {
+                failureContent = { exception ->
                     Text(
                         modifier = Modifier.align(Alignment.Center),
-                        text = it.message ?: stringResource(R.string.log_error_unknown),
-                        style = MaterialTheme.typography.titleLarge
+                        text = exception.message ?: FetchPlaceException().message,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
             )
@@ -123,7 +97,7 @@ fun LogListComponent(
             showDialog = showDeleteAlert,
             onDismissRequest = { showDeleteAlert = false },
             onConfirmation = {
-                viewModel.onEvent(LogEvent.DeleteAllLogs)
+                viewModel.onEvent(LogEvent.OnDeleteAllEntries)
                 showDeleteAlert = false
             }
         )

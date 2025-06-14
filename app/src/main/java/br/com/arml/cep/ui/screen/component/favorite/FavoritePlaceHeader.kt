@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.place.favorite
+package br.com.arml.cep.ui.screen.component.favorite
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack

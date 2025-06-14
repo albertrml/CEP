@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.place
+package br.com.arml.cep.ui.screen.component.common
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,7 +19,7 @@ import br.com.arml.cep.R
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun ShowDeleteAlert(
+fun DeleteAllComponent(
     modifier: Modifier = Modifier,
     typeName: String,
     showDeleteAlert: () -> Unit,
@@ -52,5 +52,4 @@ fun ShowDeleteAlert(
             )
         }
     }
-
 }
