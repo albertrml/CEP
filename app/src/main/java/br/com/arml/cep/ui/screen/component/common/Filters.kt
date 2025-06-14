@@ -1,8 +1,7 @@
 package br.com.arml.cep.ui.screen.component.common
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,12 +25,14 @@ fun CepFilter(
     var zipCode by remember { mutableStateOf("") }
     val isButtonActive = zipCode.length >= 3
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
+    ) {
         CepField(
             modifier = modifier,
             onQueryChange = { zipCode = it }
         )
-        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
         Button(
             enabled = isButtonActive,
             onClick = { onFilterByCep(zipCode) },
@@ -51,7 +52,10 @@ fun FieldFilter(
     var text by remember { mutableStateOf("") }
     val isButtonActive = text.length >= 3
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
+    ) {
         CepTextField(
             modifier = modifier,
             nameField = nameFilter,
@@ -59,7 +63,6 @@ fun FieldFilter(
             onChangeText = { newText -> text = newText },
             maxSize = maxSize,
         )
-        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
         Button(
             enabled = isButtonActive,
             onClick = { onFilterByCep(text) },
@@ -77,13 +80,15 @@ fun SingleDateFilter(
     var initialDate by remember { mutableStateOf<Long?>(null) }
     val isButtonActive = initialDate != null
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
+    ) {
         DatePickerFieldToModal(
             modifier = modifier,
             label = stringResource(R.string.log_filter_initial_date_label),
             onSelectDate = { initialDate = it }
         )
-        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
         Button(
             enabled = isButtonActive,
             onClick = { initialDate?.let{ onFilterByInitialDate(it) } },
@@ -109,13 +114,15 @@ fun PeriodFilter(
     }
     val isButtonActive = initialDate != null && finalDate != null && !isError
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
+    ) {
         DatePickerFieldToModal(
             modifier = modifier,
             label = stringResource(R.string.log_filter_initial_date_label),
             onSelectDate = { initialDate = it }
         )
-        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
         DatePickerFieldToModal(
             modifier = modifier,
             label = stringResource(R.string.log_filter_final_date_label),
@@ -127,7 +134,6 @@ fun PeriodFilter(
             },
             onSelectDate = { finalDate = it }
         )
-        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
         Button(
             enabled = isButtonActive,
             onClick = { onFilterByInitialDate(initialDate!!,finalDate!!) },

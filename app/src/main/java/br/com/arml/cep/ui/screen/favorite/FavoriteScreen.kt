@@ -1,6 +1,5 @@
 package br.com.arml.cep.ui.screen.favorite
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -20,7 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.ui.screen.component.place.PlaceDetailsComponent
 import br.com.arml.cep.ui.screen.component.place.favorite.FavoritePlaceAlert
-import br.com.arml.cep.ui.screen.component.place.favorite.FavoritePlaceListScreen
+import br.com.arml.cep.ui.screen.component.place.favorite.FavoritePlaceListComponent
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnFetchFavorites
 import br.com.arml.cep.ui.theme.dimens
 import kotlinx.coroutines.launch
@@ -31,10 +30,11 @@ fun FavoriteScreen(
     modifier: Modifier = Modifier,
 ) {
     val viewmodel = hiltViewModel<FavoriteViewModel>()
-    val state = viewmodel.state.collectAsStateWithLifecycle()
+    val state by viewmodel.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val navigator = rememberListDetailPaneScaffoldNavigator()
     var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
+    var isUnlikeAlertShown by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewmodel.onEvent(OnFetchFavorites)
@@ -45,13 +45,12 @@ fun FavoriteScreen(
         navigator = navigator,
         listPane = {
             AnimatedPane {
-                Log.d("FavoriteViewModel", "fetch: ${state.value.fetchEntries}")
-                Log.d("FavoriteViewModel", "filter: ${state.value.filterOperation.name}")
-                FavoritePlaceListScreen(
-                    modifier = modifier,
-                    fetchResponse = state.value.fetchEntries,
+                FavoritePlaceListComponent(
+                    modifier = modifier.padding(horizontal = MaterialTheme.dimens.mediumMargin),
+                    fetchResponse = state.fetchEntries,
                     onFavoriteIconClick = { place ->
                         viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(place))
+                        isUnlikeAlertShown = true
                     },
                     onCepFilter = { query ->
                         viewmodel.onEvent(FavoriteEvent.OnFilterByCep(query))
@@ -71,9 +70,11 @@ fun FavoriteScreen(
                     }
                 )
 
-                state.value.placeForUnwanted?.let{ place ->
+                state.placeForUnwanted?.let{ place ->
                     FavoritePlaceAlert(
                         place = place,
+                        isVisible = isUnlikeAlertShown,
+                        onChangeVisibility = { isUnlikeAlertShown = it },
                         onDismissRequest = {
                             viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(null))
                         },
@@ -88,7 +89,7 @@ fun FavoriteScreen(
         detailPane = {
             if (isDetailPaneExpanded) {
                 AnimatedPane {
-                    state.value.placeForEdit?.let {
+                    state.placeForEdit?.let {
                         PlaceDetailsComponent(
                             modifier = modifier
                                 .padding(horizontal = MaterialTheme.dimens.smallMargin),

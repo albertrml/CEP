@@ -1,22 +1,20 @@
-package br.com.arml.cep.ui.screen.component.place.favorite
+package br.com.arml.cep.ui.screen.component.place.cache
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import br.com.arml.cep.ui.screen.component.place.PlaceFilterComponent
-import br.com.arml.cep.ui.utils.favoriteFilterOptions
+import br.com.arml.cep.ui.utils.cacheFilterOptions
 
 @Composable
-fun FavoritePlaceFilter(
+fun CachePlaceFilter(
     modifier: Modifier = Modifier,
     onFilterByCep: (String) -> Unit = {},
-    onFilterByTitle: (String) -> Unit = {},
     onNoneFilter: () -> Unit = {}
 ) {
     PlaceFilterComponent(
         modifier = modifier,
-        filters = favoriteFilterOptions,
+        filters = cacheFilterOptions,
         onFilterByCep = { onFilterByCep(it) },
-        onFilterByTitle = { onFilterByTitle(it) },
         onNoneFilter = { onNoneFilter() }
     )
 }

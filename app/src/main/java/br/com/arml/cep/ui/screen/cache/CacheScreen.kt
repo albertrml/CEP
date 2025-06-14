@@ -2,9 +2,7 @@
 
 package br.com.arml.cep.ui.screen.cache
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
@@ -17,17 +15,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.ui.screen.component.cep.display.DisplayScreen
-import br.com.arml.cep.ui.screen.component.common.CepAlertDialog
-import br.com.arml.cep.ui.screen.component.place.PlaceList
-import br.com.arml.cep.ui.screen.component.place.UnwantedOptionComponent
-import br.com.arml.cep.ui.utils.ShowResults
+import br.com.arml.cep.ui.screen.component.place.cache.CachePlaceAlert
+import br.com.arml.cep.ui.screen.component.place.cache.CachePlaceListComponent
+import br.com.arml.cep.ui.theme.dimens
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,52 +44,40 @@ fun CacheScreen(
         navigator = navigator,
         listPane = {
             AnimatedPane {
-                Column(
-                    modifier = modifier,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    UnwantedOptionComponent(
-                        onFilterByCep = { viewModel.onEvent(CacheEvent.OnFilterByCep(it)) },
-                        onNoneFilter = { viewModel.onEvent(CacheEvent.OnFilterNone) },
-                        onClickToShowAlert = { isDeleteAllAlertShown = true }
-                    )
-
-                    state.fetchEntries.ShowResults(
-                        successContent = { placeList ->
-                            PlaceList(
-                                modifier = Modifier,
-                                placeEntries = placeList,
-                                favoriteIcon = Icons.Default.FavoriteBorder,
-                                colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
-                                onFavoriteIconClick = { place ->
-                                    viewModel.onEvent(CacheEvent.OnDelete(place))
-                                },
-                                onClickLogo = { place ->
-                                    viewModel.onEvent(CacheEvent.OnUpdate(place))
-                                },
-                                onClickEntry = { place ->
-                                    viewModel.onEvent(CacheEvent.OnSelectEntryForDetails(place))
-                                    scope.launch {
-                                        isDetailPaneExpanded = true
-                                        navigator.navigateTo(pane = ListDetailPaneScaffoldRole.Detail)
-                                    }
-                                }
-                            )
+                CachePlaceListComponent(
+                    modifier = modifier.padding(horizontal = MaterialTheme.dimens.mediumMargin),
+                    fetchResponse = state.fetchEntries,
+                    onFavoriteIconClick = { place ->
+                        viewModel.onEvent(CacheEvent.OnUpdate(place))
+                    },
+                    onDeleteCacheClick = {
+                        isDeleteAllAlertShown = true
+                    },
+                    onDeleteIconClick = { place ->
+                        viewModel.onEvent(CacheEvent.OnDelete(place))
+                    },
+                    onCepFilter = { query ->
+                        viewModel.onEvent(CacheEvent.OnFilterByCep(query))
+                    },
+                    onClearFilter = { viewModel.onEvent(CacheEvent.OnFilterNone) },
+                    onNavigateToDetail = { place ->
+                        viewModel.onEvent(CacheEvent.OnSelectEntryForDetails(place))
+                        isDetailPaneExpanded = true
+                        scope.launch {
+                            navigator.navigateTo(pane = ListDetailPaneScaffoldRole.Detail)
                         }
-                    )
-
-                    if (isDeleteAllAlertShown) {
-                        CepAlertDialog(
-                            dialogText = "Delete All",
-                            dialogTitle = "Are you sure you want to delete all unwanted places?",
-                            onDismissRequest = { isDeleteAllAlertShown = false },
-                            onConfirmationRequest = {
-                                viewModel.onEvent(CacheEvent.OnDeleteAll)
-                                isDeleteAllAlertShown = false
-                            },
-                        )
                     }
-                }
+                )
+
+                CachePlaceAlert(
+                    isVisible = isDeleteAllAlertShown,
+                    onChangeVisibility = { isDeleteAllAlertShown = it },
+                    onDismissRequest = { isDeleteAllAlertShown = false },
+                    onConfirmationRequest = {
+                        viewModel.onEvent(CacheEvent.OnDeleteAll)
+                        isDeleteAllAlertShown = false
+                    }
+                )
             }
         },
         detailPane = {

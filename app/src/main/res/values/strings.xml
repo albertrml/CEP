@@ -68,5 +68,7 @@
     <string name="favorite_unwanted_alert_text">O %1$s será removido da lista dos favoritos e pederá sua nota, mas permanecerá em cache. Desejas prosseguir</string>
     <string name="favorite_unwanted_alert_title">Favorito</string>
     <string name="destination_cache">Cache</string>
+    <string name="cache_title_alert">Apagar cache</string>
+    <string name="cache_text_alert">Todos os dados serão apagados do cache que são favoritos serão apagados. Desejas continuar?</string>
 
 </resources>

@@ -6,7 +6,7 @@ import br.com.arml.cep.domain.FavoriteUseCase
 import br.com.arml.cep.model.domain.Favorite
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.ui.utils.FavoriteFilterOption
+import br.com.arml.cep.ui.utils.PlaceFilterOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -23,12 +23,11 @@ class FavoriteViewModel @Inject constructor(
 ) : ViewModel() {
     val _state = MutableStateFlow(FavoriteState())
     val state = _state.asStateFlow()
+    private var fetchEntriesJob: Job? = null
 
     init {
         fetchFavorites()
     }
-
-    private var fetchEntriesJob: Job? = null
 
     fun onEvent(event: FavoriteEvent) {
         when (event) {
@@ -66,21 +65,21 @@ class FavoriteViewModel @Inject constructor(
     }
 
     private fun fetchFavorites() {
-        launchFetchEntriesFlow(favoriteUseCase.fetchFavorites(), FavoriteFilterOption.None)
+        launchFetchEntriesFlow(favoriteUseCase.fetchFavorites(), PlaceFilterOption.None)
     }
 
     private fun filterByNone() {
-        if (state.value.filterOperation !is FavoriteFilterOption.None) {
-            launchFetchEntriesFlow(favoriteUseCase.fetchFavorites(), FavoriteFilterOption.None)
+        if (state.value.filterOperation !is PlaceFilterOption.None) {
+            launchFetchEntriesFlow(favoriteUseCase.fetchFavorites(), PlaceFilterOption.None)
         }
     }
 
     private fun filterByCep(query: String) {
-        launchFetchEntriesFlow(favoriteUseCase.filterByCep(query), FavoriteFilterOption.ByCep)
+        launchFetchEntriesFlow(favoriteUseCase.filterByCep(query), PlaceFilterOption.ByCep)
     }
 
     private fun filterByTitle(query: String) {
-        launchFetchEntriesFlow(favoriteUseCase.filterByTitle(query), FavoriteFilterOption.ByTitle)
+        launchFetchEntriesFlow(favoriteUseCase.filterByTitle(query), PlaceFilterOption.ByTitle)
     }
 
     private fun updateFavorite(entry: PlaceEntry) {
@@ -98,7 +97,7 @@ class FavoriteViewModel @Inject constructor(
 
     private fun launchFetchEntriesFlow(
         flow: Flow<Response<List<PlaceEntry>>>,
-        operation: FavoriteFilterOption
+        operation: PlaceFilterOption
     ) {
         fetchEntriesJob?.cancel()
         fetchEntriesJob = viewModelScope.launch {

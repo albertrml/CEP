@@ -23,7 +23,7 @@ import br.com.arml.cep.ui.theme.dimens
 @Composable
 fun FavoritePlaceList(
     modifier: Modifier = Modifier,
-    placeEntries: List<PlaceEntry>,
+    places: List<PlaceEntry>,
     onFavoriteIconClick: (PlaceEntry) -> Unit,
     onNavigateToDetail: (PlaceEntry) -> Unit
 ) {
@@ -34,7 +34,7 @@ fun FavoritePlaceList(
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
         ) {
-            items(placeEntries) { place ->
+            items(places) { place ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Card(
                         modifier = Modifier.clickable(onClick = { onNavigateToDetail(place) }),

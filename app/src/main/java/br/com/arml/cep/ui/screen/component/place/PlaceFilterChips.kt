@@ -33,7 +33,7 @@ import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
 import br.com.arml.cep.ui.screen.component.common.CepFilter
 import br.com.arml.cep.ui.screen.component.common.FieldFilter
 import br.com.arml.cep.ui.theme.dimens
-import br.com.arml.cep.ui.utils.FavoriteFilterOption
+import br.com.arml.cep.ui.utils.PlaceFilterOption
 import br.com.arml.cep.ui.utils.favoriteFilterOptions
 import br.com.arml.cep.ui.utils.filterEnterTransition
 import br.com.arml.cep.ui.utils.filterExitTransition
@@ -41,13 +41,13 @@ import br.com.arml.cep.ui.utils.filterExitTransition
 @Composable
 fun PlaceFilterComponent(
     modifier: Modifier = Modifier,
-    filters: List<FavoriteFilterOption> = favoriteFilterOptions,
+    filters: List<PlaceFilterOption>,
     onFilterByCep: (String) -> Unit = {},
     onFilterByTitle: (String) -> Unit = {},
     onNoneFilter: () -> Unit = {}
 ) {
-    var selectedFilter by rememberSaveable(stateSaver = FavoriteFilterOption.saver) {
-        mutableStateOf<FavoriteFilterOption>(FavoriteFilterOption.None)
+    var selectedFilter by rememberSaveable(stateSaver = PlaceFilterOption.saver) {
+        mutableStateOf<PlaceFilterOption>(PlaceFilterOption.None)
     }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -68,7 +68,7 @@ fun PlaceFilterComponent(
             }
         ) { targetFilter ->
             when (targetFilter) {
-                FavoriteFilterOption.ByCep -> {
+                PlaceFilterOption.ByCep -> {
                     CepFilter(
                         onFilterByCep = {
                             keyboardController?.hide()
@@ -76,7 +76,7 @@ fun PlaceFilterComponent(
                         }
                     )
                 }
-                FavoriteFilterOption.ByTitle -> {
+                PlaceFilterOption.ByTitle -> {
                     FieldFilter(
                         nameFilter = stringResource(R.string.favorite_title_field_filter),
                         maxSize = MAX_TITLE_LENGTH,
@@ -86,7 +86,7 @@ fun PlaceFilterComponent(
                         }
                     )
                 }
-                FavoriteFilterOption.None -> {
+                PlaceFilterOption.None -> {
                     keyboardController?.hide()
                     onNoneFilter()
                 }
@@ -98,9 +98,9 @@ fun PlaceFilterComponent(
 @Composable
 fun PlaceFilterChips(
     modifier: Modifier = Modifier,
-    filters: List<FavoriteFilterOption>,
-    selectedFilter: FavoriteFilterOption,
-    onSelectedFilter: (FavoriteFilterOption) -> Unit
+    filters: List<PlaceFilterOption>,
+    selectedFilter: PlaceFilterOption,
+    onSelectedFilter: (PlaceFilterOption) -> Unit
 ) {
     LazyRow(
         modifier = modifier,
@@ -120,9 +120,9 @@ fun PlaceFilterChips(
 @Composable
 fun PlaceFilterChip(
     modifier: Modifier = Modifier,
-    labelFilter: FavoriteFilterOption,
+    labelFilter: PlaceFilterOption,
     isSelected: Boolean,
-    onSelected: (FavoriteFilterOption) -> Unit
+    onSelected: (PlaceFilterOption) -> Unit
 ) {
     FilterChip(
         modifier = modifier,
@@ -160,6 +160,7 @@ fun PlaceFilterPreview() {
                 .fillMaxWidth()
                 .padding(top = MaterialTheme.dimens.largeMargin * 2)
                 .padding(horizontal = MaterialTheme.dimens.mediumMargin),
+            filters = favoriteFilterOptions,
             onFilterByCep = {},
             onFilterByTitle = {},
             onNoneFilter = {}
