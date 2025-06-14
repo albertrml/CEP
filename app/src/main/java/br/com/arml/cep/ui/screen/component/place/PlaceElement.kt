@@ -30,10 +30,11 @@ import br.com.arml.cep.ui.theme.dimens
 fun PlaceElement(
     modifier: Modifier = Modifier,
     placeEntry: PlaceEntry,
-    logo: ImageVector,
-    colorLogo: Color,
-    onClickLogo: (PlaceEntry) -> Unit,
+    favoriteIcon: ImageVector,
+    colorFavoriteIcon: Color,
+    onFavoriteIconClick: (PlaceEntry) -> Unit,
 ) {
+
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -61,12 +62,12 @@ fun PlaceElement(
         }
         IconButton(
             modifier = Modifier.align(Alignment.CenterVertically),
-            onClick = { onClickLogo(placeEntry) },
+            onClick = { onFavoriteIconClick(placeEntry) },
         ) {
             Icon(
-                imageVector = logo,
+                imageVector = favoriteIcon,
                 contentDescription = null,
-                tint = colorLogo
+                tint = colorFavoriteIcon
             )
         }
     }
@@ -78,9 +79,9 @@ fun UnwantedPlaceElementPreview() {
     Surface {
         PlaceElement(
             placeEntry = mockPlaceEntries.first(),
-            colorLogo = MaterialTheme.colorScheme.onSurface,
-            logo = Icons.Default.FavoriteBorder,
-            onClickLogo = {}
+            colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
+            favoriteIcon = Icons.Default.FavoriteBorder,
+            onFavoriteIconClick = {}
         )
     }
 }
@@ -97,9 +98,9 @@ fun FavoritePlaceElementPreview() {
                     content = stringResource(R.string.app_name)
                 )
             ),
-            logo = Icons.Default.Favorite,
-            colorLogo = MaterialTheme.colorScheme.onSurface,
-            onClickLogo = {}
+            favoriteIcon = Icons.Default.Favorite,
+            colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
+            onFavoriteIconClick = {}
         )
     }
 }

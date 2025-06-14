@@ -6,7 +6,10 @@ import br.com.arml.cep.domain.FavoriteUseCase
 import br.com.arml.cep.model.domain.Favorite
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.ui.utils.FavoriteFilterOption
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -21,13 +24,19 @@ class FavoriteViewModel @Inject constructor(
     val _state = MutableStateFlow(FavoriteState())
     val state = _state.asStateFlow()
 
+    init {
+        fetchFavorites()
+    }
+
+    private var fetchEntriesJob: Job? = null
+
     fun onEvent(event: FavoriteEvent) {
         when (event) {
             is FavoriteEvent.OnClickToUnwanted -> changeFavoriteToUnwanted(event.placeEntry)
             is FavoriteEvent.OnFetchFavorites -> fetchFavorites()
             is FavoriteEvent.OnFilterByCep -> filterByCep(event.cep)
             is FavoriteEvent.OnFilterByTitle -> filterByTitle(event.title)
-            is FavoriteEvent.OnFilterNone -> filterNone()
+            is FavoriteEvent.OnFilterNone -> filterByNone()
             is FavoriteEvent.OnUpdateFavorite -> updateFavorite(event.placeEntry)
             is FavoriteEvent.OnSelectEntryToUnwanted -> selectEntryToUnwanted(event.placeEntry)
             is FavoriteEvent.OnSelectEntryToEdit -> selectEntryToEdit(event.placeEntry)
@@ -57,66 +66,51 @@ class FavoriteViewModel @Inject constructor(
     }
 
     private fun fetchFavorites() {
-        viewModelScope.launch {
-            if (state.value.wasFiltered || state.value.fetchEntries is Response.Loading) {
-                favoriteUseCase.fetchFavorites().collectLatest { response ->
-                    _state.update {
-                        it.copy(
-                            wasFiltered = false,
-                            fetchEntries = response
-                        )
-                    }
-                }
-            }
+        launchFetchEntriesFlow(favoriteUseCase.fetchFavorites(), FavoriteFilterOption.None)
+    }
+
+    private fun filterByNone() {
+        if (state.value.filterOperation !is FavoriteFilterOption.None) {
+            launchFetchEntriesFlow(favoriteUseCase.fetchFavorites(), FavoriteFilterOption.None)
         }
     }
 
     private fun filterByCep(query: String) {
-        viewModelScope.launch {
-            favoriteUseCase.filterByCep(query).collect { response ->
-                _state.update {
-                    it.copy(
-                        wasFiltered = true,
-                        fetchEntries = response
-                    )
-                }
-            }
-        }
+        launchFetchEntriesFlow(favoriteUseCase.filterByCep(query), FavoriteFilterOption.ByCep)
     }
 
     private fun filterByTitle(query: String) {
-        viewModelScope.launch {
-            favoriteUseCase.filterByTitle(query).collect { response ->
-                _state.update {
-                    it.copy(
-                        wasFiltered = true,
-                        fetchEntries = response
-                    )
-                }
-            }
-        }
-    }
-
-    private fun filterNone() {
-        viewModelScope.launch {
-            if (state.value.wasFiltered) {
-                favoriteUseCase.fetchFavorites().collect { response ->
-                    _state.update {
-                        it.copy(
-                            wasFiltered = false,
-                            fetchEntries = response
-                        )
-                    }
-                }
-            }
-        }
+        launchFetchEntriesFlow(favoriteUseCase.filterByTitle(query), FavoriteFilterOption.ByTitle)
     }
 
     private fun updateFavorite(entry: PlaceEntry) {
         viewModelScope.launch {
             favoriteUseCase.update(entry).collect { response ->
-                _state.update { it.copy(updateEntry = response) }
+                _state.update {
+                    if (response is Response.Success) {
+                        it.copy(placeForEdit = null, updateEntry = response)
+                    } else
+                        it.copy(updateEntry = response)
+                }
             }
         }
     }
+
+    private fun launchFetchEntriesFlow(
+        flow: Flow<Response<List<PlaceEntry>>>,
+        operation: FavoriteFilterOption
+    ) {
+        fetchEntriesJob?.cancel()
+        fetchEntriesJob = viewModelScope.launch {
+            flow.collectLatest { response ->
+                _state.update {
+                    it.copy(
+                        filterOperation = operation,
+                        fetchEntries = response
+                    )
+                }
+            }
+        }
+    }
+
 }

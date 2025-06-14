@@ -16,7 +16,7 @@ fun CepAlertDialog(
     dialogTitle: String,
     dialogText: String,
     onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit
+    onConfirmationRequest: () -> Unit
 ) {
 
     AlertDialog(
@@ -35,7 +35,7 @@ fun CepAlertDialog(
         },
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            TextButton(onClick = onConfirmation) {
+            TextButton(onClick = onConfirmationRequest) {
                 Text(
                     text = stringResource(R.string.alert_dialog_confirm_button),
                     style = MaterialTheme.typography.titleMedium
@@ -66,6 +66,6 @@ fun InsightAlertDialogPreview() {
         dialogTitle = stringResource(R.string.log_delete_all_log_title),
         dialogText = stringResource(R.string.log_delete_all_log_alert),
         onDismissRequest = {},
-        onConfirmation = {}
+        onConfirmationRequest = {}
     )
 }

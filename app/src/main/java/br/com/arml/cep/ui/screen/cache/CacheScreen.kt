@@ -63,9 +63,9 @@ fun CacheScreen(
                             PlaceList(
                                 modifier = Modifier,
                                 placeEntries = placeList,
-                                logo = Icons.Default.FavoriteBorder,
-                                colorLogo = MaterialTheme.colorScheme.onSurface,
-                                onClickToDelete = { place ->
+                                favoriteIcon = Icons.Default.FavoriteBorder,
+                                colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
+                                onFavoriteIconClick = { place ->
                                     viewModel.onEvent(CacheEvent.OnDelete(place))
                                 },
                                 onClickLogo = { place ->
@@ -87,7 +87,7 @@ fun CacheScreen(
                             dialogText = "Delete All",
                             dialogTitle = "Are you sure you want to delete all unwanted places?",
                             onDismissRequest = { isDeleteAllAlertShown = false },
-                            onConfirmation = {
+                            onConfirmationRequest = {
                                 viewModel.onEvent(CacheEvent.OnDeleteAll)
                                 isDeleteAllAlertShown = false
                             },

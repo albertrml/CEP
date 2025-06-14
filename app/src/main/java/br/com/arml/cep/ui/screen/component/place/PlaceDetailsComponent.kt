@@ -4,13 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,13 +18,13 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.MAX_CONTENT_LENGTH
 import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
 import br.com.arml.cep.model.domain.MIN_TITLE_LENGTH
-import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.isValidTitleNoteSize
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.mock.mockFavoritePlaceEntries
 import br.com.arml.cep.ui.screen.component.cep.display.AddressScreen
 import br.com.arml.cep.ui.screen.component.common.CepTextField
-import br.com.arml.cep.ui.screen.component.common.Header
+import br.com.arml.cep.ui.screen.component.place.favorite.FavoritePlaceHeaderDetails
+import br.com.arml.cep.ui.screen.component.place.favorite.FavoritePlaceUpdateButton
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -47,17 +41,10 @@ fun PlaceDetailsComponent(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Header(
-            modifier = modifier,
-            logo = Icons.AutoMirrored.Filled.ArrowBack,
-            title = stringResource(R.string.favorite_details_title),
-            onClickLogo = onNavigateBack
-        )
+        FavoritePlaceHeaderDetails(onNavigateBackToList = onNavigateBack)
         Spacer(modifier = Modifier.padding(MaterialTheme.dimens.mediumSpacing))
         CepTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MaterialTheme.dimens.smallSpacing),
+            modifier = Modifier.fillMaxWidth(),
             nameField = stringResource(R.string.place_details_title),
             text = title,
             textStyle = MaterialTheme.typography.titleMedium,
@@ -71,9 +58,7 @@ fun PlaceDetailsComponent(
             )
         )
         CepTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MaterialTheme.dimens.smallSpacing),
+            modifier = Modifier.fillMaxWidth(),
             nameField = stringResource(R.string.place_details_content),
             text = note,
             onChangeText = { note = it },
@@ -81,32 +66,20 @@ fun PlaceDetailsComponent(
             maxLines = 7
         )
         AddressScreen(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(MaterialTheme.dimens.smallSpacing),
+            modifier = Modifier.weight(1f),
             address = placeEntry.address
         )
-        Button(
-            modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing),
-            enabled = title.isValidTitleNoteSize(),
-            onClick = {
-                val newNote = Note.build(
-                    title = title,
-                    content = note
-                )
-                onClickToUpdate(placeEntry.copy(note = newNote))
-            }
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Create,
-                contentDescription = stringResource(R.string.favorite_details_update_button_description)
-            )
-            Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
-            Text(text = stringResource(R.string.favorite_details_update_button))
-        }
+        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.mediumSpacing))
+        FavoritePlaceUpdateButton(
+            place = placeEntry,
+            title = title,
+            note = note,
+            onClickToUpdate = onClickToUpdate
+        )
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable

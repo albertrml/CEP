@@ -3,7 +3,6 @@ package br.com.arml.cep.ui.screen.component.cep.display
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -26,7 +25,6 @@ fun AddressScreen(
     ) { scrollState ->
         Column(
             modifier = Modifier
-                .padding(horizontal = MaterialTheme.dimens.mediumSpacing)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing),
         ) {
