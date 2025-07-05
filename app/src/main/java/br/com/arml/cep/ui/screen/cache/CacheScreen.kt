@@ -24,6 +24,8 @@ import br.com.arml.cep.ui.screen.component.cep.display.DisplayScreen
 import br.com.arml.cep.ui.screen.component.cache.CachePlaceAlert
 import br.com.arml.cep.ui.screen.component.cache.CachePlaceListComponent
 import br.com.arml.cep.ui.theme.dimens
+import br.com.arml.cep.ui.utils.paneEnterTransition
+import br.com.arml.cep.ui.utils.paneExitTransition
 import kotlinx.coroutines.launch
 
 @Composable
@@ -43,7 +45,10 @@ fun CacheScreen(
         modifier = modifier,
         navigator = navigator,
         listPane = {
-            AnimatedPane {
+            AnimatedPane(
+                enterTransition = paneEnterTransition,
+                exitTransition = paneExitTransition
+            ) {
                 CachePlaceListComponent(
                     modifier = modifier.padding(horizontal = MaterialTheme.dimens.mediumMargin),
                     fetchResponse = state.fetchEntries,
@@ -82,7 +87,10 @@ fun CacheScreen(
         },
         detailPane = {
             if (isDetailPaneExpanded) {
-                AnimatedPane {
+                AnimatedPane(
+                    enterTransition = paneEnterTransition,
+                    exitTransition = paneExitTransition
+                ) {
                     state.placeForDetails?.let {
                         DisplayScreen(
                             response = Response.Success<PlaceEntry>(it),

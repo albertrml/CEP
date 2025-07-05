@@ -85,7 +85,15 @@ class FavoriteViewModel @Inject constructor(
     private fun updateFavorite(entry: PlaceEntry) {
         viewModelScope.launch {
             favoriteUseCase.update(entry).collect { response ->
-                _state.update { it.copy(updateEntry = response) }
+                _state.update {
+                    if (response is Response.Success)
+                        it.copy(
+                            placeForEdit = entry,
+                            updateEntry = response
+                        )
+                    else
+                        it.copy(updateEntry = response)
+                }
             }
         }
     }

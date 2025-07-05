@@ -38,12 +38,14 @@ data class LogEntry(
 
 private fun Timestamp.toFormatted(pattern: String): String{
     val formatter = SimpleDateFormat(pattern, Locale.getDefault())
-    formatter.timeZone = TimeZone.getTimeZone("UTC")
+    //formatter.timeZone = TimeZone.getTimeZone("UTC")
+    formatter.timeZone = TimeZone.getDefault()
     return formatter.format(this)
 }
 
 fun Timestamp.toFormattedUTC(): String{
-    return this.toFormatted("yyyy-MM-dd HH:mm XXX")
+    //return this.toFormatted("yyyy-MM-dd HH:mm XXX")
+    return this.toFormatted("yyyy-MM-dd HH:mm")
 }
 
 fun Long.toFormattedBR(): String{

@@ -22,6 +22,8 @@ import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceAlert
 import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceListComponent
 import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceExtraComponent
 import br.com.arml.cep.ui.theme.dimens
+import br.com.arml.cep.ui.utils.paneEnterTransition
+import br.com.arml.cep.ui.utils.paneExitTransition
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
@@ -41,7 +43,10 @@ fun FavoriteScreen(
         modifier = modifier,
         navigator = navigator,
         listPane = {
-            AnimatedPane {
+            AnimatedPane(
+                enterTransition = paneEnterTransition,
+                exitTransition = paneExitTransition
+            ) {
                 FavoritePlaceListComponent(
                     modifier = modifier.padding(horizontal = MaterialTheme.dimens.mediumMargin),
                     fetchResponse = state.fetchEntries,
@@ -67,7 +72,7 @@ fun FavoriteScreen(
                     }
                 )
 
-                state.placeForUnwanted?.let{ place ->
+                state.placeForUnwanted?.let { place ->
                     FavoritePlaceAlert(
                         place = place,
                         isVisible = isUnlikeAlertShown,
@@ -85,7 +90,10 @@ fun FavoriteScreen(
 
         detailPane = {
             if (isDetailPaneExpanded) {
-                AnimatedPane {
+                AnimatedPane(
+                    enterTransition = paneEnterTransition,
+                    exitTransition = paneExitTransition
+                ) {
                     state.placeForEdit?.let {
                         FavoritePlaceDetailsComponent(
                             modifier = modifier
@@ -107,10 +115,13 @@ fun FavoriteScreen(
         },
 
         extraPane = {
-            AnimatedPane {
+            AnimatedPane(
+                enterTransition = paneEnterTransition,
+                exitTransition = paneExitTransition
+            ) {
                 if (isDetailPaneExpanded == false) isExtraPaneExpanded = false
                 if (isExtraPaneExpanded) {
-                    state.placeForEdit?.let{
+                    state.placeForEdit?.let {
                         FavoritePlaceExtraComponent(
                             modifier = modifier
                                 .fillMaxSize()

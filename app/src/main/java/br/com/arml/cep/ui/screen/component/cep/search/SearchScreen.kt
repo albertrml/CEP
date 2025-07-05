@@ -1,6 +1,6 @@
 package br.com.arml.cep.ui.screen.component.cep.search
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,18 +32,20 @@ fun SearchScreen(
     var query by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    Box(
+    Column(
         modifier = modifier,
-        contentAlignment = Alignment.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Header(
-            modifier = modifier.align(Alignment.TopCenter),
+            modifier = Modifier,
             title = stringResource(R.string.search_title),
             logo = Icons.Default.Search
         )
         Column(
-            modifier = modifier,
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             CepField(
                 modifier = Modifier,

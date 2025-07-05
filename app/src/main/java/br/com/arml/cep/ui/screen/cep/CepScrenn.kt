@@ -22,6 +22,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.ui.screen.component.cep.display.DisplayScreen
 import br.com.arml.cep.ui.screen.component.cep.search.SearchScreen
 import br.com.arml.cep.ui.theme.dimens
+import br.com.arml.cep.ui.utils.paneEnterTransition
+import br.com.arml.cep.ui.utils.paneExitTransition
 import kotlinx.coroutines.launch
 
 @Composable
@@ -38,7 +40,10 @@ fun CepScreen(
         modifier = modifier,
         navigator = navigator,
         listPane = {
-            AnimatedPane {
+            AnimatedPane(
+                enterTransition = paneEnterTransition,
+                exitTransition = paneExitTransition
+            ) {
                 SearchScreen(
                     modifier = modifier
                         .padding(horizontal = MaterialTheme.dimens.smallMargin),
@@ -56,7 +61,10 @@ fun CepScreen(
         },
         detailPane = {
             if (isDetailPaneExpanded){
-                AnimatedPane {
+                AnimatedPane(
+                    enterTransition = paneEnterTransition,
+                    exitTransition = paneExitTransition
+                ) {
                     DisplayScreen(
                         modifier = Modifier
                             .fillMaxSize()
