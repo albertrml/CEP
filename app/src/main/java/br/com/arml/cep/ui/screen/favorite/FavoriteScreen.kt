@@ -39,6 +39,10 @@ fun FavoriteScreen(
     var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
     var isExtraPaneExpanded by rememberSaveable { mutableStateOf(false) }
 
+    val marginScreen = Modifier
+        .fillMaxSize()
+        .padding(horizontal = MaterialTheme.dimens.mediumMargin)
+
     NavigableListDetailPaneScaffold(
         modifier = modifier,
         navigator = navigator,
@@ -48,7 +52,7 @@ fun FavoriteScreen(
                 exitTransition = paneExitTransition
             ) {
                 FavoritePlaceListComponent(
-                    modifier = modifier.padding(horizontal = MaterialTheme.dimens.mediumMargin),
+                    modifier = marginScreen,
                     fetchResponse = state.fetchEntries,
                     onFavoriteIconClick = { place ->
                         viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(place))
@@ -96,8 +100,7 @@ fun FavoriteScreen(
                 ) {
                     state.placeForEdit?.let {
                         FavoritePlaceDetailsComponent(
-                            modifier = modifier
-                                .padding(horizontal = MaterialTheme.dimens.smallMargin),
+                            modifier = marginScreen,
                             placeEntry = it,
                             onNavigateBackToList = {
                                 isDetailPaneExpanded = false
@@ -119,13 +122,11 @@ fun FavoriteScreen(
                 enterTransition = paneEnterTransition,
                 exitTransition = paneExitTransition
             ) {
-                if (isDetailPaneExpanded == false) isExtraPaneExpanded = false
+                if (!isDetailPaneExpanded) isExtraPaneExpanded = false
                 if (isExtraPaneExpanded) {
                     state.placeForEdit?.let {
                         FavoritePlaceExtraComponent(
-                            modifier = modifier
-                                .fillMaxSize()
-                                .padding(horizontal = MaterialTheme.dimens.smallMargin),
+                            modifier = marginScreen,
                             placeEntry = it,
                             onClickToUpdate = { entry ->
                                 viewmodel.onEvent(FavoriteEvent.OnUpdateFavorite(entry))

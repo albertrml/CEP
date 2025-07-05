@@ -45,7 +45,6 @@ class DisplayScreenTest {
         every { mockOnBackPress() } answers {
             println("mockOnBackPress CALLED")
         }
-
     }
 
     private fun setDisplayScreenContent(response: Response<PlaceEntry>) {

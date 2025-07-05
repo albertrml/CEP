@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.10.1"
-agp = "8.10.1"
+agp = "8.11.0"
 androidHilt = "2.55"
 composeBom = "2025.06.00"
 composeHilt = "1.2.0"

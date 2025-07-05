@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3AdaptiveApi::class)
-
 package br.com.arml.cep.ui.screen.cep
 
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +24,7 @@ import br.com.arml.cep.ui.utils.paneEnterTransition
 import br.com.arml.cep.ui.utils.paneExitTransition
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun CepScreen(
     modifier: Modifier = Modifier
@@ -36,6 +35,10 @@ fun CepScreen(
     val scope = rememberCoroutineScope()
     var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
 
+    val marginScreen = Modifier
+        .fillMaxSize()
+        .padding(horizontal = MaterialTheme.dimens.mediumMargin)
+
     NavigableListDetailPaneScaffold(
         modifier = modifier,
         navigator = navigator,
@@ -45,8 +48,7 @@ fun CepScreen(
                 exitTransition = paneExitTransition
             ) {
                 SearchScreen(
-                    modifier = modifier
-                        .padding(horizontal = MaterialTheme.dimens.smallMargin),
+                    modifier = marginScreen,
                     onSearchCep = {
                         scope.launch {
                             viewModel.onEvent(CepEvent.SearchCep(it))
@@ -66,9 +68,7 @@ fun CepScreen(
                     exitTransition = paneExitTransition
                 ) {
                     DisplayScreen(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = MaterialTheme.dimens.smallMargin),
+                        modifier = marginScreen,
                         response = uiState.entry,
                         onBackPress = {
                             scope.launch {

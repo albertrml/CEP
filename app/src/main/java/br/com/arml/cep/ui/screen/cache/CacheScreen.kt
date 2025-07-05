@@ -1,7 +1,6 @@
-@file:OptIn(ExperimentalMaterial3AdaptiveApi::class)
-
 package br.com.arml.cep.ui.screen.cache
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
@@ -19,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.ui.screen.component.cep.display.DisplayScreen
 import br.com.arml.cep.ui.screen.component.cache.CachePlaceAlert
 import br.com.arml.cep.ui.screen.component.cache.CachePlaceListComponent
@@ -28,6 +26,7 @@ import br.com.arml.cep.ui.utils.paneEnterTransition
 import br.com.arml.cep.ui.utils.paneExitTransition
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun CacheScreen(
     modifier: Modifier = Modifier,
@@ -40,6 +39,9 @@ fun CacheScreen(
     var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
     var isDeleteAllAlertShown by rememberSaveable { mutableStateOf(false) }
 
+    val marginScreen = Modifier
+        .fillMaxSize()
+        .padding(horizontal = MaterialTheme.dimens.mediumMargin)
 
     NavigableListDetailPaneScaffold(
         modifier = modifier,
@@ -50,7 +52,7 @@ fun CacheScreen(
                 exitTransition = paneExitTransition
             ) {
                 CachePlaceListComponent(
-                    modifier = modifier.padding(horizontal = MaterialTheme.dimens.mediumMargin),
+                    modifier = marginScreen,
                     fetchResponse = state.fetchEntries,
                     onFavoriteIconClick = { place ->
                         viewModel.onEvent(CacheEvent.OnUpdate(place))
@@ -93,7 +95,8 @@ fun CacheScreen(
                 ) {
                     state.placeForDetails?.let {
                         DisplayScreen(
-                            response = Response.Success<PlaceEntry>(it),
+                            modifier = marginScreen,
+                            response = Response.Success(it),
                             onBackPress = {
                                 scope.launch {
                                     isDetailPaneExpanded = false
@@ -101,9 +104,9 @@ fun CacheScreen(
                                     viewModel.onEvent(CacheEvent.OnSelectEntryForDetails(null))
                                 }
                             },
-                            onFavoriteClick = {
+                            onFavoriteClick = { placeEntry ->
                                 scope.launch {
-                                    viewModel.onEvent(CacheEvent.OnUpdate(it))
+                                    viewModel.onEvent(CacheEvent.OnUpdate(placeEntry))
                                     isDetailPaneExpanded = false
                                     navigator.navigateBack()
                                 }
