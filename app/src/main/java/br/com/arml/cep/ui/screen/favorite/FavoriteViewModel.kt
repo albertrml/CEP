@@ -21,7 +21,7 @@ import javax.inject.Inject
 class FavoriteViewModel @Inject constructor(
     private val favoriteUseCase: FavoriteUseCase
 ) : ViewModel() {
-    val _state = MutableStateFlow(FavoriteState())
+    private val _state = MutableStateFlow(FavoriteState())
     val state = _state.asStateFlow()
     private var fetchEntriesJob: Job? = null
 
@@ -58,7 +58,15 @@ class FavoriteViewModel @Inject constructor(
                     note = null
                 )
                 favoriteUseCase.update(newEntry).collect { response ->
-                    _state.update { it.copy(updateEntry = response) }
+                    _state.update {
+                        when(response){
+                            is Response.Success -> it.copy(
+                                placeForUnwanted = null,
+                                updateEntry = response
+                            )
+                            else -> it.copy(updateEntry = response)
+                        }
+                    }
                 }
             }
         }

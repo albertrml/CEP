@@ -5,26 +5,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
-import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceDetailsComponent
+import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
 import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceAlert
-import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceListComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceDetailsComponent
 import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceExtraComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceListComponent
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.paneEnterTransition
 import br.com.arml.cep.ui.utils.paneExitTransition
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -33,26 +27,25 @@ fun FavoriteScreen(
 ) {
     val viewmodel = hiltViewModel<FavoriteViewModel>()
     val state by viewmodel.state.collectAsStateWithLifecycle()
-    val scope = rememberCoroutineScope()
-    val navigator = rememberListDetailPaneScaffoldNavigator()
-    var isUnlikeAlertShown by rememberSaveable { mutableStateOf(false) }
-    var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
-    var isExtraPaneExpanded by rememberSaveable { mutableStateOf(false) }
+    val uiStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
+
+    val marginScreen = Modifier
+        .fillMaxSize()
+        .padding(horizontal = MaterialTheme.dimens.mediumMargin)
 
     NavigableListDetailPaneScaffold(
         modifier = modifier,
-        navigator = navigator,
+        navigator = uiStateHolder.navigator,
         listPane = {
             AnimatedPane(
                 enterTransition = paneEnterTransition,
                 exitTransition = paneExitTransition
             ) {
                 FavoritePlaceListComponent(
-                    modifier = modifier.padding(horizontal = MaterialTheme.dimens.mediumMargin),
+                    modifier = marginScreen,
                     fetchResponse = state.fetchEntries,
                     onFavoriteIconClick = { place ->
                         viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(place))
-                        isUnlikeAlertShown = true
                     },
                     onCepFilter = { query ->
                         viewmodel.onEvent(FavoriteEvent.OnFilterByCep(query))
@@ -63,50 +56,57 @@ fun FavoriteScreen(
                     onClearFilter = {
                         viewmodel.onEvent(FavoriteEvent.OnFilterNone)
                     },
-                    onNavigateToDetail = {
-                        isDetailPaneExpanded = true
-                        viewmodel.onEvent(FavoriteEvent.OnSelectEntryToEdit(it))
-                        scope.launch {
-                            navigator.navigateTo(pane = ListDetailPaneScaffoldRole.Detail)
+                    onNavigateToDetail = { entry ->
+                        uiStateHolder.navigateToDetailPane {
+                            viewmodel.onEvent(FavoriteEvent.OnSelectEntryToEdit(entry))
                         }
                     }
                 )
-
-                state.placeForUnwanted?.let { place ->
-                    FavoritePlaceAlert(
-                        place = place,
-                        isVisible = isUnlikeAlertShown,
-                        onChangeVisibility = { isUnlikeAlertShown = it },
-                        onDismissRequest = {
-                            viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(null))
-                        },
-                        onConfirmationRequest = {
-                            viewmodel.onEvent(FavoriteEvent.OnClickToUnwanted(place))
+                FavoritePlaceAlert(
+                    place = state.placeForUnwanted,
+                    onDismissRequest = {
+                        viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(null))
+                    },
+                    onConfirmationRequest = {
+                        state.placeForUnwanted?.let { place ->
+                            if (place == state.placeForEdit){
+                                uiStateHolder.navigateBackToListPane {
+                                    viewmodel.onEvent(
+                                        FavoriteEvent.OnClickToUnwanted(place)
+                                    )
+                                }
+                            } else{
+                                viewmodel.onEvent(
+                                    FavoriteEvent.OnClickToUnwanted(place)
+                                )
+                            }
                         }
-                    )
-                }
+                    }
+                )
             }
         },
 
         detailPane = {
-            if (isDetailPaneExpanded) {
+            uiStateHolder.ShowDetailPane {
                 AnimatedPane(
                     enterTransition = paneEnterTransition,
                     exitTransition = paneExitTransition
                 ) {
                     state.placeForEdit?.let {
                         FavoritePlaceDetailsComponent(
-                            modifier = modifier
-                                .padding(horizontal = MaterialTheme.dimens.smallMargin),
+                            modifier = marginScreen,
                             placeEntry = it,
                             onNavigateBackToList = {
-                                isDetailPaneExpanded = false
-                                viewmodel.onEvent(FavoriteEvent.OnSelectEntryToEdit(null))
-                                scope.launch { navigator.navigateBack() }
+                                uiStateHolder.navigateBackToListPane {
+                                    viewmodel.onEvent(
+                                        FavoriteEvent.OnSelectEntryToEdit(null)
+                                    )
+                                }
                             },
                             onNavigateToExtra = {
-                                isExtraPaneExpanded = true
-                                scope.launch { navigator.navigateTo(pane = ListDetailPaneScaffoldRole.Extra) }
+                                uiStateHolder.navigateToExtraPane {
+                                    viewmodel.onEvent(FavoriteEvent.OnSelectEntryToEdit(it))
+                                }
                             }
                         )
                     }
@@ -115,26 +115,22 @@ fun FavoriteScreen(
         },
 
         extraPane = {
-            AnimatedPane(
-                enterTransition = paneEnterTransition,
-                exitTransition = paneExitTransition
-            ) {
-                if (isDetailPaneExpanded == false) isExtraPaneExpanded = false
-                if (isExtraPaneExpanded) {
+            uiStateHolder.ShowExtraPane {
+                AnimatedPane(
+                    enterTransition = paneEnterTransition,
+                    exitTransition = paneExitTransition
+                ) {
                     state.placeForEdit?.let {
                         FavoritePlaceExtraComponent(
-                            modifier = modifier
-                                .fillMaxSize()
-                                .padding(horizontal = MaterialTheme.dimens.smallMargin),
+                            modifier = marginScreen,
                             placeEntry = it,
                             onClickToUpdate = { entry ->
-                                viewmodel.onEvent(FavoriteEvent.OnUpdateFavorite(entry))
-                                isExtraPaneExpanded = false
-                                scope.launch { navigator.navigateBack() }
+                                uiStateHolder.navigateBackToDetailPane {
+                                    viewmodel.onEvent(FavoriteEvent.OnUpdateFavorite(entry))
+                                }
                             },
                             onNavigateBackToDetails = {
-                                isExtraPaneExpanded = false
-                                scope.launch { navigator.navigateBack() }
+                                uiStateHolder.navigateBackToDetailPane {}
                             }
                         )
                     }

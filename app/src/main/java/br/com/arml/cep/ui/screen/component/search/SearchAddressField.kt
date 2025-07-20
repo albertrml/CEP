@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.cep.display
+package br.com.arml.cep.ui.screen.component.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

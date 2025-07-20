@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.cep.display
+package br.com.arml.cep.ui.screen.component.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +32,7 @@ import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
 
 @Composable
-fun DisplayScreen(
+fun SearchDetailPane(
     modifier: Modifier = Modifier,
     response: Response<PlaceEntry>,
     onBackPress: () -> Unit,
@@ -55,7 +55,7 @@ fun DisplayScreen(
                 Box(
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    AddressScreen(
+                    SearchAddressForms(
                         modifier = Modifier.padding(
                             vertical = MaterialTheme.dimens.largeMargin
                         ),
@@ -149,7 +149,7 @@ fun DisplayScreen(
 )
 @Composable
 fun DisplayScreenPreview() {
-    DisplayScreen(
+    SearchDetailPane(
         modifier = Modifier
             .fillMaxSize()
             .padding(MaterialTheme.dimens.mediumMargin),

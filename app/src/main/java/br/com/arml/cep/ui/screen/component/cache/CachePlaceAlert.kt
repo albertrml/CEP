@@ -10,7 +10,6 @@ import br.com.arml.cep.ui.screen.component.common.CepAlertDialog
 fun CachePlaceAlert(
     modifier: Modifier = Modifier,
     isVisible: Boolean,
-    onChangeVisibility: (Boolean) -> Unit,
     onDismissRequest: () -> Unit,
     onConfirmationRequest: () -> Unit,
 ) {
@@ -20,14 +19,8 @@ fun CachePlaceAlert(
             modifier = modifier,
             dialogTitle = stringResource(R.string.cache_title_alert),
             dialogText = stringResource(R.string.cache_text_alert),
-            onDismissRequest = {
-                onDismissRequest()
-                onChangeVisibility(false)
-            },
-            onConfirmationRequest = {
-                onConfirmationRequest()
-                onChangeVisibility(false)
-            }
+            onDismissRequest = onDismissRequest,
+            onConfirmationRequest = onConfirmationRequest
         )
     }
 }

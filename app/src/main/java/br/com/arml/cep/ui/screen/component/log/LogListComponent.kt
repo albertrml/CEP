@@ -17,25 +17,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.R
 import br.com.arml.cep.model.entity.LogEntry
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
 import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
 import br.com.arml.cep.ui.screen.component.common.Header
-import br.com.arml.cep.ui.screen.log.LogEvent
-import br.com.arml.cep.ui.screen.log.LogViewModel
+import br.com.arml.cep.ui.screen.log.LogState
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
 
 @Composable
 fun LogListComponent(
     modifier: Modifier = Modifier,
+    state: LogState,
+    onFilterByCep: (String) -> Unit,
+    onFilterByInitialDate: (Long) -> Unit,
+    onFilterByFinalDate: (Long) -> Unit,
+    onFilterByRangeDate: (Long, Long) -> Unit,
+    onFilterByNone: () -> Unit,
+    onClickToDeleteEntry: (LogEntry) -> Unit,
+    onConfirmDeleteAllEntries: () -> Unit,
     onCopyToClipboard: (LogEntry) -> Unit
 ) {
-    val viewModel = hiltViewModel<LogViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
+
     var showDeleteAlert by rememberSaveable { mutableStateOf(false) }
 
     Column(
@@ -48,13 +52,11 @@ fun LogListComponent(
             logo = Icons.AutoMirrored.Filled.List
         )
         LogFilterComponent(
-            onFilterByCep = { query -> viewModel.onEvent(LogEvent.OnFilterByCep(query)) },
-            onFilterByInitialDate = { from -> viewModel.onEvent(LogEvent.OnFilterByInitialDate(from)) },
-            onFilterByFinalDate = { until -> viewModel.onEvent(LogEvent.OnFilterByFinalDate(until)) },
-            onFilterByRangeDate = { from, until ->
-                viewModel.onEvent(LogEvent.OnFilterByRangeDate(from, until))
-            },
-            onNoneFilter = { viewModel.onEvent(LogEvent.OnFilterByNone) }
+            onFilterByCep = { query -> onFilterByCep(query) },
+            onFilterByInitialDate = { from -> onFilterByInitialDate(from) },
+            onFilterByFinalDate = { until -> onFilterByFinalDate(until) },
+            onFilterByRangeDate = { from, until -> onFilterByRangeDate(from, until) },
+            onNoneFilter = onFilterByNone
         )
 
         DeleteAllComponent(
@@ -73,7 +75,7 @@ fun LogListComponent(
                     LogList(
                         modifier = Modifier.align(Alignment.TopCenter),
                         logEntries = logList,
-                        onClickToDelete = { entry -> viewModel.onEvent(LogEvent.OnDeleteEntry(entry)) },
+                        onClickToDelete = { entry -> onClickToDeleteEntry(entry) },
                         onCopyToClipboard = { entry -> onCopyToClipboard(entry) }
                     )
                 },
@@ -97,7 +99,7 @@ fun LogListComponent(
             showDialog = showDeleteAlert,
             onDismissRequest = { showDeleteAlert = false },
             onConfirmation = {
-                viewModel.onEvent(LogEvent.OnDeleteAllEntries)
+                onConfirmDeleteAllEntries()
                 showDeleteAlert = false
             }
         )

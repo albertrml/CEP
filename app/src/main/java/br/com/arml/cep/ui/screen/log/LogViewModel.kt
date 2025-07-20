@@ -20,7 +20,7 @@ import javax.inject.Inject
 class LogViewModel @Inject constructor(
     private val logUseCase: LogUseCase
 ) : ViewModel() {
-    val _state = MutableStateFlow(LogState())
+    private val _state = MutableStateFlow(LogState())
     val state = _state.asStateFlow()
     private var fetchEntriesJob: Job? = null
 

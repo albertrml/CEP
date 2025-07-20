@@ -3,11 +3,11 @@ package br.com.arml.cep.ui.utils
 import androidx.compose.runtime.saveable.Saver
 
 sealed class LogFilterOption(val name: String) {
-    object None : LogFilterOption("Nenhum")
-    object ByCep : LogFilterOption("CEP")
-    object ByInitialDate : LogFilterOption("A partir de")
-    object ByFinalDate : LogFilterOption("Até")
-    object ByRangeDate : LogFilterOption("Entre")
+    data object None : LogFilterOption("Nenhum")
+    data object ByCep : LogFilterOption("CEP")
+    data object ByInitialDate : LogFilterOption("A partir de")
+    data object ByFinalDate : LogFilterOption("Até")
+    data object ByRangeDate : LogFilterOption("Entre")
 
     companion object{
         val saver: Saver<LogFilterOption, String> = Saver (

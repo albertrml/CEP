@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.cep.search.CepField
+import br.com.arml.cep.ui.screen.component.search.SearchCepField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -29,7 +29,7 @@ fun CepFilter(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
     ) {
-        CepField(
+        SearchCepField(
             modifier = modifier,
             onQueryChange = { zipCode = it }
         )
