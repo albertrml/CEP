@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.cep.search
+package br.com.arml.cep.ui.screen.component.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +25,7 @@ import br.com.arml.cep.ui.screen.component.common.Header
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun SearchScreen(
+fun SearchListPane(
     modifier: Modifier = Modifier,
     onSearchCep: (String) -> Unit = {}
 ) {
@@ -47,7 +47,7 @@ fun SearchScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            CepField(
+            SearchCepField(
                 modifier = Modifier,
                 onQueryChange = { query = it }
             )
@@ -97,5 +97,5 @@ fun SearchScreen(
 )
 @Composable
 fun SearchScreenPreview() {
-    SearchScreen(modifier = Modifier.fillMaxSize())
+    SearchListPane(modifier = Modifier.fillMaxSize())
 }

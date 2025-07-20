@@ -5,26 +5,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
-import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.ui.screen.component.cep.display.DisplayScreen
+import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
 import br.com.arml.cep.ui.screen.component.cache.CachePlaceAlert
 import br.com.arml.cep.ui.screen.component.cache.CachePlaceListComponent
+import br.com.arml.cep.ui.screen.component.search.SearchDetailPane
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.paneEnterTransition
 import br.com.arml.cep.ui.utils.paneExitTransition
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -33,11 +27,7 @@ fun CacheScreen(
 ) {
     val viewModel = hiltViewModel<CacheViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-    val navigator = rememberListDetailPaneScaffoldNavigator()
-    val scope = rememberCoroutineScope()
-    var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
-    var isDeleteAllAlertShown by rememberSaveable { mutableStateOf(false) }
+    val uiStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
 
     val marginScreen = Modifier
         .fillMaxSize()
@@ -45,7 +35,7 @@ fun CacheScreen(
 
     NavigableListDetailPaneScaffold(
         modifier = modifier,
-        navigator = navigator,
+        navigator = uiStateHolder.navigator,
         listPane = {
             AnimatedPane(
                 enterTransition = paneEnterTransition,
@@ -58,7 +48,7 @@ fun CacheScreen(
                         viewModel.onEvent(CacheEvent.OnUpdate(place))
                     },
                     onDeleteCacheClick = {
-                        isDeleteAllAlertShown = true
+                        viewModel.onEvent(CacheEvent.OnShowDeleteAllAlert)
                     },
                     onDeleteIconClick = { place ->
                         viewModel.onEvent(CacheEvent.OnDelete(place))
@@ -68,47 +58,43 @@ fun CacheScreen(
                     },
                     onClearFilter = { viewModel.onEvent(CacheEvent.OnFilterNone) },
                     onNavigateToDetail = { place ->
-                        viewModel.onEvent(CacheEvent.OnSelectEntryForDetails(place))
-                        isDetailPaneExpanded = true
-                        scope.launch {
-                            navigator.navigateTo(pane = ListDetailPaneScaffoldRole.Detail)
+                        uiStateHolder.navigateToDetailPane {
+                            viewModel.onEvent(CacheEvent.OnSelectEntryForDetails(place))
                         }
                     }
                 )
 
                 CachePlaceAlert(
-                    isVisible = isDeleteAllAlertShown,
-                    onChangeVisibility = { isDeleteAllAlertShown = it },
-                    onDismissRequest = { isDeleteAllAlertShown = false },
+                    isVisible = state.deleteAllAlert,
+                    onDismissRequest = {
+                        viewModel.onEvent(CacheEvent.OnHideDeleteAllAlert)
+                    },
                     onConfirmationRequest = {
-                        viewModel.onEvent(CacheEvent.OnDeleteAll)
-                        isDeleteAllAlertShown = false
+                        uiStateHolder.navigateBackToListPane {
+                            viewModel.onEvent(CacheEvent.OnDeleteAll)
+                        }
                     }
                 )
             }
         },
         detailPane = {
-            if (isDetailPaneExpanded) {
+            uiStateHolder.ShowDetailPane {
                 AnimatedPane(
                     enterTransition = paneEnterTransition,
                     exitTransition = paneExitTransition
                 ) {
                     state.placeForDetails?.let {
-                        DisplayScreen(
+                        SearchDetailPane(
                             modifier = marginScreen,
                             response = Response.Success(it),
                             onBackPress = {
-                                scope.launch {
-                                    isDetailPaneExpanded = false
-                                    navigator.navigateBack()
+                                uiStateHolder.navigateBackToListPane {
                                     viewModel.onEvent(CacheEvent.OnSelectEntryForDetails(null))
                                 }
                             },
                             onFavoriteClick = { placeEntry ->
-                                scope.launch {
+                                uiStateHolder.navigateBackToListPane {
                                     viewModel.onEvent(CacheEvent.OnUpdate(placeEntry))
-                                    isDetailPaneExpanded = false
-                                    navigator.navigateBack()
                                 }
                             }
                         )

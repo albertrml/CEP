@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.cep.search
+package br.com.arml.cep.ui.screen.component.search
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -27,7 +27,7 @@ import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.updateCepField
 
 @Composable
-fun CepField(
+fun SearchCepField(
     modifier: Modifier = Modifier,
     onQueryChange: (String) -> Unit
 ){
@@ -87,5 +87,5 @@ fun CepField(
 @Preview (showBackground = true)
 @Composable
 fun CepFieldPreview(){
-    CepField(onQueryChange = {})
+    SearchCepField(onQueryChange = {})
 }

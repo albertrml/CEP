@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.cep.display
+package br.com.arml.cep.ui.screen.component.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +16,7 @@ import br.com.arml.cep.ui.screen.component.common.ScrollableFab
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun AddressScreen(
+fun SearchAddressForms(
     modifier: Modifier = Modifier,
     address: Address,
 ) {
@@ -84,7 +84,7 @@ fun AddressScreen(
 )
 @Composable
 fun AddressScreenPreview() {
-    AddressScreen(
+    SearchAddressForms(
         modifier = Modifier.fillMaxSize(),
         address = mockAddress
     )

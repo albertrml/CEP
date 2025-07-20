@@ -26,7 +26,7 @@ import br.com.arml.cep.model.domain.MIN_TITLE_LENGTH
 import br.com.arml.cep.model.domain.isValidTitleNoteSize
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.mock.mockFavoritePlaceEntries
-import br.com.arml.cep.ui.screen.component.cep.display.AddressScreen
+import br.com.arml.cep.ui.screen.component.search.SearchAddressForms
 import br.com.arml.cep.ui.screen.component.common.CepTextField
 import br.com.arml.cep.ui.theme.dimens
 
@@ -43,7 +43,7 @@ fun FavoritePlaceDetailsComponent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
     ) {
         FavoritePlaceHeaderDetails(onNavigateBackToList = onNavigateBackToList)
-        AddressScreen(
+        SearchAddressForms(
             modifier = Modifier.weight(1f),
             address = placeEntry.address
         )

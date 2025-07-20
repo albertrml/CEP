@@ -22,7 +22,7 @@ import javax.inject.Inject
 class CacheViewModel @Inject constructor(
     private val cacheUseCase: CacheUseCase
 ) : ViewModel() {
-    val _state = MutableStateFlow(CacheState())
+    private val _state = MutableStateFlow(CacheState())
     val state = _state.asStateFlow()
     private var fetchEntriesJob: Job? = null
 
@@ -35,8 +35,10 @@ class CacheViewModel @Inject constructor(
             is CacheEvent.OnFilterNone -> filterByNone()
             is CacheEvent.OnDeleteAll -> deleteAll()
             is CacheEvent.OnDelete -> deleteEntry(event.place)
+            is CacheEvent.OnHideDeleteAllAlert -> _state.update { it.copy(deleteAllAlert = false) }
             is CacheEvent.OnUpdate -> updateCache(event.place)
             is CacheEvent.OnSelectEntryForDetails -> selectEntryToEdit(event.place)
+            is CacheEvent.OnShowDeleteAllAlert -> _state.update { it.copy(deleteAllAlert = true) }
         }
     }
 
@@ -75,7 +77,15 @@ class CacheViewModel @Inject constructor(
     private fun deleteAll() {
         viewModelScope.launch {
             cacheUseCase.deleteAll().collect { response ->
-                _state.update { it.copy(deleteEntry = response) }
+                _state.update {
+                    when(response){
+                        is Response.Success -> it.copy(
+                            deleteAllAlert = false,
+                            deleteEntry = response
+                        )
+                        else -> it.copy(deleteEntry = response)
+                    }
+                }
             }
         }
     }

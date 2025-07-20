@@ -13,7 +13,7 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.cep.search.CepField
+import br.com.arml.cep.ui.screen.component.search.SearchCepField
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -27,16 +27,13 @@ class CepFieldTest {
 
     @Test
     fun cepField_initialState_displaysPlaceholder() {
-        // Obter string do placeholder de dentro de um Composable no teste
-        var placeholderText = ""
         composeTestRule.setContent {
-            placeholderText = stringResource(R.string.search_cep_hint)
-            MaterialTheme { // Envolver com MaterialTheme se seu Composable usa atributos dele
+            MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ){
-                    CepField(onQueryChange = ::onQueryChangeCallback)
+                    SearchCepField(onQueryChange = ::onQueryChangeCallback)
                 }
             }
         }
@@ -52,7 +49,7 @@ class CepFieldTest {
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ){
-                    CepField(onQueryChange = ::onQueryChangeCallback)
+                    SearchCepField(onQueryChange = ::onQueryChangeCallback)
                 }
             }
         }
@@ -67,13 +64,13 @@ class CepFieldTest {
     fun cepFiels_should_shows_cep_when_lastQuery_is_a12n34n5oi67ja89(){
         var labelText = ""
         composeTestRule.setContent {
-            labelText = stringResource(R.string.search_cep_field_name) // Use o texto do label para encontrar o campo
+            labelText = stringResource(R.string.search_cep_field_name)
             MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ){
-                    CepField(onQueryChange = ::onQueryChangeCallback)
+                    SearchCepField(onQueryChange = ::onQueryChangeCallback)
                 }
             }
         }
@@ -88,13 +85,13 @@ class CepFieldTest {
     fun cepFiels_should_shows_cep_when_lastQuery_is_123456(){
         var labelText = ""
         composeTestRule.setContent {
-            labelText = stringResource(R.string.search_cep_field_name) // Use o texto do label para encontrar o campo
+            labelText = stringResource(R.string.search_cep_field_name)
             MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ){
-                    CepField(onQueryChange = ::onQueryChangeCallback)
+                    SearchCepField(onQueryChange = ::onQueryChangeCallback)
                 }
             }
         }
@@ -109,13 +106,13 @@ class CepFieldTest {
     fun cepField_whenDeletingCharacters_formatsCorrectlyAndCallsOnQueryChange(){
         var labelText = ""
         composeTestRule.setContent {
-            labelText = stringResource(R.string.search_cep_field_name) // Use o texto do label para encontrar o campo
+            labelText = stringResource(R.string.search_cep_field_name)
             MaterialTheme {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ){
-                    CepField(onQueryChange = ::onQueryChangeCallback)
+                    SearchCepField(onQueryChange = ::onQueryChangeCallback)
                 }
             }
         }

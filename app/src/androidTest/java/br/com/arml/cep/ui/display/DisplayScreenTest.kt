@@ -10,7 +10,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.cep.display.DisplayScreen
+import br.com.arml.cep.ui.screen.component.search.SearchDetailPane
 import br.com.arml.cep.ui.theme.CEPTheme
 import br.com.arml.cep.model.exception.CepException
 import br.com.arml.cep.model.domain.Response
@@ -50,7 +50,7 @@ class DisplayScreenTest {
     private fun setDisplayScreenContent(response: Response<PlaceEntry>) {
         composeTestRule.setContent {
             CEPTheme {
-                DisplayScreen(
+                SearchDetailPane(
                     modifier = Modifier.fillMaxSize(),
                     response = response,
                     onBackPress = mockOnBackPress,

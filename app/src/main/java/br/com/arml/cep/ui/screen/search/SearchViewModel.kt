@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.cep
+package br.com.arml.cep.ui.screen.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,17 +16,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CepViewModel @Inject constructor(
+class SearchViewModel @Inject constructor(
     private val useCase: CepUseCase
 ) : ViewModel() {
-    private var _state = MutableStateFlow(CepState())
+    private var _state = MutableStateFlow(SearchState())
     val state = _state.asStateFlow()
 
-    fun onEvent(event: CepEvent) {
+    fun onEvent(event: SearchEvent) {
         when (event) {
-            is CepEvent.SearchCep -> searchCep(event.code)
-            is CepEvent.FavoriteCep -> favoriteCep(event.placeEntry)
-            is CepEvent.ClearCep -> cleanState()
+            is SearchEvent.OnSearch -> searchCep(event.code)
+            is SearchEvent.OnFavorite -> favoriteCep(event.placeEntry)
+            is SearchEvent.OnClear -> cleanState()
         }
     }
 
@@ -54,7 +54,7 @@ class CepViewModel @Inject constructor(
     }
 
     private fun cleanState() {
-        _state.update { CepState() }
+        _state.update { SearchState() }
     }
 
     private fun searchCep(code: String) {

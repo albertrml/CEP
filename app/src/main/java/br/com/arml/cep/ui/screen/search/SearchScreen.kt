@@ -1,39 +1,31 @@
-package br.com.arml.cep.ui.screen.cep
+package br.com.arml.cep.ui.screen.search
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
-import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.arml.cep.ui.screen.component.cep.display.DisplayScreen
-import br.com.arml.cep.ui.screen.component.cep.search.SearchScreen
+import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
+import br.com.arml.cep.ui.screen.component.search.SearchDetailPane
+import br.com.arml.cep.ui.screen.component.search.SearchListPane
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.paneEnterTransition
 import br.com.arml.cep.ui.utils.paneExitTransition
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun CepScreen(
+fun SearchScreen(
     modifier: Modifier = Modifier
 ) {
-    val viewModel = hiltViewModel<CepViewModel>()
+    val viewModel = hiltViewModel<SearchViewModel>()
     val uiState by viewModel.state.collectAsStateWithLifecycle()
-    val navigator = rememberListDetailPaneScaffoldNavigator()
-    val scope = rememberCoroutineScope()
-    var isDetailPaneExpanded by rememberSaveable { mutableStateOf(false) }
+    val uiStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
 
     val marginScreen = Modifier
         .fillMaxSize()
@@ -41,45 +33,39 @@ fun CepScreen(
 
     NavigableListDetailPaneScaffold(
         modifier = modifier,
-        navigator = navigator,
+        navigator = uiStateHolder.navigator,
         listPane = {
             AnimatedPane(
                 enterTransition = paneEnterTransition,
                 exitTransition = paneExitTransition
             ) {
-                SearchScreen(
+                SearchListPane(
                     modifier = marginScreen,
-                    onSearchCep = {
-                        scope.launch {
-                            viewModel.onEvent(CepEvent.SearchCep(it))
-                            isDetailPaneExpanded = true
-                            navigator.navigateTo(
-                                pane = ListDetailPaneScaffoldRole.Detail
-                            )
+                    onSearchCep = { query ->
+                        uiStateHolder.navigateToDetailPane {
+                            viewModel.onEvent(SearchEvent.OnSearch(query))
                         }
                     }
                 )
             }
         },
         detailPane = {
-            if (isDetailPaneExpanded){
+            uiStateHolder.ShowDetailPane {
                 AnimatedPane(
                     enterTransition = paneEnterTransition,
                     exitTransition = paneExitTransition
                 ) {
-                    DisplayScreen(
+                    SearchDetailPane(
                         modifier = marginScreen,
                         response = uiState.entry,
                         onBackPress = {
-                            scope.launch {
-                                viewModel.onEvent(CepEvent.ClearCep)
-                                isDetailPaneExpanded = false
-                                navigator.navigateBack()
+                            uiStateHolder.navigateBackToListPane {
+                                viewModel.onEvent(SearchEvent.OnClear)
                             }
                         },
                         onFavoriteClick = {
-                            scope.launch {
-                                viewModel.onEvent(CepEvent.FavoriteCep(it))
+                            uiStateHolder.navigateBackToListPane {
+                                viewModel.onEvent(SearchEvent.OnFavorite(it))
                             }
                         }
                     )
