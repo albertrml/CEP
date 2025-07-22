@@ -2,9 +2,9 @@ package br.com.arml.cep.di
 
 import br.com.arml.cep.model.repository.LogRepository
 import br.com.arml.cep.model.repository.PlaceRepository
-import br.com.arml.cep.model.source.local.LogDao
-import br.com.arml.cep.model.source.local.PlaceDao
-import br.com.arml.cep.model.source.remote.CepApiService
+import br.com.arml.cep.model.source.local.LogLocalDataSource
+import br.com.arml.cep.model.source.local.PlaceLocalDataSource
+import br.com.arml.cep.model.source.remote.PlaceRemoteDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,17 +18,17 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideCepRepository(
-        service: CepApiService,
-        placeDao: PlaceDao,
-        logDao: LogDao
+        placeRemoteDataSource: PlaceRemoteDataSource,
+        placeLocalDataSource: PlaceLocalDataSource,
+        logLocalDataSource: LogLocalDataSource
     ): PlaceRepository {
-        return PlaceRepository(service, placeDao, logDao)
+        return PlaceRepository(placeRemoteDataSource, placeLocalDataSource, logLocalDataSource)
     }
 
     @Provides
     @Singleton
-    fun provideLogRepository(logDao: LogDao): LogRepository {
-        return LogRepository(logDao)
+    fun provideLogRepository(logLocalDataSource: LogLocalDataSource): LogRepository {
+        return LogRepository(logLocalDataSource)
     }
 
 }

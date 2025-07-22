@@ -3,12 +3,12 @@ package br.com.arml.cep.repository
 import br.com.arml.cep.model.dto.AddressDTO
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.repository.PlaceRepository
-import br.com.arml.cep.model.source.local.PlaceDao
-import br.com.arml.cep.model.source.remote.CepApiService
+import br.com.arml.cep.model.source.local.PlaceLocalDataSource
+import br.com.arml.cep.model.source.remote.PlaceRemoteDataSource
 import br.com.arml.cep.model.exception.CepException
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.mock.mockPlaceEntries
-import br.com.arml.cep.model.source.local.LogDao
+import br.com.arml.cep.model.source.local.LogLocalDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -21,9 +21,9 @@ import org.junit.Test
 import retrofit2.HttpException
 
 class CepRepositoryTest {
-    private val service = mockk<CepApiService>()
-    private val placeDao = mockk<PlaceDao>()
-    private val logDao = mockk<LogDao>()
+    private val service = mockk<PlaceRemoteDataSource>()
+    private val placeLocalDataSource = mockk<PlaceLocalDataSource>()
+    private val logLocalDataSource = mockk<LogLocalDataSource>()
     private lateinit var repository: PlaceRepository
 
     val mockAddressDTO = AddressDTO(
@@ -42,7 +42,7 @@ class CepRepositoryTest {
 
     @Before
     fun setup() {
-        repository = PlaceRepository(service,placeDao,logDao)
+        repository = PlaceRepository(service,placeLocalDataSource,logLocalDataSource)
     }
 
     @Test
@@ -133,7 +133,7 @@ class CepRepositoryTest {
     fun `should emit success entry when the cep exists in the database`() = runTest{
         // getCepEntry(cep: Cep)
         val entry = mockPlaceEntries[0]
-        coEvery { placeDao.read(any()) } returns entry
+        coEvery { placeLocalDataSource.read(any()) } returns entry
         repository.getPlace(entry.cep).collect { response ->
             when (response) {
                 is Response.Success -> { assertEquals(entry, response.result) }
@@ -148,9 +148,9 @@ class CepRepositoryTest {
     @Test
     fun `should emit success entry when the cep does not exists in the database but exists in the api`() = runTest{
         val entry = mockPlaceEntries[0]
-        coEvery { placeDao.read(any()) } returns null
+        coEvery { placeLocalDataSource.read(any()) } returns null
         coEvery { service.getAddressByCep(any()) } returns entry.address.toAddressDTO()
-        coEvery { placeDao.create(any()) } returns Unit
+        coEvery { placeLocalDataSource.create(any()) } returns Unit
 
         repository.getPlace(entry.cep).collect { response ->
             when (response) {
@@ -173,7 +173,7 @@ class CepRepositoryTest {
     @Test
     fun `should emit failure entry when the cep does not exists in the database and the api`() = runTest{
         val entry = mockPlaceEntries[0]
-        coEvery { placeDao.read(any()) } returns null
+        coEvery { placeLocalDataSource.read(any()) } returns null
         coEvery { service.getAddressByCep(any()) } returns AddressDTO(erro = "true")
 
         repository.getPlace(entry.cep).collect { response ->
@@ -203,7 +203,7 @@ class CepRepositoryTest {
                 errorResponseBody
             )
 
-        coEvery { placeDao.read(any()) } returns null
+        coEvery { placeLocalDataSource.read(any()) } returns null
         coEvery {
             service.getAddressByCep(any())
         } throws HttpException(mockHttpErrorResponse)

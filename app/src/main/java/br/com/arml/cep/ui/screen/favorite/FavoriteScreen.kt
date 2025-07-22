@@ -92,10 +92,10 @@ fun FavoriteScreen(
                     enterTransition = paneEnterTransition,
                     exitTransition = paneExitTransition
                 ) {
-                    state.placeForEdit?.let {
+                    state.placeForEdit?.let { placeEntry ->
                         FavoritePlaceDetailsComponent(
                             modifier = marginScreen,
-                            placeEntry = it,
+                            placeEntry = placeEntry,
                             onNavigateBackToList = {
                                 uiStateHolder.navigateBackToListPane {
                                     viewmodel.onEvent(
@@ -105,7 +105,9 @@ fun FavoriteScreen(
                             },
                             onNavigateToExtra = {
                                 uiStateHolder.navigateToExtraPane {
-                                    viewmodel.onEvent(FavoriteEvent.OnSelectEntryToEdit(it))
+                                    viewmodel.onEvent(
+                                        FavoriteEvent.OnSelectEntryToEdit(placeEntry)
+                                    )
                                 }
                             }
                         )
@@ -120,10 +122,10 @@ fun FavoriteScreen(
                     enterTransition = paneEnterTransition,
                     exitTransition = paneExitTransition
                 ) {
-                    state.placeForEdit?.let {
+                    state.placeForEdit?.let { placeEntry ->
                         FavoritePlaceExtraComponent(
                             modifier = marginScreen,
-                            placeEntry = it,
+                            placeEntry = placeEntry,
                             onClickToUpdate = { entry ->
                                 uiStateHolder.navigateBackToDetailPane {
                                     viewmodel.onEvent(FavoriteEvent.OnUpdateFavorite(entry))

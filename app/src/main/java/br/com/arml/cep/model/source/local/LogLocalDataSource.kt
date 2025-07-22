@@ -9,7 +9,7 @@ import br.com.arml.cep.model.entity.LogEntry
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface LogDao {
+interface LogLocalDataSource {
     @Insert(onConflict = OnConflictStrategy.NONE)
     suspend fun create(logEntry: LogEntry)
 

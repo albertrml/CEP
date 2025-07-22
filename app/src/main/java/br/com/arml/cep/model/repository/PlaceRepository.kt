@@ -7,21 +7,21 @@ import br.com.arml.cep.model.domain.asResponse
 import br.com.arml.cep.model.entity.LogEntry
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.exception.CepException
-import br.com.arml.cep.model.source.local.LogDao
-import br.com.arml.cep.model.source.local.PlaceDao
-import br.com.arml.cep.model.source.remote.CepApiService
+import br.com.arml.cep.model.source.local.LogLocalDataSource
+import br.com.arml.cep.model.source.local.PlaceLocalDataSource
+import br.com.arml.cep.model.source.remote.PlaceRemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import java.sql.Timestamp
 import javax.inject.Inject
 
 class PlaceRepository @Inject constructor(
-    private val service: CepApiService,
-    private val placeDao: PlaceDao,
-    private val logDao: LogDao
+    private val placeRemoteDataSource: PlaceRemoteDataSource,
+    private val placeLocalDataSource: PlaceLocalDataSource,
+    private val logLocalDataSource: LogLocalDataSource
 ){
     fun getAddressByCep(cep: Cep): Flow<Response<Address>> = asResponse {
         val zipCode = cep.text
-        val cepDAO = service.getAddressByCep(zipCode)
+        val cepDAO = placeRemoteDataSource.getAddressByCep(zipCode)
         if (cepDAO.erro == "true") throw CepException.NotFoundCepException()
         cepDAO.toAddress()
     }
@@ -29,17 +29,17 @@ class PlaceRepository @Inject constructor(
     fun getPlace(cep: Cep): Flow<Response<PlaceEntry>> = asResponse {
         /* get the entry from the database */
         val zipCode = cep.text
-        val entryDB = placeDao.read(zipCode)
+        val entryDB = placeLocalDataSource.read(zipCode)
 
         /* if the entry is not in the database, get from api and save in the database */
         val entry = entryDB?:run {
-            val address = service.getAddressByCep(zipCode)
+            val address = placeRemoteDataSource.getAddressByCep(zipCode)
             if (address.erro == "true") throw CepException.NotFoundCepException()
             val entryPlaceAPI = PlaceEntry(
                 cep = cep,
                 address = address.toAddress()
             )
-            placeDao.create(entryPlaceAPI)
+            placeLocalDataSource.create(entryPlaceAPI)
             entryPlaceAPI
         }
 
@@ -47,21 +47,21 @@ class PlaceRepository @Inject constructor(
             cep = cep,
             timestamp = Timestamp(System.currentTimeMillis())
         )
-        logDao.create(entryLog)
+        logLocalDataSource.create(entryLog)
 
         /* return the entry from the database */
         entry
     }
 
-    fun updatePlace(entry: PlaceEntry) = asResponse { placeDao.update(entry) }
-    fun deletePlace(entry: PlaceEntry) = asResponse { placeDao.delete(entry) }
+    fun updatePlace(entry: PlaceEntry) = asResponse { placeLocalDataSource.update(entry) }
+    fun deletePlace(entry: PlaceEntry) = asResponse { placeLocalDataSource.delete(entry) }
 
-    fun getFavoritePlaces() = placeDao.readFavorites()
-    fun filterPlacesByCep(query: String) = placeDao.filterByCep(query)
-    fun filterPlacesByCepAndFavorite(query: String) = placeDao.filterByCepAndFavorite(query)
+    fun getFavoritePlaces() = placeLocalDataSource.readFavorites()
+    fun filterPlacesByCep(query: String) = placeLocalDataSource.filterByCep(query)
+    fun filterPlacesByCepAndFavorite(query: String) = placeLocalDataSource.filterByCepAndFavorite(query)
 
-    fun getUnwantedPlaces() = placeDao.readUnwanted()
-    fun getUnwantedPlacesByCepAndUnwanted(query: String) = placeDao.filterByCepAndUnwanted(query)
-    fun deleteAllUnwantedPlaces() = asResponse { placeDao.deleteAllNotFavorite() }
+    fun getUnwantedPlaces() = placeLocalDataSource.readUnwanted()
+    fun getUnwantedPlacesByCepAndUnwanted(query: String) = placeLocalDataSource.filterByCepAndUnwanted(query)
+    fun deleteAllUnwantedPlaces() = asResponse { placeLocalDataSource.deleteAllNotFavorite() }
 }
 

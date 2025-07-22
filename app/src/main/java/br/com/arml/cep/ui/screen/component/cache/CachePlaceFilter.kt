@@ -2,6 +2,7 @@ package br.com.arml.cep.ui.screen.component.cache
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.ui.screen.component.place.PlaceFilterComponent
 import br.com.arml.cep.ui.utils.cacheFilterOptions
 
@@ -17,4 +18,10 @@ fun CachePlaceFilter(
         onFilterByCep = { onFilterByCep(it) },
         onNoneFilter = { onNoneFilter() }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CachePlaceFilterPreview() {
+    CachePlaceFilter()
 }

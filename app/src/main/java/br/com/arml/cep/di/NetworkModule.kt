@@ -1,6 +1,6 @@
 package br.com.arml.cep.di
 
-import br.com.arml.cep.model.source.remote.CepApiService
+import br.com.arml.cep.model.source.remote.PlaceRemoteDataSource
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -50,7 +50,7 @@ object NetworkModule{
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): CepApiService {
-        return retrofit.create(CepApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): PlaceRemoteDataSource {
+        return retrofit.create(PlaceRemoteDataSource::class.java)
     }
 }

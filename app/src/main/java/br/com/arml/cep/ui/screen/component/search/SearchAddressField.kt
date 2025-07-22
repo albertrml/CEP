@@ -3,13 +3,16 @@ package br.com.arml.cep.ui.screen.component.search
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import br.com.arml.cep.ui.theme.dimens
 
@@ -24,7 +27,7 @@ fun AddressField(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
+        verticalArrangement = Arrangement.Center
     ) {
         Row(
             modifier = modifier,
@@ -40,10 +43,20 @@ fun AddressField(
             )
         }
         if (isDividerVisible) {
+            Spacer(modifier = Modifier.padding(vertical = MaterialTheme.dimens.smallSpacing))
             HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
                 thickness = thickness,
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AddressFieldPreview(){
+    AddressField(
+        title = "CEP",
+        value = "01001-000"
+    )
 }

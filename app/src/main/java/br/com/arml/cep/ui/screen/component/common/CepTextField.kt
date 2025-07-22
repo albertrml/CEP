@@ -2,8 +2,6 @@ package br.com.arml.cep.ui.screen.component.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -18,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun CepTextField(
@@ -32,6 +29,7 @@ fun CepTextField(
     minLines: Int = 1,
     maxSize: Int,
     maxLines: Int = 1,
+    showInputSize: Boolean = false
 ){
 
     var currentTextSize by rememberSaveable { mutableIntStateOf(text.length) }
@@ -70,13 +68,14 @@ fun CepTextField(
                 }
             }
         )
-        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
-        Text(
-            modifier = Modifier
-                .align(Alignment.End),
-            text = "$currentTextSize/$maxSize",
-            style = MaterialTheme.typography.labelLarge
-        )
+        if(showInputSize){
+            Text(
+                modifier = Modifier
+                    .align(Alignment.End),
+                text = "$currentTextSize/$maxSize",
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
     }
 }
 
@@ -85,7 +84,6 @@ fun CepTextField(
 fun CepTextFieldPreview(){
     var text by rememberSaveable { mutableStateOf("") }
     CepTextField(
-        modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing),
         nameField = "Name",
         text = text,
         onChangeText = { newText -> text = newText },

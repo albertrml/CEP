@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
+import br.com.arml.cep.model.mock.mockUnfavoritePlaceEntries
 import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
@@ -74,4 +76,18 @@ fun CachePlaceListComponent(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CachePlaceListComponentPreview(){
+    CachePlaceListComponent(
+        fetchResponse = Response.Success(mockUnfavoritePlaceEntries),
+        onFavoriteIconClick = {},
+        onDeleteIconClick = {},
+        onCepFilter = {},
+        onClearFilter = {},
+        onNavigateToDetail = {},
+        onDeleteCacheClick = {}
+    )
 }

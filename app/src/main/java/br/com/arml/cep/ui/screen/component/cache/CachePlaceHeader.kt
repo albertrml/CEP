@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.ui.screen.component.common.Header
 
@@ -17,4 +18,10 @@ fun CachePlaceHeaderList(
         logo = Icons.Default.FavoriteBorder,
         title = stringResource(R.string.cache_title)
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CachePlaceHeaderListPreview() {
+    CachePlaceHeaderList()
 }

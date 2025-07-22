@@ -10,7 +10,7 @@ import br.com.arml.cep.model.entity.PlaceEntry
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface PlaceDao {
+interface PlaceLocalDataSource {
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun create(placeEntry: PlaceEntry)

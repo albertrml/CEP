@@ -12,9 +12,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import br.com.arml.cep.R
 
 sealed class CepDestination(
-    @StringRes val label: Int,
+    @field:StringRes val label: Int,
     val icon: ImageVector,
-    @StringRes val contentDescription: Int
+    @field:StringRes val contentDescription: Int
 ) {
     data object SearchDestination : CepDestination(
         label = R.string.destination_search,

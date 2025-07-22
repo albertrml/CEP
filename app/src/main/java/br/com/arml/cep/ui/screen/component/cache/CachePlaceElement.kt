@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +24,7 @@ fun CachePlaceElement(
     onFavoriteIconClick: (PlaceEntry) -> Unit,
     onDeleteIconClick: (PlaceEntry) -> Unit,
 ) {
-    Card(
+    ElevatedCard(
         modifier = modifier,
         shape = MaterialTheme.shapes.small
     ) {
@@ -38,7 +38,6 @@ fun CachePlaceElement(
                     tint = Color.Red
                 )
             }
-
             PlaceElement(
                 modifier = Modifier,
                 placeEntry = place,

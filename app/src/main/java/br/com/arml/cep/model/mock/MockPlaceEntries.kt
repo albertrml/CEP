@@ -26,6 +26,10 @@ val mockPlaceEntries = List<PlaceEntry>(15){ i ->
     )
 }
 
+val mockUnfavoritePlaceEntries = mockPlaceEntries.filter { it.isFavorite == Favorite(false) }
+val mockFavoritePlaceEntries = mockPlaceEntries.filter { it.isFavorite == Favorite(true) }
+
+/*
 val mockFavoritePlaceEntries = List<PlaceEntry>(20){ i ->
     PlaceEntry(
         cep = Cep.build("${i%10}".repeat(8)),
@@ -44,4 +48,4 @@ val mockFavoritePlaceEntries = List<PlaceEntry>(20){ i ->
         isFavorite = Favorite(true),
         note = Note.build("Título $i", "Conteúdo $i")
     )
-}
+}*/

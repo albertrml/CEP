@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.ui.theme.dimens
 
@@ -48,8 +49,17 @@ fun DeleteAllComponent(
             )
             Text(
                 text = stringResource(R.string.show_delete_alert_button),
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DeleteAllComponentPreview(){
+    DeleteAllComponent(
+        typeName = "Log",
+        showDeleteAlert = {}
+    )
 }

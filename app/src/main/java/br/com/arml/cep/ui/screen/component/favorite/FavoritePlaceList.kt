@@ -9,13 +9,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.mock.mockFavoritePlaceEntries
 import br.com.arml.cep.ui.screen.component.common.ScrollableFab
 import br.com.arml.cep.ui.screen.component.place.PlaceElement
 import br.com.arml.cep.ui.theme.dimens
@@ -30,13 +32,13 @@ fun FavoritePlaceList(
     val lazyListState = rememberLazyListState()
     ScrollableFab(listState = lazyListState) {
         LazyColumn(
-            modifier = modifier,
+            modifier = modifier.padding(vertical = MaterialTheme.dimens.smallPadding),
             state = lazyListState,
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
         ) {
             items(places) { place ->
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Card(
+                    ElevatedCard(
                         modifier = Modifier.clickable(onClick = { onNavigateToDetail(place) }),
                         shape = MaterialTheme.shapes.small
                     ) {
@@ -54,4 +56,14 @@ fun FavoritePlaceList(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FavoritePlaceListPreview(){
+    FavoritePlaceList(
+        places = mockFavoritePlaceEntries,
+        onFavoriteIconClick = {},
+        onNavigateToDetail = {}
+    )
 }

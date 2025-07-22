@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.ui.screen.component.search.SearchCepField
 import br.com.arml.cep.ui.theme.dimens
@@ -54,14 +55,14 @@ fun FieldFilter(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
+        verticalArrangement = Arrangement.Center
     ) {
         CepTextField(
             modifier = modifier,
             nameField = nameFilter,
             text = text,
             onChangeText = { newText -> text = newText },
-            maxSize = maxSize,
+            maxSize = maxSize
         )
         Button(
             enabled = isButtonActive,
@@ -141,4 +142,38 @@ fun PeriodFilter(
             Text(text = stringResource(R.string.log_filter_button))
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CepFilterPreview(){
+    CepFilter(
+        onFilterByCep = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FieldFilterPreview(){
+    FieldFilter(
+        nameFilter = "Name",
+        maxSize = 100,
+        onFilterByCep = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SingleDateFilterPreview(){
+    SingleDateFilter(
+        onFilterByInitialDate = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PeriodFilterPreview(){
+    PeriodFilter(
+        onFilterByInitialDate = {_,_ ->}
+    )
 }

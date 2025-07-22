@@ -63,9 +63,9 @@ fun SearchScreen(
                                 viewModel.onEvent(SearchEvent.OnClear)
                             }
                         },
-                        onFavoriteClick = {
+                        onFavoriteClick = { placeEntry ->
                             uiStateHolder.navigateBackToListPane {
-                                viewModel.onEvent(SearchEvent.OnFavorite(it))
+                                viewModel.onEvent(SearchEvent.OnFavorite(placeEntry))
                             }
                         }
                     )

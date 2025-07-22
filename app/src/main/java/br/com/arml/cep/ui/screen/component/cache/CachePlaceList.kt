@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.model.mock.mockPlaceEntries
+import br.com.arml.cep.model.mock.mockUnfavoritePlaceEntries
 import br.com.arml.cep.ui.screen.component.common.ScrollableFab
 import br.com.arml.cep.ui.theme.dimens
 
@@ -45,7 +45,7 @@ fun CachePlaceList(
 @Composable
 fun CachePlaceListPreview(){
     CachePlaceList(
-        places = mockPlaceEntries,
+        places = mockUnfavoritePlaceEntries,
         onDeleteIconClick = {},
         onFavoriteIconClick = {},
         onNavigateToDetail = {},

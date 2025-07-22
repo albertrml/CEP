@@ -47,7 +47,7 @@ fun PlaceFilterComponent(
     onNoneFilter: () -> Unit = {}
 ) {
     var selectedFilter by rememberSaveable(stateSaver = PlaceFilterOption.saver) {
-        mutableStateOf<PlaceFilterOption>(PlaceFilterOption.None)
+        mutableStateOf(PlaceFilterOption.None)
     }
     val keyboardController = LocalSoftwareKeyboardController.current
 

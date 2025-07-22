@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.entity.toFormattedBR
 
@@ -102,4 +103,13 @@ fun DatePickerModal(
     ) {
         DatePicker(state = datePickerState)
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DatePickerFieldToModalPreview() {
+    DatePickerFieldToModal(
+        label = "Date",
+        onSelectDate = {}
+    )
 }

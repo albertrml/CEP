@@ -15,8 +15,8 @@ const val DATABASE_NAME = "cep_database"
     exportSchema = true
 )
 abstract class CepRoomDatabase() : RoomDatabase() {
-    abstract fun placeDao(): PlaceDao
-    abstract fun logDao(): LogDao
+    abstract fun placeDao(): PlaceLocalDataSource
+    abstract fun logDao(): LogLocalDataSource
 
     companion object{
         @Volatile

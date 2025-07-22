@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.entity.LogEntry
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
@@ -104,4 +105,20 @@ fun LogListComponent(
             }
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LogListComponentPreview(){
+    LogListComponent(
+        state = LogState(),
+        onFilterByCep = {},
+        onFilterByInitialDate = {},
+        onFilterByFinalDate = {},
+        onFilterByRangeDate = { _, _ -> },
+        onFilterByNone = {},
+        onClickToDeleteEntry = {},
+        onConfirmDeleteAllEntries = {},
+        onCopyToClipboard = {}
+    )
 }

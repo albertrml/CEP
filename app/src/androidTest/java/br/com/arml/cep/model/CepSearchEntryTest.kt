@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import br.com.arml.cep.model.mock.mockPlaceEntries
 import br.com.arml.cep.model.source.local.CepRoomDatabase
-import br.com.arml.cep.model.source.local.PlaceDao
+import br.com.arml.cep.model.source.local.PlaceLocalDataSource
 import junit.framework.TestCase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -22,7 +22,7 @@ import org.junit.Test
 class CepSearchEntryTest {
 
     private lateinit var db: CepRoomDatabase
-    private lateinit var dao: PlaceDao
+    private lateinit var dao: PlaceLocalDataSource
 
     @Before
     fun setup() {

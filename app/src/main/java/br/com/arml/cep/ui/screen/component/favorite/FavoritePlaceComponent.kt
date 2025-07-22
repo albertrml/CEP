@@ -10,9 +10,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
+import br.com.arml.cep.model.mock.mockFavoritePlaceEntries
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
 
@@ -67,4 +69,17 @@ fun FavoritePlaceListComponent(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FavoritePlaceListComponentPreview(){
+    FavoritePlaceListComponent(
+        fetchResponse = Response.Success(mockFavoritePlaceEntries),
+        onFavoriteIconClick = {},
+        onCepFilter = {},
+        onTitleFilter = {},
+        onClearFilter = {},
+        onNavigateToDetail = {}
+    )
 }

@@ -60,7 +60,7 @@ fun CepAlertDialog(
 
 @Preview
 @Composable
-fun InsightAlertDialogPreview() {
+fun CepAlertDialogPreview() {
     CepAlertDialog(
         modifier = Modifier,
         dialogTitle = stringResource(R.string.log_delete_all_log_title),

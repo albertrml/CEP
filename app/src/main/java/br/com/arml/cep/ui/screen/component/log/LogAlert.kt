@@ -3,6 +3,7 @@ package br.com.arml.cep.ui.screen.component.log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.ui.screen.component.common.CepAlertDialog
 
@@ -22,4 +23,14 @@ fun DeleteAllLogAlert(
             onConfirmationRequest = onConfirmation
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DeleteAllLogAlertPreview(){
+    DeleteAllLogAlert(
+        showDialog = true,
+        onDismissRequest = {},
+        onConfirmation = {}
+    )
 }
