@@ -13,11 +13,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
-data class NavigableListDetailPaneScaffoldStateHolder(
+open class NavigableListDetailPaneScaffoldStateHolder(
     val navigator: ThreePaneScaffoldNavigator<Any>,
     private val scope: CoroutineScope,
 ) {
-
     private val isDetailPaneEffectivelyVisible by derivedStateOf {
         navigator.currentDestination?.run {
             pane == ListDetailPaneScaffoldRole.Detail ||

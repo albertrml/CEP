@@ -7,16 +7,25 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
-import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceAlert
-import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceDetailsComponent
-import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceExtraComponent
-import br.com.arml.cep.ui.screen.component.favorite.FavoritePlaceListComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoriteChangeAlert
+import br.com.arml.cep.ui.screen.component.favorite.FavoriteDetailsComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoriteExport
+import br.com.arml.cep.ui.screen.component.favorite.FavoriteExtraComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoriteImport
+import br.com.arml.cep.ui.screen.component.favorite.FavoriteListComponent
 import br.com.arml.cep.ui.theme.dimens
+import br.com.arml.cep.ui.utils.exportBackupLauncher
+import br.com.arml.cep.ui.utils.getExportIntent
+import br.com.arml.cep.ui.utils.getImportIntent
+import br.com.arml.cep.ui.utils.importBackupLauncher
 import br.com.arml.cep.ui.utils.paneEnterTransition
 import br.com.arml.cep.ui.utils.paneExitTransition
 
@@ -28,6 +37,26 @@ fun FavoriteScreen(
     val viewmodel = hiltViewModel<FavoriteViewModel>()
     val state by viewmodel.state.collectAsStateWithLifecycle()
     val uiStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
+    val launcherExportBackup = exportBackupLauncher(
+        context = LocalContext.current,
+        json = (state.exportBackup as? Response.Success<String>)?.result ?: "",
+        onExportRequest = {
+            viewmodel.onEvent(FavoriteEvent.OnExportFavorites)
+        }
+    )
+    val launcherImportBackup = importBackupLauncher(
+        context = LocalContext.current,
+        onSuccess = { json ->
+            viewmodel.onEvent(FavoriteEvent.OnImportBackup(json))
+        }
+    )
+
+    LaunchedEffect(state.exportBackup, state.importBackup) {
+        if (state.exportBackup is Response.Success && state.exportAlert)
+            launcherExportBackup.launch( getExportIntent() )
+        if (state.importBackup is Response.Success && state.importAlert )
+            launcherImportBackup.launch(getImportIntent())
+    }
 
     val marginScreen = Modifier
         .fillMaxSize()
@@ -41,9 +70,15 @@ fun FavoriteScreen(
                 enterTransition = paneEnterTransition,
                 exitTransition = paneExitTransition
             ) {
-                FavoritePlaceListComponent(
+                FavoriteListComponent(
                     modifier = marginScreen,
                     fetchResponse = state.fetchEntries,
+                    onExportClick = {
+                        viewmodel.onEvent(FavoriteEvent.OnExportShow)
+                    },
+                    onImportClick = {
+                        viewmodel.onEvent(FavoriteEvent.OnImportShow)
+                    },
                     onFavoriteIconClick = { place ->
                         viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(place))
                     },
@@ -62,25 +97,44 @@ fun FavoriteScreen(
                         }
                     }
                 )
-                FavoritePlaceAlert(
+                FavoriteChangeAlert(
                     place = state.placeForUnwanted,
                     onDismissRequest = {
                         viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(null))
                     },
                     onConfirmationRequest = {
                         state.placeForUnwanted?.let { place ->
-                            if (place == state.placeForEdit){
+                            if (place == state.placeForEdit) {
                                 uiStateHolder.navigateBackToListPane {
                                     viewmodel.onEvent(
                                         FavoriteEvent.OnClickToUnwanted(place)
                                     )
                                 }
-                            } else{
+                            } else {
                                 viewmodel.onEvent(
                                     FavoriteEvent.OnClickToUnwanted(place)
                                 )
                             }
                         }
+                    }
+                )
+
+                FavoriteImport(
+                    isVisibility = state.importAlert,
+                    onDismissRequest = {
+                        viewmodel.onEvent(FavoriteEvent.OnImportHide)
+                    },
+                    onConfirmationRequest = {
+                        launcherImportBackup.launch(getImportIntent())
+                    }
+                )
+                FavoriteExport(
+                    isVisibility = state.exportAlert,
+                    onDismissRequest = {
+                        viewmodel.onEvent(FavoriteEvent.OnExportHide)
+                    },
+                    onConfirmationRequest = {
+                        launcherExportBackup.launch(getExportIntent())
                     }
                 )
             }
@@ -93,7 +147,7 @@ fun FavoriteScreen(
                     exitTransition = paneExitTransition
                 ) {
                     state.placeForEdit?.let { placeEntry ->
-                        FavoritePlaceDetailsComponent(
+                        FavoriteDetailsComponent(
                             modifier = marginScreen,
                             placeEntry = placeEntry,
                             onNavigateBackToList = {
@@ -123,7 +177,7 @@ fun FavoriteScreen(
                     exitTransition = paneExitTransition
                 ) {
                     state.placeForEdit?.let { placeEntry ->
-                        FavoritePlaceExtraComponent(
+                        FavoriteExtraComponent(
                             modifier = marginScreen,
                             placeEntry = placeEntry,
                             onClickToUpdate = { entry ->

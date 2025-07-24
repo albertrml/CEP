@@ -10,7 +10,7 @@ import br.com.arml.cep.model.mock.mockPlaceEntries
 import br.com.arml.cep.ui.screen.component.common.CepAlertDialog
 
 @Composable
-fun FavoritePlaceAlert(
+fun FavoriteChangeAlert(
     modifier: Modifier = Modifier,
     place: PlaceEntry?,
     onConfirmationRequest: () -> Unit,
@@ -35,8 +35,8 @@ fun FavoritePlaceAlert(
 
 @Preview(showBackground = true)
 @Composable
-fun FavoritePlaceAlertPreview() {
-    FavoritePlaceAlert(
+fun FavoriteAlertPreview() {
+    FavoriteChangeAlert(
         place = mockPlaceEntries.first(),
         onConfirmationRequest = {},
         onDismissRequest = {}

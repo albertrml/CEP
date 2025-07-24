@@ -20,7 +20,7 @@ import br.com.arml.cep.model.mock.mockPlaceEntries
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun FavoritePlaceUpdateButton(
+fun FavoriteUpdateButton(
     modifier: Modifier = Modifier,
     place: PlaceEntry,
     title: String,
@@ -49,8 +49,8 @@ fun FavoritePlaceUpdateButton(
 
 @Preview(showBackground = true)
 @Composable
-fun FavoritePlaceUpdateButtonPreview() {
-    FavoritePlaceUpdateButton(
+fun FavoriteUpdateButtonPreview() {
+    FavoriteUpdateButton(
         place = mockPlaceEntries.first(),
         title = "teste",
         note = "teste",

@@ -19,13 +19,17 @@ class PlaceRepository @Inject constructor(
     private val placeLocalDataSource: PlaceLocalDataSource,
     private val logLocalDataSource: LogLocalDataSource
 ){
+    fun deleteAllUnwantedPlaces() = asResponse { placeLocalDataSource.deleteAllNotFavorite() }
+    fun deletePlace(entry: PlaceEntry) = asResponse { placeLocalDataSource.delete(entry) }
+    fun filterPlacesByCep(query: String) = placeLocalDataSource.filterByCep(query)
+    fun filterPlacesByCepAndFavorite(query: String) = placeLocalDataSource.filterByCepAndFavorite(query)
     fun getAddressByCep(cep: Cep): Flow<Response<Address>> = asResponse {
         val zipCode = cep.text
         val cepDAO = placeRemoteDataSource.getAddressByCep(zipCode)
         if (cepDAO.erro == "true") throw CepException.NotFoundCepException()
         cepDAO.toAddress()
     }
-
+    fun getFavoritePlaces() = placeLocalDataSource.readFavorites()
     fun getPlace(cep: Cep): Flow<Response<PlaceEntry>> = asResponse {
         /* get the entry from the database */
         val zipCode = cep.text
@@ -52,16 +56,16 @@ class PlaceRepository @Inject constructor(
         /* return the entry from the database */
         entry
     }
-
-    fun updatePlace(entry: PlaceEntry) = asResponse { placeLocalDataSource.update(entry) }
-    fun deletePlace(entry: PlaceEntry) = asResponse { placeLocalDataSource.delete(entry) }
-
-    fun getFavoritePlaces() = placeLocalDataSource.readFavorites()
-    fun filterPlacesByCep(query: String) = placeLocalDataSource.filterByCep(query)
-    fun filterPlacesByCepAndFavorite(query: String) = placeLocalDataSource.filterByCepAndFavorite(query)
-
     fun getUnwantedPlaces() = placeLocalDataSource.readUnwanted()
     fun getUnwantedPlacesByCepAndUnwanted(query: String) = placeLocalDataSource.filterByCepAndUnwanted(query)
-    fun deleteAllUnwantedPlaces() = asResponse { placeLocalDataSource.deleteAllNotFavorite() }
+    fun importFavoritePlaces(places: List<PlaceEntry>) = asResponse {
+        places.forEach {
+            if (placeLocalDataSource.read(it.cep.text) != null)
+                placeLocalDataSource.update(it)
+            else
+                placeLocalDataSource.create(it)
+        }
+    }
+    fun updatePlace(entry: PlaceEntry) = asResponse { placeLocalDataSource.update(entry) }
 }
 

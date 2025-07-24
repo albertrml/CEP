@@ -7,7 +7,7 @@ import br.com.arml.cep.ui.screen.component.place.PlaceFilterComponent
 import br.com.arml.cep.ui.utils.favoriteFilterOptions
 
 @Composable
-fun FavoritePlaceFilter(
+fun FavoriteFilter(
     modifier: Modifier = Modifier,
     onFilterByCep: (String) -> Unit = {},
     onFilterByTitle: (String) -> Unit = {},
@@ -24,6 +24,6 @@ fun FavoritePlaceFilter(
 
 @Preview(showBackground = true)
 @Composable
-fun FavoritePlaceFilterPreview() {
-    FavoritePlaceFilter()
+fun FavoriteFilterPreview() {
+    FavoriteFilter()
 }

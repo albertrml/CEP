@@ -28,4 +28,3 @@ data class PlaceEntry(
     val isFavorite: Favorite = Favorite(),
     val note: Note? = null
 )
-

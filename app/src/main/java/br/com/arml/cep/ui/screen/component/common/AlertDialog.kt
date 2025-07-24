@@ -18,7 +18,6 @@ fun CepAlertDialog(
     onDismissRequest: () -> Unit,
     onConfirmationRequest: () -> Unit
 ) {
-
     AlertDialog(
         modifier = modifier,
         title = {
@@ -53,9 +52,7 @@ fun CepAlertDialog(
                 )
             }
         }
-
     )
-
 }
 
 @Preview

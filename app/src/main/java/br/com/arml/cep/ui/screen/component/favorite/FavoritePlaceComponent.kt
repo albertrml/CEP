@@ -19,9 +19,11 @@ import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
 
 @Composable
-fun FavoritePlaceListComponent(
+fun FavoriteListComponent(
     modifier: Modifier = Modifier,
     fetchResponse: Response<List<PlaceEntry>>,
+    onImportClick: () -> Unit = {},
+    onExportClick: () -> Unit = {},
     onFavoriteIconClick: (PlaceEntry) -> Unit,
     onCepFilter: (String) -> Unit,
     onTitleFilter: (String) -> Unit,
@@ -33,8 +35,11 @@ fun FavoritePlaceListComponent(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
     ) {
-        FavoritePlaceHeaderList()
-        FavoritePlaceFilter(
+        FavoriteListHeader(
+            onImportClick = onImportClick,
+            onExportClick = onExportClick
+        )
+        FavoriteFilter(
             modifier = Modifier.fillMaxWidth(),
             onFilterByCep = { query -> onCepFilter(query) },
             onFilterByTitle = { query -> onTitleFilter(query) },
@@ -48,7 +53,7 @@ fun FavoritePlaceListComponent(
         ) {
             fetchResponse.ShowResults(
                 successContent = { places ->
-                    FavoritePlaceList(
+                    FavoriteList(
                         modifier = Modifier.align(Alignment.TopCenter),
                         places = places,
                         onFavoriteIconClick = { place -> onFavoriteIconClick(place) },
@@ -73,8 +78,8 @@ fun FavoritePlaceListComponent(
 
 @Preview(showBackground = true)
 @Composable
-fun FavoritePlaceListComponentPreview(){
-    FavoritePlaceListComponent(
+fun FavoriteListComponentPreview(){
+    FavoriteListComponent(
         fetchResponse = Response.Success(mockFavoritePlaceEntries),
         onFavoriteIconClick = {},
         onCepFilter = {},

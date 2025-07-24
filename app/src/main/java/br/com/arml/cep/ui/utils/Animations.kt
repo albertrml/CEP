@@ -11,12 +11,12 @@ import androidx.compose.animation.slideOutHorizontally
 
 val paneEnterTransition = fadeIn(
     animationSpec = spring(
-        dampingRatio = Spring.DampingRatioMediumBouncy,
+        dampingRatio = Spring.DampingRatioNoBouncy,
         stiffness = Spring.StiffnessMediumLow
     )
 ) + slideInHorizontally(
     animationSpec = spring(
-        dampingRatio = Spring.DampingRatioMediumBouncy,
+        dampingRatio = Spring.DampingRatioNoBouncy,
         stiffness = Spring.StiffnessMediumLow
 
     )
@@ -37,12 +37,12 @@ val paneExitTransition = fadeOut(
 
 val filterEnterTransition = fadeIn(
     animationSpec = spring(
-        dampingRatio = Spring.DampingRatioMediumBouncy,
+        dampingRatio = Spring.DampingRatioLowBouncy,
         stiffness = Spring.StiffnessMediumLow
     )
 ) + expandVertically(
     animationSpec = spring(
-        dampingRatio = Spring.DampingRatioMediumBouncy,
+        dampingRatio = Spring.DampingRatioLowBouncy,
         stiffness = Spring.StiffnessMediumLow
     )
 )

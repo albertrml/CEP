@@ -45,4 +45,7 @@ interface PlaceLocalDataSource {
     @Query("SELECT * FROM place_table WHERE cep LIKE '%' || :query || '%' AND favorite_status = 0")
     fun filterByCepAndUnwanted(query: String): Flow<List<PlaceEntry>>
 
+    @Query("SELECT * FROM place_table WHERE :cep = cep")
+    fun checkIfCepExists(cep: String): Boolean
+
 }

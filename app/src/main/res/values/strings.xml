@@ -32,6 +32,10 @@
     <string name="display_street_field">"Rua: "</string>
     <string name="display_uf_field">"UF: "</string>
     <string name="display_zipcode_field">"CEP: "</string>
+    <string name="favorite_list_export_title">Exportar</string>
+    <string name="favorite_list_export_msg">Deseja exportar os registros salvos como favoritos?</string>
+    <string name="favorite_list_import_title">Importar</string>
+    <string name="favorite_list_import_msg">Deseja selecionar arquivo de backup para importar?</string>
     <string name="favorite_details_title">Editar Favorito</string>
     <string name="favorite_details_title_error_msg">O título deve conter entre %1$s e %2$s caracteres</string>
     <string name="favorite_details_update_button">Atualizar</string>

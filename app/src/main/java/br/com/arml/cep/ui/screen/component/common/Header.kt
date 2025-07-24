@@ -3,8 +3,14 @@ package br.com.arml.cep.ui.screen.component.common
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.sharp.Home
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -24,7 +31,8 @@ fun Header(
     logo: ImageVector? = null,
     colorLogo: Color? = null,
     title: String,
-    onClickLogo: () -> Unit = {}
+    onClickLogo: () -> Unit = {},
+    menu: @Composable () -> Unit = {}
 ){
     Column(
         modifier = modifier,
@@ -60,6 +68,7 @@ fun Header(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
+            menu()
         }
         HorizontalDivider(
             modifier = Modifier
@@ -68,4 +77,44 @@ fun Header(
             color = MaterialTheme.colorScheme.onBackground
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HeaderPreview(){
+    Header(
+        modifier = Modifier.fillMaxSize(),
+        logo = Icons.AutoMirrored.Filled.ArrowBack,
+        title = "Header",
+        onClickLogo = {},
+        menu = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                IconButton(
+                    onClick = {}
+                ) {
+                    Icon(
+                        modifier = Modifier.fillMaxSize(),
+                        imageVector = Icons.Rounded.Favorite,
+                        contentDescription = "Menu"
+                    )
+                }
+
+                Spacer(Modifier.padding(horizontal = MaterialTheme.dimens.smallSpacing))
+                
+                IconButton(
+                    onClick = {}
+                ) {
+                    Icon(
+                        modifier = Modifier.fillMaxSize(),
+                        imageVector = Icons.Sharp.Home,
+                        contentDescription = "Menu"
+                    )
+                }
+            }
+        }
+    )
 }

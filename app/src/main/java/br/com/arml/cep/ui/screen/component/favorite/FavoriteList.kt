@@ -23,7 +23,7 @@ import br.com.arml.cep.ui.screen.component.place.PlaceElement
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun FavoritePlaceList(
+fun FavoriteList(
     modifier: Modifier = Modifier,
     places: List<PlaceEntry>,
     onFavoriteIconClick: (PlaceEntry) -> Unit,
@@ -60,8 +60,8 @@ fun FavoritePlaceList(
 
 @Preview(showBackground = true)
 @Composable
-fun FavoritePlaceListPreview(){
-    FavoritePlaceList(
+fun FavoriteListPreview(){
+    FavoriteList(
         places = mockFavoritePlaceEntries,
         onFavoriteIconClick = {},
         onNavigateToDetail = {}

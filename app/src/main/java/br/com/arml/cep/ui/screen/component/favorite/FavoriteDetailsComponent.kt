@@ -31,7 +31,7 @@ import br.com.arml.cep.ui.screen.component.common.CepTextField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun FavoritePlaceDetailsComponent(
+fun FavoriteDetailsComponent(
     modifier: Modifier,
     placeEntry: PlaceEntry,
     onNavigateBackToList: () -> Unit,
@@ -42,7 +42,7 @@ fun FavoritePlaceDetailsComponent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
     ) {
-        FavoritePlaceHeaderDetails(onNavigateBackToList = onNavigateBackToList)
+        FavoriteDetailsHeader(onNavigateBackToList = onNavigateBackToList)
         SearchAddressForms(
             modifier = Modifier.weight(1f),
             address = placeEntry.address
@@ -58,7 +58,7 @@ fun FavoritePlaceDetailsComponent(
 
 
 @Composable
-fun FavoritePlaceExtraComponent(
+fun FavoriteExtraComponent(
     modifier: Modifier = Modifier,
     placeEntry: PlaceEntry,
     onClickToUpdate: (PlaceEntry) -> Unit,
@@ -72,7 +72,7 @@ fun FavoritePlaceExtraComponent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        FavoritePlaceHeaderDetails(
+        FavoriteDetailsHeader(
             modifier = Modifier,
             onNavigateBackToList = onNavigateBackToDetails
         )
@@ -106,7 +106,7 @@ fun FavoritePlaceExtraComponent(
                 minLines = 7,
                 maxLines = 10
             )
-            FavoritePlaceUpdateButton(
+            FavoriteUpdateButton(
                 place = placeEntry,
                 title = title,
                 note = note,
@@ -119,7 +119,7 @@ fun FavoritePlaceExtraComponent(
 @Preview(showBackground = true)
 @Composable
 fun PlaceDetailsPreview() {
-    FavoritePlaceDetailsComponent(
+    FavoriteDetailsComponent(
         modifier = Modifier,
         placeEntry = mockFavoritePlaceEntries.first(),
         onNavigateBackToList = {},
@@ -131,7 +131,7 @@ fun PlaceDetailsPreview() {
 @Preview(showBackground = true)
 @Composable
 fun PlaceExtraPreview() {
-    FavoritePlaceExtraComponent(
+    FavoriteExtraComponent(
         modifier = Modifier.fillMaxSize(),
         placeEntry = mockFavoritePlaceEntries.first(),
         onClickToUpdate = {},

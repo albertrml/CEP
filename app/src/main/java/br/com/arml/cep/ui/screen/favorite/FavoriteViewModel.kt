@@ -32,22 +32,20 @@ class FavoriteViewModel @Inject constructor(
     fun onEvent(event: FavoriteEvent) {
         when (event) {
             is FavoriteEvent.OnClickToUnwanted -> changeFavoriteToUnwanted(event.placeEntry)
+            is FavoriteEvent.OnExportFavorites -> exportFavorites()
+            is FavoriteEvent.OnExportHide -> exportHide()
+            is FavoriteEvent.OnExportShow -> exportShow()
             is FavoriteEvent.OnFetchFavorites -> fetchFavorites()
             is FavoriteEvent.OnFilterByCep -> filterByCep(event.cep)
             is FavoriteEvent.OnFilterByTitle -> filterByTitle(event.title)
             is FavoriteEvent.OnFilterNone -> filterByNone()
-            is FavoriteEvent.OnUpdateFavorite -> updateFavorite(event.placeEntry)
-            is FavoriteEvent.OnSelectEntryToUnwanted -> selectEntryToUnwanted(event.placeEntry)
+            is FavoriteEvent.OnImportBackup -> importBackup(event.json)
+            is FavoriteEvent.OnImportHide -> importHide()
+            is FavoriteEvent.OnImportShow -> importShow()
             is FavoriteEvent.OnSelectEntryToEdit -> selectEntryToEdit(event.placeEntry)
+            is FavoriteEvent.OnSelectEntryToUnwanted -> selectEntryToUnwanted(event.placeEntry)
+            is FavoriteEvent.OnUpdateFavorite -> updateFavorite(event.placeEntry)
         }
-    }
-
-    private fun selectEntryToUnwanted(placeEntry: PlaceEntry?) {
-        _state.update { it.copy(placeForUnwanted = placeEntry) }
-    }
-
-    private fun selectEntryToEdit(placeEntry: PlaceEntry?) {
-        _state.update { it.copy(placeForEdit = placeEntry) }
     }
 
     private fun changeFavoriteToUnwanted(placeEntry: PlaceEntry) {
@@ -59,11 +57,12 @@ class FavoriteViewModel @Inject constructor(
                 )
                 favoriteUseCase.update(newEntry).collect { response ->
                     _state.update {
-                        when(response){
+                        when (response) {
                             is Response.Success -> it.copy(
                                 placeForUnwanted = null,
                                 updateEntry = response
                             )
+
                             else -> it.copy(updateEntry = response)
                         }
                     }
@@ -72,14 +71,43 @@ class FavoriteViewModel @Inject constructor(
         }
     }
 
-    private fun fetchFavorites() {
-        launchFetchEntriesFlow(favoriteUseCase.fetchFavorites(), PlaceFilterOption.None)
+    private fun exportFavorites() {
+        viewModelScope.launch {
+            favoriteUseCase.exportFavorite().collect { response ->
+                _state.update { state ->
+                    when (response) {
+                        is Response.Success -> state.copy(
+                            exportBackup = response,
+                            exportAlert = false
+                        )
+
+                        else -> state.copy(exportBackup = response)
+                    }
+                }
+            }
+        }
     }
 
-    private fun filterByNone() {
-        if (state.value.filterOperation !is PlaceFilterOption.None) {
-            launchFetchEntriesFlow(favoriteUseCase.fetchFavorites(), PlaceFilterOption.None)
+    private fun exportHide() {
+        _state.update {
+            it.copy(
+                exportBackup = Response.Loading,
+                exportAlert = false
+            )
         }
+    }
+
+    private fun exportShow() {
+        _state.update {
+            it.copy(
+                exportBackup = Response.Loading,
+                exportAlert = true
+            )
+        }
+    }
+
+    private fun fetchFavorites() {
+        launchFetchEntriesFlow(favoriteUseCase.fetchFavorites(), PlaceFilterOption.None)
     }
 
     private fun filterByCep(query: String) {
@@ -88,6 +116,56 @@ class FavoriteViewModel @Inject constructor(
 
     private fun filterByTitle(query: String) {
         launchFetchEntriesFlow(favoriteUseCase.filterByTitle(query), PlaceFilterOption.ByTitle)
+    }
+
+    private fun filterByNone() {
+        if (state.value.filterOperation !is PlaceFilterOption.None) {
+            launchFetchEntriesFlow(favoriteUseCase.fetchFavorites(), PlaceFilterOption.None)
+        }
+    }
+
+    private fun importBackup(json: String) {
+        viewModelScope.launch {
+            favoriteUseCase.importFavorite(json).collect { response ->
+                _state.update {
+                    when (response) {
+                        is Response.Success -> it.copy(
+                            importBackup = response,
+                            importAlert = false
+                        )
+                        else -> {
+                            it.copy(importBackup = response)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun importHide() {
+        _state.update {
+            it.copy(
+                importBackup = Response.Loading,
+                importAlert = false
+            )
+        }
+    }
+
+    private fun importShow() {
+        _state.update {
+            it.copy(
+                importBackup = Response.Loading,
+                importAlert = true
+            )
+        }
+    }
+
+    private fun selectEntryToEdit(placeEntry: PlaceEntry?) {
+        _state.update { it.copy(placeForEdit = placeEntry) }
+    }
+
+    private fun selectEntryToUnwanted(placeEntry: PlaceEntry?) {
+        _state.update { it.copy(placeForUnwanted = placeEntry) }
     }
 
     private fun updateFavorite(entry: PlaceEntry) {
