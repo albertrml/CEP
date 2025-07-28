@@ -10,6 +10,7 @@ object CepConverter {
         return cep?.text
     }
 
+
     @TypeConverter
     fun fromStringToCep(cepText: String?): Cep? {
         return cepText?.let {

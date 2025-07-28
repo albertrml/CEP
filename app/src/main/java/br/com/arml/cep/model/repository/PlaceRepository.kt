@@ -21,7 +21,7 @@ class PlaceRepository @Inject constructor(
 ){
     fun deleteAllUnwantedPlaces() = asResponse { placeLocalDataSource.deleteAllNotFavorite() }
     fun deletePlace(entry: PlaceEntry) = asResponse { placeLocalDataSource.delete(entry) }
-    fun filterPlacesByCep(query: String) = placeLocalDataSource.filterByCep(query)
+    fun filterPlacesByCep(query: String):Flow<List<PlaceEntry>> = placeLocalDataSource.filterByCep(query)
     fun filterPlacesByCepAndFavorite(query: String) = placeLocalDataSource.filterByCepAndFavorite(query)
     fun getAddressByCep(cep: Cep): Flow<Response<Address>> = asResponse {
         val zipCode = cep.text

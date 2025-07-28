@@ -1,4 +1,4 @@
-package br.com.arml.cep.model.converter
+package br.com.arml.cep.model.adapter
 
 import br.com.arml.cep.model.entity.PlaceEntry
 import com.squareup.moshi.JsonAdapter

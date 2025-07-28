@@ -24,7 +24,7 @@ data class Note private constructor(
     }
 
     private fun isContentTooLong() {
-        if(title.length > MAX_CONTENT_LENGTH) throw NoteException.ContentTooLongException()
+        if(content.length > MAX_CONTENT_LENGTH) throw NoteException.ContentTooLongException()
     }
 
     companion object{

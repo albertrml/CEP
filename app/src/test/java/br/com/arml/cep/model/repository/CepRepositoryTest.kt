@@ -1,18 +1,23 @@
-package br.com.arml.cep.repository
+package br.com.arml.cep.model.repository
 
-import br.com.arml.cep.model.dto.AddressDTO
 import br.com.arml.cep.model.domain.Cep
-import br.com.arml.cep.model.repository.PlaceRepository
+import br.com.arml.cep.model.domain.Favorite
+import br.com.arml.cep.model.domain.Response
+import br.com.arml.cep.model.dto.AddressDTO
+import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.exception.CepException
+import br.com.arml.cep.model.mock.mockPlaceEntries
+import br.com.arml.cep.model.mock.mockUnfavoritePlaceEntries
+import br.com.arml.cep.model.source.local.LogLocalDataSource
 import br.com.arml.cep.model.source.local.PlaceLocalDataSource
 import br.com.arml.cep.model.source.remote.PlaceRemoteDataSource
-import br.com.arml.cep.model.exception.CepException
-import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.mock.mockPlaceEntries
-import br.com.arml.cep.model.source.local.LogLocalDataSource
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -45,6 +50,7 @@ class CepRepositoryTest {
         repository = PlaceRepository(service,placeLocalDataSource,logLocalDataSource)
     }
 
+    /*** Get Address ***/
     @Test
     fun `should emit success when getAddressByCep works properly`() = runTest {
         val cep = Cep.build("12345678")
@@ -131,18 +137,17 @@ class CepRepositoryTest {
     /*** Get an Entry ***/
     @Test
     fun `should emit success entry when the cep exists in the database`() = runTest{
-        // getCepEntry(cep: Cep)
-        val entry = mockPlaceEntries[0]
+        val entry = mockPlaceEntries.first()
         coEvery { placeLocalDataSource.read(any()) } returns entry
-        repository.getPlace(entry.cep).collect { response ->
-            when (response) {
-                is Response.Success -> { assertEquals(entry, response.result) }
-                is Response.Loading -> { assertTrue(true) }
-                is Response.Failure -> {
-                    assertTrue("Deveria ser Success, mas foi Failure", false)
-                }
-            }
-        }
+        coEvery { logLocalDataSource.create(any()) } returns Unit
+
+        val flow = repository.getPlace(entry.cep)
+        val collected = flow.toList()
+
+        assertEquals(2,collected.size)
+        assertEquals(Response.Loading, collected.first())
+        assertEquals(Response.Success(entry), collected.last())
+        assertEquals(entry, (collected.last() as Response.Success).result)
     }
 
     @Test
@@ -151,21 +156,15 @@ class CepRepositoryTest {
         coEvery { placeLocalDataSource.read(any()) } returns null
         coEvery { service.getAddressByCep(any()) } returns entry.address.toAddressDTO()
         coEvery { placeLocalDataSource.create(any()) } returns Unit
+        coEvery { logLocalDataSource.create(any()) } returns Unit
 
-        repository.getPlace(entry.cep).collect { response ->
-            when (response) {
-                is Response.Success -> {
-                    assertEquals(entry.cep, response.result.cep)
-                    assertEquals(entry.address, response.result.address)
-                    assertEquals(entry.isFavorite, response.result.isFavorite)
-                    assertEquals(entry.note, response.result.note)
-                }
-                is Response.Loading -> { assertTrue(true) }
-                is Response.Failure -> {
-                    assertTrue("Deveria ser Success, mas foi Failure", false)
-                }
-            }
-        }
+        val flow = repository.getPlace(entry.cep)
+        val collected = flow.toList()
+
+        assertEquals(2,collected.size)
+        assertEquals(Response.Loading, collected.first())
+        assertEquals(Response.Success(entry), collected.last())
+        assertEquals(entry, (collected.last() as Response.Success).result)
     }
 
 
@@ -226,4 +225,135 @@ class CepRepositoryTest {
         }
     }
 
+    /*** Delete All Unwanted Places ***/
+    @Test
+    fun `should delete all unwanted places`() = runTest {
+        coEvery { placeLocalDataSource.deleteAllNotFavorite() } returns Unit
+        val flow = repository.deleteAllUnwantedPlaces()
+        val collected = flow.toList()
+
+        assertEquals(2,collected.size)
+        assertEquals(Response.Loading, collected.first())
+        assertEquals(Response.Success(Unit), collected.last())
+        assertEquals(Unit, (collected.last() as Response.Success).result)
+    }
+
+    /*** Delete Place ***/
+    @Test
+    fun `should emits Loading and Success when delete a place Entry`() = runTest {
+        val entry = mockPlaceEntries[0]
+        coEvery { placeLocalDataSource.delete(entry) } returns Unit
+        val flow = repository.deletePlace(entry)
+        val collected = flow.toList()
+
+        assertEquals(2,collected.size)
+        assertEquals(Response.Loading, collected.first())
+        assertEquals(Response.Success(Unit), collected.last())
+        assertEquals(Unit, (collected.last() as Response.Success).result)
+    }
+
+    /*** Filter Places By Cep ***/
+    @Test
+    fun `should emits filtered places by cep`() = runTest {
+        val cep = mockPlaceEntries.first().cep.text
+        val expectedPlaces = mockPlaceEntries.filter { it.cep.text.contains(cep) }
+        val flowOfPlaces: Flow<List<PlaceEntry>> =  flowOf(expectedPlaces)
+        coEvery { placeLocalDataSource.filterByCep(any()) } returns flowOfPlaces
+
+        val flow = repository.filterPlacesByCep(cep)
+        val result = flow.toList().maxBy { it.size }
+        assertEquals(expectedPlaces,result)
+    }
+
+    /*** Filter Favorite Places by Cep ***/
+    @Test
+    fun `should emits filtered favorite places by cep`() = runTest {
+        val cep = mockPlaceEntries.first().cep.text
+        val expectedFavoritePlaces = mockPlaceEntries.filter {
+            it.cep.text.contains(cep) && it.isFavorite.value
+
+        }
+        val flowOfFavoritePlaces: Flow<List<PlaceEntry>> =  flowOf(expectedFavoritePlaces)
+        coEvery { placeLocalDataSource.filterByCepAndFavorite(any()) } returns flowOfFavoritePlaces
+
+        val flow = repository.filterPlacesByCepAndFavorite(cep)
+        val result = flow.toList().maxBy { it.size }
+
+        assertEquals(expectedFavoritePlaces,result)
+    }
+
+    /*** get Unfavorite Places ***/
+    @Test
+    fun `should emits only unfavorite places`() = runTest {
+        val expectedUnfavoritePlaces = mockPlaceEntries.filter { !it.isFavorite.value }
+        val flowOfUnfavoritePlaces: Flow<List<PlaceEntry>> =  flowOf(expectedUnfavoritePlaces)
+        coEvery { placeLocalDataSource.readUnwanted() } returns flowOfUnfavoritePlaces
+
+        val flow = repository.getUnwantedPlaces()
+        val result = flow.toList().maxBy { it.size }
+        assertEquals(expectedUnfavoritePlaces,result)
+    }
+
+    @Test
+    fun `should emits a specific unfavorite place by cep`() = runTest {
+        val cep = mockPlaceEntries.first().cep.text
+        val expectedUnfavoritePlaces = mockPlaceEntries.filter {
+            it.cep.text.contains(cep) && !it.isFavorite.value
+        }
+        val flowOfUnfavoritePlaces: Flow<List<PlaceEntry>> =  flowOf(expectedUnfavoritePlaces)
+        coEvery { placeLocalDataSource.filterByCepAndUnwanted(any()) } returns flowOfUnfavoritePlaces
+
+        val flow = repository.getUnwantedPlacesByCepAndUnwanted(cep)
+        val result = flow.toList().maxBy { it.size }
+        assertEquals(expectedUnfavoritePlaces,result)
+    }
+
+    /*** Update Place ***/
+    @Test
+    fun `should update an existent place`() = runTest {
+        val oldEntry = mockUnfavoritePlaceEntries.first()
+        val updatedEntry = oldEntry.copy(isFavorite = Favorite(true))
+        coEvery { placeLocalDataSource.update(updatedEntry) } returns Unit
+        val flow = repository.updatePlace(updatedEntry)
+        val collected = flow.toList()
+
+        assertEquals(2,collected.size)
+        assertEquals(Response.Loading, collected.first())
+        assertEquals(Response.Success(Unit), collected.last())
+        assertEquals(Unit, (collected.last() as Response.Success).result)
+    }
+
+    /*** Import Places ***/
+    @Test
+    fun `should create new places when they do not exist in the database`() = runTest {
+        val importedPlaces = mockPlaceEntries
+        importedPlaces.forEach { place ->
+            coEvery { placeLocalDataSource.read(place.cep.text) } returns null
+            coEvery { placeLocalDataSource.create(place) } returns Unit
+        }
+        val flow = repository.importFavoritePlaces(importedPlaces)
+        val collected = flow.toList()
+
+        assertEquals(2,collected.size)
+        assertEquals(Response.Loading, collected.first())
+        assertEquals(Response.Success(Unit), collected.last())
+        assertEquals(Unit, (collected.last() as Response.Success).result)
+    }
+
+    @Test
+    fun `should update places when they exist in the database`() = runTest {
+        val importedPlaces = mockPlaceEntries
+        importedPlaces.forEach { place ->
+            coEvery { placeLocalDataSource.read(place.cep.text) } returns place
+            coEvery { placeLocalDataSource.update(place) } returns Unit
+        }
+
+        val flow = repository.importFavoritePlaces(importedPlaces)
+        val collected = flow.toList()
+
+        assertEquals(2,collected.size)
+        assertEquals(Response.Loading, collected.first())
+        assertEquals(Response.Success(Unit), collected.last())
+        assertEquals(Unit, (collected.last() as Response.Success).result)
+    }
 }

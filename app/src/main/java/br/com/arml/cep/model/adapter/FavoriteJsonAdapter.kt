@@ -14,5 +14,4 @@ class FavoriteJsonAdapter {
     fun fromJson(favorite: Boolean): Favorite {
         return Favorite(favorite)
     }
-
 }

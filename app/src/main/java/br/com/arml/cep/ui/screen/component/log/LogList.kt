@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.model.entity.LogEntry
-import br.com.arml.cep.model.mock.mockLogEntry
+import br.com.arml.cep.model.mock.mockLogEntries
 import br.com.arml.cep.ui.screen.component.common.ScrollableFab
 import br.com.arml.cep.ui.theme.dimens
 
@@ -50,7 +50,7 @@ fun LogList(
 @Composable
 fun LogListPreview(){
     LogList(
-        logEntries = mockLogEntry,
+        logEntries = mockLogEntries,
         onClickToDelete = {},
         onCopyToClipboard = {}
     )

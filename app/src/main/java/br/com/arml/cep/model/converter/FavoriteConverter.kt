@@ -13,5 +13,4 @@ object FavoriteConverter {
     fun fromBooleanToFavorite(isFavorite: Boolean?): Favorite? {
         return isFavorite?.let { Favorite(it) }
     }
-
 }

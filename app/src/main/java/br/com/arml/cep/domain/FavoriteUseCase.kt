@@ -1,7 +1,7 @@
 package br.com.arml.cep.domain
 
-import br.com.arml.cep.model.converter.toJson
-import br.com.arml.cep.model.converter.toPlaceList
+import br.com.arml.cep.model.adapter.toJson
+import br.com.arml.cep.model.adapter.toPlaceList
 import br.com.arml.cep.model.domain.toResponseFlow
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.qualifier.BackupMoshi

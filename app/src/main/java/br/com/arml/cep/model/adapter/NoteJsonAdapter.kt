@@ -7,7 +7,6 @@ import com.squareup.moshi.ToJson
 data class NoteJson(val title: String, val content: String)
 
 class NoteJsonAdapter {
-
     @ToJson
     fun toJson(note: Note): NoteJson {
         return NoteJson(note.title, note.content)
@@ -17,5 +16,4 @@ class NoteJsonAdapter {
     fun fromJson(note: NoteJson): Note {
         return Note.build(note.title, note.content)
     }
-
 }
