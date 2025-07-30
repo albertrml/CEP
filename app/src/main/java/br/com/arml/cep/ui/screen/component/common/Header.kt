@@ -19,17 +19,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import br.com.arml.cep.R
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun Header(
     modifier: Modifier = Modifier,
-    logo: ImageVector? = null,
-    colorLogo: Color? = null,
+    logo: ImageVector,
     title: String,
     onClickLogo: () -> Unit = {},
     menu: @Composable () -> Unit = {}
@@ -44,26 +45,22 @@ fun Header(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            logo?.let { logo ->
-                IconButton(
-                    modifier = Modifier,
-                    onClick = onClickLogo
-                ) {
-                    colorLogo?.let{ colorLogo ->
-                        Icon(
-                            modifier = Modifier.fillMaxSize(),
-                            imageVector = logo,
-                            contentDescription = title,
-                            tint = colorLogo
-                        )
-                    } ?: Icon(
-                        modifier = Modifier.fillMaxSize(),
-                        imageVector = logo,
-                        contentDescription = title
-                    )
-                }
+            IconButton(
+                modifier = Modifier.testTag(
+                    stringResource(R.string.testTag_header_icon)
+                ),
+                onClick = onClickLogo
+            ) {
+                Icon(
+                    modifier = Modifier.fillMaxSize(),
+                    imageVector = logo,
+                    contentDescription = title
+                )
             }
             Text(
+                modifier = Modifier.testTag(
+                    stringResource(R.string.testTag_header_title)
+                ),
                 text = title,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold

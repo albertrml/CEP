@@ -13,7 +13,7 @@
     <string name="destination_cache">Cache</string>
     <string name="destination_favorite">Favorito</string>
     <string name="destination_favorite_description">Ceps favoritos</string>
-    <string name="destination_history">Log</string>
+    <string name="destination_history">Histórico</string>
     <string name="destination_history_description">Histórico de pesquisa</string>
     <string name="destination_search">Procurar</string>
     <string name="destination_search_description">Procurar CEP</string>
@@ -32,18 +32,19 @@
     <string name="display_street_field">"Rua: "</string>
     <string name="display_uf_field">"UF: "</string>
     <string name="display_zipcode_field">"CEP: "</string>
-    <string name="favorite_list_export_title">Exportar</string>
-    <string name="favorite_list_export_msg">Deseja exportar os registros salvos como favoritos?</string>
-    <string name="favorite_list_import_title">Importar</string>
-    <string name="favorite_list_import_msg">Deseja selecionar arquivo de backup para importar?</string>
+    <string name="favorite_address_button">Anotação</string>
     <string name="favorite_details_title">Editar Favorito</string>
     <string name="favorite_details_title_error_msg">O título deve conter entre %1$s e %2$s caracteres</string>
     <string name="favorite_details_update_button">Atualizar</string>
     <string name="favorite_details_update_button_description">Botão para atualizar nota do cep</string>
+    <string name="favorite_list_export_msg">Deseja exportar os registros salvos como favoritos?</string>
+    <string name="favorite_list_export_title">Exportar</string>
+    <string name="favorite_list_import_msg">Deseja selecionar arquivo de backup para importar?</string>
+    <string name="favorite_list_import_title">Importar</string>
     <string name="favorite_place_element_zipcode">CEP: %1$s</string>
     <string name="favorite_title">Favoritos</string>
     <string name="favorite_title_field_filter">Título</string>
-    <string name="favorite_unwanted_alert_text">O %1$s será removido da lista dos favoritos e perderá sua nota, mas permanecerá em cache. Desejas prosseguir</string>
+    <string name="favorite_unwanted_alert_text">O %1$s será removido da lista dos favoritos e perderá sua nota, mas permanecerá em cache. Desejas prosseguir?</string>
     <string name="favorite_unwanted_alert_title">Favorito</string>
     <string name="icon_button_tag">back_button</string>
     <string name="log_cep_field">CEP: %1$s</string>
@@ -74,5 +75,16 @@
     <string name="show_delete_alert_cache">cache</string>
     <string name="show_delete_alert_description">Botão para deletar todos os registros do %1$s</string>
     <string name="show_delete_alert_log">histórico</string>
-    <string name="favorite_address_button">Anotação</string>
+    <string name="testTag_searchScreen_listPane_header">SearchScreenListPaneHeader"</string>
+    <string name="testTag_searchScreen_listPane_cepField">SearchScreenListPaneCepField"</string>
+    <string name="testTag_searchScreen_listPane_searchButton">SearchScreenListPaneSearchButton"</string>
+    <string name="testTag_searchScreen_detailPane_header">SearchScreenDetailPaneHeader"</string>
+    <string name="testTag_searchScreen_detailPane_onSuccess">SearchScreenDetailPaneOnSuccess"</string>
+    <string name="testTag_searchScreen_detailPane_onLoading">SearchScreenDetailPaneOnLoading"</string>
+    <string name="testTag_searchScreen_detailPane_onLoading_circularProgressIndicator">
+        ShowsCircularProgressIndicatorOnSearchScreenDetailPaneOnLoading"
+    </string>
+    <string name="testTag_searchScreen_detailPane_onFailure">SearchScreenDetailPaneOnFailure"</string>
+    <string name="testTag_header_icon">IconHeader"</string>
+    <string name="testTag_header_title">TitleHeader"</string>
 </resources>

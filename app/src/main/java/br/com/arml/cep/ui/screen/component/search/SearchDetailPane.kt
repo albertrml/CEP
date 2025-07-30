@@ -44,78 +44,122 @@ fun SearchDetailPane(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header(
-            modifier = Modifier,
+            modifier = Modifier.testTag(
+                stringResource(R.string.testTag_searchScreen_detailPane_header)
+            ),
             logo = Icons.AutoMirrored.Filled.ArrowBack,
             title = stringResource(R.string.display_address_title),
             onClickLogo = onBackPress
         )
 
         response.ShowResults(
-            successContent = {
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    SearchAddressForms(
-                        modifier = Modifier.padding(
-                            vertical = MaterialTheme.dimens.largeMargin
+            successContent = { place ->
+                SearchDetailPaneOnSuccess(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(
+                            stringResource(R.string.testTag_searchScreen_detailPane_onSuccess)
                         ),
-                        address = it.address
-                    )
-
-                    Button(
-                        enabled = !it.isFavorite.value,
-                        modifier = Modifier.align(Alignment.TopEnd),
-                        onClick = { onFavoriteClick(it) }
-                    ) {
-
-                        val (colorIcon, textButton) = when (it.isFavorite.value) {
-                            true -> {
-                                Color.Red to
-                                        stringResource(R.string.display_saved_entry)
-                            }
-                            false -> {
-                                MaterialTheme.colorScheme.onPrimary to
-                                        stringResource(R.string.display_not_save_entry)
-                            }
-                        }
-                        Icon(
-                            imageVector = Icons.Filled.Favorite,
-                            contentDescription = stringResource(R.string.display_favorite_button_description),
-                            tint = colorIcon
-                        )
-                        Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallPadding))
-                        Text(
-                            text = textButton,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                }
+                    place = place,
+                    onFavoriteClick = onFavoriteClick
+                )
             },
             loadingContent = {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.testTag(stringResource(R.string.display_loading_indicator))
-                    )
-                }
+                SearchDetailPaneOnLoading(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag(
+                            stringResource(R.string.testTag_searchScreen_detailPane_onLoading)
+                        )
+                )
             },
-            failureContent = {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        style = MaterialTheme.typography.titleLarge,
-                        text = it.message ?: CepException.NotFoundCepException().message
-                    )
-                }
+            failureContent = { failure ->
+                SearchDetailPaneOnFailure(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag(
+                            stringResource(R.string.testTag_searchScreen_detailPane_onFailure)
+                        ),
+                    failure = failure
+                )
             }
         )
     }
 }
 
+@Composable
+fun SearchDetailPaneOnSuccess(
+    modifier: Modifier = Modifier,
+    place: PlaceEntry,
+    onFavoriteClick: (PlaceEntry) -> Unit
+) {
+    Box(modifier = modifier) {
+        SearchAddressForms(
+            modifier = Modifier.padding(
+                vertical = MaterialTheme.dimens.largeMargin
+            ),
+            address = place.address
+        )
+        Button(
+            enabled = !place.isFavorite.value,
+            modifier = Modifier.align(Alignment.TopEnd),
+            onClick = { onFavoriteClick(place) }
+        ) {
+            val (colorIcon, textButton) = when (place.isFavorite.value) {
+                true -> {
+                    Color.Red to
+                            stringResource(R.string.display_saved_entry)
+                }
+
+                false -> {
+                    MaterialTheme.colorScheme.onPrimary to
+                            stringResource(R.string.display_not_save_entry)
+                }
+            }
+            Icon(
+                imageVector = Icons.Filled.Favorite,
+                contentDescription = stringResource(R.string.display_favorite_button_description),
+                tint = colorIcon
+            )
+            Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallPadding))
+            Text(
+                text = textButton,
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+    }
+}
+
+@Composable
+fun SearchDetailPaneOnLoading(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_searchScreen_detailPane_onLoading_circularProgressIndicator))
+        )
+    }
+}
+
+@Composable
+fun SearchDetailPaneOnFailure(
+    modifier: Modifier = Modifier,
+    failure: Exception
+) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            style = MaterialTheme.typography.titleLarge,
+            text = failure.message ?: CepException.NotFoundCepException().message
+        )
+    }
+}
 
 @Preview(
     name = "Smart Phone Portrait",

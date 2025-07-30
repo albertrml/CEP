@@ -2,10 +2,10 @@ package br.com.arml.cep.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -23,17 +23,17 @@ sealed class CepDestination(
     )
     data object HistoryDestination : CepDestination(
         label = R.string.destination_history,
-        icon = Icons.AutoMirrored.Filled.List,
+        icon = Icons.Default.History,
         contentDescription = R.string.destination_history_description
     )
     data object FavoriteDestination : CepDestination(
         label = R.string.destination_favorite,
-        icon = Icons.Filled.Favorite,
+        icon = Icons.Default.Favorite,
         contentDescription = R.string.destination_favorite_description
     )
     data object CacheDestination : CepDestination(
         label = R.string.destination_cache,
-        icon = Icons.Filled.FavoriteBorder,
+        icon = Icons.Default.Storage,
         contentDescription = R.string.destination_favorite_description
     )
 

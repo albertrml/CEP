@@ -1,7 +1,7 @@
 package br.com.arml.cep.ui.screen.component.cache
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Storage
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -15,7 +15,7 @@ fun CachePlaceHeaderList(
 ){
     Header(
         modifier = modifier,
-        logo = Icons.Default.FavoriteBorder,
+        logo = Icons.Default.Storage,
         title = stringResource(R.string.cache_title)
     )
 }

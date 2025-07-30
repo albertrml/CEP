@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "br.com.arml.cep"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "br.com.arml.cep"
@@ -44,17 +44,25 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.value(
+                JavaLanguageVersion.of(11)
+            )
+        }
     }
+
     buildFeatures {
         compose = true
     }
-    packaging { // Add this block
+
+    packaging {
         resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
         resources.excludes.add("META-INF/LICENSE.md")
         resources.excludes.add("META-INF/LICENSE-notice.md")
@@ -87,6 +95,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.windowsizeclass)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.text.google.fonts)

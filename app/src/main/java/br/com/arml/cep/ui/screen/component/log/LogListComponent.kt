@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -50,7 +50,7 @@ fun LogListComponent(
     ) {
         Header(
             title = stringResource(R.string.log_title),
-            logo = Icons.AutoMirrored.Filled.List
+            logo = Icons.Default.History
         )
         LogFilterComponent(
             onFilterByCep = { query -> onFilterByCep(query) },

@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -38,7 +39,10 @@ fun SearchListPane(
         verticalArrangement = Arrangement.Center
     ) {
         Header(
-            modifier = Modifier,
+            modifier = Modifier
+                .testTag(
+                    stringResource(R.string.testTag_searchScreen_listPane_header)
+                ),
             title = stringResource(R.string.search_title),
             logo = Icons.Default.Search
         )
@@ -48,12 +52,18 @@ fun SearchListPane(
             verticalArrangement = Arrangement.Center
         ) {
             SearchCepField(
-                modifier = Modifier,
+                modifier = Modifier
+                    .testTag(
+                        stringResource(R.string.testTag_searchScreen_listPane_cepField)
+                    ),
                 onQueryChange = { query = it }
             )
             Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
             Button(
-                modifier = Modifier,
+                modifier = Modifier
+                    .testTag(stringResource(
+                        R.string.testTag_searchScreen_listPane_searchButton)
+                    ),
                 onClick = {
                     keyboardController?.hide()
                     onSearchCep(query)
