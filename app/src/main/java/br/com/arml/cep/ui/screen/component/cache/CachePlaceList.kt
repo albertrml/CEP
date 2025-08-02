@@ -33,8 +33,9 @@ fun CachePlaceList(
                 CachePlaceElement(
                     modifier = Modifier.clickable(onClick = { onNavigateToDetail(place) }),
                     place = place,
-                    onFavoriteIconClick = { onFavoriteIconClick(place) },
-                    onDeleteIconClick = { onDeleteIconClick(place) }
+                    onNavigateToDetail = onNavigateToDetail,
+                    onFavoriteIconClick = onFavoriteIconClick,
+                    onDeleteIconClick = onDeleteIconClick
                 )
             }
         }

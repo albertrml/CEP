@@ -4,10 +4,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,54 +38,71 @@ fun FavoriteListComponent(
     onNavigateToDetail: (PlaceEntry) -> Unit,
 ) {
 
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
-    ) {
-        FavoriteListHeader(
-            onImportClick = onImportClick,
-            onExportClick = onExportClick
-        )
-        FavoriteFilter(
-            modifier = Modifier.fillMaxWidth(),
-            onFilterByCep = { query -> onCepFilter(query) },
-            onFilterByTitle = { query -> onTitleFilter(query) },
-            onNoneFilter = { onClearFilter() }
-        )
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            fetchResponse.ShowResults(
-                successContent = { places ->
-                    FavoriteList(
-                        modifier = Modifier.align(Alignment.TopCenter),
-                        places = places,
-                        onFavoriteIconClick = { place -> onFavoriteIconClick(place) },
-                        onNavigateToDetail = { place -> onNavigateToDetail(place) }
-                    )
-                },
-                loadingContent = {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                },
-                failureContent = { exception ->
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = exception.message ?: FetchPlaceException().message,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(fetchResponse) {
+        if (fetchResponse is Response.Failure) {
+            val exception = fetchResponse.exception
+            val message = exception.message ?: exception.javaClass.simpleName
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
             )
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+    ) { paddingValues ->
+        Column(
+            modifier = modifier.padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
+        ) {
+            FavoriteListHeader(
+                onImportClick = onImportClick,
+                onExportClick = onExportClick
+            )
+            FavoriteFilter(
+                modifier = Modifier.fillMaxWidth(),
+                onFilterByCep = { query -> onCepFilter(query) },
+                onFilterByTitle = { query -> onTitleFilter(query) },
+                onNoneFilter = { onClearFilter() }
+            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                fetchResponse.ShowResults(
+                    successContent = { places ->
+                        FavoriteList(
+                            modifier = Modifier.align(Alignment.TopCenter),
+                            places = places,
+                            onFavoriteIconClick = { place -> onFavoriteIconClick(place) },
+                            onNavigateToDetail = { place -> onNavigateToDetail(place) }
+                        )
+                    },
+                    loadingContent = {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    },
+                    failureContent = { exception ->
+                        Text(
+                            modifier = Modifier.align(Alignment.Center),
+                            text = exception.message ?: FetchPlaceException().message,
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                )
+            }
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun FavoriteListComponentPreview(){
+fun FavoriteListComponentPreview() {
     FavoriteListComponent(
         fetchResponse = Response.Success(mockFavoritePlaceEntries),
         onFavoriteIconClick = {},

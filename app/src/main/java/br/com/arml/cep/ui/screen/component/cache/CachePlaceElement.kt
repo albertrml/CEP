@@ -1,6 +1,8 @@
 package br.com.arml.cep.ui.screen.component.cache
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -16,37 +18,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.mock.mockPlaceEntries
 import br.com.arml.cep.ui.screen.component.place.PlaceElement
+import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun CachePlaceElement(
     modifier: Modifier = Modifier,
     place: PlaceEntry,
+    onNavigateToDetail: (PlaceEntry) -> Unit,
     onFavoriteIconClick: (PlaceEntry) -> Unit,
     onDeleteIconClick: (PlaceEntry) -> Unit,
 ) {
-    ElevatedCard(
-        modifier = modifier,
-        shape = MaterialTheme.shapes.small
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(
-                onClick = { onDeleteIconClick(place) }
-            ) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        ElevatedCard(
+            modifier = modifier,
+            shape = MaterialTheme.shapes.small
+        ) {
+            IconButton( onClick = { onDeleteIconClick(place) } ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = null,
                     tint = Color.Red
                 )
             }
-            PlaceElement(
-                modifier = Modifier,
-                placeEntry = place,
-                favoriteIcon = Icons.Default.FavoriteBorder,
-                colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
-                onFavoriteIconClick = { place -> onFavoriteIconClick(place) }
-            )
         }
+        Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.smallSpacing))
+        PlaceElement(
+            modifier = Modifier.padding(start = MaterialTheme.dimens.smallPadding),
+            placeEntry = place,
+            favoriteIcon = Icons.Default.FavoriteBorder,
+            colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
+            onNavigateToDetail = { place -> onNavigateToDetail(place) },
+            onFavoriteIconClick = { place -> onFavoriteIconClick(place) }
+        )
     }
+
 }
 
 @Preview(showBackground = true)
@@ -55,6 +60,7 @@ fun CachePlaceElementPreview() {
     CachePlaceElement(
         place = mockPlaceEntries.first(),
         onFavoriteIconClick = {},
+        onNavigateToDetail = {},
         onDeleteIconClick = {}
     )
 }

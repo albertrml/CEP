@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.display
+package br.com.arml.cep.ui.search
 
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.hasText

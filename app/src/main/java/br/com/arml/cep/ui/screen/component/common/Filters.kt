@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -22,7 +23,7 @@ import br.com.arml.cep.ui.theme.dimens
 fun CepFilter(
     modifier: Modifier = Modifier,
     onFilterByCep: (String) -> Unit
-){
+) {
     var zipCode by remember { mutableStateOf("") }
     val isButtonActive = zipCode.length >= 3
 
@@ -31,10 +32,13 @@ fun CepFilter(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
     ) {
         SearchCepField(
-            modifier = modifier,
+            modifier = modifier
+                .testTag(stringResource(R.string.testTag_cepFilter_searchField)),
             onQueryChange = { zipCode = it }
         )
         Button(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_cepFilter_searchButton)),
             enabled = isButtonActive,
             onClick = { onFilterByCep(zipCode) },
         ) {
@@ -49,7 +53,7 @@ fun FieldFilter(
     nameFilter: String,
     maxSize: Int,
     onFilterByCep: (String) -> Unit,
-){
+) {
     var text by remember { mutableStateOf("") }
     val isButtonActive = text.length >= 3
 
@@ -77,7 +81,7 @@ fun FieldFilter(
 fun SingleDateFilter(
     modifier: Modifier = Modifier,
     onFilterByInitialDate: (Long) -> Unit
-){
+) {
     var initialDate by remember { mutableStateOf<Long?>(null) }
     val isButtonActive = initialDate != null
 
@@ -92,7 +96,7 @@ fun SingleDateFilter(
         )
         Button(
             enabled = isButtonActive,
-            onClick = { initialDate?.let{ onFilterByInitialDate(it) } },
+            onClick = { initialDate?.let { onFilterByInitialDate(it) } },
         ) {
             Text(text = stringResource(R.string.log_filter_button))
         }
@@ -103,7 +107,7 @@ fun SingleDateFilter(
 fun PeriodFilter(
     modifier: Modifier = Modifier,
     onFilterByInitialDate: (Long, Long) -> Unit
-){
+) {
     var initialDate by remember { mutableStateOf<Long?>(null) }
     var finalDate by remember { mutableStateOf<Long?>(null) }
     val isError = run {
@@ -137,7 +141,7 @@ fun PeriodFilter(
         )
         Button(
             enabled = isButtonActive,
-            onClick = { onFilterByInitialDate(initialDate!!,finalDate!!) },
+            onClick = { onFilterByInitialDate(initialDate!!, finalDate!!) },
         ) {
             Text(text = stringResource(R.string.log_filter_button))
         }
@@ -146,7 +150,7 @@ fun PeriodFilter(
 
 @Preview(showBackground = true)
 @Composable
-fun CepFilterPreview(){
+fun CepFilterPreview() {
     CepFilter(
         onFilterByCep = {}
     )
@@ -154,7 +158,7 @@ fun CepFilterPreview(){
 
 @Preview(showBackground = true)
 @Composable
-fun FieldFilterPreview(){
+fun FieldFilterPreview() {
     FieldFilter(
         nameFilter = "Name",
         maxSize = 100,
@@ -164,7 +168,7 @@ fun FieldFilterPreview(){
 
 @Preview(showBackground = true)
 @Composable
-fun SingleDateFilterPreview(){
+fun SingleDateFilterPreview() {
     SingleDateFilter(
         onFilterByInitialDate = {}
     )
@@ -172,8 +176,8 @@ fun SingleDateFilterPreview(){
 
 @Preview(showBackground = true)
 @Composable
-fun PeriodFilterPreview(){
+fun PeriodFilterPreview() {
     PeriodFilter(
-        onFilterByInitialDate = {_,_ ->}
+        onFilterByInitialDate = { _, _ -> }
     )
 }

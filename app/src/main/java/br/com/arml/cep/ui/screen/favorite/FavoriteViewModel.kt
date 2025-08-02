@@ -76,12 +76,11 @@ class FavoriteViewModel @Inject constructor(
             favoriteUseCase.exportFavorite().collect { response ->
                 _state.update { state ->
                     when (response) {
-                        is Response.Success -> state.copy(
+                        is Response.Loading -> state.copy(exportBackup = response)
+                        else -> state.copy(
                             exportBackup = response,
                             exportAlert = false
                         )
-
-                        else -> state.copy(exportBackup = response)
                     }
                 }
             }
@@ -129,13 +128,11 @@ class FavoriteViewModel @Inject constructor(
             favoriteUseCase.importFavorite(json).collect { response ->
                 _state.update {
                     when (response) {
-                        is Response.Success -> it.copy(
+                        is Response.Loading -> it.copy(importBackup = response)
+                        else -> it.copy(
                             importBackup = response,
                             importAlert = false
                         )
-                        else -> {
-                            it.copy(importBackup = response)
-                        }
                     }
                 }
             }

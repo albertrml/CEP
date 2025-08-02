@@ -7,7 +7,6 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -50,13 +49,6 @@ fun FavoriteScreen(
             viewmodel.onEvent(FavoriteEvent.OnImportBackup(json))
         }
     )
-
-    LaunchedEffect(state.exportBackup, state.importBackup) {
-        if (state.exportBackup is Response.Success && state.exportAlert)
-            launcherExportBackup.launch( getExportIntent() )
-        if (state.importBackup is Response.Success && state.importAlert )
-            launcherImportBackup.launch(getImportIntent())
-    }
 
     val marginScreen = Modifier
         .fillMaxSize()

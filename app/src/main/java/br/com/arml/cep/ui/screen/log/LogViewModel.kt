@@ -93,18 +93,17 @@ class LogViewModel @Inject constructor(
 
     private fun deleteAllLogs() {
         viewModelScope.launch {
-            logUseCase.deleteAllLogs().collect {
-                _state.value = _state.value.copy(deleteLog = it)
+            logUseCase.deleteAllLogs().collect { response ->
+                _state.update { it.copy(deleteLog = response) }
             }
         }
     }
 
     private fun deleteLog(entry: LogEntry) {
         viewModelScope.launch {
-            logUseCase.deleteLog(entry).collect {
-                _state.value = _state.value.copy(deleteLog = it)
+            logUseCase.deleteLog(entry).collect { response ->
+                _state.update { it.copy(deleteLog = response) }
             }
         }
     }
 }
-

@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.search
+package br.com.arml.cep.ui.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,9 +30,9 @@ class CepFieldTest {
         composeTestRule.setContent {
             MaterialTheme {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ){
+                    modifier = Modifier.Companion.fillMaxSize(),
+                    contentAlignment = Alignment.Companion.Center
+                ) {
                     SearchCepField(onQueryChange = ::onQueryChangeCallback)
                 }
             }
@@ -43,12 +43,13 @@ class CepFieldTest {
     fun cepFiels_should_shows_cep_when_lastQuery_is_12345678(){
         var labelText = ""
         composeTestRule.setContent {
-            labelText = stringResource(R.string.search_cep_field_name) // Use o texto do label para encontrar o campo
+            labelText =
+                stringResource(R.string.search_cep_field_name) // Use o texto do label para encontrar o campo
             MaterialTheme {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ){
+                    modifier = Modifier.Companion.fillMaxSize(),
+                    contentAlignment = Alignment.Companion.Center
+                ) {
                     SearchCepField(onQueryChange = ::onQueryChangeCallback)
                 }
             }
@@ -67,9 +68,9 @@ class CepFieldTest {
             labelText = stringResource(R.string.search_cep_field_name)
             MaterialTheme {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ){
+                    modifier = Modifier.Companion.fillMaxSize(),
+                    contentAlignment = Alignment.Companion.Center
+                ) {
                     SearchCepField(onQueryChange = ::onQueryChangeCallback)
                 }
             }
@@ -88,9 +89,9 @@ class CepFieldTest {
             labelText = stringResource(R.string.search_cep_field_name)
             MaterialTheme {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ){
+                    modifier = Modifier.Companion.fillMaxSize(),
+                    contentAlignment = Alignment.Companion.Center
+                ) {
                     SearchCepField(onQueryChange = ::onQueryChangeCallback)
                 }
             }
@@ -109,9 +110,9 @@ class CepFieldTest {
             labelText = stringResource(R.string.search_cep_field_name)
             MaterialTheme {
                 Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ){
+                    modifier = Modifier.Companion.fillMaxSize(),
+                    contentAlignment = Alignment.Companion.Center
+                ) {
                     SearchCepField(onQueryChange = ::onQueryChangeCallback)
                 }
             }

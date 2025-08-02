@@ -75,6 +75,18 @@
     <string name="show_delete_alert_cache">cache</string>
     <string name="show_delete_alert_description">Botão para deletar todos os registros do %1$s</string>
     <string name="show_delete_alert_log">histórico</string>
+
+    <string name="testTag_cepFilter_searchButton">CepFilterSearchButton</string>"
+    <string name="testTag_cepFilter_searchField">CepFilterSearchField</string>
+
+    <string name="testTag_logScreen_DeleteAllLogAlert">LogScreenDeleteAllLogAlert</string>
+    <string name="testTag_logScreen_fetching_OnFailure">LogScreenOnFailure</string>
+    <string name="testTag_logScreen_fetching_OnLoading">LogScreenOnLoading</string>
+    <string name="testTag_logScreen_fetching_OnSuccess">LogScreenOnSuccess</string>
+    <string name="testTag_logScreen_filterComponent">LogScreenFilterComponent</string>
+    <string name="testTag_logScreen_filter_deleteAllComponent">LogScreenDeleteAllComponent</string>
+    <string name="testTag_logScreen_header">LogScreenHeader</string>
+
     <string name="testTag_searchScreen_listPane_header">SearchScreenListPaneHeader"</string>
     <string name="testTag_searchScreen_listPane_cepField">SearchScreenListPaneCepField"</string>
     <string name="testTag_searchScreen_listPane_searchButton">SearchScreenListPaneSearchButton"</string>

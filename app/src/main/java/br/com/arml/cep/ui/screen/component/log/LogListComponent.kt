@@ -16,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -49,10 +50,14 @@ fun LogListComponent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
     ) {
         Header(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_logScreen_header)),
             title = stringResource(R.string.log_title),
             logo = Icons.Default.History
         )
         LogFilterComponent(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_logScreen_filterComponent)),
             onFilterByCep = { query -> onFilterByCep(query) },
             onFilterByInitialDate = { from -> onFilterByInitialDate(from) },
             onFilterByFinalDate = { until -> onFilterByFinalDate(until) },
@@ -61,6 +66,8 @@ fun LogListComponent(
         )
 
         DeleteAllComponent(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_logScreen_filter_deleteAllComponent)),
             typeName = stringResource(R.string.log_title),
             showDeleteAlert = { showDeleteAlert = true }
         )
@@ -74,7 +81,9 @@ fun LogListComponent(
             state.fetchEntries.ShowResults(
                 successContent = { logList ->
                     LogList(
-                        modifier = Modifier.align(Alignment.TopCenter),
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .testTag(stringResource(R.string.testTag_logScreen_fetching_OnSuccess)),
                         logEntries = logList,
                         onClickToDelete = { entry -> onClickToDeleteEntry(entry) },
                         onCopyToClipboard = { entry -> onCopyToClipboard(entry) }
@@ -82,12 +91,18 @@ fun LogListComponent(
                 },
 
                 loadingContent = {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .testTag(stringResource(R.string.testTag_logScreen_fetching_OnLoading))
+                    )
                 },
 
                 failureContent = { exception ->
                     Text(
-                        modifier = Modifier.align(Alignment.Center),
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .testTag(stringResource(R.string.testTag_logScreen_fetching_OnFailure)),
                         text = exception.message ?: FetchPlaceException().message,
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyLarge
@@ -97,6 +112,8 @@ fun LogListComponent(
         }
 
         DeleteAllLogAlert(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_logScreen_DeleteAllLogAlert)),
             showDialog = showDeleteAlert,
             onDismissRequest = { showDeleteAlert = false },
             onConfirmation = {

@@ -1,5 +1,6 @@
 package br.com.arml.cep.ui.screen.component.place
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -7,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.CardColors
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,43 +35,54 @@ fun PlaceElement(
     placeEntry: PlaceEntry,
     favoriteIcon: ImageVector,
     colorFavoriteIcon: Color,
-    onFavoriteIconClick: (PlaceEntry) -> Unit,
+    onNavigateToDetail: (PlaceEntry) -> Unit = {},
+    onFavoriteIconClick: (PlaceEntry) -> Unit = {},
 ) {
-
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+    ElevatedCard(
+        modifier = Modifier.clickable(onClick = { onNavigateToDetail(placeEntry) }),
+        shape = MaterialTheme.shapes.small,
+        colors = CardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+            disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            placeEntry.note?.let {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
+            ) {
+                placeEntry.note?.let {
+                    Text(
+                        text = it.title,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
                 Text(
-                    text = it.title,
-                    style = MaterialTheme.typography.titleMedium
+                    text = stringResource(
+                        R.string.favorite_place_element_zipcode,
+                        placeEntry.address.zipCode
+                    ),
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
-            Text(
-                text = stringResource(
-                    R.string.favorite_place_element_zipcode,
-                    placeEntry.address.zipCode
-                ),
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-        IconButton(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            onClick = { onFavoriteIconClick(placeEntry) },
-        ) {
-            Icon(
-                imageVector = favoriteIcon,
-                contentDescription = null,
-                tint = colorFavoriteIcon
-            )
+            IconButton(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                onClick = { onFavoriteIconClick(placeEntry) },
+            ) {
+                Icon(
+                    imageVector = favoriteIcon,
+                    contentDescription = null,
+                    tint = colorFavoriteIcon
+                )
+            }
         }
     }
 }
@@ -81,6 +95,7 @@ fun UnwantedPlaceElementPreview() {
             placeEntry = mockPlaceEntries.first(),
             colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
             favoriteIcon = Icons.Default.FavoriteBorder,
+            onNavigateToDetail = {},
             onFavoriteIconClick = {}
         )
     }
@@ -100,6 +115,7 @@ fun FavoritePlaceElementPreview() {
             ),
             favoriteIcon = Icons.Default.Favorite,
             colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
+            onNavigateToDetail = {},
             onFavoriteIconClick = {}
         )
     }
