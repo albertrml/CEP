@@ -48,6 +48,15 @@ data class Cep private constructor(
             val onlyDigits = formattedCep.filter { it.isDigit() }
             return onlyDigits.filterIndexed { index, _ -> index < 8 }
         }
+
+        fun isValid(cep: String): Boolean {
+            return try {
+                build(cep)
+                true
+            } catch (_: CepException) {
+                false
+            }
+        }
     }
 }
 

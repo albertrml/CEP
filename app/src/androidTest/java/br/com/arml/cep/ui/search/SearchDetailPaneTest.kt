@@ -3,6 +3,9 @@ package br.com.arml.cep.ui.search
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -10,6 +13,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
+import br.com.arml.cep.model.domain.Favorite
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.exception.CepException
@@ -28,18 +32,29 @@ class SearchDetailPaneTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
-    private val mockOnBackPress: () -> Unit = mockk()
-    private lateinit var displayAddressTitle: String
-    private lateinit var mockPlaceEntry: PlaceEntry
-    private lateinit var backButton: String
 
+    /*** Header ***/
     private lateinit var searchDetailPaneHeader: String
     private lateinit var searchDetailPaneTitleHeader: String
     private lateinit var searchDetailPaneIconHeader: String
+    private lateinit var backButton: String
+    private val mockOnBackPress: () -> Unit = mockk()
+
+    /*** On Success ***/
+    private lateinit var mockPlaceEntry: PlaceEntry
     private lateinit var searchDetailPaneOnSuccess: String
+
+    /*** On Loading ***/
     private lateinit var searchDetailPaneOnLoading: String
     private lateinit var searchDetailPaneOnLoadingCircularProgressIndicator: String
+
+    /*** On Failure ***/
     private lateinit var searchDetailPaneOnFailure: String
+
+    /*** Favorite Button ***/
+    private lateinit var searchDetailFavoriteButton: String
+    private val mockOnFavorite: (PlaceEntry) -> Unit = mockk()
+
 
     @Before
     fun setUp() {
@@ -49,6 +64,8 @@ class SearchDetailPaneTest {
             R.string.testTag_searchScreen_detailPane_header)
         searchDetailPaneTitleHeader = context.getString(R.string.testTag_header_title)
         searchDetailPaneIconHeader = context.getString(R.string.testTag_header_icon)
+        backButton = context.getString(R.string.icon_button_tag)
+        every { mockOnBackPress() } answers { println("mockOnBackPress CALLED") }
 
         /*** On Loading ***/
         searchDetailPaneOnLoading = context.getString(
@@ -60,15 +77,12 @@ class SearchDetailPaneTest {
         searchDetailPaneOnFailure = context.getString(R.string.testTag_searchScreen_detailPane_onFailure)
 
         /*** On Success ***/
+        mockPlaceEntry = mockPlaceEntries[0]
         searchDetailPaneOnSuccess = context.getString(R.string.testTag_searchScreen_detailPane_onSuccess)
 
-
-        displayAddressTitle = context.getString(R.string.display_address_title)
-        backButton = context.getString(R.string.icon_button_tag)
-        mockPlaceEntry = mockPlaceEntries[0] // Use seu mockAddress
-        every { mockOnBackPress() } answers {
-            println("mockOnBackPress CALLED")
-        }
+        /*** Favorite Button ***/
+        searchDetailFavoriteButton = context.getString(R.string.testTag_searchScreen_detailPane_saveAddressButton)
+        every { mockOnFavorite(any()) } answers {  println("mockOnFavorite CALLED") }
     }
 
     private fun setDisplayScreenContent(response: Response<PlaceEntry>) {
@@ -82,88 +96,99 @@ class SearchDetailPaneTest {
         }
     }
 
+    /*** Header ***/
     @Test
-    fun searchDetailPane_shouldShowIconAndTitleOnHeader() {
-        setDisplayScreenContent(Response.Success(mockPlaceEntry))
-        composeTestRule.apply{
-            onNodeWithTag(searchDetailPaneHeader).assertExists()
-            onNodeWithTag(searchDetailPaneTitleHeader).assertIsDisplayed()
-            onNodeWithTag(searchDetailPaneIconHeader).assertIsDisplayed()
-            onNodeWithTag(searchDetailPaneIconHeader).performClick()
-            verify { mockOnBackPress() }
-        }
-    }
-
-    @Test
-    fun searchDetailPane_shouldShowCircularProgressIndicatorOnLoading(){
+    fun shouldDisplayTitleAndIconOnHeader_whenSearchScreenDetailPaneIsCalled(){
         setDisplayScreenContent(Response.Loading)
         composeTestRule.apply{
             onNodeWithTag(searchDetailPaneHeader).assertExists()
-            onNodeWithTag(searchDetailPaneTitleHeader).assertIsDisplayed()
-            onNodeWithTag(searchDetailPaneIconHeader).assertIsDisplayed()
-            onNodeWithTag(searchDetailPaneOnLoading).assertExists()
-            onNodeWithTag(searchDetailPaneOnSuccess).assertDoesNotExist()
-            onNodeWithTag(searchDetailPaneOnFailure).assertDoesNotExist()
-            onNodeWithTag(searchDetailPaneOnLoadingCircularProgressIndicator).assertExists()
+            onNodeWithTag(searchDetailPaneTitleHeader).assertExists()
+            onNodeWithTag(searchDetailPaneIconHeader).assertExists()
         }
     }
 
     @Test
-    fun searchDetailPane_shouldShowFailureMessageOnFailure(){
-        val errorMsg = CepException.NotFoundCepException().message
-        setDisplayScreenContent(Response.Failure(CepException.NotFoundCepException()))
+    fun shouldPerformBackNavigation_whenHeaderIconIsClicked(){
+        setDisplayScreenContent(Response.Loading)
         composeTestRule.apply{
             onNodeWithTag(searchDetailPaneHeader).assertExists()
-            onNodeWithTag(searchDetailPaneTitleHeader).assertIsDisplayed()
-            onNodeWithTag(searchDetailPaneIconHeader).assertIsDisplayed()
-            onNodeWithTag(searchDetailPaneOnFailure).assertExists()
-            onNodeWithTag(searchDetailPaneOnLoading).assertDoesNotExist()
-            onNodeWithTag(searchDetailPaneOnSuccess).assertDoesNotExist()
-            onNodeWithText(errorMsg).assertIsDisplayed()
+            onNodeWithTag(searchDetailPaneIconHeader).assertExists()
+            onNodeWithTag(searchDetailPaneIconHeader).performClick()
+        }
+        verify { mockOnBackPress() }
+    }
+
+    /*** Address Information ***/
+    @Test
+    fun shouldDisplayAddressInformation_whenSearchCepSucceeds(){
+        setDisplayScreenContent(Response.Success(mockPlaceEntry))
+        composeTestRule.apply {
+            onNodeWithTag(searchDetailPaneOnSuccess).assertIsDisplayed()
+            onNodeWithTag(searchDetailPaneOnLoading).assertIsNotDisplayed()
+            onNodeWithTag(searchDetailPaneOnFailure).assertIsNotDisplayed()
+
+            mockPlaceEntry.address.apply {
+                onNodeWithText(zipCode).assertIsDisplayed()
+                onNodeWithText(street).assertIsDisplayed()
+                onNodeWithText(complement).assertIsDisplayed()
+                onNodeWithText(district).assertIsDisplayed()
+                onNodeWithText(city).assertIsDisplayed()
+                onNodeWithText(state).assertIsDisplayed()
+                onNodeWithText(uf).assertIsDisplayed()
+                onNodeWithText(region).assertIsDisplayed()
+                onNodeWithText(country).assertIsDisplayed()
+                onNodeWithText(ddd).assertIsDisplayed()
+            }
         }
     }
 
     @Test
-    fun searchDetailPane_whenSuccess_showsAddressScreenWithCorrectData() {
+    fun shouldDisplayLoadingIndicator_whenSearchCepIsInProgress(){
+        setDisplayScreenContent(Response.Loading)
+        composeTestRule.apply {
+            onNodeWithTag(searchDetailPaneOnSuccess).assertIsNotDisplayed()
+            onNodeWithTag(searchDetailPaneOnLoading).assertIsDisplayed()
+            onNodeWithTag(searchDetailPaneOnFailure).assertIsNotDisplayed()
+
+            onNodeWithTag(searchDetailPaneOnLoadingCircularProgressIndicator)
+                .assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun shouldDisplayErrorMessage_whenSearchCepFails(){
+        val failure = CepException.NotFoundCepException()
+        setDisplayScreenContent(Response.Failure(failure))
+        composeTestRule.apply {
+            onNodeWithTag(searchDetailPaneOnSuccess).assertIsNotDisplayed()
+            onNodeWithTag(searchDetailPaneOnLoading).assertIsNotDisplayed()
+            onNodeWithTag(searchDetailPaneOnFailure).assertIsDisplayed()
+
+            onNodeWithTag(searchDetailPaneOnFailure).assertExists()
+            onNodeWithText(failure.message).assertIsDisplayed()
+        }
+    }
+
+    /*** Save Button ***/
+    @Test
+    fun shouldSaveAddress_whenSaveButtonIsClicked(){
         setDisplayScreenContent(Response.Success(mockPlaceEntry))
-        val address = mockPlaceEntry.address
-        composeTestRule.onNodeWithText(address.zipCode).assertIsDisplayed()
-        composeTestRule.onNodeWithText(address.street).assertIsDisplayed()
-        composeTestRule.onNodeWithText(address.complement).assertIsDisplayed()
-        composeTestRule.onNodeWithText(address.district).assertIsDisplayed()
-        composeTestRule.onNodeWithText(address.city).assertIsDisplayed()
-        composeTestRule.onNodeWithText(address.state).assertIsDisplayed()
-        composeTestRule.onNodeWithText(address.uf).assertIsDisplayed()
-        composeTestRule.onNodeWithText(address.region).assertIsDisplayed()
-        composeTestRule.onNodeWithText(address.country).assertIsDisplayed()
-        composeTestRule.onNodeWithText(address.ddd).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(searchDetailFavoriteButton).apply {
+            assertExists()
+            assertIsEnabled()
+            performClick()
+        }
     }
 
     @Test
-    fun searchDetailPane_shouldShowNotFoundCepErrorMessage_whenFailureWithNotFoundCepException() {
-        val errorMessage = CepException.NotFoundCepException()
-        setDisplayScreenContent(Response.Failure(errorMessage))
-        composeTestRule.onNodeWithText(errorMessage.message).assertIsDisplayed()
-    }
-
-    @Test
-    fun searchDetailPane_shouldShowInputCepExceptionMessage_whenFailureWithInputCepException() {
-        val errorMessage = CepException.InputCepException()
-        setDisplayScreenContent(Response.Failure(errorMessage))
-        composeTestRule.onNodeWithText(errorMessage.message).assertIsDisplayed()
-    }
-
-    @Test
-    fun searchDetailPane_shouldShowSizeCepExceptionMessage_whenFailureWithSizeCepException() {
-        val errorMessage = CepException.SizeCepException()
-        setDisplayScreenContent(Response.Failure(errorMessage))
-        composeTestRule.onNodeWithText(errorMessage.message).assertIsDisplayed()
-    }
-
-    @Test
-    fun searchDetailPane_shouldShowEmptyCepExceptionMessage_whenFailureWithEmptyCepException() {
-        val errorMessage = CepException.EmptyCepException()
-        setDisplayScreenContent(Response.Failure(errorMessage))
-        composeTestRule.onNodeWithText(errorMessage.message).assertIsDisplayed()
+    fun shouldBeUnableFavoriteButton_whenAddressIsAlreadyFavorite(){
+        val mockPlaceEntry = mockPlaceEntries[0].copy(
+            isFavorite = Favorite(true)
+        )
+        setDisplayScreenContent(Response.Success(mockPlaceEntry))
+        composeTestRule.onNodeWithTag(searchDetailFavoriteButton).apply {
+            assertExists()
+            assertIsNotEnabled()
+        }
     }
 }

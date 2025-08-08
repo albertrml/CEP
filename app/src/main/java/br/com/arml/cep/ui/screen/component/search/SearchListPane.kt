@@ -11,8 +11,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -22,6 +24,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
+import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.ui.screen.component.common.Header
 import br.com.arml.cep.ui.theme.dimens
 
@@ -31,6 +34,7 @@ fun SearchListPane(
     onSearchCep: (String) -> Unit = {}
 ) {
     var query by rememberSaveable { mutableStateOf("") }
+    val isActive by remember { derivedStateOf { Cep.isValid(query) } }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
@@ -67,7 +71,8 @@ fun SearchListPane(
                 onClick = {
                     keyboardController?.hide()
                     onSearchCep(query)
-                }
+                },
+                enabled = isActive
             ) {
                 Text(text = stringResource(R.string.search_button_label))
             }

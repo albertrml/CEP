@@ -101,8 +101,12 @@ fun SearchDetailPaneOnSuccess(
             address = place.address
         )
         Button(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .testTag(
+                    stringResource(R.string.testTag_searchScreen_detailPane_saveAddressButton)
+                ),
             enabled = !place.isFavorite.value,
-            modifier = Modifier.align(Alignment.TopEnd),
             onClick = { onFavoriteClick(place) }
         ) {
             val (colorIcon, textButton) = when (place.isFavorite.value) {

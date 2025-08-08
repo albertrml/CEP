@@ -55,6 +55,19 @@ fun FavoriteDetailsHeader(
 }
 
 @Composable
+fun FavoriteExtraHeader(
+    modifier: Modifier = Modifier,
+    onNavigateBackToList: () -> Unit
+) {
+    Header(
+        modifier = modifier,
+        logo = Icons.AutoMirrored.Filled.ArrowBack,
+        title = stringResource(R.string.favorite_extra_title),
+        onClickLogo = onNavigateBackToList
+    )
+}
+
+@Composable
 fun FavoriteListHeaderMenu(
     onExportClick: () -> Unit = {},
     onImportClick: () -> Unit = {}

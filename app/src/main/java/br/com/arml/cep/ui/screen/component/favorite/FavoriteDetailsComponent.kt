@@ -72,7 +72,7 @@ fun FavoriteExtraComponent(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        FavoriteDetailsHeader(
+        FavoriteExtraHeader(
             modifier = Modifier,
             onNavigateBackToList = onNavigateBackToDetails
         )
@@ -95,7 +95,8 @@ fun FavoriteExtraComponent(
                     R.string.favorite_details_title_error_msg,
                     MIN_TITLE_LENGTH,
                     MAX_TITLE_LENGTH
-                )
+                ),
+                showInputSize = true
             )
             CepTextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -104,7 +105,8 @@ fun FavoriteExtraComponent(
                 onChangeText = { note = it },
                 maxSize = MAX_CONTENT_LENGTH,
                 minLines = 7,
-                maxLines = 10
+                maxLines = 10,
+                showInputSize = true
             )
             FavoriteUpdateButton(
                 place = placeEntry,
