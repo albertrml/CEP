@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
 import br.com.arml.cep.ui.screen.component.common.CepFilter
-import br.com.arml.cep.ui.screen.component.common.FieldFilter
+import br.com.arml.cep.ui.screen.component.common.TitleFilter
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.PlaceFilterOption
 import br.com.arml.cep.ui.utils.favoriteFilterOptions
@@ -77,10 +77,10 @@ fun PlaceFilterComponent(
                     )
                 }
                 PlaceFilterOption.ByTitle -> {
-                    FieldFilter(
+                    TitleFilter(
                         nameFilter = stringResource(R.string.favorite_title_field_filter),
                         maxSize = MAX_TITLE_LENGTH,
-                        onFilterByCep = {
+                        onFilterByTitle = {
                             keyboardController?.hide()
                             onFilterByTitle(it)
                         }

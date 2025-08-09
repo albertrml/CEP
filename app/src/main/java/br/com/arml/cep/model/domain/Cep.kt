@@ -2,6 +2,9 @@ package br.com.arml.cep.model.domain
 
 import br.com.arml.cep.model.exception.CepException
 
+const val CEP_LENGTH = 8
+const val MIN_CEP_LENGTH_FOR_SEARCH = 3
+
 @ConsistentCopyVisibility
 data class Cep private constructor(
     val text: String

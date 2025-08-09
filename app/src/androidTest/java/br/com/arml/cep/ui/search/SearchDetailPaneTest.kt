@@ -91,7 +91,7 @@ class SearchDetailPaneTest {
                 modifier = Modifier.fillMaxSize(),
                 response = response,
                 onBackPress = mockOnBackPress,
-                onFavoriteClick = {}
+                onFavoriteClick = mockOnFavorite
             )
         }
     }

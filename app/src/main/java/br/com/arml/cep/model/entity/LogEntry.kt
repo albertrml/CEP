@@ -10,6 +10,7 @@ import br.com.arml.cep.model.converter.TimestampConverter
 import br.com.arml.cep.model.domain.Cep
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
@@ -44,10 +45,18 @@ private fun Timestamp.toFormatted(pattern: String): String{
 }
 
 fun Timestamp.toFormattedUTC(): String{
-    //return this.toFormatted("yyyy-MM-dd HH:mm XXX")
     return this.toFormatted("yyyy-MM-dd HH:mm")
 }
 
 fun Long.toFormattedBR(): String{
     return Timestamp(this).toFormatted("dd/MM/yyyy")
+}
+
+fun Long.addCurrentHour(): Long{
+    val timestamp = Timestamp(this)
+    val calendar = Calendar.getInstance()
+    calendar.time = timestamp
+    val currentHour = Timestamp(System.currentTimeMillis()).hours
+    calendar.add(Calendar.HOUR,currentHour)
+    return calendar.timeInMillis
 }

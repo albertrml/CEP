@@ -10,7 +10,7 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.entity.LogEntry
 import br.com.arml.cep.model.mock.mockLogEntries
-import br.com.arml.cep.ui.screen.component.log.LogListComponent
+import br.com.arml.cep.ui.screen.component.log.LogScreenListComponent
 import br.com.arml.cep.ui.screen.log.LogState
 import br.com.arml.cep.ui.utils.LogFilterOption
 import io.mockk.every
@@ -82,7 +82,7 @@ class LogScreenTest {
 
     private fun launchLogListComponent(){
         composeTestRule.setContent {
-            LogListComponent(
+            LogScreenListComponent(
                 state = state,
                 onFilterByCep = mockOnFilterByCep,
                 onFilterByInitialDate = mockOnFilterByInitialDate,

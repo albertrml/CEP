@@ -103,4 +103,19 @@
     <string name="testTag_searchScreen_detailPane_onFailure">SearchScreenDetailPaneOnFailure"</string>
     <string name="testTag_header_icon">IconHeader"</string>
     <string name="testTag_header_title">TitleHeader"</string>
+    <string name="testTag_titleFilter_composable">TitleFilterComposable</string>
+    <string name="testTag_titleFilter_field">TitleFilterField</string>
+    <string name="testTag_titleFilter_button">TitleFilterButton</string>
+    <string name="testTag_cepFilter_composable">CepFilterComposable</string>
+    <string name="testTag_singleDateFilter_composable">SingleDateFilterComposable</string>
+    <string name="testTag_singleDateFilter_field">SingleDateFilterField</string>
+    <string name="testTag_singleDateFilter_button">SingleDateFilterButton</string>
+    <string name="testTag_datePickerField">DatePickerField</string>
+    <string name="testTag_datePickerModal">DatePickerModal</string>
+    <string name="testTag_datePicker_confirmTextButton">DatePickerConfirmTextButton</string>
+    <string name="testTag_datePicker_cancelTextButton">DatePickerCancelTextButton</string>
+    <string name="testTag_periodFilter_composable">PeriodFilterComposable</string>
+    <string name="testTag_periodFilter_startDateField">PeriodFilterStartDateField</string>
+    <string name="testTag_periodFilter_endDateField">PeriodFilterEndDateField</string>
+    <string name="testTag_periodFilter_button">PeriodFilterButton</string>
 </resources>

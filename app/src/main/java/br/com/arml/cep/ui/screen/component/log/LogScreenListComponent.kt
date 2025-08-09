@@ -29,7 +29,7 @@ import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
 
 @Composable
-fun LogListComponent(
+fun LogScreenListComponent(
     modifier: Modifier = Modifier,
     state: LogState,
     onFilterByCep: (String) -> Unit,
@@ -127,7 +127,7 @@ fun LogListComponent(
 @Preview(showBackground = true)
 @Composable
 fun LogListComponentPreview(){
-    LogListComponent(
+    LogScreenListComponent(
         state = LogState(),
         onFilterByCep = {},
         onFilterByInitialDate = {},

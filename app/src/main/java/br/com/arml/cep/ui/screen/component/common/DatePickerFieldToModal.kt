@@ -23,9 +23,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
+import br.com.arml.cep.model.entity.addCurrentHour
 import br.com.arml.cep.model.entity.toFormattedBR
 
 @Composable
@@ -58,20 +60,17 @@ fun DatePickerFieldToModal(
                 awaitEachGesture {
                     awaitFirstDown(pass = PointerEventPass.Initial)
                     val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (upEvent != null) {
-                        showModal = true
-                    }
+                    if (upEvent != null) { showModal = true }
                 }
             }
+            .testTag(stringResource(R.string.testTag_datePickerField))
     )
 
     if (showModal) {
         DatePickerModal(
             onDateSelected = {
                 selectedDate = it
-                it?.let {
-                    onSelectDate(it)
-                }
+                it?.let { onSelectDate(it) }
             },
             onDismiss = { showModal = false }
         )
@@ -86,22 +85,33 @@ fun DatePickerModal(
     val datePickerState = rememberDatePickerState()
 
     DatePickerDialog(
+        modifier = Modifier.testTag(stringResource(R.string.testTag_datePickerModal)),
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(onClick = {
-                onDateSelected(datePickerState.selectedDateMillis)
-                onDismiss()
-            }) {
+            TextButton(
+                modifier = Modifier
+                    .testTag(stringResource(R.string.testTag_datePicker_confirmTextButton)),
+                onClick = {
+                    onDateSelected(datePickerState.selectedDateMillis?.addCurrentHour())
+                    onDismiss()
+                }
+            ) {
                 Text(stringResource(R.string.date_picker_confirm_button))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(
+                modifier = Modifier
+                    .testTag(stringResource(R.string.testTag_datePicker_cancelTextButton)),
+                onClick = onDismiss
+            ) {
                 Text(stringResource(R.string.date_picker_confirm_cancel))
             }
         }
     ) {
-        DatePicker(state = datePickerState)
+        DatePicker(
+            state = datePickerState,
+        )
     }
 }
 

@@ -33,7 +33,5 @@ abstract class CepRoomDatabase() : RoomDatabase() {
                 return instance
             }
         }
-
     }
-
 }

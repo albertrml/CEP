@@ -82,7 +82,8 @@ fun LogFilterComponent(
 
                 LogFilterOption.ByInitialDate -> {
                     SingleDateFilter(
-                        onFilterByInitialDate = {
+                        labelId = R.string.log_filter_initial_date_label,
+                        onFilterByDate = {
                             keyboardController?.hide()
                             onFilterByInitialDate(it)
                         }
@@ -91,7 +92,8 @@ fun LogFilterComponent(
 
                 LogFilterOption.ByFinalDate -> {
                     SingleDateFilter(
-                        onFilterByInitialDate = {
+                        labelId = R.string.log_filter_final_date_label,
+                        onFilterByDate = {
                             keyboardController?.hide()
                             onFilterByFinalDate(it + oneSecondForTomorrow)
                         }
