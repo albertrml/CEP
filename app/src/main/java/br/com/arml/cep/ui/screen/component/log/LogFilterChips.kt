@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,7 +51,7 @@ fun LogFilterComponent(
 ) {
     val filters = logFilterOptions
     var selectedFilter by rememberSaveable(stateSaver = LogFilterOption.saver) {
-        mutableStateOf<LogFilterOption>(LogFilterOption.None)
+        mutableStateOf(LogFilterOption.None)
     }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -59,6 +60,8 @@ fun LogFilterComponent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LogFilterChips(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_logFilter_composable)),
             filters = filters,
             selectedFilter = selectedFilter,
             onSelectedFilter = { selectedFilter = it }
@@ -73,9 +76,9 @@ fun LogFilterComponent(
             when (targetFilter) {
                 LogFilterOption.ByCep -> {
                     CepFilter(
-                        onFilterByCep = {
+                        onFilterByCep = { cep ->
                             keyboardController?.hide()
-                            onFilterByCep(it)
+                            onFilterByCep(cep)
                         }
                     )
                 }
@@ -83,9 +86,9 @@ fun LogFilterComponent(
                 LogFilterOption.ByInitialDate -> {
                     SingleDateFilter(
                         labelId = R.string.log_filter_initial_date_label,
-                        onFilterByDate = {
+                        onFilterByDate = { start ->
                             keyboardController?.hide()
-                            onFilterByInitialDate(it)
+                            onFilterByInitialDate(start)
                         }
                     )
                 }
@@ -93,9 +96,9 @@ fun LogFilterComponent(
                 LogFilterOption.ByFinalDate -> {
                     SingleDateFilter(
                         labelId = R.string.log_filter_final_date_label,
-                        onFilterByDate = {
+                        onFilterByDate = { end ->
                             keyboardController?.hide()
-                            onFilterByFinalDate(it + oneSecondForTomorrow)
+                            onFilterByFinalDate(end + oneSecondForTomorrow)
                         }
                     )
                 }
@@ -132,7 +135,7 @@ fun LogFilterChips(
             LogFilterChip(
                 labelFilter = topic,
                 isSelected = topic === selectedFilter,
-                onSelected = { onSelectedFilter(it) }
+                onSelected = { topic -> onSelectedFilter(topic) }
             )
         }
     }

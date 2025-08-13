@@ -11,8 +11,6 @@ sealed class CacheEvent {
     // Delete
     data object OnDeleteAll : CacheEvent()
     data class OnDelete(val place: PlaceEntry) : CacheEvent()
-    data object OnShowDeleteAllAlert : CacheEvent()
-    data object OnHideDeleteAllAlert : CacheEvent()
 
     // Update
     data class OnUpdate(val place: PlaceEntry) : CacheEvent()

@@ -1,0 +1,104 @@
+package br.com.arml.cep.ui.component
+
+import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.test.platform.app.InstrumentationRegistry
+import br.com.arml.cep.R
+import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+
+class DeleteAllComponentTest {
+
+    @get:Rule
+    val composeTestRule: ComposeContentTestRule = createComposeRule()
+
+    private lateinit var deleteAllComponent: String
+    private lateinit var deleteAllComponentDivider: String
+    private lateinit var deleteAllComponentButton: String
+    private lateinit var logScreenDeleteAllLogAlert: String
+    private lateinit var logScreenDeleteAllLogAlertTitle: String
+    private lateinit var logScreenDeleteAllLogAlertMessage: String
+    private lateinit var logScreenDeleteAllLogAlertConfirmButton: String
+    private lateinit var logScreenDeleteAllLogAlertDismissButton: String
+
+    private val onConfirmDeleteAllEntries: () -> Unit = mockk(relaxed = true        )
+
+    @Before
+    fun steUp(){
+        InstrumentationRegistry.getInstrumentation().targetContext.apply {
+            deleteAllComponent = getString(R.string.testTag_deleteAllComponent)
+            deleteAllComponentDivider = getString(R.string.testTag_deleteAllComponent_divider)
+            deleteAllComponentButton = getString(R.string.testTag_deleteAllComponent_button)
+            logScreenDeleteAllLogAlert = getString(R.string.testTag_logScreen_DeleteAllLogAlert)
+            logScreenDeleteAllLogAlertTitle = getString(R.string.log_delete_all_log_title)
+            logScreenDeleteAllLogAlertMessage = getString(R.string.log_delete_all_log_alert)
+            logScreenDeleteAllLogAlertConfirmButton = getString(R.string.alert_dialog_confirm_button)
+            logScreenDeleteAllLogAlertDismissButton = getString(R.string.alert_dialog_dismiss_button)
+        }
+
+        every { onConfirmDeleteAllEntries() } answers { println("onConfirmDeleteAllEntries") }
+
+        showDeleteAllComponent()
+    }
+
+    fun showDeleteAllComponent(){
+        composeTestRule.setContent {
+            DeleteAllComponent(
+                deleteLogAlertTitleId = R.string.log_delete_all_log_title,
+                deleteLogAlertTextId = R.string.log_delete_all_log_alert,
+                onConfirmDeleteAllEntries = onConfirmDeleteAllEntries,
+            )
+        }
+    }
+
+    @Test
+    fun shouldDeleteAllEntries_whenDeleteAllLogAlertConfirmButtonIsClicked(){
+        composeTestRule.apply {
+            onNodeWithTag(deleteAllComponentButton).performClick()
+            waitForIdle()
+            onNodeWithText(logScreenDeleteAllLogAlertConfirmButton).performClick()
+            verify { onConfirmDeleteAllEntries() }
+        }
+    }
+
+    @Test
+    fun shouldDisplayDividerAndButton_whenDeleteAllComponentIsCalled(){
+        composeTestRule.apply {
+            onNodeWithTag(deleteAllComponent).assertExists()
+            onNodeWithTag(deleteAllComponentDivider).assertExists()
+            onNodeWithTag(deleteAllComponentButton).assertExists()
+            onNodeWithTag(logScreenDeleteAllLogAlert).assertIsNotDisplayed()
+        }
+    }
+
+    @Test
+    fun shouldDisplayDeleteAllLogAlert_whenDeleteAllComponentButtonIsClicked(){
+        composeTestRule.apply {
+            onNodeWithTag(deleteAllComponentButton).performClick()
+            onNodeWithTag(logScreenDeleteAllLogAlert).assertExists()
+            onNodeWithText(logScreenDeleteAllLogAlertTitle).assertExists()
+            onNodeWithText(logScreenDeleteAllLogAlertMessage).assertExists()
+            onNodeWithText(logScreenDeleteAllLogAlertConfirmButton).assertExists()
+            onNodeWithText(logScreenDeleteAllLogAlertDismissButton).assertExists()
+        }
+    }
+
+    @Test
+    fun shouldNotDisplayDeleteAllLogAlert_whenDeleteAllLogAlertDismissButtonIsClicked(){
+        composeTestRule.apply {
+            onNodeWithTag(deleteAllComponentButton).performClick()
+            waitForIdle()
+            onNodeWithText(logScreenDeleteAllLogAlertDismissButton).performClick()
+            onNodeWithTag(logScreenDeleteAllLogAlert).assertIsNotDisplayed()
+        }
+    }
+}

@@ -13,7 +13,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
-import br.com.arml.cep.ui.screen.component.cache.CachePlaceAlert
 import br.com.arml.cep.ui.screen.component.cache.CachePlaceListComponent
 import br.com.arml.cep.ui.screen.component.search.SearchDetailPane
 import br.com.arml.cep.ui.theme.dimens
@@ -48,7 +47,7 @@ fun CacheScreen(
                         viewModel.onEvent(CacheEvent.OnUpdate(place))
                     },
                     onDeleteCacheClick = {
-                        viewModel.onEvent(CacheEvent.OnShowDeleteAllAlert)
+                        viewModel.onEvent(CacheEvent.OnDeleteAll)
                     },
                     onDeleteIconClick = { place ->
                         viewModel.onEvent(CacheEvent.OnDelete(place))
@@ -60,18 +59,6 @@ fun CacheScreen(
                     onNavigateToDetail = { place ->
                         uiStateHolder.navigateToDetailPane {
                             viewModel.onEvent(CacheEvent.OnSelectEntryForDetails(place))
-                        }
-                    }
-                )
-
-                CachePlaceAlert(
-                    isVisible = state.deleteAllAlert,
-                    onDismissRequest = {
-                        viewModel.onEvent(CacheEvent.OnHideDeleteAllAlert)
-                    },
-                    onConfirmationRequest = {
-                        uiStateHolder.navigateBackToListPane {
-                            viewModel.onEvent(CacheEvent.OnDeleteAll)
                         }
                     }
                 )

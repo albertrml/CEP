@@ -10,6 +10,5 @@ data class CacheState(
     val filterOperation: PlaceFilterOption = PlaceFilterOption.None,
     val deleteEntry: Response<Unit> = Loading,
     val placeForDetails: PlaceEntry? = null,
-    val placeUpdate: PlaceEntry? = null,
-    val deleteAllAlert: Boolean = false
+    val placeUpdate: PlaceEntry? = null
 )

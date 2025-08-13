@@ -1,5 +1,6 @@
 package br.com.arml.cep.ui.screen.component.common
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -12,8 +13,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -22,30 +28,44 @@ import br.com.arml.cep.ui.theme.dimens
 @Composable
 fun DeleteAllComponent(
     modifier: Modifier = Modifier,
-    typeName: String,
-    showDeleteAlert: () -> Unit,
+    @StringRes deleteLogAlertTitleId: Int,
+    @StringRes deleteLogAlertTextId: Int,
+    onConfirmDeleteAllEntries: () -> Unit = {}
 ){
+
+    var showDeleteAlert by rememberSaveable { mutableStateOf(false) }
+
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(stringResource(R.string.testTag_deleteAllComponent)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         HorizontalDivider(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .testTag(stringResource(R.string.testTag_deleteAllComponent_divider)),
             thickness = MaterialTheme.dimens.mediumThickness
         )
         Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.smallPadding))
         Button(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_deleteAllComponent_button)),
             colors = ButtonColors(
                 containerColor = MaterialTheme.colorScheme.error,
                 contentColor = MaterialTheme.colorScheme.onError,
                 disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
                 disabledContentColor = MaterialTheme.colorScheme.onErrorContainer
             ),
-            onClick = { showDeleteAlert() }
+            enabled = !showDeleteAlert,
+            onClick = { showDeleteAlert = true }
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = stringResource(R.string.show_delete_alert_description, typeName),
+                contentDescription =
+                    stringResource(
+                        id =R.string.show_delete_alert_description,
+                        stringResource(R.string.log_title)
+                    ),
             )
             Text(
                 text = stringResource(R.string.show_delete_alert_button),
@@ -53,13 +73,28 @@ fun DeleteAllComponent(
             )
         }
     }
+
+    if (showDeleteAlert) {
+        CepAlertDialog(
+            modifier = modifier
+                .testTag(stringResource(R.string.testTag_logScreen_DeleteAllLogAlert)),
+            dialogTitle = stringResource(deleteLogAlertTitleId),
+            dialogText = stringResource(deleteLogAlertTextId),
+            onDismissRequest = { showDeleteAlert = false },
+            onConfirmationRequest = {
+                onConfirmDeleteAllEntries()
+                showDeleteAlert = false
+            }
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DeleteAllComponentPreview(){
     DeleteAllComponent(
-        typeName = "Log",
-        showDeleteAlert = {}
+        deleteLogAlertTitleId = R.string.log_delete_all_log_title,
+        deleteLogAlertTextId = R.string.log_delete_all_log_alert,
+        onConfirmDeleteAllEntries = {}
     )
 }

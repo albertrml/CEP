@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
@@ -43,8 +42,9 @@ fun CachePlaceListComponent(
             onNoneFilter = { onClearFilter() }
         )
         DeleteAllComponent(
-            typeName = stringResource(R.string.show_delete_alert_cache),
-            showDeleteAlert = { onDeleteCacheClick() }
+            deleteLogAlertTitleId = R.string.cache_title_alert,
+            deleteLogAlertTextId = R.string.cache_text_alert,
+            onConfirmDeleteAllEntries = { onDeleteCacheClick() }
         )
         Box(
             modifier = Modifier
