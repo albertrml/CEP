@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -78,7 +79,11 @@ fun FavoriteListHeaderMenu(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        IconButton(onClick = onExportClick) {
+        IconButton(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_favoriteListHeader_exportButton)),
+            onClick = onExportClick
+        ) {
             Icon(
                 modifier = Modifier.wrapContentSize(),
                 painter = painterResource(R.drawable.ic_export),
@@ -88,7 +93,11 @@ fun FavoriteListHeaderMenu(
 
         Spacer(Modifier.padding(horizontal = MaterialTheme.dimens.smallSpacing))
 
-        IconButton(onClick = onImportClick) {
+        IconButton(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_favoriteListHeader_importButton)),
+            onClick = onImportClick
+        ) {
             Icon(
                 modifier = Modifier.wrapContentSize(),
                 painter = painterResource(R.drawable.ic_import),

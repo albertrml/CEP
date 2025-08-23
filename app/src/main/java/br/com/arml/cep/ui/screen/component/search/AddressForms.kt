@@ -16,7 +16,7 @@ import br.com.arml.cep.ui.screen.component.common.ScrollableFab
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun SearchAddressForms(
+fun AddressForms(
     modifier: Modifier = Modifier,
     address: Address,
 ) {
@@ -84,7 +84,7 @@ fun SearchAddressForms(
 )
 @Composable
 fun AddressScreenPreview() {
-    SearchAddressForms(
+    AddressForms(
         modifier = Modifier.fillMaxSize(),
         address = mockAddress
     )

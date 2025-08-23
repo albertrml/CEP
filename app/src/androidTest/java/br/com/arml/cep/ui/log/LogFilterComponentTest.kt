@@ -95,6 +95,7 @@ class LogFilterComponentTest {
     @Test
     fun shouldDisplayCepFilterComponents_whenCepFilterOptionIsSelected(){
         composeTestRule.apply {
+            onRoot().printToLog("PlaceFilterChipTest")
             onNodeWithTag(logFilterComponent)
                 .performScrollToNode(matcher = hasText(logFilterByCepChip))
             onNodeWithText(logFilterByCepChip).performClick()

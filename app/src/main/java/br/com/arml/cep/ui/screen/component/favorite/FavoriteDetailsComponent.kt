@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -26,13 +27,13 @@ import br.com.arml.cep.model.domain.MIN_TITLE_LENGTH
 import br.com.arml.cep.model.domain.isValidTitleNoteSize
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.mock.mockFavoritePlaceEntries
-import br.com.arml.cep.ui.screen.component.search.SearchAddressForms
+import br.com.arml.cep.ui.screen.component.search.AddressForms
 import br.com.arml.cep.ui.screen.component.common.CepTextField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun FavoriteDetailsComponent(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     placeEntry: PlaceEntry,
     onNavigateBackToList: () -> Unit,
     onNavigateToExtra: () -> Unit
@@ -42,13 +43,21 @@ fun FavoriteDetailsComponent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
     ) {
-        FavoriteDetailsHeader(onNavigateBackToList = onNavigateBackToList)
-        SearchAddressForms(
-            modifier = Modifier.weight(1f),
+        FavoriteDetailsHeader(
+            modifier = Modifier
+                .testTag(stringResource(R.string.testTag_favoriteDetails_header)),
+            onNavigateBackToList = onNavigateBackToList
+        )
+        AddressForms(
+            modifier = Modifier
+                .weight(1f)
+                .testTag(stringResource(R.string.testTag_favoriteDetails_content)),
             address = placeEntry.address
         )
         Button(
-            modifier = Modifier.padding(MaterialTheme.dimens.mediumPadding),
+            modifier = Modifier
+                .padding(MaterialTheme.dimens.mediumPadding)
+                .testTag(stringResource(R.string.testTag_favoriteDetails_button)),
             onClick = onNavigateToExtra
         ){
             Text(text = stringResource(R.string.favorite_address_button))
@@ -84,7 +93,9 @@ fun FavoriteExtraComponent(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
         ) {
             CepTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(stringResource(R.string.testTag_favoriteExtraScreen_titleNoteField)),
                 nameField = stringResource(R.string.place_details_title),
                 text = title,
                 textStyle = MaterialTheme.typography.titleMedium,
@@ -99,7 +110,8 @@ fun FavoriteExtraComponent(
                 showInputSize = true
             )
             CepTextField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .testTag(stringResource(R.string.testTag_favoriteExtraScreen_contentNoteField)),
                 nameField = stringResource(R.string.place_details_content),
                 text = note,
                 onChangeText = { note = it },
@@ -108,7 +120,10 @@ fun FavoriteExtraComponent(
                 maxLines = 10,
                 showInputSize = true
             )
+
             FavoriteUpdateButton(
+                modifier = Modifier
+                    .testTag(stringResource(R.string.testTag_favoriteExtraScreen_updateButton)),
                 place = placeEntry,
                 title = title,
                 note = note,

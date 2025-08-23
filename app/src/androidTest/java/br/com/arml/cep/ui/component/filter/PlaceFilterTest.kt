@@ -22,7 +22,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class CepFilterTest {
+class PlaceFilterTest {
 
     @get:Rule
     val composeTestRule: ComposeContentTestRule = createComposeRule()

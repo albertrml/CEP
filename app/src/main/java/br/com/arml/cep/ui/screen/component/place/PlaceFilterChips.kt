@@ -70,9 +70,9 @@ fun PlaceFilterComponent(
             when (targetFilter) {
                 PlaceFilterOption.ByCep -> {
                     CepFilter(
-                        onFilterByCep = {
+                        onFilterByCep = { cep ->
                             keyboardController?.hide()
-                            onFilterByCep(it)
+                            onFilterByCep(cep)
                         }
                     )
                 }
@@ -80,9 +80,9 @@ fun PlaceFilterComponent(
                     TitleFilter(
                         nameFilter = stringResource(R.string.favorite_title_field_filter),
                         maxSize = MAX_TITLE_LENGTH,
-                        onFilterByTitle = {
+                        onFilterByTitle = { title ->
                             keyboardController?.hide()
-                            onFilterByTitle(it)
+                            onFilterByTitle(title)
                         }
                     )
                 }
@@ -104,14 +104,14 @@ fun PlaceFilterChips(
 ) {
     LazyRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing),
         verticalAlignment = Alignment.CenterVertically
     ) {
         items(filters) { topic ->
             PlaceFilterChip(
                 labelFilter = topic,
                 isSelected = topic === selectedFilter,
-                onSelected = { onSelectedFilter(it) }
+                onSelected = { topic -> onSelectedFilter(topic) }
             )
         }
     }

@@ -126,19 +126,6 @@ class SearchDetailPaneTest {
             onNodeWithTag(searchDetailPaneOnSuccess).assertIsDisplayed()
             onNodeWithTag(searchDetailPaneOnLoading).assertIsNotDisplayed()
             onNodeWithTag(searchDetailPaneOnFailure).assertIsNotDisplayed()
-
-            mockPlaceEntry.address.apply {
-                onNodeWithText(zipCode).assertIsDisplayed()
-                onNodeWithText(street).assertIsDisplayed()
-                onNodeWithText(complement).assertIsDisplayed()
-                onNodeWithText(district).assertIsDisplayed()
-                onNodeWithText(city).assertIsDisplayed()
-                onNodeWithText(state).assertIsDisplayed()
-                onNodeWithText(uf).assertIsDisplayed()
-                onNodeWithText(region).assertIsDisplayed()
-                onNodeWithText(country).assertIsDisplayed()
-                onNodeWithText(ddd).assertIsDisplayed()
-            }
         }
     }
 

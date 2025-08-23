@@ -17,7 +17,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.entity.PlaceEntry
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
@@ -34,8 +37,8 @@ fun FavoriteListComponent(
     onFavoriteIconClick: (PlaceEntry) -> Unit,
     onCepFilter: (String) -> Unit,
     onTitleFilter: (String) -> Unit,
-    onClearFilter: () -> Unit,
-    onNavigateToDetail: (PlaceEntry) -> Unit,
+    onNoneFilter: () -> Unit,
+    onNavigateToDetails: (PlaceEntry) -> Unit,
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -59,15 +62,21 @@ fun FavoriteListComponent(
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
         ) {
             FavoriteListHeader(
+                modifier = Modifier
+                    .testTag(stringResource(R.string.testTag_favoriteList_header)),
                 onImportClick = onImportClick,
                 onExportClick = onExportClick
             )
+
             FavoriteFilter(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(stringResource(R.string.testTag_favoriteList_filter)),
                 onFilterByCep = { query -> onCepFilter(query) },
                 onFilterByTitle = { query -> onTitleFilter(query) },
-                onNoneFilter = { onClearFilter() }
+                onNoneFilter = { onNoneFilter() }
             )
+
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -76,19 +85,27 @@ fun FavoriteListComponent(
             ) {
                 fetchResponse.ShowResults(
                     successContent = { places ->
-                        FavoriteList(
-                            modifier = Modifier.align(Alignment.TopCenter),
+                        FavoriteListOnSuccess(
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .testTag(stringResource(R.string.testTag_favoriteList_onSuccess)),
                             places = places,
-                            onFavoriteIconClick = { place -> onFavoriteIconClick(place) },
-                            onNavigateToDetail = { place -> onNavigateToDetail(place) }
+                            onFavoriteIconClick = onFavoriteIconClick,
+                            onNavigateToDetails = onNavigateToDetails
                         )
                     },
                     loadingContent = {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .testTag(stringResource(R.string.testTag_favoriteList_onLoading))
+                        )
                     },
                     failureContent = { exception ->
                         Text(
-                            modifier = Modifier.align(Alignment.Center),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .testTag(stringResource(R.string.testTag_favoriteList_onFailure)),
                             text = exception.message ?: FetchPlaceException().message,
                             color = MaterialTheme.colorScheme.error,
                             style = MaterialTheme.typography.bodyLarge
@@ -100,15 +117,61 @@ fun FavoriteListComponent(
     }
 }
 
+@Composable
+fun FavoriteListOnSuccess(
+    modifier: Modifier = Modifier,
+    places: List<PlaceEntry>,
+    onFavoriteIconClick: (PlaceEntry) -> Unit,
+    onNavigateToDetails: (PlaceEntry) -> Unit
+){
+    Column(modifier = modifier) {
+        FavoriteList(
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(stringResource(R.string.testTag_favoriteList_list)),
+            places = places,
+            onFavoriteIconClick = { place -> onFavoriteIconClick(place) },
+            onNavigateToDetail = { place -> onNavigateToDetails(place) }
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
-fun FavoriteListComponentPreview() {
+fun FavoriteListComponentOnSuccessPreview() {
     FavoriteListComponent(
         fetchResponse = Response.Success(mockFavoritePlaceEntries),
         onFavoriteIconClick = {},
         onCepFilter = {},
         onTitleFilter = {},
-        onClearFilter = {},
-        onNavigateToDetail = {}
+        onNoneFilter = {},
+        onNavigateToDetails = {}
+    )
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun FavoriteListComponentOnLoadingPreview() {
+    FavoriteListComponent(
+        fetchResponse = Response.Loading,
+        onFavoriteIconClick = {},
+        onCepFilter = {},
+        onTitleFilter = {},
+        onNoneFilter = {},
+        onNavigateToDetails = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FavoriteListComponentOnFailurePreview() {
+    FavoriteListComponent(
+        fetchResponse = Response.Failure(Exception("Error")),
+        onFavoriteIconClick = {},
+        onCepFilter = {},
+        onTitleFilter = {},
+        onNoneFilter = {},
+        onNavigateToDetails = {}
     )
 }

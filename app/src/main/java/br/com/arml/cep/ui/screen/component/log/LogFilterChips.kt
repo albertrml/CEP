@@ -129,7 +129,8 @@ fun LogFilterChips(
 ) {
     LazyRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         items(filters) { topic ->
             LogFilterChip(

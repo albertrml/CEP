@@ -135,4 +135,25 @@
     <string name="testTag_titleFilter_composable">TitleFilterComposable</string>
     <string name="testTag_titleFilter_field">TitleFilterField</string>
     <string name="testTag_logFilter_composable">LogFilterComposable</string>
+    <string name="testTag_placeFilter_component">PlaceFilterComponent</string>
+    <string name="testTag_placeFilter_composable">PlaceFilterComposable</string>
+    <string name="testTag_favoriteExtraScreen_header_component">FavoriteExtraScreenHeaderComponent</string>
+    <string name="testTag_favoriteExtraScreen_titleNoteField">FavoriteExtraScreenTitleNoteField</string>
+    <string name="testTag_favoriteExtraScreen_contentNoteField">FavoriteExtraScreenContentNoteField</string>
+    <string name="testTag_favoriteExtraScreen_updateButton">FavoriteExtraScreenUpdateButton</string>
+    <string name="testTag_favoriteDetails_component">FavoriteDetailsComponent</string>
+    <string name="testTag_favoriteDetails_header">FavoriteDetailsHeader</string>
+    <string name="testTag_favoriteDetails_content">FavoriteDetailsContent</string>
+    <string name="testTag_favoriteDetails_button">FavoriteDetailsButton</string>
+    <string name="testTag_addressForms_component">AddressFormsComponent</string>
+    <string name="testTag_favoriteList_component">FavoriteListPaneComponent</string>
+    <string name="testTag_favoriteList_header">FavoriteListPaneHeader</string>
+    <string name="testTag_favoriteList_list">FavoriteListPaneList</string>
+    <string name="testTag_favoriteList_filter">FavoriteListPaneFilter</string>
+    <string name="testTag_favoriteList_onSuccess">FavoriteListPaneOnSuccess</string>
+    <string name="testTag_favoriteList_onLoading">FavoriteListPaneOnLoading</string>
+    <string name="testTag_favoriteList_onFailure">FavoriteListPaneOnFailure</string>
+    <string name="testTag_placeElement_favoriteIconButton">PlaceElementFavoriteIconButton %1$s</string>
+    <string name="testTag_favoriteListHeader_exportButton">FavoriteListHeaderExportButton</string>
+    <string name="testTag_favoriteListHeader_importButton">FavoriteListHeaderImportButton</string>
 </resources>

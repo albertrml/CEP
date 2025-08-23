@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -40,12 +41,6 @@ fun PlaceElement(
     ElevatedCard(
         modifier = Modifier.clickable(onClick = { onNavigateToDetail(placeEntry) }),
         shape = MaterialTheme.shapes.small,
-        /*colors = CardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-            disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-        )*/
     ) {
         Row(
             modifier = modifier,
@@ -73,7 +68,14 @@ fun PlaceElement(
                 )
             }
             IconButton(
-                modifier = Modifier.align(Alignment.CenterVertically),
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .testTag(
+                        stringResource(
+                            R.string.testTag_placeElement_favoriteIconButton,
+                            placeEntry.cep.text
+                        )
+                    ),
                 onClick = { onFavoriteIconClick(placeEntry) },
             ) {
                 Icon(

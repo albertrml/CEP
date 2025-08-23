@@ -36,13 +36,15 @@ fun FavoriteScreen(
     val viewmodel = hiltViewModel<FavoriteViewModel>()
     val state by viewmodel.state.collectAsStateWithLifecycle()
     val uiStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
+
     val launcherExportBackup = exportBackupLauncher(
         context = LocalContext.current,
         json = (state.exportBackup as? Response.Success<String>)?.result ?: "",
         onExportRequest = {
-            viewmodel.onEvent(FavoriteEvent.OnExportFavorites)
+            viewmodel.onEvent(FavoriteEvent.OnExportHide)
         }
     )
+
     val launcherImportBackup = importBackupLauncher(
         context = LocalContext.current,
         onSuccess = { json ->
@@ -80,10 +82,10 @@ fun FavoriteScreen(
                     onTitleFilter = { query ->
                         viewmodel.onEvent(FavoriteEvent.OnFilterByTitle(query))
                     },
-                    onClearFilter = {
+                    onNoneFilter = {
                         viewmodel.onEvent(FavoriteEvent.OnFilterNone)
                     },
-                    onNavigateToDetail = { entry ->
+                    onNavigateToDetails = { entry ->
                         uiStateHolder.navigateToDetailPane {
                             viewmodel.onEvent(FavoriteEvent.OnSelectEntryToEdit(entry))
                         }
@@ -126,6 +128,7 @@ fun FavoriteScreen(
                         viewmodel.onEvent(FavoriteEvent.OnExportHide)
                     },
                     onConfirmationRequest = {
+                        viewmodel.onEvent(FavoriteEvent.OnExportFavorites)
                         launcherExportBackup.launch(getExportIntent())
                     }
                 )

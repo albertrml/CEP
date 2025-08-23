@@ -94,7 +94,7 @@ fun SearchDetailPaneOnSuccess(
     onFavoriteClick: (PlaceEntry) -> Unit
 ) {
     Box(modifier = modifier) {
-        SearchAddressForms(
+        AddressForms(
             modifier = Modifier.padding(
                 vertical = MaterialTheme.dimens.largeMargin
             ),
