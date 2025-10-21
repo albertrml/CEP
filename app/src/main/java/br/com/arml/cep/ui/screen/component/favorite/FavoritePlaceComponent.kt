@@ -14,6 +14,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +44,12 @@ fun FavoriteListComponent(
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
+    val isVisible by remember {
+        derivedStateOf {
+            fetchResponse is Response.Success
+        }
+    }
+
 
     LaunchedEffect(fetchResponse) {
         if (fetchResponse is Response.Failure) {
@@ -68,14 +76,16 @@ fun FavoriteListComponent(
                 onExportClick = onExportClick
             )
 
-            FavoriteFilter(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(stringResource(R.string.testTag_favoriteList_filter)),
-                onFilterByCep = { query -> onCepFilter(query) },
-                onFilterByTitle = { query -> onTitleFilter(query) },
-                onNoneFilter = { onNoneFilter() }
-            )
+            if (isVisible) {
+                FavoriteFilter(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag(stringResource(R.string.testTag_favoriteList_filter)),
+                    onFilterByCep = { query -> onCepFilter(query) },
+                    onFilterByTitle = { query -> onTitleFilter(query) },
+                    onNoneFilter = { onNoneFilter() }
+                )
+            }
 
             Box(
                 modifier = Modifier
@@ -123,7 +133,7 @@ fun FavoriteListOnSuccess(
     places: List<PlaceEntry>,
     onFavoriteIconClick: (PlaceEntry) -> Unit,
     onNavigateToDetails: (PlaceEntry) -> Unit
-){
+) {
     Column(modifier = modifier) {
         FavoriteList(
             modifier = Modifier

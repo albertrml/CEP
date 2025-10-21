@@ -1,10 +1,10 @@
 package br.com.arml.cep.domain
 
 import br.com.arml.cep.model.domain.Cep
-import br.com.arml.cep.model.mock.mockAddress
 import br.com.arml.cep.model.repository.PlaceRepository
 import br.com.arml.cep.model.exception.CepException
 import br.com.arml.cep.model.domain.Response
+import br.com.arml.cep.model.mock.mockPlaceEntries
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertTrue
@@ -17,9 +17,6 @@ class CepUseCaseTest {
     private val repository = mockk<PlaceRepository>()
     private lateinit var useCase: CepUseCase
 
-    private val mockZipCode = mockAddress.zipCode
-    private val mockCep = Cep.build(mockZipCode)
-
     @Before
     fun setup(){
         useCase = CepUseCase(repository)
@@ -27,16 +24,18 @@ class CepUseCaseTest {
 
     @Test
     fun `should emit success when repository returns success`() = runTest{
-        coEvery {
-            repository.getAddressByCep(mockCep)
-        } returns flowOf(Response.Success(mockAddress))
+        val mockPlaceEntry = mockPlaceEntries[0]
 
-        useCase.fetchEntry(mockZipCode).collect{ response ->
+        coEvery {
+            repository.getPlace(mockPlaceEntry.cep)
+        } returns flowOf(Response.Success(mockPlaceEntry))
+
+        useCase.fetchEntry(mockPlaceEntry.cep.text).collect{ response ->
             when(response){
                 is Response.Success -> {
                     assertTrue(
                         "The response address must be equals to mockAddress",
-                        response.result == mockAddress
+                        response.result == mockPlaceEntry
                     )
                 }
                 is Response.Loading -> { assertTrue(true)}
@@ -127,7 +126,7 @@ class CepUseCaseTest {
     fun `should emit failure when repository doesn't find an address for zipcode`() = runTest {
         val invalidZipCode = "99999999"
         coEvery {
-            repository.getAddressByCep(Cep.build(invalidZipCode))
+            repository.getPlace(Cep.build(invalidZipCode))
         } returns flowOf(Response.Failure(CepException.NotFoundCepException()))
 
         useCase.fetchEntry(invalidZipCode).collect { response ->

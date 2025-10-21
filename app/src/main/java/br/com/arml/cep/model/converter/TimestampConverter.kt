@@ -13,5 +13,4 @@ object TimestampConverter {
     fun fromLongToTimestamp(time: Long?): Timestamp? {
         return time?.let { Timestamp(it) }
     }
-
 }
