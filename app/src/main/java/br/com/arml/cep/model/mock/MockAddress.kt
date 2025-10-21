@@ -1,6 +1,6 @@
 package br.com.arml.cep.model.mock
 
-import br.com.arml.cep.model.entity.Address
+import br.com.arml.cep.model.domain.Address
 
 val mockAddress = Address(
     zipCode = "89042299",

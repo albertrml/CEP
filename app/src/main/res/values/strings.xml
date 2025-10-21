@@ -1,20 +1,159 @@
 <resources>
+    <string name="alert_dialog_confirm_button">Confirmar</string>
+    <string name="alert_dialog_dismiss_button">Cancelar</string>
+
     <string name="app_name">CEP</string>
+
+    <string name="cache_delete_alert">Esta ação apagará todos os CEPS não favoritados, bem como seus registros no histórico. Desejas prosseguir?</string>
+    <string name="cache_text_alert">Todos os dados serão apagados do cache que são favoritos serão apagados. Desejas continuar?</string>
+    <string name="cache_title">Cache</string>
+    <string name="cache_title_alert">Apagar cache</string>
+
+    <string name="date_picker_confirm_button">OK</string>
+    <string name="date_picker_confirm_cancel">Cancelar</string>
+    <string name="date_picker_description">Selecionar data</string>
+    <string name="date_time_pattern_from_brazil">DD/MM/YYYY</string>
+
+    <string name="destination_cache">Cache</string>
+    <string name="destination_favorite">Favorito</string>
+    <string name="destination_favorite_description">Ceps favoritos</string>
+    <string name="destination_history">Histórico</string>
+    <string name="destination_history_description">Histórico de pesquisa</string>
+    <string name="destination_search">Procurar</string>
+    <string name="destination_search_description">Procurar CEP</string>
+
     <string name="display_address_title">Endereço</string>
     <string name="display_city_field">"Cidade: "</string>
     <string name="display_complement_field">"Complemento: "</string>
     <string name="display_country_field">"País: "</string>
     <string name="display_ddd_field">"DDD: "</string>
+    <string name="display_favorite_button_description">Salvar como favorito</string>
+    <string name="display_loading_indicator">Procurando endereço</string>
     <string name="display_neighborhood_field">"Bairro: "</string>
+    <string name="display_not_save_entry">Salvar</string>
     <string name="display_region_field">"Região: "</string>
+    <string name="display_saved_entry">Salvo</string>
     <string name="display_state_field">"Estado: "</string>
     <string name="display_street_field">"Rua: "</string>
     <string name="display_uf_field">"UF: "</string>
+    <string name="display_zipcode_field">"CEP: "</string>
+
+    <string name="favorite_address_button">Anotação</string>
+    <string name="favorite_details_title">Endereço</string>
+    <string name="favorite_details_title_error_msg">O título deve conter entre %1$s e %2$s caracteres</string>
+    <string name="favorite_details_update_button">Atualizar</string>
+    <string name="favorite_details_update_button_description">Botão para atualizar nota do cep</string>
+    <string name="favorite_extra_title">Anotação</string>
+    <string name="favorite_list_export_msg">Deseja exportar os registros salvos como favoritos?</string>
+    <string name="favorite_list_export_title">Exportar</string>
+    <string name="favorite_list_import_msg">Deseja selecionar arquivo de backup para importar?</string>
+    <string name="favorite_list_import_title">Importar</string>
+    <string name="favorite_place_element_zipcode">CEP: %1$s</string>
+    <string name="favorite_title">Favoritos</string>
+    <string name="favorite_title_field_filter">Título</string>
+    <string name="favorite_unwanted_alert_text">O %1$s será removido da lista dos favoritos e perderá sua nota, mas permanecerá em cache. Desejas prosseguir?</string>
+    <string name="favorite_unwanted_alert_title">Favorito</string>
+
+    <string name="icon_button_tag">back_button</string>
+
+    <string name="log_cep_field">CEP: %1$s</string>
+    <string name="log_delete_all_log_alert">Esta ação apagará todo o histórico de pesquisa. Desejas prosseguir?</string>
+    <string name="log_delete_all_log_title">Apagar histórico</string>
+    <string name="log_error_unknown">Erro desconhecido</string>
+    <string name="log_filter_button">Filtrar</string>
+    <string name="log_filter_final_date_label">Até</string>
+    <string name="log_filter_final_date_support_text">A data inicial deve ser menor que a final</string>
+    <string name="log_filter_initial_date_label">De</string>
+    <string name="log_list_clipboard_msg">CEP %1$s copied ao clipboard</string>
+    <string name="log_list_delete_all_button">Todos</string>
+    <string name="log_list_delete_all_button_description">Botão para deletar todos os registros do histórico</string>
+    <string name="log_selected_filter_description">Filtro %1$s selecionado</string>
+    <string name="log_timestamp_field">Pesquisado em: %1$s</string>
+    <string name="log_title">Histórico</string>
+
+    <string name="place_details_content">Note</string>
+    <string name="place_details_title">Título</string>
+
+    <string name="scrollable_button_down">Fim</string>
+    <string name="scrollable_button_up">Topo</string>
+
     <string name="search_button_label">Pesquisar</string>
+    <string name="search_cep_clear_button">Limpar campo cep</string>
     <string name="search_cep_field_name">CEP</string>
     <string name="search_cep_hint">Digite o CEP</string>
     <string name="search_title">Busca</string>
-    <string name="display_loading_indicator">loading_indicator</string>
-    <string name="icon_button_tag">back_button</string>
-    <string name="search_cep_clear_button">Limpar campo cep</string>
+
+    <string name="show_delete_alert_button">Todos</string>
+    <string name="show_delete_alert_cache">cache</string>
+    <string name="show_delete_alert_description">Botão para deletar todos os registros do %1$s</string>
+    <string name="show_delete_alert_log">histórico</string>
+
+    <string name="testTag_cepFilter_composable">CepFilterComposable</string>
+    <string name="testTag_cepFilter_searchButton">CepFilterSearchButton</string>"
+    <string name="testTag_cepFilter_searchField">CepFilterSearchField</string>
+
+    <string name="testTag_deleteAllComponent">DeleteAllComponentCompose</string>
+    <string name="testTag_deleteAllComponent_divider">DeleteAllComponentDivider</string>
+    <string name="testTag_deleteAllComponent_button">DeleteAllComponentButton</string>
+
+    <string name="testTag_datePickerField">DatePickerField</string>
+    <string name="testTag_datePickerModal">DatePickerModal</string>
+    <string name="testTag_datePicker_cancelTextButton">DatePickerCancelTextButton</string>
+    <string name="testTag_datePicker_confirmTextButton">DatePickerConfirmTextButton</string>
+
+    <string name="testTag_header_icon">IconHeader"</string>
+    <string name="testTag_header_title">TitleHeader"</string>
+
+    <string name="testTag_logScreen_DeleteAllLogAlert">LogScreenDeleteAllLogAlert</string>
+    <string name="testTag_logScreen_fetching_OnFailure">LogScreenOnFailure</string>
+    <string name="testTag_logScreen_fetching_OnLoading">LogScreenOnLoading</string>
+    <string name="testTag_logScreen_fetching_OnSuccess">LogScreenOnSuccess</string>
+    <string name="testTag_logScreen_filterComponent">LogScreenFilterComponent</string>
+    <string name="testTag_logScreen_filter_deleteAllComponent">LogScreenDeleteAllComponent</string>
+    <string name="testTag_logScreen_header">LogScreenHeader</string>
+
+    <string name="testTag_periodFilter_button">PeriodFilterButton</string>
+    <string name="testTag_periodFilter_composable">PeriodFilterComposable</string>
+    <string name="testTag_periodFilter_endDateField">PeriodFilterEndDateField</string>
+    <string name="testTag_periodFilter_startDateField">PeriodFilterStartDateField</string>
+
+    <string name="testTag_searchScreen_detailPane_header">SearchScreenDetailPaneHeader"</string>
+    <string name="testTag_searchScreen_detailPane_onFailure">SearchScreenDetailPaneOnFailure"</string>
+    <string name="testTag_searchScreen_detailPane_onLoading">SearchScreenDetailPaneOnLoading"</string>
+    <string name="testTag_searchScreen_detailPane_onLoading_circularProgressIndicator">ShowsCircularProgressIndicatorOnSearchScreenDetailPaneOnLoading"</string>
+    <string name="testTag_searchScreen_detailPane_onSuccess">SearchScreenDetailPaneOnSuccess"</string>
+    <string name="testTag_searchScreen_detailPane_saveAddressButton">SearchScreenDetailPaneSaveAddressButton"</string>
+    <string name="testTag_searchScreen_listPane_cepField">SearchScreenListPaneCepField"</string>
+    <string name="testTag_searchScreen_listPane_header">SearchScreenListPaneHeader"</string>
+    <string name="testTag_searchScreen_listPane_searchButton">SearchScreenListPaneSearchButton"</string>
+
+    <string name="testTag_singleDateFilter_button">SingleDateFilterButton</string>
+    <string name="testTag_singleDateFilter_composable">SingleDateFilterComposable</string>
+    <string name="testTag_singleDateFilter_field">SingleDateFilterField</string>
+
+    <string name="testTag_titleFilter_button">TitleFilterButton</string>
+    <string name="testTag_titleFilter_composable">TitleFilterComposable</string>
+    <string name="testTag_titleFilter_field">TitleFilterField</string>
+    <string name="testTag_logFilter_composable">LogFilterComposable</string>
+    <string name="testTag_placeFilter_component">PlaceFilterComponent</string>
+    <string name="testTag_placeFilter_composable">PlaceFilterComposable</string>
+    <string name="testTag_favoriteExtraScreen_header_component">FavoriteExtraScreenHeaderComponent</string>
+    <string name="testTag_favoriteExtraScreen_titleNoteField">FavoriteExtraScreenTitleNoteField</string>
+    <string name="testTag_favoriteExtraScreen_contentNoteField">FavoriteExtraScreenContentNoteField</string>
+    <string name="testTag_favoriteExtraScreen_updateButton">FavoriteExtraScreenUpdateButton</string>
+    <string name="testTag_favoriteDetails_component">FavoriteDetailsComponent</string>
+    <string name="testTag_favoriteDetails_header">FavoriteDetailsHeader</string>
+    <string name="testTag_favoriteDetails_content">FavoriteDetailsContent</string>
+    <string name="testTag_favoriteDetails_button">FavoriteDetailsButton</string>
+    <string name="testTag_addressForms_component">AddressFormsComponent</string>
+    <string name="testTag_favoriteList_component">FavoriteListPaneComponent</string>
+    <string name="testTag_favoriteList_header">FavoriteListPaneHeader</string>
+    <string name="testTag_favoriteList_list">FavoriteListPaneList</string>
+    <string name="testTag_favoriteList_filter">FavoriteListPaneFilter</string>
+    <string name="testTag_favoriteList_onSuccess">FavoriteListPaneOnSuccess</string>
+    <string name="testTag_favoriteList_onLoading">FavoriteListPaneOnLoading</string>
+    <string name="testTag_favoriteList_onFailure">FavoriteListPaneOnFailure</string>
+    <string name="testTag_placeElement_favoriteIconButton">PlaceElementFavoriteIconButton %1$s</string>
+    <string name="testTag_favoriteListHeader_exportButton">FavoriteListHeaderExportButton</string>
+    <string name="testTag_favoriteListHeader_importButton">FavoriteListHeaderImportButton</string>
 </resources>

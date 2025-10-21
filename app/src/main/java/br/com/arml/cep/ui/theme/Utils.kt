@@ -9,14 +9,12 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 internal fun getDimensAndTypographyByScreenOrientation(
     screenOrientation: Int,
     windowSizeClass: WindowSizeClass
-): Pair<Dimens, Typography> {
-    return when (screenOrientation) {
-        Configuration.ORIENTATION_PORTRAIT -> {
-            return getDimensAndTypographyByWindowWidthSize(windowSizeClass.widthSizeClass)
-        }
-        else -> {
-            return getDimensAndTypographyByWindowsHeightSize(windowSizeClass.heightSizeClass)
-        }
+): Pair<Dimens, Typography> = when (screenOrientation) {
+    Configuration.ORIENTATION_PORTRAIT -> {
+        getDimensAndTypographyByWindowWidthSize(windowSizeClass.widthSizeClass)
+    }
+    else -> {
+        getDimensAndTypographyByWindowsHeightSize(windowSizeClass.heightSizeClass)
     }
 }
 

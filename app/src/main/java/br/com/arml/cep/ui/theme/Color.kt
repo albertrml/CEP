@@ -7,8 +7,8 @@ import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF1A237E)
 val onPrimaryLight = Color(0xFFFFFFFF)
-val primaryContainerLight = Color(0xFFAEC0F1)
-val onPrimaryContainerLight = Color(0xFF001945)
+val primaryContainerLight = Color(0xFFBBCDFA)
+val onPrimaryContainerLight = Color(0xFF000D23)
 val secondaryLight = Color(0xFF01579B)
 val onSecondaryLight = Color(0xFFFFFFFF)
 val secondaryContainerLight = Color(0xFF64B5F6)
@@ -21,14 +21,17 @@ val errorLight = Color(0xFFBA1A1A)
 val onErrorLight = Color(0xFFFFFFFF)
 val errorContainerLight = Color(0xFFFFDAD6)
 val onErrorContainerLight = Color(0xFF410002)
-val surfaceLight = Color(0xFFF5FAFB)
+val surfaceLight = Color(0xFFFFFFFF)
 val onSurfaceLight = Color(0xFF100121)
 val surfaceVariantLight = Color(0xFFDAE3F9)
 val onSurfaceVariantLight = Color(0xFF010626)
-val backgroundLight = Color(0xFFF5FAFB)
+val surfaceContainerLowLight = Color(0xFF89CAFD)    // Card Background
+val surfaceContainerLight = Color(0xFFE6EEFD)      // Bottom Bar
+val backgroundLight = Color(0xFFFFFFFF)
 val onBackgroundLight = Color(0xFF100121)
 val outlineLight = Color(0xFF010626)
 val outlineVariantLight = Color(0xFF010418)
+
 
 val primaryDark = Color(0xFFB0C4FF)
 val onPrimaryDark = Color(0xFF001B3F)
@@ -42,19 +45,20 @@ val tertiaryDark = Color(0xFFE0C970)
 val onTertiaryDark = Color(0xFF3A2E00)
 val tertiaryContainerDark = Color(0xFF544500)
 val onTertiaryContainerDark = Color(0xFFFDE089)
-val errorDark = Color(0xFFFFB4AB)
-val onErrorDark = Color(0xFF690005)
+val errorDark = Color(0xFFBA1A1A)
+val onErrorDark = Color(0xFFFFFFFF)
 val errorContainerDark = Color(0xFF93000A)
 val onErrorContainerDark = Color(0xFFFFDAD6)
 val surfaceDark = Color(0xFF111318)
 val onSurfaceDark = Color(0xFFE2E2E9)
 val surfaceVariantDark = Color(0xFF43474E)
 val onSurfaceVariantDark = Color(0xFFC3C7CE)
+val surfaceContainerLowDark = Color(0xFF2D2D2D)    // Card Background
+val surfaceContainerDark = Color(0xFF1F1F1F)      // Bottom Bar
 val backgroundDark = Color(0xFF111318)
 val onBackgroundDark = Color(0xFFE2E2E9)
 val outlineDark = Color(0xFF8D9199)
 val outlineVariantDark = Color(0xFF43474E)
-
 
 private val DarkColorScheme = darkColorScheme(
     primary = primaryDark,
@@ -73,6 +77,8 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = onSurfaceDark,
     surfaceVariant = surfaceVariantDark,
     onSurfaceVariant = onSurfaceVariantDark,
+    surfaceContainer = surfaceContainerDark,
+    surfaceContainerLow = surfaceContainerLowDark,
     background = backgroundDark,
     onBackground = onBackgroundDark,
     error = errorDark,
@@ -100,6 +106,8 @@ private val LightColorScheme = lightColorScheme(
     onSurface = onSurfaceLight,
     surfaceVariant = surfaceVariantLight,
     onSurfaceVariant = onSurfaceVariantLight,
+    surfaceContainer = surfaceContainerLight,
+    surfaceContainerLow = surfaceContainerLowLight,
     background = backgroundLight,
     onBackground = onBackgroundLight,
     error = errorLight,
@@ -111,8 +119,5 @@ private val LightColorScheme = lightColorScheme(
 )
 
 internal fun getColorScheme(darkTheme: Boolean): ColorScheme {
-    return if (darkTheme)
-        DarkColorScheme
-    else
-        LightColorScheme
+    return if (darkTheme) DarkColorScheme else LightColorScheme
 }

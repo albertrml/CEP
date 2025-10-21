@@ -9,16 +9,30 @@ plugins {
 
 android {
     namespace = "br.com.arml.cep"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "br.com.arml.cep"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 6
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        defaultConfig {
+            // ...
+            javaCompileOptions {
+                annotationProcessorOptions {
+                    arguments["room.schemaLocation"] = "$projectDir/schemas"
+                }
+            }
+        }
+
+    }
+
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
     }
 
     buildTypes {
@@ -30,17 +44,25 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+
+    kotlin {
+        jvmToolchain {
+            languageVersion.value(
+                JavaLanguageVersion.of(11)
+            )
+        }
     }
+
     buildFeatures {
         compose = true
     }
-    packaging { // Add this block
+
+    packaging {
         resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
         resources.excludes.add("META-INF/LICENSE.md")
         resources.excludes.add("META-INF/LICENSE-notice.md")
@@ -52,6 +74,7 @@ dependencies {
     implementation(libs.androidx.compose.adaptive)
     implementation(libs.androidx.compose.adaptive.layout)
     implementation(libs.androidx.compose.adaptive.navigation)
+    implementation(libs.androidx.compose.adaptive.navigation.suite)
 
     // Core
     implementation(libs.androidx.core.ktx)
@@ -72,6 +95,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3.windowsizeclass)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.text.google.fonts)
@@ -85,7 +109,13 @@ dependencies {
     implementation(libs.squareup.moshi.kotlin)
     implementation(libs.squareup.logging.interceptor)
 
+    // Room
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
     // Test Dependencies
+    testImplementation(libs.androidx.ui.test.junit)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
