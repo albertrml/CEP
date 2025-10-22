@@ -289,13 +289,26 @@ class CepRepositoryTest {
         val flowOfUnfavoritePlaces: Flow<List<PlaceEntry>> =  flowOf(expectedUnfavoritePlaces)
         coEvery { placeLocalDataSource.readUnwanted() } returns flowOfUnfavoritePlaces
 
-        val flow = repository.getUnwantedPlaces()
-        val result = flow.toList().maxBy { it.size }
-        assertEquals(expectedUnfavoritePlaces,result)
+        repository.getUnwantedPlaces().collect { response ->
+            when (response) {
+                is Response.Success -> {
+                    assertEquals(expectedUnfavoritePlaces, response.result)
+                }
+                is Response.Loading -> { assertTrue(true) }
+                is Response.Failure -> {
+                    assertTrue(
+                        "It should be Success, not Failure",
+                        false
+                    )
+                }
+            }
+        }
+
+        coEvery { placeLocalDataSource.filterByCepAndUnwanted(any()) }
     }
 
     @Test
-    fun `should emits a specific unfavorite place by cep`() = runTest {
+    fun `should emits a specific unfavorite places by cep`() = runTest {
         val cep = mockPlaceEntries.first().cep.text
         val expectedUnfavoritePlaces = mockPlaceEntries.filter {
             it.cep.text.contains(cep) && !it.isFavorite.value
@@ -303,9 +316,22 @@ class CepRepositoryTest {
         val flowOfUnfavoritePlaces: Flow<List<PlaceEntry>> =  flowOf(expectedUnfavoritePlaces)
         coEvery { placeLocalDataSource.filterByCepAndUnwanted(any()) } returns flowOfUnfavoritePlaces
 
-        val flow = repository.getUnwantedPlacesByCepAndUnwanted(cep)
-        val result = flow.toList().maxBy { it.size }
-        assertEquals(expectedUnfavoritePlaces,result)
+        repository.getUnwantedPlacesByCepAndUnwanted(cep).collect { response ->
+            when (response) {
+                is Response.Success -> {
+                    assertEquals(expectedUnfavoritePlaces, response.result)
+                }
+                is Response.Loading -> { assertTrue(true) }
+                is Response.Failure -> {
+                    assertTrue(
+                        "It should be Success, not Failure",
+                        false
+                    )
+                }
+            }
+        }
+
+        coEvery { placeLocalDataSource.filterByCepAndUnwanted(any()) }
     }
 
     /*** Update Place ***/

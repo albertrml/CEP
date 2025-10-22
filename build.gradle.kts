@@ -6,5 +6,4 @@ plugins {
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.kotlin.ksp) apply false
     alias(libs.plugins.kotlin.hilt) apply false
-    /*alias(libs.plugins.google.services.gms) apply false*/
 }
