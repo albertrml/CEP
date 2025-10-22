@@ -36,13 +36,13 @@ interface PlaceLocalDataSource {
     @Query("DELETE FROM place_table WHERE favorite_status = 0")
     suspend fun deleteAllNotFavorite()
 
-    @Query("SELECT * FROM place_table WHERE cep LIKE '%' || :query || '%' ")
+    @Query("SELECT * FROM place_table WHERE cep LIKE '%'||:query||'%' ")
     fun filterByCep(query: String): Flow<List<PlaceEntry>>
 
-    @Query("SELECT * FROM place_table WHERE cep LIKE '%' || :query || '%' AND favorite_status = 1")
+    @Query("SELECT * FROM place_table WHERE cep LIKE '%'||:query||'%' AND favorite_status = 1")
     fun filterByCepAndFavorite(query: String): Flow<List<PlaceEntry>>
 
-    @Query("SELECT * FROM place_table WHERE cep LIKE '%' || :query || '%' AND favorite_status = 0")
+    @Query("SELECT * FROM place_table WHERE cep LIKE '%'||:query||'%' AND favorite_status = 0")
     fun filterByCepAndUnwanted(query: String): Flow<List<PlaceEntry>>
 
     @Query("SELECT * FROM place_table WHERE :cep = cep")
