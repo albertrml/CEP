@@ -53,6 +53,12 @@
     <string name="favorite_title_field_filter">Título</string>
     <string name="favorite_unwanted_alert_text">O %1$s será removido da lista dos favoritos e perderá sua nota, mas permanecerá em cache. Desejas prosseguir?</string>
     <string name="favorite_unwanted_alert_title">Favorito</string>
+    <string name="favorite_address_tab">Endereço</string>
+    <string name="favorite_notes_tab">Anotação</string>
+    <string name="favorite_address_tab_description">Aba de endereço</string>
+    <string name="favorite_notes_tab_description">Aba de anotações</string>
+    <string name="favorite_notes_show_all_button">Mostrar anotações</string>
+    <string name="favorite_notes_hide_all_button">Esconder anotações</string>
 
     <string name="icon_button_tag">back_button</string>
 
@@ -89,7 +95,7 @@
     <string name="show_delete_alert_log">histórico</string>
 
     <string name="testTag_cepFilter_composable">CepFilterComposable</string>
-    <string name="testTag_cepFilter_searchButton">CepFilterSearchButton</string>"
+    <string name="testTag_cepFilter_searchButton">CepFilterSearchButton</string>
     <string name="testTag_cepFilter_searchField">CepFilterSearchField</string>
 
     <string name="testTag_deleteAllComponent">DeleteAllComponentCompose</string>
@@ -101,8 +107,8 @@
     <string name="testTag_datePicker_cancelTextButton">DatePickerCancelTextButton</string>
     <string name="testTag_datePicker_confirmTextButton">DatePickerConfirmTextButton</string>
 
-    <string name="testTag_header_icon">IconHeader"</string>
-    <string name="testTag_header_title">TitleHeader"</string>
+    <string name="testTag_header_icon">IconHeader</string>
+    <string name="testTag_header_title">TitleHeader</string>
 
     <string name="testTag_logScreen_DeleteAllLogAlert">LogScreenDeleteAllLogAlert</string>
     <string name="testTag_logScreen_fetching_OnFailure">LogScreenOnFailure</string>
@@ -117,15 +123,15 @@
     <string name="testTag_periodFilter_endDateField">PeriodFilterEndDateField</string>
     <string name="testTag_periodFilter_startDateField">PeriodFilterStartDateField</string>
 
-    <string name="testTag_searchScreen_detailPane_header">SearchScreenDetailPaneHeader"</string>
-    <string name="testTag_searchScreen_detailPane_onFailure">SearchScreenDetailPaneOnFailure"</string>
-    <string name="testTag_searchScreen_detailPane_onLoading">SearchScreenDetailPaneOnLoading"</string>
-    <string name="testTag_searchScreen_detailPane_onLoading_circularProgressIndicator">ShowsCircularProgressIndicatorOnSearchScreenDetailPaneOnLoading"</string>
-    <string name="testTag_searchScreen_detailPane_onSuccess">SearchScreenDetailPaneOnSuccess"</string>
-    <string name="testTag_searchScreen_detailPane_saveAddressButton">SearchScreenDetailPaneSaveAddressButton"</string>
-    <string name="testTag_searchScreen_listPane_cepField">SearchScreenListPaneCepField"</string>
-    <string name="testTag_searchScreen_listPane_header">SearchScreenListPaneHeader"</string>
-    <string name="testTag_searchScreen_listPane_searchButton">SearchScreenListPaneSearchButton"</string>
+    <string name="testTag_searchScreen_detailPane_header">SearchScreenDetailPaneHeader</string>
+    <string name="testTag_searchScreen_detailPane_onFailure">SearchScreenDetailPaneOnFailure</string>
+    <string name="testTag_searchScreen_detailPane_onLoading">SearchScreenDetailPaneOnLoading</string>
+    <string name="testTag_searchScreen_detailPane_onLoading_circularProgressIndicator">ShowsCircularProgressIndicatorOnSearchScreenDetailPaneOnLoading</string>
+    <string name="testTag_searchScreen_detailPane_onSuccess">SearchScreenDetailPaneOnSuccess</string>
+    <string name="testTag_searchScreen_detailPane_saveAddressButton">SearchScreenDetailPaneSaveAddressButton</string>
+    <string name="testTag_searchScreen_listPane_cepField">SearchScreenListPaneCepField</string>
+    <string name="testTag_searchScreen_listPane_header">SearchScreenListPaneHeader</string>
+    <string name="testTag_searchScreen_listPane_searchButton">SearchScreenListPaneSearchButton</string>
 
     <string name="testTag_singleDateFilter_button">SingleDateFilterButton</string>
     <string name="testTag_singleDateFilter_composable">SingleDateFilterComposable</string>
@@ -156,4 +162,7 @@
     <string name="testTag_placeElement_favoriteIconButton">PlaceElementFavoriteIconButton %1$s</string>
     <string name="testTag_favoriteListHeader_exportButton">FavoriteListHeaderExportButton</string>
     <string name="testTag_favoriteListHeader_importButton">FavoriteListHeaderImportButton</string>
+    <string name="testTag_favoriteDetails_addressContent">FavoriteDetailsAddressContent</string>
+    <string name="testTag_favoriteDetails_notesContent">FavoriteDetailsNotesContent</string>
+    <string name="favorite_details_save_button">Criar</string>
 </resources>

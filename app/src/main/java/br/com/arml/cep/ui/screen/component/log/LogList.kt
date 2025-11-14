@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.arml.cep.model.entity.LogEntry
+import br.com.arml.cep.model.domain.Log
 import br.com.arml.cep.model.mock.mockLogEntries
 import br.com.arml.cep.ui.screen.component.common.ScrollableFab
 import br.com.arml.cep.ui.theme.dimens
@@ -21,9 +21,9 @@ import br.com.arml.cep.ui.theme.dimens
 @Composable
 fun LogList(
     modifier: Modifier = Modifier,
-    logEntries: List<LogEntry>,
-    onClickToDelete: (LogEntry) -> Unit,
-    onCopyToClipboard: (LogEntry) -> Unit
+    logEntries: List<Log>,
+    onClickToDelete: (Log) -> Unit,
+    onCopyToClipboard: (Log) -> Unit
 ){
     val listState = rememberLazyListState()
     ScrollableFab(listState = listState) {
@@ -35,7 +35,7 @@ fun LogList(
         ) {
             items(items = logEntries) {
                 LogElement(
-                    logEntry = it,
+                    log = it,
                     onClickToDelete = onClickToDelete,
                     onClickToDetail = onCopyToClipboard
                 )

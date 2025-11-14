@@ -2,11 +2,9 @@ package br.com.arml.cep.ui.screen.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.arml.cep.domain.CepUseCase
-import br.com.arml.cep.model.domain.Favorite
-import br.com.arml.cep.model.domain.Note
+import br.com.arml.cep.domain.SearchUseCase
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.domain.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val useCase: CepUseCase
+    private val useCase: SearchUseCase
 ) : ViewModel() {
     private var _state = MutableStateFlow(SearchState())
     val state = _state.asStateFlow()
@@ -25,27 +23,18 @@ class SearchViewModel @Inject constructor(
     fun onEvent(event: SearchEvent) {
         when (event) {
             is SearchEvent.OnSearch -> searchCep(event.code)
-            is SearchEvent.OnFavorite -> favoriteCep(event.placeEntry)
+            is SearchEvent.OnFavorite -> favoriteCep(event.place)
             is SearchEvent.OnClear -> cleanState()
         }
     }
 
-    private fun favoriteCep(entry: PlaceEntry) {
+    private fun favoriteCep(place: Place) {
         viewModelScope.launch {
-            if (entry.isFavorite.value) return@launch
-
-            val favoriteEntry = entry.copy(
-                isFavorite = Favorite(true),
-                note = Note.build(
-                    title = entry.cep.text,
-                    content = ""
-                )
-            )
-
-            useCase.favoriteEntry(favoriteEntry).collect { response ->
+            if (place.isFavorite.value) return@launch
+            useCase.addToFavorite(place).collect { response ->
                 _state.update {
                     if (response is Response.Success) {
-                        it.copy(insert = response,entry = Response.Success(favoriteEntry))
+                        it.copy(insert = response,entry = Response.Success(place))
                     } else
                         it.copy(insert = response)
                 }
@@ -59,7 +48,7 @@ class SearchViewModel @Inject constructor(
 
     private fun searchCep(code: String) {
         viewModelScope.launch {
-            useCase.fetchEntry(code).collectLatest { response ->
+            useCase.searchPlace(code).collectLatest { response ->
                 _state.update { it.copy(entry = response) }
             }
         }

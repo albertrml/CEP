@@ -13,7 +13,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
 import br.com.arml.cep.model.domain.MIN_TITLE_LENGTH
-import br.com.arml.cep.model.mock.mockFavoritePlaceEntries
+import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.screen.component.common.TitleFilter
 import io.mockk.every
 import io.mockk.mockk
@@ -29,14 +29,16 @@ class TitleFilterTest {
     val composeTestRule = createComposeRule()
 
     private lateinit var ctx: Context
-    private val entry = mockFavoritePlaceEntries.random()
+    private val mockPlace = mockFavoritePlaces.first()
     private lateinit var titleFilterComposable: String
     private lateinit var titleFilterField: String
     private lateinit var titleFilterButton: String
     private val mockOnTitleFilter: (String) -> Unit = mockk()
     private val invalidQueryByMinLength = "A".repeat(MIN_TITLE_LENGTH - 1)
     private val invalidQueryByMaxLength = "A".repeat(MAX_TITLE_LENGTH + 1)
-    private val validQuery = entry.note!!.title.substring(0..MIN_TITLE_LENGTH-1)
+    private val validQuery = mockPlace
+        .notes.first()
+        .title.substring(0..<MIN_TITLE_LENGTH)
 
     @Before
     fun setUp() {

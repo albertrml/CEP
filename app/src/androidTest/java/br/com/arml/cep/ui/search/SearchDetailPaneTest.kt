@@ -13,11 +13,11 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.model.domain.Favorite
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.exception.CepException
-import br.com.arml.cep.model.mock.mockPlaceEntries
+import br.com.arml.cep.model.mock.mockFavoritePlaces
+import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.ui.screen.component.search.SearchDetailPane
 import io.mockk.every
 import io.mockk.mockk
@@ -41,7 +41,7 @@ class SearchDetailPaneTest {
     private val mockOnBackPress: () -> Unit = mockk()
 
     /*** On Success ***/
-    private lateinit var mockPlaceEntry: PlaceEntry
+    private lateinit var mockPlace: Place
     private lateinit var searchDetailPaneOnSuccess: String
 
     /*** On Loading ***/
@@ -53,7 +53,7 @@ class SearchDetailPaneTest {
 
     /*** Favorite Button ***/
     private lateinit var searchDetailFavoriteButton: String
-    private val mockOnFavorite: (PlaceEntry) -> Unit = mockk()
+    private val mockOnFavorite: (Place) -> Unit = mockk()
 
 
     @Before
@@ -77,7 +77,7 @@ class SearchDetailPaneTest {
         searchDetailPaneOnFailure = context.getString(R.string.testTag_searchScreen_detailPane_onFailure)
 
         /*** On Success ***/
-        mockPlaceEntry = mockPlaceEntries[0]
+        mockPlace = mockUnfavoritePlaces.first()
         searchDetailPaneOnSuccess = context.getString(R.string.testTag_searchScreen_detailPane_onSuccess)
 
         /*** Favorite Button ***/
@@ -85,7 +85,7 @@ class SearchDetailPaneTest {
         every { mockOnFavorite(any()) } answers {  println("mockOnFavorite CALLED") }
     }
 
-    private fun setDisplayScreenContent(response: Response<PlaceEntry>) {
+    private fun setDisplayScreenContent(response: Response<Place>) {
         composeTestRule.setContent {
             SearchDetailPane(
                 modifier = Modifier.fillMaxSize(),
@@ -121,7 +121,7 @@ class SearchDetailPaneTest {
     /*** Address Information ***/
     @Test
     fun shouldDisplayAddressInformation_whenSearchCepSucceeds(){
-        setDisplayScreenContent(Response.Success(mockPlaceEntry))
+        setDisplayScreenContent(Response.Success(mockPlace))
         composeTestRule.apply {
             onNodeWithTag(searchDetailPaneOnSuccess).assertIsDisplayed()
             onNodeWithTag(searchDetailPaneOnLoading).assertIsNotDisplayed()
@@ -159,7 +159,7 @@ class SearchDetailPaneTest {
     /*** Save Button ***/
     @Test
     fun shouldSaveAddress_whenSaveButtonIsClicked(){
-        setDisplayScreenContent(Response.Success(mockPlaceEntry))
+        setDisplayScreenContent(Response.Success(mockPlace))
         composeTestRule.onNodeWithTag(searchDetailFavoriteButton).apply {
             assertExists()
             assertIsEnabled()
@@ -169,9 +169,7 @@ class SearchDetailPaneTest {
 
     @Test
     fun shouldBeUnableFavoriteButton_whenAddressIsAlreadyFavorite(){
-        val mockPlaceEntry = mockPlaceEntries[0].copy(
-            isFavorite = Favorite(true)
-        )
+        val mockPlaceEntry = mockFavoritePlaces.first()
         setDisplayScreenContent(Response.Success(mockPlaceEntry))
         composeTestRule.onNodeWithTag(searchDetailFavoriteButton).apply {
             assertExists()

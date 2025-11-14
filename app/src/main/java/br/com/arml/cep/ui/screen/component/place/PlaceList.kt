@@ -20,20 +20,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.model.mock.mockPlaceEntries
+import br.com.arml.cep.model.domain.Place
+import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.ui.screen.component.common.ScrollableFab
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun PlaceList(
     modifier: Modifier = Modifier,
-    placeEntries: List<PlaceEntry>,
+    placeEntries: List<Place>,
     favoriteIcon: ImageVector,
     colorFavoriteIcon: Color,
-    onFavoriteIconClick: ((PlaceEntry) -> Unit)? = null,
-    onClickLogo: (PlaceEntry) -> Unit,
-    onClickEntry: (PlaceEntry) -> Unit
+    onFavoriteIconClick: ((Place) -> Unit)? = null,
+    onClickLogo: (Place) -> Unit,
+    onClickEntry: (Place) -> Unit
 ) {
 
     val lazyListState = rememberLazyListState()
@@ -69,7 +69,7 @@ fun PlaceList(
                             modifier = Modifier
                                 .padding(vertical = MaterialTheme.dimens.smallPadding)
                                 .padding(start = MaterialTheme.dimens.mediumPadding),
-                            placeEntry = placeEntry,
+                            place = placeEntry,
                             onFavoriteIconClick = onClickLogo,
                             favoriteIcon = favoriteIcon,
                             colorFavoriteIcon = colorFavoriteIcon
@@ -86,7 +86,7 @@ fun PlaceList(
 @Composable
 fun FavoriteListPreview() {
     PlaceList(
-        placeEntries = mockPlaceEntries,
+        placeEntries = mockUnfavoritePlaces,
         favoriteIcon = Icons.Default.Favorite,
         colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
         onClickLogo = {},

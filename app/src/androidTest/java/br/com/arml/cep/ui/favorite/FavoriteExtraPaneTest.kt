@@ -8,8 +8,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.model.mock.mockFavoritePlaceEntries
+import br.com.arml.cep.model.domain.Note
+import br.com.arml.cep.model.mock.mockNotes
 import br.com.arml.cep.ui.screen.component.favorite.FavoriteExtraComponent
 import io.mockk.mockk
 import io.mockk.verify
@@ -29,7 +29,7 @@ class FavoriteExtraPaneTest {
     private lateinit var favoriteContentNoteField: String
     private lateinit var favoriteUpdateButton: String
 
-    private val onClickToUpdateListener: (PlaceEntry) -> Unit = mockk(relaxed = true)
+    private val onClickToUpdateListener: (Note) -> Unit = mockk(relaxed = true)
     private val onNavigateBackToDetailsListener: () -> Unit = mockk(relaxed = true)
 
     @Before
@@ -44,12 +44,12 @@ class FavoriteExtraPaneTest {
         }
     }
 
-    fun displayFavoriteExtra(placeEntry: PlaceEntry = mockFavoritePlaceEntries.first()){
+    fun displayFavoriteExtra(note: Note = mockNotes.first()){
         composeTestRule.setContent {
             FavoriteExtraComponent(
                 modifier = Modifier.testTag(favoriteExtraHeaderComponent),
-                placeEntry = placeEntry,
-                onClickToUpdate = { onClickToUpdateListener(placeEntry) },
+                note = note,
+                onClick = { onClickToUpdateListener(note) },
                 onNavigateBackToDetails = onNavigateBackToDetailsListener
             )
         }
@@ -70,10 +70,10 @@ class FavoriteExtraPaneTest {
 
     @Test
     fun shouldUpdatePlaceEntry_whenUpdateButtonIsClicked(){
-        val placeEntry = mockFavoritePlaceEntries.first()
-        displayFavoriteExtra(placeEntry)
+        val note = mockNotes.first()
+        displayFavoriteExtra(note)
         composeTestRule.onNodeWithTag(favoriteUpdateButton).performClick()
-        verify { onClickToUpdateListener(placeEntry) }
+        verify { onClickToUpdateListener(note) }
     }
 
     @Test

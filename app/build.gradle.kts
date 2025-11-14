@@ -122,8 +122,11 @@ dependencies {
 
     // Android Test Dependencies
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.google.truth)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit)
+    androidTestImplementation(libs.androidx.room.testing)
+    androidTestImplementation(libs.jetbrains.kotlin.test)
     androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(platform(libs.androidx.compose.bom))

@@ -3,6 +3,8 @@ package br.com.arml.cep.ui.screen.component.search
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -25,40 +27,79 @@ fun AddressForms(
     ) { scrollState ->
         Column(
             modifier = Modifier
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing),
         ) {
             AddressField(
+                modifier = Modifier.padding(
+                    top = MaterialTheme.dimens.mediumPadding,
+                    bottom = MaterialTheme.dimens.xSmallPadding
+                ),
                 title = stringResource(R.string.display_zipcode_field),
                 value = address.zipCode
             )
             AddressField(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.xSmallPadding
+                ),
                 title = stringResource(R.string.display_street_field),
                 value = address.street
             )
             AddressField(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.xSmallPadding
+                ),
                 title = stringResource(R.string.display_complement_field),
                 value = address.complement
             )
             AddressField(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.xSmallPadding
+                ),
                 title = stringResource(R.string.display_neighborhood_field),
                 value = address.district
             )
-            AddressField(title = stringResource(R.string.display_city_field), value = address.city)
             AddressField(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.xSmallPadding
+                ),
+                title = stringResource(R.string.display_city_field),
+                value = address.city
+            )
+            AddressField(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.xSmallPadding
+                ),
                 title = stringResource(R.string.display_state_field),
                 value = address.state
             )
-            AddressField(title = stringResource(R.string.display_uf_field), value = address.uf)
             AddressField(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.xSmallPadding
+                ),
+                title = stringResource(R.string.display_uf_field),
+                value = address.uf
+            )
+            AddressField(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.xSmallPadding
+                ),
                 title = stringResource(R.string.display_region_field),
                 value = address.region
             )
             AddressField(
+                modifier = Modifier.padding(
+                    vertical = MaterialTheme.dimens.xSmallPadding
+                ),
                 title = stringResource(R.string.display_country_field),
                 value = address.country
             )
             AddressField(
+                modifier = Modifier.padding(
+                    bottom = MaterialTheme.dimens.mediumPadding,
+                    top = MaterialTheme.dimens.xSmallPadding,
+                ),
                 title = stringResource(R.string.display_ddd_field),
                 value = address.ddd,
                 thickness = MaterialTheme.dimens.largeThickness

@@ -11,9 +11,9 @@ import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.LogEntry
-import br.com.arml.cep.model.entity.toFormattedUTC
+import br.com.arml.cep.model.domain.Log
 import br.com.arml.cep.model.mock.mockLogEntries
+import br.com.arml.cep.model.utils.toFormattedUTC
 import br.com.arml.cep.ui.screen.component.log.LogScreenListComponent
 import br.com.arml.cep.ui.screen.log.LogState
 import io.mockk.every
@@ -53,8 +53,8 @@ class LogScreenListPaneTest {
         private lateinit var logScreenListIsSuccess: String
         private lateinit var logScreenListIsLoading: String
         private lateinit var logScreenListIsFailure: String
-        private val mockOnClickToDeleteEntry: (LogEntry) -> Unit = mockk(relaxed = true)
-        private val mockOnCopyToClipboard: (LogEntry) -> Unit = mockk(relaxed = true)
+        private val mockOnClickToDeleteEntry: (Log) -> Unit = mockk(relaxed = true)
+        private val mockOnCopyToClipboard: (Log) -> Unit = mockk(relaxed = true)
 
         @Before
         fun setUp(){

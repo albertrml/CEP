@@ -1,223 +1,170 @@
 package br.com.arml.cep.model.repository
 
-import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.mock.getMockDate
+import br.com.arml.cep.model.domain.toEntity
+import br.com.arml.cep.model.entity.LogEntity
 import br.com.arml.cep.model.mock.mockLogEntries
-import br.com.arml.cep.model.source.local.LogLocalDataSource
+import br.com.arml.cep.model.source.local.LogDao
+import br.com.arml.cep.utils.assertFlowFailure
+import br.com.arml.cep.utils.assertFlowSuccess
 import io.mockk.coEvery
+import io.mockk.coJustRun
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 
 class LogRepositoryTest {
 
-    private val logLocalDataSource = mockk<LogLocalDataSource>()
-    private val logRepository = LogRepository(logLocalDataSource)
+    private val logDao = mockk<LogDao>()
+    private lateinit var logRepository: LogRepository
 
-    /*** getAllLogs ***/
-    @Test
-    fun `should emit success when getAllLogs works properly`() = runTest {
-        val expectedLogs = mockLogEntries
-        val logFlow = flowOf(expectedLogs)
-        coEvery { logLocalDataSource.readAll() } returns logFlow
-
-        val result = logRepository.getAllLogs().toList()
-
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Success(expectedLogs), result.last())
-        assertEquals(expectedLogs, (result.last() as Response.Success).result)
+    @Before
+    fun setup() {
+        logRepository = LogRepository(logDao)
     }
 
-    @Test
-    fun `should emit loading and failure when getAllLogs throws exception`() = runTest {
-        val expectedException = Exception("Database error")
-        coEvery { logLocalDataSource.readAll() } returns flow{ throw expectedException }
-
-        val result = logRepository.getAllLogs().toList()
-
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Failure(expectedException), result.last())
-        assertEquals(expectedException, (result.last() as Response.Failure).exception)
+    private fun mockGetLogByZipcodeSuccess(result: List<LogEntity>) {
+        coEvery { logDao.getLogByZipcode(any()) } returns flowOf(result)
     }
 
-    /*** filterLogsByCep ***/
+    private fun mockGetLogByZipcodeFailure(exception: Exception) {
+        coEvery { logDao.getLogByZipcode(any()) } returns flow { throw exception }
+    }
+
+    private fun mockGetLogByPeriodSuccess(result: List<LogEntity>) {
+        coEvery { logDao.getLogByPeriod(any(), any()) } returns flowOf(result)
+    }
+
+    private fun mockGetLogByPeriodFailure(exception: Exception) {
+        coEvery { logDao.getLogByPeriod(any(), any()) } returns flow { throw exception }
+    }
+
+    // region fetchLogByZipcode tests
     @Test
-    fun `should emit loading and success when filterLogsByCep works properly`() = runTest {
-        val query = "111"
+    fun `fetchLogByZipcode should emit Success with Logs`() = runTest {
+        val query = mockLogEntries.first().cep.text.substring(0, 3)
         val expectedLogs = mockLogEntries.filter { it.cep.text.contains(query) }
-        val logFlow = flowOf(expectedLogs)
-        coEvery { logLocalDataSource.filterByCep(query) } returns logFlow
+        mockGetLogByZipcodeSuccess(expectedLogs.map { it.toEntity() })
 
-        val result = logRepository.filterLogsByCep(query).toList()
+        val responses = logRepository.fetchLogByZipcode(query).toList()
 
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Success(expectedLogs), result.last())
-        assertEquals(expectedLogs, (result.last() as Response.Success).result)
+        responses.assertFlowSuccess { actual ->
+            assertTrue(actual.containsAll(expectedLogs))
+        }
+        coVerify(exactly = 1) { logDao.getLogByZipcode(query) }
     }
 
     @Test
-    fun `should emit loading and failure when filterLogsByCep throws exception`() = runTest {
+    fun `fetchLogByZipcode should emit Success with empty list`() = runTest {
+        val query = "12345678"
+        mockGetLogByZipcodeSuccess(emptyList())
+
+        val responses = logRepository.fetchLogByZipcode(query).toList()
+
+        responses.assertFlowSuccess { assertTrue(it.isEmpty()) }
+        coVerify(exactly = 1) { logDao.getLogByZipcode(query) }
+    }
+
+    @Test
+    fun `fetchLogByZipcode should emit Failure`() = runTest {
         val query = "111"
-        val expectedException = Exception("Database error")
-        coEvery { logLocalDataSource.filterByCep(query) } returns flow{ throw expectedException }
+        val exception = Exception("Database error")
+        mockGetLogByZipcodeFailure(exception)
 
-        val result = logRepository.filterLogsByCep(query).toList()
+        val responses = logRepository.fetchLogByZipcode(query).toList()
 
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Failure(expectedException), result.last())
-        assertEquals(expectedException, (result.last() as Response.Failure).exception)
+        responses.assertFlowFailure { assertEquals(exception.javaClass, it.javaClass) }
+        coVerify(exactly = 1) { logDao.getLogByZipcode(query) }
     }
+    // endregion
 
-    /*** filterLogsByInitialDate ***/
+    // region fetchLogByPeriod tests
     @Test
-    fun `should emit loading and success when filterLogsByInitialDate works properly`() = runTest {
-        val initialDate = getMockDate(8)
-        val expectedLogs = mockLogEntries.filter { it.timestamp.time >= initialDate.time }
-        val logFlow = flowOf(expectedLogs)
-        coEvery { logLocalDataSource.filterByInitialTimestamp(initialDate.time) } returns logFlow
+    fun `fetchLogByPeriod should emit Success with Logs by period`() = runTest {
+        val (start, end) = mockLogEntries[2].timestamp.time to mockLogEntries[8].timestamp.time
+        val expectedLogs = mockLogEntries.filter { it.timestamp.time in start..end }
+        mockGetLogByPeriodSuccess(expectedLogs.map { it.toEntity() })
 
-        val result = logRepository.filterLogsByInitialDate(initialDate.time).toList()
+        val responses = logRepository.fetchLogByPeriod(start, end).toList()
 
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Success(expectedLogs), result.last())
-        assertEquals(expectedLogs, (result.last() as Response.Success).result)
-        assertEquals(
-            expectedLogs.size,
-            (result.last() as Response.Success).result.size
-        )
+        responses.assertFlowSuccess { assertTrue(it.containsAll(expectedLogs)) }
+        coVerify(exactly = 1) { logDao.getLogByPeriod(start, end) }
     }
 
     @Test
-    fun `should emit loading and failure when filterLogsByInitialDate throws exception`() = runTest {
-        val initialDate = getMockDate(7)
-        val expectedException = Exception("Database error")
-        coEvery { logLocalDataSource.filterByInitialTimestamp(initialDate.time) } returns flow{ throw expectedException }
+    fun `fetchLogByPeriod should emit Success with all logs by default`() = runTest {
+        val expectedLogs = mockLogEntries
+        mockGetLogByPeriodSuccess(expectedLogs.map { it.toEntity() })
 
-        val result = logRepository.filterLogsByInitialDate(initialDate.time).toList()
+        val responses = logRepository.fetchLogByPeriod().toList()
 
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Failure(expectedException), result.last())
-        assertEquals(expectedException, (result.last() as Response.Failure).exception)
-    }
-
-    /*** filterLogsByFinalDate ***/
-    @Test
-    fun `should emit loading and success when filterLogsByFinalDate works properly`() = runTest {
-        val dateQuery = getMockDate(8)
-        val expectedLogs = mockLogEntries.filter { it.timestamp.time <= dateQuery.time }
-        val logFlow = flowOf(expectedLogs)
-        coEvery { logLocalDataSource.filterByFinalTimestamp(dateQuery.time) } returns logFlow
-
-        val result = logRepository.filterLogsByFinalDate(dateQuery.time).toList()
-
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Success(expectedLogs), result.last())
-        assertEquals(expectedLogs, (result.last() as Response.Success).result)
+        responses.assertFlowSuccess { assertTrue(it.containsAll(expectedLogs)) }
+        coVerify(exactly = 1) { logDao.getLogByPeriod(any(), any()) }
     }
 
     @Test
-    fun `should emit loading and failure when filterLogsByFinalDate throws exception`() = runTest {
-        val dateQuery = getMockDate(7)
-        val expectedException = Exception("Database error")
-        coEvery { logLocalDataSource.filterByFinalTimestamp(dateQuery.time) } returns flow{ throw expectedException }
+    fun `fetchLogByPeriod should emit Failure`() = runTest {
+        val exception = Exception("Database error")
+        mockGetLogByPeriodFailure(exception)
 
-        val result = logRepository.filterLogsByFinalDate(dateQuery.time).toList()
+        val responses = logRepository.fetchLogByPeriod().toList()
 
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Failure(expectedException), result.last())
-        assertEquals(expectedException, (result.last() as Response.Failure).exception)
+        responses.assertFlowFailure { assertEquals(exception.javaClass, it.javaClass) }
+        coVerify(exactly = 1) { logDao.getLogByPeriod(any(), any()) }
     }
+    // endregion
 
-    /*** filterLogsByRangeDate ***/
+    // region deleteAllLogs tests
     @Test
-    fun `should emit loading and success when filterLogsByRangeDate works properly`() = runTest {
-        val initialDate = getMockDate(3)
-        val finalDate = getMockDate(8)
-        val expectedLogs = mockLogEntries.filter { it.timestamp.time in initialDate.time..finalDate.time }
-        val logFlow = flowOf(expectedLogs)
-        coEvery { logLocalDataSource.filterByTimestamp(initialDate.time, finalDate.time) } returns logFlow
+    fun `deleteAllLogs should emit Success`() = runTest {
+        coJustRun { logDao.deleteAll() }
 
-        val result = logRepository.filterLogsByRangeDate(initialDate.time, finalDate.time).toList()
+        val responses = logRepository.deleteAllLogs().toList()
 
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Success(expectedLogs), result.last())
-        assertEquals(expectedLogs, (result.last() as Response.Success).result)
+        responses.assertFlowSuccess { assertEquals(Unit, it) }
+        coVerify(exactly = 1) { logDao.deleteAll() }
     }
 
     @Test
-    fun `should emit loading and failure when filterLogsByRangeDate throws exception`() = runTest {
-        val initialDate = getMockDate(3)
-        val finalDate = getMockDate(8)
-        val expectedException = Exception("Database error")
-        coEvery { logLocalDataSource.filterByTimestamp(initialDate.time, finalDate.time) } returns flow{ throw expectedException }
+    fun `deleteAllLogs should emit Failure`() = runTest {
+        val exception = Exception("Database error")
+        coEvery { logDao.deleteAll() } throws exception
 
-        val result = logRepository.filterLogsByRangeDate(initialDate.time, finalDate.time).toList()
+        val responses = logRepository.deleteAllLogs().toList()
 
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Failure(expectedException), result.last())
-        assertEquals(expectedException, (result.last() as Response.Failure).exception)
+        responses.assertFlowFailure { assertEquals(exception.javaClass, it.javaClass) }
+        coVerify(exactly = 1) { logDao.deleteAll() }
     }
+    // endregion
 
-    /*** deleteAllLogs ***/
+    // region deleteLog tests
     @Test
-    fun `should emit loading and success when deleteAllLogs works properly`() = runTest {
-        coEvery { logLocalDataSource.deleteAll() } returns Unit
-        val result = logRepository.deleteAllLogs().toList()
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Success(Unit), result.last())
-    }
+    fun `deleteLog should emit Success`() = runTest {
+        val log = mockLogEntries.first()
+        coJustRun { logDao.delete(any()) }
 
-    @Test
-    fun `should emit loading and failure when deleteAllLogs throws exception`() = runTest {
-        val expectedException = Exception("Database error")
-        coEvery { logLocalDataSource.deleteAll() } throws expectedException
-        val result = logRepository.deleteAllLogs().toList()
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Failure(expectedException), result.last())
-        assertEquals(expectedException, (result.last() as Response.Failure).exception)
-    }
+        val responses = logRepository.deleteLog(log.toEntity()).toList()
 
-    /*** deleteLog ***/
-    @Test
-    fun `should emit loading and success when deleteLog works properly`() = runTest {
-        val entry = mockLogEntries.first()
-        coEvery { logLocalDataSource.delete(entry) } returns Unit
-
-        val result = logRepository.deleteLog(entry).toList()
-
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Success(Unit), result.last())
-        assertEquals(Unit, (result.last() as Response.Success).result)
+        responses.assertFlowSuccess { assertEquals(Unit, it) }
+        coVerify(exactly = 1) { logDao.delete(any()) }
     }
 
     @Test
-    fun `should emit loading and failure when deleteLog throws exception`() = runTest {
-        val entry = mockLogEntries.first()
-        val expectedException = Exception("Database error")
-        coEvery { logLocalDataSource.delete(entry) } throws expectedException
+    fun `deleteLog should emit Failure`() = runTest {
+        val log = mockLogEntries.first()
+        val exception = Exception("Database error")
+        coEvery { logDao.delete(any()) } throws exception
 
-        val result = logRepository.deleteLog(entry).toList()
+        val responses = logRepository.deleteLog(log.toEntity()).toList()
 
-        assertEquals(2,result.size)
-        assertEquals(Response.Loading, result.first())
-        assertEquals(Response.Failure(expectedException), result.last())
-        assertEquals(expectedException, (result.last() as Response.Failure).exception)
+        responses.assertFlowFailure { assertEquals(exception.javaClass, it.javaClass) }
+        coVerify(exactly = 1) { logDao.delete(any()) }
     }
+    // endregion
 }

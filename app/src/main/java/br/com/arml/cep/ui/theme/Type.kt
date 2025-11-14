@@ -6,6 +6,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.googlefonts.GoogleFont
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import br.com.arml.cep.R
 
@@ -91,6 +92,7 @@ val compactTypography = Typography(
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.sp,
+        textAlign = TextAlign.Justify
     ),
     bodyMedium = TextStyle(
         fontFamily = inriaSerifFamily,
@@ -98,6 +100,7 @@ val compactTypography = Typography(
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp,
+        textAlign = TextAlign.Justify
     ),
     bodySmall = TextStyle(
         fontFamily = inriaSerifFamily,
@@ -105,6 +108,7 @@ val compactTypography = Typography(
         fontSize = 12.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.sp,
+        textAlign = TextAlign.Justify
     ),
     labelLarge = TextStyle(
         fontFamily = inriaSerifFamily,
@@ -200,6 +204,7 @@ val mediumTypography = Typography(
         fontSize = 20.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.sp,
+        textAlign = TextAlign.Justify
     ),
     bodyMedium = TextStyle(
         fontFamily = inriaSerifFamily,
@@ -207,6 +212,7 @@ val mediumTypography = Typography(
         fontSize = 16.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp,
+        textAlign = TextAlign.Justify
     ),
     bodySmall = TextStyle(
         fontFamily = inriaSerifFamily,
@@ -214,6 +220,7 @@ val mediumTypography = Typography(
         fontSize = 12.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.sp,
+        textAlign = TextAlign.Justify
     ),
     labelLarge = TextStyle(
         fontFamily = inriaSerifFamily,
@@ -309,6 +316,7 @@ val expandedTypography = Typography(
         fontSize = 24.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.sp,
+        textAlign = TextAlign.Justify
     ),
     bodyMedium = TextStyle(
         fontFamily = inriaSerifFamily,
@@ -316,6 +324,7 @@ val expandedTypography = Typography(
         fontSize = 20.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp,
+        textAlign = TextAlign.Justify
     ),
     bodySmall = TextStyle(
         fontFamily = inriaSerifFamily,
@@ -323,6 +332,7 @@ val expandedTypography = Typography(
         fontSize = 16.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.sp,
+        textAlign = TextAlign.Justify
     ),
     labelLarge = TextStyle(
         fontFamily = inriaSerifFamily,

@@ -24,9 +24,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.exception.CepException
-import br.com.arml.cep.model.mock.mockPlaceEntries
+import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.ui.screen.component.common.Header
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
@@ -34,9 +34,9 @@ import br.com.arml.cep.ui.utils.ShowResults
 @Composable
 fun SearchDetailPane(
     modifier: Modifier = Modifier,
-    response: Response<PlaceEntry>,
+    response: Response<Place>,
     onBackPress: () -> Unit,
-    onFavoriteClick: (PlaceEntry) -> Unit
+    onFavoriteClick: (Place) -> Unit
 ) {
     Column(
         modifier = modifier,
@@ -90,8 +90,8 @@ fun SearchDetailPane(
 @Composable
 fun SearchDetailPaneOnSuccess(
     modifier: Modifier = Modifier,
-    place: PlaceEntry,
-    onFavoriteClick: (PlaceEntry) -> Unit
+    place: Place,
+    onFavoriteClick: (Place) -> Unit
 ) {
     Box(modifier = modifier) {
         AddressForms(
@@ -201,7 +201,7 @@ fun DisplayScreenPreview() {
         modifier = Modifier
             .fillMaxSize()
             .padding(MaterialTheme.dimens.mediumMargin),
-        response = Response.Success(mockPlaceEntries[0]),
+        response = Response.Success(mockUnfavoritePlaces.first()),
         onBackPress = {},
         onFavoriteClick = {}
     )

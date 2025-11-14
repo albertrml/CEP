@@ -10,7 +10,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Address
-import br.com.arml.cep.model.mock.mockPlaceEntries
+import br.com.arml.cep.model.mock.mockAddress
 import br.com.arml.cep.ui.screen.component.search.AddressForms
 import org.junit.Before
 import org.junit.Rule
@@ -41,7 +41,7 @@ class AddressFormsTest {
 
     @Test
     fun shouldDisplayAddressInformation_whenSearchCepSucceeds(){
-        val address = mockPlaceEntries.first().address
+        val address = mockAddress(1)
         displayAddressForm(address)
         composeTestRule.apply {
             onNodeWithTag(addressFormsComponent).assertIsDisplayed()

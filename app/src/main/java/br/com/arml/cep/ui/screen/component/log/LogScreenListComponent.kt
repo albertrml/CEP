@@ -17,7 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.LogEntry
+import br.com.arml.cep.model.domain.Log
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
 import br.com.arml.cep.model.mock.mockLogEntries
 import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
@@ -35,9 +35,9 @@ fun LogScreenListComponent(
     onFilterByFinalDate: (Long) -> Unit,
     onFilterByRangeDate: (Long, Long) -> Unit,
     onFilterByNone: () -> Unit,
-    onClickToDeleteEntry: (LogEntry) -> Unit,
+    onClickToDeleteEntry: (Log) -> Unit,
     onConfirmDeleteAllEntries: () -> Unit,
-    onCopyToClipboard: (LogEntry) -> Unit
+    onCopyToClipboard: (Log) -> Unit
 ) {
 
     Column(

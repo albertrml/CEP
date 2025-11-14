@@ -3,17 +3,18 @@ package br.com.arml.cep.ui.screen.component.favorite
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,113 +22,106 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.model.domain.MAX_CONTENT_LENGTH
-import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
-import br.com.arml.cep.model.domain.MIN_TITLE_LENGTH
-import br.com.arml.cep.model.domain.isValidTitleNoteSize
-import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.model.mock.mockFavoritePlaceEntries
+import br.com.arml.cep.model.domain.Address
+import br.com.arml.cep.model.domain.Cep
+import br.com.arml.cep.model.domain.Note
+import br.com.arml.cep.model.mock.mockAddress
+import br.com.arml.cep.model.mock.mockNotes
+import br.com.arml.cep.ui.screen.component.favorite.component.FavoriteDetailsHeader
 import br.com.arml.cep.ui.screen.component.search.AddressForms
-import br.com.arml.cep.ui.screen.component.common.CepTextField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun FavoriteDetailsComponent(
     modifier: Modifier = Modifier,
-    placeEntry: PlaceEntry,
+    favorite: Pair<Address, Note?>,
     onNavigateBackToList: () -> Unit,
-    onNavigateToExtra: () -> Unit
+    onEditNote: (Note) -> Unit,
+    onCreateNote: (Cep, Note) -> Unit,
 ) {
-    Column(
+    val tabs = listOf(FavoriteTab.Notes, FavoriteTab.Address)
+    val (address, note) = favorite
+    val cep = Cep.build(address.zipCode.filter { it.isDigit() })
+
+    var selectedTab by rememberSaveable(
+        stateSaver = FavoriteTabSaver
+    ) { mutableStateOf(FavoriteTab.Notes) }
+
+    val selectedTabIndex by remember {
+        derivedStateOf { tabs.indexOf(selectedTab) }
+    }
+
+    Scaffold(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
-    ) {
-        FavoriteDetailsHeader(
+        topBar = {
+            FavoriteDetailsHeader(
+                modifier = Modifier
+                    .testTag(stringResource(R.string.testTag_favoriteDetails_header)),
+                onNavigateBackToList = onNavigateBackToList
+            )
+        }
+    ) { contentPadding ->
+        Column(
             modifier = Modifier
-                .testTag(stringResource(R.string.testTag_favoriteDetails_header)),
-            onNavigateBackToList = onNavigateBackToList
-        )
-        AddressForms(
-            modifier = Modifier
-                .weight(1f)
-                .testTag(stringResource(R.string.testTag_favoriteDetails_content)),
-            address = placeEntry.address
-        )
-        Button(
-            modifier = Modifier
-                .padding(MaterialTheme.dimens.mediumPadding)
-                .testTag(stringResource(R.string.testTag_favoriteDetails_button)),
-            onClick = onNavigateToExtra
-        ){
-            Text(text = stringResource(R.string.favorite_address_button))
+                .padding(contentPadding)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
+        ) {
+            PrimaryTabRow(
+                selectedTabIndex = selectedTabIndex
+            ) {
+                tabs.forEachIndexed { index, tab ->
+                    Tab(
+                        selected = tab == selectedTab,
+                        onClick = { selectedTab = tabs[index] },
+                        text = {
+                            Text(
+                                text = stringResource(tab.label),
+                                style = MaterialTheme.typography.labelLarge
+                            )
+                        }
+                    )
+                }
+            }
+
+            NoteFromFavoriteFragment(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = MaterialTheme.dimens.smallPadding),
+                selectedTab = selectedTab,
+                address = address,
+                note = note,
+                onClick = { newNote ->
+                    note?.let{ onEditNote(newNote) } ?: onCreateNote(cep,newNote)
+                }
+            )
         }
     }
 }
 
-
 @Composable
-fun FavoriteExtraComponent(
+fun NoteFromFavoriteFragment(
     modifier: Modifier = Modifier,
-    placeEntry: PlaceEntry,
-    onClickToUpdate: (PlaceEntry) -> Unit,
-    onNavigateBackToDetails: () -> Unit,
+    selectedTab: FavoriteTab,
+    address: Address,
+    note: Note?,
+    onClick: (Note) -> Unit,
 ){
-    var title by remember { mutableStateOf(placeEntry.note?.title ?: "") }
-    var note by remember { mutableStateOf(placeEntry.note?.content ?: "") }
-
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        FavoriteExtraHeader(
-            modifier = Modifier,
-            onNavigateBackToList = onNavigateBackToDetails
-        )
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(MaterialTheme.dimens.mediumSpacing),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
-        ) {
-            CepTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .testTag(stringResource(R.string.testTag_favoriteExtraScreen_titleNoteField)),
-                nameField = stringResource(R.string.place_details_title),
-                text = title,
-                textStyle = MaterialTheme.typography.titleMedium,
-                onChangeText = { title = it },
-                maxSize = MAX_TITLE_LENGTH,
-                isError = !title.isValidTitleNoteSize(),
-                errorMessage = stringResource(
-                    R.string.favorite_details_title_error_msg,
-                    MIN_TITLE_LENGTH,
-                    MAX_TITLE_LENGTH
-                ),
-                showInputSize = true
+    when (selectedTab) {
+        FavoriteTab.Address -> {
+            AddressForms(
+                modifier = modifier
+                    .padding(horizontal = MaterialTheme.dimens.smallPadding),
+                address = address
             )
-            CepTextField(
-                modifier = Modifier.fillMaxWidth()
-                    .testTag(stringResource(R.string.testTag_favoriteExtraScreen_contentNoteField)),
-                nameField = stringResource(R.string.place_details_content),
-                text = note,
-                onChangeText = { note = it },
-                maxSize = MAX_CONTENT_LENGTH,
-                minLines = 7,
-                maxLines = 10,
-                showInputSize = true
-            )
+        }
 
-            FavoriteUpdateButton(
-                modifier = Modifier
-                    .testTag(stringResource(R.string.testTag_favoriteExtraScreen_updateButton)),
-                place = placeEntry,
-                title = title,
+        FavoriteTab.Notes -> {
+            FavoriteNotesComponent(
+                modifier = modifier,
                 note = note,
-                onClickToUpdate = onClickToUpdate
+                onClick = { note -> onClick(note) }
             )
         }
     }
@@ -138,20 +132,9 @@ fun FavoriteExtraComponent(
 fun PlaceDetailsPreview() {
     FavoriteDetailsComponent(
         modifier = Modifier,
-        placeEntry = mockFavoritePlaceEntries.first(),
+        favorite = mockAddress(1) to mockNotes[0],
         onNavigateBackToList = {},
-        onNavigateToExtra = {}
-    )
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PlaceExtraPreview() {
-    FavoriteExtraComponent(
-        modifier = Modifier.fillMaxSize(),
-        placeEntry = mockFavoritePlaceEntries.first(),
-        onClickToUpdate = {},
-        onNavigateBackToDetails = {}
+        onEditNote = {},
+        onCreateNote = { _, _ -> }
     )
 }

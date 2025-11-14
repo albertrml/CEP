@@ -1,0 +1,272 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "9b1cb02551ddb0ecfb97a3a598168d1c",
+    "entities": [
+      {
+        "tableName": "favorites",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zipcode_place` TEXT NOT NULL, `id_note` INTEGER NOT NULL, PRIMARY KEY(`zipcode_place`, `id_note`), FOREIGN KEY(`zipcode_place`) REFERENCES `places`(`zipcode`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_note`) REFERENCES `notes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "zipcodePlace",
+            "columnName": "zipcode_place",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idNote",
+            "columnName": "id_note",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "zipcode_place",
+            "id_note"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_favorites_zipcode_place",
+            "unique": false,
+            "columnNames": [
+              "zipcode_place"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_favorites_zipcode_place` ON `${TABLE_NAME}` (`zipcode_place`)"
+          },
+          {
+            "name": "index_favorites_id_note",
+            "unique": false,
+            "columnNames": [
+              "id_note"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_favorites_id_note` ON `${TABLE_NAME}` (`id_note`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "places",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "zipcode_place"
+            ],
+            "referencedColumns": [
+              "zipcode"
+            ]
+          },
+          {
+            "table": "notes",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "id_note"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "logs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `zipcode_place` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, FOREIGN KEY(`zipcode_place`) REFERENCES `places`(`zipcode`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zipcodePlace",
+            "columnName": "zipcode_place",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_logs_zipcode_place",
+            "unique": false,
+            "columnNames": [
+              "zipcode_place"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_logs_zipcode_place` ON `${TABLE_NAME}` (`zipcode_place`)"
+          },
+          {
+            "name": "index_logs_timestamp",
+            "unique": false,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_logs_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "places",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "zipcode_place"
+            ],
+            "referencedColumns": [
+              "zipcode"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "notes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "content",
+            "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_notes_title",
+            "unique": true,
+            "columnNames": [
+              "title"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_notes_title` ON `${TABLE_NAME}` (`title`)"
+          }
+        ]
+      },
+      {
+        "tableName": "places",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zipcode` TEXT NOT NULL, `street` TEXT NOT NULL, `complement` TEXT NOT NULL, `district` TEXT NOT NULL, `city` TEXT NOT NULL, `state` TEXT NOT NULL, `uf` TEXT NOT NULL, `region` TEXT NOT NULL, `country` TEXT NOT NULL, `ddd` TEXT NOT NULL, PRIMARY KEY(`zipcode`))",
+        "fields": [
+          {
+            "fieldPath": "zipcode",
+            "columnName": "zipcode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "street",
+            "columnName": "street",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "complement",
+            "columnName": "complement",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "district",
+            "columnName": "district",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "city",
+            "columnName": "city",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uf",
+            "columnName": "uf",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "region",
+            "columnName": "region",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ddd",
+            "columnName": "ddd",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "zipcode"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_places_street_district_city_state",
+            "unique": false,
+            "columnNames": [
+              "street",
+              "district",
+              "city",
+              "state"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_street_district_city_state` ON `${TABLE_NAME}` (`street`, `district`, `city`, `state`)"
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9b1cb02551ddb0ecfb97a3a598168d1c')"
+    ]
+  }
+}

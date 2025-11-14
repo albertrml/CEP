@@ -3,9 +3,11 @@ package br.com.arml.cep.ui.screen.favorite
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.arml.cep.domain.FavoriteUseCase
-import br.com.arml.cep.model.domain.Favorite
+import br.com.arml.cep.model.domain.Address
+import br.com.arml.cep.model.domain.Cep
+import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.ui.utils.PlaceFilterOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -25,13 +27,9 @@ class FavoriteViewModel @Inject constructor(
     val state = _state.asStateFlow()
     private var fetchEntriesJob: Job? = null
 
-    init {
-        fetchFavorites()
-    }
-
     fun onEvent(event: FavoriteEvent) {
         when (event) {
-            is FavoriteEvent.OnClickToUnwanted -> changeFavoriteToUnwanted(event.placeEntry)
+            is FavoriteEvent.OnClickToUnwanted -> changeFavoriteToUnwanted(event.place)
             is FavoriteEvent.OnExportFavorites -> exportFavorites()
             is FavoriteEvent.OnExportHide -> exportHide()
             is FavoriteEvent.OnExportShow -> exportShow()
@@ -42,29 +40,53 @@ class FavoriteViewModel @Inject constructor(
             is FavoriteEvent.OnImportBackup -> importBackup(event.json)
             is FavoriteEvent.OnImportHide -> importHide()
             is FavoriteEvent.OnImportShow -> importShow()
-            is FavoriteEvent.OnSelectEntryToEdit -> selectEntryToEdit(event.placeEntry)
-            is FavoriteEvent.OnSelectEntryToUnwanted -> selectEntryToUnwanted(event.placeEntry)
-            is FavoriteEvent.OnUpdateFavorite -> updateFavorite(event.placeEntry)
+            is FavoriteEvent.OnSelectFavoriteEntry -> selectEntryToEdit(event.favorite)
+            is FavoriteEvent.OnSelectEntryToUnwanted -> selectEntryToUnwanted(event.place)
+            is FavoriteEvent.OnSelectNoteEntry -> selectNoteEntry(event.note)
+            is FavoriteEvent.OnAddNoteToFavorite -> addNoteToFavorite(event.cep, event.note)
+            is FavoriteEvent.OnDeleteNoteFromFavorite -> deleteNoteFromFavorite(event.noteWithCep)
+            is FavoriteEvent.OnEditNoteFromFavorite -> editNoteFromFavorite(event.note)
         }
     }
 
-    private fun changeFavoriteToUnwanted(placeEntry: PlaceEntry) {
-        viewModelScope.launch {
-            if (placeEntry.isFavorite.value) {
-                val newEntry = placeEntry.copy(
-                    isFavorite = Favorite(false),
-                    note = null
-                )
-                favoriteUseCase.update(newEntry).collect { response ->
-                    _state.update {
-                        when (response) {
-                            is Response.Success -> it.copy(
-                                placeForUnwanted = null,
-                                updateEntry = response
-                            )
+    fun selectNoteEntry(note: Note?){ _state.update { it.copy(noteForEdit = note) } }
 
-                            else -> it.copy(updateEntry = response)
-                        }
+    fun addNoteToFavorite(cep: Cep, note: Note){
+        viewModelScope.launch {
+            favoriteUseCase.addNoteToFavorite(cep, note).collect { response ->
+                _state.update { state -> state.copy(addNoteEntry = response) }
+            }
+        }
+    }
+
+    fun editNoteFromFavorite(note: Note) {
+        viewModelScope.launch {
+            favoriteUseCase.updateNote(note).collect { response ->
+                _state.update { state ->  state.copy(updateNoteEntry = response) }
+            }
+        }
+    }
+
+    fun deleteNoteFromFavorite(noteWithCep: Pair<Cep,Note>) {
+        viewModelScope.launch {
+            with(noteWithCep) {
+                favoriteUseCase.deleteNote(first,second).collect { response ->
+                    _state.update { state -> state.copy(deleteNoteEntry = response) }
+                }
+            }
+        }
+    }
+
+    private fun changeFavoriteToUnwanted(place: Place) {
+        viewModelScope.launch {
+            favoriteUseCase.removeFromFavorite(place).collect { response ->
+                _state.update {
+                    when (response) {
+                        is Response.Success -> it.copy(
+                            placeForUnwanted = null,
+                            updateNoteEntry = response
+                        )
+                        else -> it.copy(updateNoteEntry = response)
                     }
                 }
             }
@@ -73,7 +95,7 @@ class FavoriteViewModel @Inject constructor(
 
     private fun exportFavorites() {
         viewModelScope.launch {
-            favoriteUseCase.exportFavorite().collect { response ->
+            favoriteUseCase.exportFavorites().collect { response ->
                 _state.update { state ->
                     when (response) {
                         is Response.Loading -> state.copy(exportBackup = response)
@@ -125,7 +147,7 @@ class FavoriteViewModel @Inject constructor(
 
     private fun importBackup(json: String) {
         viewModelScope.launch {
-            favoriteUseCase.importFavorite(json).collect { response ->
+            favoriteUseCase.importFavorites(json).collect { response ->
                 _state.update {
                     when (response) {
                         is Response.Loading -> it.copy(importBackup = response)
@@ -157,32 +179,16 @@ class FavoriteViewModel @Inject constructor(
         }
     }
 
-    private fun selectEntryToEdit(placeEntry: PlaceEntry?) {
-        _state.update { it.copy(placeForEdit = placeEntry) }
+    private fun selectEntryToEdit(favorite: Pair<Address,Note?>?) {
+        _state.update { it.copy(favoriteEntry = favorite) }
     }
 
-    private fun selectEntryToUnwanted(placeEntry: PlaceEntry?) {
-        _state.update { it.copy(placeForUnwanted = placeEntry) }
-    }
-
-    private fun updateFavorite(entry: PlaceEntry) {
-        viewModelScope.launch {
-            favoriteUseCase.update(entry).collect { response ->
-                _state.update {
-                    if (response is Response.Success)
-                        it.copy(
-                            placeForEdit = entry,
-                            updateEntry = response
-                        )
-                    else
-                        it.copy(updateEntry = response)
-                }
-            }
-        }
+    private fun selectEntryToUnwanted(place: Place?) {
+        _state.update { it.copy(placeForUnwanted = place) }
     }
 
     private fun launchFetchEntriesFlow(
-        flow: Flow<Response<List<PlaceEntry>>>,
+        flow: Flow<Response<List<Place>>>,
         operation: PlaceFilterOption
     ) {
         fetchEntriesJob?.cancel()
@@ -197,5 +203,4 @@ class FavoriteViewModel @Inject constructor(
             }
         }
     }
-
 }

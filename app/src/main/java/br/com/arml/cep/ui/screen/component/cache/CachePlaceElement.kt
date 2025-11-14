@@ -15,18 +15,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.model.mock.mockPlaceEntries
+import br.com.arml.cep.model.domain.Place
+import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.ui.screen.component.place.PlaceElement
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun CachePlaceElement(
     modifier: Modifier = Modifier,
-    place: PlaceEntry,
-    onNavigateToDetail: (PlaceEntry) -> Unit,
-    onFavoriteIconClick: (PlaceEntry) -> Unit,
-    onDeleteIconClick: (PlaceEntry) -> Unit,
+    place: Place,
+    onNavigateToDetail: (Place) -> Unit,
+    onFavoriteIconClick: (Place) -> Unit,
+    onDeleteIconClick: (Place) -> Unit,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         ElevatedCard(
@@ -44,7 +44,7 @@ fun CachePlaceElement(
         Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.smallSpacing))
         PlaceElement(
             modifier = Modifier.padding(start = MaterialTheme.dimens.smallPadding),
-            placeEntry = place,
+            place = place,
             favoriteIcon = Icons.Default.FavoriteBorder,
             colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
             onNavigateToDetail = { place -> onNavigateToDetail(place) },
@@ -58,7 +58,7 @@ fun CachePlaceElement(
 @Composable
 fun CachePlaceElementPreview() {
     CachePlaceElement(
-        place = mockPlaceEntries.first(),
+        place = mockUnfavoritePlaces.first(),
         onFavoriteIconClick = {},
         onNavigateToDetail = {},
         onDeleteIconClick = {}

@@ -1,6 +1,6 @@
 package br.com.arml.cep.ui.screen.log
 
-import br.com.arml.cep.model.entity.LogEntry
+import br.com.arml.cep.model.domain.Log
 
 sealed class LogEvent{
     data object OnFetchAllLogs: LogEvent()
@@ -10,5 +10,5 @@ sealed class LogEvent{
     data class OnFilterByRangeDate(val initialDate: Long, val finalDate: Long): LogEvent()
     data object OnFilterByNone: LogEvent()
     data object OnDeleteAllEntries: LogEvent()
-    data class OnDeleteEntry(val entry: LogEntry): LogEvent()
+    data class OnDeleteEntry(val entry: Log): LogEvent()
 }

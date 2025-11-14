@@ -18,6 +18,7 @@ data class Dimens(
     val largeMargin: Dp = 0.dp,
     val xLargeMargin: Dp = 0.dp,
     // Padding
+    val xSmallPadding: Dp = 0.dp,
     val smallPadding: Dp = 0.dp,
     val mediumPadding: Dp = 0.dp,
     val largePadding: Dp = 0.dp,
@@ -43,6 +44,7 @@ val compactDimens = Dimens(
     largeMargin = 24.dp,
     xLargeMargin = 40.dp,
     // Padding
+    xSmallPadding = 4.dp,
     smallPadding = 8.dp,
     mediumPadding = 16.dp,
     largePadding = 24.dp,
@@ -71,6 +73,7 @@ val mediumDimens = Dimens(
     largeMargin = 32.dp,
     xLargeMargin = 48.dp,
     // Padding
+    xSmallPadding = 4.dp,
     smallPadding = 8.dp,
     mediumPadding = 12.dp,
     largePadding = 16.dp,
@@ -101,6 +104,7 @@ val expandedDimens = Dimens(
     largeMargin = 24.dp,
     xLargeMargin = 32.dp,
     // Padding
+    xSmallPadding = 4.dp,
     smallPadding = 8.dp,
     mediumPadding = 16.dp,
     largePadding = 24.dp,

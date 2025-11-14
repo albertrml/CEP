@@ -8,8 +8,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.model.mock.mockFavoritePlaceEntries
+import br.com.arml.cep.model.domain.Address
+import br.com.arml.cep.model.domain.Cep
+import br.com.arml.cep.model.domain.Note
+import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.screen.component.favorite.FavoriteDetailsComponent
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,6 +24,10 @@ class FavoriteDetailsPaneTest {
     @get:Rule
     val composeTestRule: ComposeContentTestRule = createComposeRule()
 
+    private val mockFavorite: Pair<Address, Note?> = mockFavoritePlaces.first().run {
+        address to notes.first()
+    }
+
     private lateinit var favoriteScreenComponent: String
     private lateinit var favoriteScreenHeader: String
     private lateinit var favoriteScreenContent: String
@@ -29,7 +35,8 @@ class FavoriteDetailsPaneTest {
     private lateinit var favoriteScreenNavigateToListButton: String
 
     private val onNavigateBackToList: () -> Unit = mockk(relaxed = true)
-    private val onNavigateToExtra: () -> Unit = mockk(relaxed = true)
+    private val onEditNote: (Note) -> Unit = mockk(relaxed = true)
+    private val onCreateNote: (Cep, Note) -> Unit = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -44,13 +51,14 @@ class FavoriteDetailsPaneTest {
         displayFavoriteDetailComponent()
     }
 
-    fun displayFavoriteDetailComponent(placeEntry: PlaceEntry = mockFavoritePlaceEntries.first()) {
+    fun displayFavoriteDetailComponent(favorite: Pair<Address, Note?> = mockFavorite) {
         composeTestRule.setContent {
             FavoriteDetailsComponent(
                 modifier = Modifier.testTag(favoriteScreenComponent),
-                placeEntry = placeEntry,
-                onNavigateToExtra = onNavigateToExtra,
-                onNavigateBackToList = onNavigateBackToList
+                favorite = favorite,
+                onNavigateBackToList = onNavigateBackToList,
+                onEditNote = onEditNote,
+                onCreateNote = onCreateNote
             )
         }
     }
@@ -71,9 +79,9 @@ class FavoriteDetailsPaneTest {
         verify { onNavigateBackToList() }
     }
 
-    @Test
+    /*@Test
     fun shouldNavigateToExtra_whenButtonIsClicked() {
         composeTestRule.onNodeWithTag(favoriteScreenNavigateToExtraButton).performClick()
         verify { onNavigateToExtra() }
-    }
+    }*/
 }

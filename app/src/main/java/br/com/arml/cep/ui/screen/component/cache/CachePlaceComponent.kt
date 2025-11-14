@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
-import br.com.arml.cep.model.mock.mockUnfavoritePlaceEntries
+import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
@@ -23,12 +23,12 @@ import br.com.arml.cep.ui.utils.ShowResults
 @Composable
 fun CachePlaceListComponent(
     modifier: Modifier = Modifier,
-    fetchResponse: Response<List<PlaceEntry>>,
-    onFavoriteIconClick: (PlaceEntry) -> Unit,
-    onDeleteIconClick: (PlaceEntry) -> Unit,
+    fetchResponse: Response<List<Place>>,
+    onFavoriteIconClick: (Place) -> Unit,
+    onDeleteIconClick: (Place) -> Unit,
     onCepFilter: (String) -> Unit,
     onClearFilter: () -> Unit,
-    onNavigateToDetail: (PlaceEntry) -> Unit,
+    onNavigateToDetail: (Place) -> Unit,
     onDeleteCacheClick: () -> Unit,
 ){
     Column(
@@ -82,7 +82,7 @@ fun CachePlaceListComponent(
 @Composable
 fun CachePlaceListComponentPreview(){
     CachePlaceListComponent(
-        fetchResponse = Response.Success(mockUnfavoritePlaceEntries),
+        fetchResponse = Response.Success(mockUnfavoritePlaces),
         onFavoriteIconClick = {},
         onDeleteIconClick = {},
         onCepFilter = {},

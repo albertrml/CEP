@@ -17,18 +17,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Cep
-import br.com.arml.cep.model.entity.LogEntry
-import br.com.arml.cep.model.entity.toFormattedUTC
+import br.com.arml.cep.model.domain.Log
+import br.com.arml.cep.model.utils.toFormattedUTC
 import java.sql.Timestamp
 
 @Composable
 fun LogElement(
     modifier: Modifier = Modifier,
-    logEntry: LogEntry,
-    onClickToDelete: (LogEntry) -> Unit,
-    onClickToDetail: (LogEntry) -> Unit
+    log: Log,
+    onClickToDelete: (Log) -> Unit,
+    onClickToDetail: (Log) -> Unit
 ){
-    Surface(modifier = modifier.clickable { onClickToDetail(logEntry) }) {
+    Surface(modifier = modifier.clickable { onClickToDetail(log) }) {
         Row(
             modifier = Modifier,
             verticalAlignment = Alignment.CenterVertically
@@ -36,10 +36,10 @@ fun LogElement(
 
             LogInfo(
                 modifier = Modifier.weight(1f),
-                logEntry = logEntry
+                log = log
             )
             IconButton(
-                onClick = { onClickToDelete(logEntry) },
+                onClick = { onClickToDelete(log) },
             ) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
@@ -54,17 +54,17 @@ fun LogElement(
 @Composable
 fun LogInfo(
     modifier: Modifier = Modifier,
-    logEntry: LogEntry
+    log: Log
 ){
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.log_cep_field, Cep.format(logEntry.cep.text)),
+            text = stringResource(R.string.log_cep_field, Cep.format(log.cep.text)),
             style = MaterialTheme.typography.titleMedium
         )
         Text(
             text = stringResource(
                 R.string.log_timestamp_field,
-                logEntry.timestamp.toFormattedUTC()
+                log.timestamp.toFormattedUTC()
             ),
             style = MaterialTheme.typography.bodyMedium
         )
@@ -75,7 +75,7 @@ fun LogInfo(
 @Composable
 fun LogElementPreview(){
     LogElement(
-        logEntry = LogEntry(
+        log = Log(
             cep = Cep.build("99999999"),
             timestamp = Timestamp(System.currentTimeMillis())
         ),

@@ -7,6 +7,7 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -14,12 +15,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteChangeAlert
+import br.com.arml.cep.ui.screen.component.favorite.component.FavoriteChangeAlert
 import br.com.arml.cep.ui.screen.component.favorite.FavoriteDetailsComponent
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteExport
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteExtraComponent
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteImport
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteListComponent
+import br.com.arml.cep.ui.screen.component.favorite.component.FavoriteExport
+import br.com.arml.cep.ui.screen.component.favorite.component.FavoriteImport
+import br.com.arml.cep.ui.screen.component.favorite.component.FavoriteListComponent
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.exportBackupLauncher
 import br.com.arml.cep.ui.utils.getExportIntent
@@ -30,9 +30,7 @@ import br.com.arml.cep.ui.utils.paneExitTransition
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun FavoriteScreen(
-    modifier: Modifier = Modifier,
-) {
+fun FavoriteScreen(modifier: Modifier = Modifier) {
     val viewmodel = hiltViewModel<FavoriteViewModel>()
     val state by viewmodel.state.collectAsStateWithLifecycle()
     val uiStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
@@ -56,6 +54,10 @@ fun FavoriteScreen(
         .fillMaxSize()
         .padding(horizontal = MaterialTheme.dimens.mediumMargin)
 
+    LaunchedEffect(Unit) {
+        viewmodel.onEvent(FavoriteEvent.OnFetchFavorites)
+    }
+
     NavigableListDetailPaneScaffold(
         modifier = modifier,
         navigator = uiStateHolder.navigator,
@@ -67,27 +69,26 @@ fun FavoriteScreen(
                 FavoriteListComponent(
                     modifier = marginScreen,
                     fetchResponse = state.fetchEntries,
-                    onExportClick = {
-                        viewmodel.onEvent(FavoriteEvent.OnExportShow)
-                    },
-                    onImportClick = {
-                        viewmodel.onEvent(FavoriteEvent.OnImportShow)
-                    },
-                    onFavoriteIconClick = { place ->
-                        viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(place))
-                    },
+                    onExportClick = { viewmodel.onEvent(FavoriteEvent.OnExportShow) },
+                    onImportClick = { viewmodel.onEvent(FavoriteEvent.OnImportShow) },
                     onCepFilter = { query ->
                         viewmodel.onEvent(FavoriteEvent.OnFilterByCep(query))
                     },
                     onTitleFilter = { query ->
                         viewmodel.onEvent(FavoriteEvent.OnFilterByTitle(query))
                     },
-                    onNoneFilter = {
-                        viewmodel.onEvent(FavoriteEvent.OnFilterNone)
+                    onNoneFilter = { viewmodel.onEvent(FavoriteEvent.OnFilterNone) },
+                    onFavoriteIconClick = { place ->
+                        viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(place))
                     },
-                    onNavigateToDetails = { entry ->
+                    onDeleteNote = { noteWithCep ->
+                        viewmodel.onEvent(FavoriteEvent.OnDeleteNoteFromFavorite(noteWithCep))
+                    },
+                    onNavigateToDetails = { favorite ->
                         uiStateHolder.navigateToDetailPane {
-                            viewmodel.onEvent(FavoriteEvent.OnSelectEntryToEdit(entry))
+                            viewmodel.onEvent(
+                                FavoriteEvent.OnSelectFavoriteEntry(favorite)
+                            )
                         }
                     }
                 )
@@ -100,14 +101,10 @@ fun FavoriteScreen(
                         state.placeForUnwanted?.let { place ->
                             if (place == state.placeForEdit) {
                                 uiStateHolder.navigateBackToListPane {
-                                    viewmodel.onEvent(
-                                        FavoriteEvent.OnClickToUnwanted(place)
-                                    )
+                                    viewmodel.onEvent(FavoriteEvent.OnClickToUnwanted(place))
                                 }
                             } else {
-                                viewmodel.onEvent(
-                                    FavoriteEvent.OnClickToUnwanted(place)
-                                )
+                                viewmodel.onEvent(FavoriteEvent.OnClickToUnwanted(place))
                             }
                         }
                     }
@@ -115,18 +112,12 @@ fun FavoriteScreen(
 
                 FavoriteImport(
                     isVisibility = state.importAlert,
-                    onDismissRequest = {
-                        viewmodel.onEvent(FavoriteEvent.OnImportHide)
-                    },
-                    onConfirmationRequest = {
-                        launcherImportBackup.launch(getImportIntent())
-                    }
+                    onDismissRequest = { viewmodel.onEvent(FavoriteEvent.OnImportHide) },
+                    onConfirmationRequest = { launcherImportBackup.launch(getImportIntent()) }
                 )
                 FavoriteExport(
                     isVisibility = state.exportAlert,
-                    onDismissRequest = {
-                        viewmodel.onEvent(FavoriteEvent.OnExportHide)
-                    },
+                    onDismissRequest = { viewmodel.onEvent(FavoriteEvent.OnExportHide) },
                     onConfirmationRequest = {
                         viewmodel.onEvent(FavoriteEvent.OnExportFavorites)
                         launcherExportBackup.launch(getExportIntent())
@@ -141,21 +132,26 @@ fun FavoriteScreen(
                     enterTransition = paneEnterTransition,
                     exitTransition = paneExitTransition
                 ) {
-                    state.placeForEdit?.let { placeEntry ->
+                    state.favoriteEntry?.let { favorite ->
                         FavoriteDetailsComponent(
                             modifier = marginScreen,
-                            placeEntry = placeEntry,
+                            favorite = favorite,
                             onNavigateBackToList = {
                                 uiStateHolder.navigateBackToListPane {
                                     viewmodel.onEvent(
-                                        FavoriteEvent.OnSelectEntryToEdit(null)
+                                        FavoriteEvent.OnSelectFavoriteEntry(null)
                                     )
                                 }
                             },
-                            onNavigateToExtra = {
+                            onEditNote = { note ->
+                                uiStateHolder.navigateToExtraPane {
+                                    viewmodel.onEvent(FavoriteEvent.OnEditNoteFromFavorite(note))
+                                }
+                            },
+                            onCreateNote = { cep, note ->
                                 uiStateHolder.navigateToExtraPane {
                                     viewmodel.onEvent(
-                                        FavoriteEvent.OnSelectEntryToEdit(placeEntry)
+                                        FavoriteEvent.OnAddNoteToFavorite(cep, note)
                                     )
                                 }
                             }
@@ -165,28 +161,39 @@ fun FavoriteScreen(
             }
         },
 
-        extraPane = {
+        /*extraPane = {
             uiStateHolder.ShowExtraPane {
                 AnimatedPane(
                     enterTransition = paneEnterTransition,
                     exitTransition = paneExitTransition
                 ) {
-                    state.placeForEdit?.let { placeEntry ->
-                        FavoriteExtraComponent(
-                            modifier = marginScreen,
-                            placeEntry = placeEntry,
-                            onClickToUpdate = { entry ->
-                                uiStateHolder.navigateBackToDetailPane {
-                                    viewmodel.onEvent(FavoriteEvent.OnUpdateFavorite(entry))
+                    with(state) {
+                        placeForEdit?.let { placeEntry ->
+                            FavoriteExtraComponent(
+                                modifier = marginScreen,
+                                note = noteForEdit,
+                                onClick = { note ->
+                                    uiStateHolder.navigateBackToDetailPane {
+                                        val event = if (noteForEdit != null)
+                                            FavoriteEvent.OnEditNoteFromFavorite(note)
+                                        else
+                                            FavoriteEvent.OnAddNoteToFavorite(placeEntry, note)
+
+                                        viewmodel.onEvent(event)
+                                    }
+                                },
+                                onNavigateBackToDetails = {
+                                    uiStateHolder.navigateBackToDetailPane {
+                                        viewmodel.onEvent(
+                                            FavoriteEvent.OnSelectNoteEntry(null)
+                                        )
+                                    }
                                 }
-                            },
-                            onNavigateBackToDetails = {
-                                uiStateHolder.navigateBackToDetailPane {}
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }
-        }
+        }*/
     )
 }

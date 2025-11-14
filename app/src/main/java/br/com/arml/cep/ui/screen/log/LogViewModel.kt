@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.arml.cep.domain.LogUseCase
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.LogEntry
+import br.com.arml.cep.model.domain.Log
 import br.com.arml.cep.ui.utils.LogFilterOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -32,7 +32,9 @@ class LogViewModel @Inject constructor(
             is LogEvent.OnFilterByCep -> filterByCep(event.query)
             is LogEvent.OnFilterByInitialDate -> filterByInitialDate(event.initialDate)
             is LogEvent.OnFilterByFinalDate -> filterByFinalDate(event.finalDate)
-            is LogEvent.OnFilterByRangeDate -> filterByRangeDate(event.initialDate, event.finalDate)
+            is LogEvent.OnFilterByRangeDate -> with(event) {
+                filterByRangeDate(initialDate,finalDate)
+            }
             is LogEvent.OnFilterByNone -> filterByNone()
             is LogEvent.OnDeleteAllEntries -> deleteAllLogs()
             is LogEvent.OnDeleteEntry -> deleteLog(event.entry)
@@ -40,7 +42,7 @@ class LogViewModel @Inject constructor(
     }
 
     private fun launchFetchEntriesFlow(
-        flow: Flow<Response<List<LogEntry>>>,
+        flow: Flow<Response<List<Log>>>,
         operation: LogFilterOption
     ) {
         fetchEntriesJob?.cancel()
@@ -99,9 +101,9 @@ class LogViewModel @Inject constructor(
         }
     }
 
-    private fun deleteLog(entry: LogEntry) {
+    private fun deleteLog(log: Log) {
         viewModelScope.launch {
-            logUseCase.deleteLog(entry).collect { response ->
+            logUseCase.deleteLog(log).collect { response ->
                 _state.update { it.copy(deleteLog = response) }
             }
         }

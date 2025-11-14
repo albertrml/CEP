@@ -3,10 +3,8 @@ package br.com.arml.cep.ui.screen.cache
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.arml.cep.domain.CacheUseCase
-import br.com.arml.cep.model.domain.Favorite
-import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.ui.utils.PlaceFilterOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -26,22 +24,25 @@ class CacheViewModel @Inject constructor(
     val state = _state.asStateFlow()
     private var fetchEntriesJob: Job? = null
 
-    init { fetchCache() }
+    init { fetchCacheItems() }
 
     fun onEvent(event: CacheEvent) {
         when (event) {
-            is CacheEvent.OnFetchCache -> fetchCache()
-            is CacheEvent.OnFilterByCep -> filterByCep(event.cep)
-            is CacheEvent.OnFilterNone -> filterByNone()
-            is CacheEvent.OnDeleteAll -> deleteAll()
-            is CacheEvent.OnDelete -> deleteEntry(event.place)
-            is CacheEvent.OnUpdate -> updateCache(event.place)
-            is CacheEvent.OnSelectEntryForDetails -> selectEntryToEdit(event.place)
+            is CacheEvent.OnFetchCache -> fetchCacheItems()
+            is CacheEvent.OnFilterByCep -> fetchCacheItems(
+                operation = PlaceFilterOption.ByCep,
+                query = event.query
+            )
+            is CacheEvent.OnFilterNone -> fetchCacheItems()
+            is CacheEvent.OnDeleteAll -> deleteAllCache()
+            is CacheEvent.OnDelete -> deleteCacheItem(event.place)
+            is CacheEvent.OnUpdate -> addCacheItemToFavorites(event.place)
+            is CacheEvent.OnSelectEntryForDetails -> selectCacheItem(event.place)
         }
     }
 
-    private fun launchFetchEntriesFlow(
-        flow: Flow<Response<List<PlaceEntry>>>,
+    private fun launchFetchingCacheFlow(
+        flow: Flow<Response<List<Place>>>,
         operation: PlaceFilterOption
     ) {
         fetchEntriesJob?.cancel()
@@ -57,55 +58,41 @@ class CacheViewModel @Inject constructor(
         }
     }
 
-
-    private fun fetchCache() {
-        launchFetchEntriesFlow(cacheUseCase.fetchCache(), PlaceFilterOption.None)
-    }
-
-    private fun filterByNone(){
-        if (state.value.filterOperation !is PlaceFilterOption.None) {
-            launchFetchEntriesFlow(cacheUseCase.fetchCache(), PlaceFilterOption.None)
+    private fun fetchCacheItems(operation: PlaceFilterOption = PlaceFilterOption.None, query: String = ""){
+        with(cacheUseCase){
+            val fetch = when(operation){
+                is PlaceFilterOption.ByCep -> findCachedPlacesByCep(query)
+                else -> findCachedPlacesByCep()
+            }
+            launchFetchingCacheFlow(fetch, operation)
         }
     }
 
-    private fun filterByCep(query: String) {
-        launchFetchEntriesFlow(cacheUseCase.filterByCep(query), PlaceFilterOption.ByCep)
-    }
-
-    private fun deleteAll() {
+    private fun deleteAllCache() {
         viewModelScope.launch {
-            cacheUseCase.deleteAll().collect { response ->
+            cacheUseCase.clearCache().collect { response ->
                 _state.update { it.copy(deleteEntry = response) }
             }
         }
     }
 
-    private fun deleteEntry(entry: PlaceEntry) {
+    private fun deleteCacheItem(place: Place) {
         viewModelScope.launch {
-            cacheUseCase.deleteEntry(entry).collect { response ->
+            cacheUseCase.removePlaceFromCache(place).collect { response ->
                 _state.update { it.copy(deleteEntry = response) }
             }
         }
     }
 
-    private fun updateCache(entry: PlaceEntry) {
+    private fun addCacheItemToFavorites(place: Place) {
         viewModelScope.launch {
-            if (!entry.isFavorite.value) {
-                val updatedEntry = entry.copy(
-                    note = Note.build(
-                        title = entry.cep.text,
-                        content = ""
-                    ),
-                    isFavorite = Favorite(true)
-                )
-                cacheUseCase.updateEntry(updatedEntry).collect { response ->
-                    _state.update { it.copy(deleteEntry = response) }
-                }
+            cacheUseCase.addToFavorite(place).collect { response ->
+                _state.update { it.copy(deleteEntry = response) }
             }
         }
     }
 
-    private fun selectEntryToEdit(entry: PlaceEntry?) {
+    private fun selectCacheItem(entry: Place?) {
         _state.update { it.copy(placeForDetails = entry) }
     }
 

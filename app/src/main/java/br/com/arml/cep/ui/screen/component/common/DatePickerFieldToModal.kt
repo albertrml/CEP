@@ -27,8 +27,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.model.entity.addCurrentHour
-import br.com.arml.cep.model.entity.toFormattedBR
+import br.com.arml.cep.model.utils.addCurrentHour
+import br.com.arml.cep.model.utils.toFormattedBR
 
 @Composable
 fun DatePickerFieldToModal(

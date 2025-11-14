@@ -9,18 +9,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.model.mock.mockUnfavoritePlaceEntries
+import br.com.arml.cep.model.domain.Place
+import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.ui.screen.component.common.ScrollableFab
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun CachePlaceList(
     modifier: Modifier = Modifier,
-    places: List<PlaceEntry>,
-    onDeleteIconClick: (PlaceEntry) -> Unit,
-    onFavoriteIconClick: (PlaceEntry) -> Unit,
-    onNavigateToDetail: (PlaceEntry) -> Unit
+    places: List<Place>,
+    onDeleteIconClick: (Place) -> Unit,
+    onFavoriteIconClick: (Place) -> Unit,
+    onNavigateToDetail: (Place) -> Unit
 ){
     val lazyListState = rememberLazyListState()
     ScrollableFab(listState = lazyListState){
@@ -46,7 +46,7 @@ fun CachePlaceList(
 @Composable
 fun CachePlaceListPreview(){
     CachePlaceList(
-        places = mockUnfavoritePlaceEntries,
+        places = mockUnfavoritePlaces,
         onDeleteIconClick = {},
         onFavoriteIconClick = {},
         onNavigateToDetail = {},

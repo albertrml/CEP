@@ -1,6 +1,6 @@
 package br.com.arml.cep.model.domain
 
-import br.com.arml.cep.model.dto.AddressDTO
+import br.com.arml.cep.model.entity.dto.AddressDTO
 
 const val DEFAULT_COUNTRY = "Brasil"
 
