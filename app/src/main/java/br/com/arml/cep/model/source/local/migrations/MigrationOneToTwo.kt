@@ -26,6 +26,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             )
         """.trimIndent()
         )
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_places_street_district_city_state` ON `Places` (`street`, `district`, `city`, `state`)")
 
         /** Criação da tabela Logs **/
         db.execSQL(
@@ -43,7 +44,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         )
         db.execSQL(
             """
-            CREATE INDEX IF NOT EXISTS index_logs_zipcode ON Logs(zipcode_place)
+            CREATE INDEX IF NOT EXISTS index_logs_zipcode_place ON Logs(zipcode_place)
         """.trimIndent()
         )
         db.execSQL(
@@ -82,6 +83,16 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             )
         """.trimIndent()
         )
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_favorites_zipcode_place` ON `Favorites` (`zipcode_place`)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_favorites_id_note` ON `Favorites` (`id_note`)")
+
+        /** Migração dos dados da tabela log_table para a tabela Logs **/
+        db.execSQL(
+            """
+            INSERT INTO Logs(zipcode_place, timestamp)
+            SELECT cep, timestamp FROM log_table
+        """.trimIndent()
+        )
 
         /** Migração dos dados da tabela place_table para a tabela Places **/
         db.execSQL("""
@@ -111,31 +122,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             FROM place_table
         """.trimIndent())
 
-        /** Migração dos dados da tabela log_table para a tabela Logs **/
-        db.execSQL(
-            """
-            INSERT INTO Logs(zipcode_place, timestamp)
-            SELECT cep, timestamp FROM log_table
-        """.trimIndent()
-        )
-
         /** Migração dos dados correspondentes da tabela place_table às tabelas Favorites e Notes **/
-        /*
-            1. Capture os dados dos campos cep e note da tabela place_table se o registro for
-              favoritado e se o dado do campo note não for NULL
-            2. Abra o cursor
-            3. Verifique se o cursor é capaz de mover para a primeira linha. Se sim, faça:
-                3.1. Obtenha o índice da coluna cep, da coluna note e o delimitador
-                3.2. Para cada linha do cursor, faça:
-                    3.2.1. Obtenha o valor da coluna cep e da coluna note
-                    3.2.2. Obtenha o title e o content a partir do valor de note e do delimitador
-                    3.2.3. Insira o title e o content na tabela Notes,
-                           obtendo o id do registro inserido
-                    3.2.4. Se o id do registro inserido for diferente de -1, faça:
-                        3.2.4.1. Insira o valor do cep e do id do registro inserido na
-                                 tabela Favorites
-                    3.2.5. Mova o cursor para a próxima linha. Caso não consiga, o loop se encerra.
-        */
         db.beginTransaction()
         try {
             val cursor = db.query("""
@@ -143,15 +130,15 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 WHERE favorite_status = 1 AND note IS NOT NULL
             """.trimIndent())
 
-            cursor.use { entry ->
-                if (entry.moveToFirst()){
-                    val cepIndex = entry.getColumnIndex("cep")
-                    val noteIndex = entry.getColumnIndex("note")
+            cursor.use { c ->
+                if (c.moveToFirst()){
+                    val cepIndex = c.getColumnIndex("cep")
+                    val noteIndex = c.getColumnIndex("note")
                     val delimiter = "||<NOTE_SEP>||"
 
                     do {
-                        val cep = entry.getString(cepIndex)
-                        val note = entry.getString(noteIndex)
+                        val cep = c.getString(cepIndex)
+                        val note = c.getString(noteIndex)
                         val title = note.substringBefore(delimiter)
                         val content = note.substringAfter(delimiter)
 
@@ -178,7 +165,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                             favoritesValues
                         )
 
-                    } while (entry.moveToNext())
+                    } while (c.moveToNext())
                 }
             }
             db.setTransactionSuccessful()
