@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF1A237E)
 val onPrimaryLight = Color(0xFFFFFFFF)
-val primaryContainerLight = Color(0xFFBBCDFA)
+val primaryContainerLight = Color(0xFFD7E2FC)
 val onPrimaryContainerLight = Color(0xFF000D23)
 val secondaryLight = Color(0xFF01579B)
 val onSecondaryLight = Color(0xFFFFFFFF)
@@ -23,7 +23,7 @@ val errorContainerLight = Color(0xFFFFDAD6)
 val onErrorContainerLight = Color(0xFF410002)
 val surfaceLight = Color(0xFFFFFFFF)
 val onSurfaceLight = Color(0xFF100121)
-val surfaceVariantLight = Color(0xFFDAE3F9)
+val surfaceVariantLight = Color(0xFFFFFFFF)
 val onSurfaceVariantLight = Color(0xFF010626)
 val surfaceContainerLowLight = Color(0xFF89CAFD)    // Card Background
 val surfaceContainerLight = Color(0xFFE6EEFD)      // Bottom Bar

@@ -4,16 +4,12 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import br.com.arml.cep.model.domain.toEntity
-import br.com.arml.cep.model.mock.mockFavoritePlaces
-import br.com.arml.cep.model.mock.mockUnfavoritePlaces
+import br.com.arml.cep.model.mock.mockFavoritePlaceEntities
+import br.com.arml.cep.model.mock.mockUnfavoritePlaceEntities
 import com.google.common.truth.Truth.assertThat
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,12 +19,8 @@ import org.junit.runner.RunWith
 class CacheDaoTest {
 
     private lateinit var db: CepRoomDatabase
-    /* All tables are necessary to build the CepRoomDatabase, but this test is only using the
-       cache table for testing. */
     private lateinit var cacheDao: CacheDao
     private lateinit var favoriteDao: FavoriteDao
-    private lateinit var logDao: LogDao
-
 
     @Before
     fun setup() {
@@ -38,7 +30,6 @@ class CacheDaoTest {
         ).allowMainThreadQueries().build()
         cacheDao = db.cacheDao()
         favoriteDao = db.favoriteDao()
-        logDao = db.logDao()
     }
 
     @After
@@ -47,73 +38,111 @@ class CacheDaoTest {
     }
 
     @Test
-    fun insertAndGetByZipcode_shouldReturnCorrectPlace_whenPlaceIsStoredAndFetched() = runTest {
-        val expectedPlaces = mockUnfavoritePlaces.map{ it.toEntity() }
-        expectedPlaces.forEach{ entity -> cacheDao.insert(entity) }
+    fun selectCachedPlaceEntities_shouldReturnAllNonFavorites_whenDatabaseIsPopulated() = runTest {
+        val expectedPlaces = mockUnfavoritePlaceEntities.map { it.place }
+        expectedPlaces.forEach { entity -> cacheDao.insertPlaceEntity(entity) }
 
-        cacheDao.getByZipcode("").collectLatest { result ->
-            assertTrue(
-                """The fetched places should have the same size as the inserted ones and not be empty""",
-                result.size == expectedPlaces.size && result.isNotEmpty()
-            )
-            assertTrue(
-                "The fetched places should be the same as the inserted ones.",
-                expectedPlaces.containsAll(result)
-            )
+        val result = cacheDao.selectCachedPlaceEntitiesByZipcode("").first()
+
+        assertThat(result).containsExactlyElementsIn(expectedPlaces).inOrder()
+    }
+
+    @Test
+    fun selectCachedPlaceEntities_shouldReturnFilteredNonFavorites_whenFilteredByZipcode() = runTest {
+        val allPlaces = mockUnfavoritePlaceEntities.map { it.place }
+        allPlaces.forEach { entity -> cacheDao.insertPlaceEntity(entity) }
+
+        val query = allPlaces.first().zipcode.substring(3, 5)
+        val expectedPlaces = allPlaces.asSequence()
+            .filter { it.zipcode.contains(query) }
+            .sortedBy { it.zipcode }
+            .toList()
+
+        val result = cacheDao.selectCachedPlaceEntitiesByZipcode(query = query).first()
+
+        assertThat(result).containsExactlyElementsIn(expectedPlaces).inOrder()
+    }
+
+    @Test
+    fun selectCachedPlaceEntities_shouldReturnEmptyList_whenDatabaseIsEmpty() = runTest {
+        val result = cacheDao.selectCachedPlaceEntitiesByZipcode("").first()
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun selectCachedPlaceEntities_shouldReturnOnlyNonFavoritePlaces_whenFavoritesExist() = runTest {
+        val unfavoritePlace = mockUnfavoritePlaceEntities.first().place
+        val (favoritePlace, notes) = mockFavoritePlaceEntities.last()
+        cacheDao.insertPlaceEntity(unfavoritePlace)
+        cacheDao.insertPlaceEntity(favoritePlace)
+        notes.forEach { note ->
+            favoriteDao.createFavorite(favoritePlace.zipcode, note.copy(id = 0))
         }
+
+        val result = cacheDao.selectCachedPlaceEntitiesByZipcode("").first()
+
+        assertThat(result).hasSize(1)
+        assertThat(result).contains(unfavoritePlace)
+        assertThat(result).doesNotContain(favoritePlace)
     }
 
     @Test
-    fun deleteAllUnwanted_shouldDeleteOnlyNonFavoritePlaces() = runTest {
-        val unfavoritePlaceEntity = mockUnfavoritePlaces[0].toEntity()
-        val favoritePlace = mockFavoritePlaces[0]
-        val favoritePlaceEntity = favoritePlace.toEntity()
-        val noteEntity = favoritePlace.notes.first().toEntity()
-        cacheDao.insert(unfavoritePlaceEntity)
-        cacheDao.insert(favoritePlaceEntity)
-        favoriteDao.createFavorite(favoritePlaceEntity.zipcode, noteEntity)
-        cacheDao.deleteAllUnwanted()
-        val allPlaces = cacheDao.getByZipcode("").first()
-        assertThat(allPlaces).hasSize(1)
-        assertThat(allPlaces).contains(favoritePlaceEntity)
-    }
-
-    @Test
-    fun deleteIfUnfavorite_doesNotDeleteAFavoritePlace() = runTest {
-        // Arrange: Insere um lugar e o torna favorito
-        val expectedPlace = mockFavoritePlaces[0].toEntity()
-        val noteEntity = mockFavoritePlaces[0].notes.first().toEntity()
-        cacheDao.insert(expectedPlace)
-        favoriteDao.createFavorite(expectedPlace.zipcode, noteEntity)
-
-        // Act: Tenta deletar o lugar favorito com o método condicional
-        cacheDao.deleteIfUnfavorite(expectedPlace.zipcode)
-
-        // Assert: Verifica se o lugar ainda existe na tabela
-        val allPlaces = cacheDao.getByZipcode(expectedPlace.zipcode).first()
-        assertThat(allPlaces).hasSize(1)
-        assertThat(allPlaces).contains(expectedPlace)
-    }
-
-    @Test
-    fun update_shouldUpdateCorrectly_whenPlaceIsUpdated() = runTest {
-        val oldPlace = mockUnfavoritePlaces[0].toEntity()
-        val expectedPlace = mockUnfavoritePlaces[1].toEntity().copy(zipcode = oldPlace.zipcode)
-        cacheDao.insert(expectedPlace)
-        cacheDao.update(expectedPlace)
-        cacheDao.getByZipcode(expectedPlace.zipcode).collectLatest { result ->
-            assertTrue(
-                """The fetched places should have the same size as the inserted ones and not be empty""",
-                result.size == 1
-            )
-            assertTrue(
-                "The fetched places should be the same as the inserted ones.",
-                result.contains(expectedPlace)
-            )
-            assertFalse(
-                "The fetched places should not be the same as the old ones.",
-                result.contains(oldPlace)
-            )
+    fun deleteAllCachedPlaceEntities_shouldDeleteOnlyNonFavoritePlaces() = runTest {
+        val unfavoritePlace = mockUnfavoritePlaceEntities.first().place
+        val expectedFavorites = mockFavoritePlaceEntities.last()
+        val (favoritePlace, notes) = expectedFavorites
+        cacheDao.insertPlaceEntity(unfavoritePlace)
+        cacheDao.insertPlaceEntity(favoritePlace)
+        notes.forEach { note ->
+            favoriteDao.createFavorite(favoritePlace.zipcode, note.copy(id = 0))
         }
+
+        cacheDao.deleteAllCachedPlaceEntities()
+
+        val cachedPlaces = cacheDao.selectCachedPlaceEntitiesByZipcode("").first()
+        val actualFavorites = favoriteDao.readFavoritesByZipcode("").first()
+
+        assertThat(cachedPlaces).isEmpty()
+        assertThat(actualFavorites).hasSize(1)
+        assertThat(expectedFavorites).isEqualTo(actualFavorites.first())
+    }
+
+    @Test
+    fun deleteCachedPlaceEntity_shouldDeleteNonFavoritePlace() = runTest {
+        val unfavoritePlace = mockUnfavoritePlaceEntities.first().place
+        cacheDao.insertPlaceEntity(unfavoritePlace)
+
+        cacheDao.deleteCachedPlaceEntity(unfavoritePlace.zipcode)
+
+        val result = cacheDao.selectCachedPlaceEntitiesByZipcode(unfavoritePlace.zipcode).first()
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun deleteCachedPlaceEntity_shouldNotDeleteFavoritePlace() = runTest {
+        val expectedFavorite = mockFavoritePlaceEntities.first()
+        val (favoritePlace, notes) = expectedFavorite
+        cacheDao.insertPlaceEntity(favoritePlace)
+        notes.forEach { note -> favoriteDao.createFavorite(favoritePlace.zipcode, note) }
+
+        cacheDao.deleteCachedPlaceEntity(favoritePlace.zipcode)
+
+        val actualFavorites = favoriteDao.readAFavoriteWithNotes(favoritePlace.zipcode)
+        assertThat(actualFavorites).isNotNull()
+        assertThat(actualFavorites).isEqualTo(expectedFavorite)
+    }
+
+    @Test
+    fun update_shouldUpdatePlaceEntityNonFavoritePlaceCorrectly() = runTest {
+        val oldPlace = mockUnfavoritePlaceEntities.first().place
+        val newPlace = mockUnfavoritePlaceEntities.last().place.copy(zipcode = oldPlace.zipcode)
+        cacheDao.insertPlaceEntity(oldPlace)
+
+        cacheDao.updatePlaceEntity(newPlace)
+
+        val result = cacheDao.selectCachedPlaceEntityByZipcode(oldPlace.zipcode)
+        
+        assertThat(result).isNotNull()
+        assertThat(result).isEqualTo(newPlace)
     }
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface LogDao {
     /** Create **/
     @Insert
-    suspend fun insert(log: LogEntity)
+    suspend fun insertLogEntity(log: LogEntity): Long
 
     /** Read **/
     // Search for logs which match the query in the zipcode_place column
@@ -22,7 +22,7 @@ interface LogDao {
         ORDER BY timestamp DESC
     """
     )
-    fun getLogByZipcode(query: String = ""): Flow<List<LogEntity>>
+    fun selectLogEntitiesByZipcode(query: String = ""): Flow<List<LogEntity>>
 
     // Search for logs which are in the given period of time
     @Query("""
@@ -30,18 +30,15 @@ interface LogDao {
         WHERE timestamp >= :start AND timestamp <= :end
         ORDER BY timestamp DESC
     """)
-    fun getLogByPeriod(
+    fun selectLogEntitiesByPeriod(
         start: Long = 0L,
         end : Long = System.currentTimeMillis()
     ): Flow<List<LogEntity>>
 
     /** Delete **/
-
-    /** Update **/
     @Delete
-    suspend fun delete(log: LogEntity)
+    suspend fun deleteLogEntity(log: LogEntity)
 
     @Query("DELETE FROM logs")
-    suspend fun deleteAll()
-
+    suspend fun deleteAllLogEntities()
 }

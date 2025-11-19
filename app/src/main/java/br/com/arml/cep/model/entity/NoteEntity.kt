@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import br.com.arml.cep.model.domain.Note
 
 @Entity(
-    tableName = "notes",
+    tableName = "Notes",
     indices = [ Index(value = [ "title" ], unique = true) ]
 )
 data class NoteEntity(

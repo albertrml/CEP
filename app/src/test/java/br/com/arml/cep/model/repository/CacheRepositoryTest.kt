@@ -31,7 +31,7 @@ class CacheRepositoryTest {
     fun `insertPlace should emit Loading and then Success on successful DAO insertion`() = runTest {
         // Arrange
         val placeToInsert = mockUnfavoritePlaces.first()
-        coEvery { mockCacheDao.insert(any()) } returns Unit
+        coEvery { mockCacheDao.insertPlaceEntity(any()) } returns Unit
 
         // Act
         val responses = repository.insertPlace(placeToInsert).toList()
@@ -40,7 +40,7 @@ class CacheRepositoryTest {
         assertTrue("Expected 2 responses", responses.size == 2)
         assertTrue("First response should be Loading", responses[0] is Response.Loading)
         assertTrue("Second response should be Success", responses[1] is Response.Success)
-        coVerify(exactly = 1) { mockCacheDao.insert(placeToInsert.toEntity()) }
+        coVerify(exactly = 1) { mockCacheDao.insertPlaceEntity(placeToInsert.toEntity()) }
     }
 
     @Test
@@ -48,7 +48,7 @@ class CacheRepositoryTest {
         // Arrange
         val placeToInsert = mockUnfavoritePlaces.first()
         val exception = SQLiteConstraintException("Primary key conflict")
-        coEvery { mockCacheDao.insert(any()) } throws exception
+        coEvery { mockCacheDao.insertPlaceEntity(any()) } throws exception
 
         // Act
         val responses = repository.insertPlace(placeToInsert).toList()
@@ -57,7 +57,7 @@ class CacheRepositoryTest {
         assertTrue("Expected 2 responses", responses.size == 2)
         assertTrue("First response should be Loading", responses[0] is Response.Loading)
         assertTrue("Second response should be Failure", responses[1] is Response.Failure)
-        coVerify(exactly = 1) { mockCacheDao.insert(placeToInsert.toEntity()) }
+        coVerify(exactly = 1) { mockCacheDao.insertPlaceEntity(placeToInsert.toEntity()) }
     }
 
     /** READ **/
@@ -65,7 +65,7 @@ class CacheRepositoryTest {
     fun `getPlacesByZipcode should emit Loading and then Success with data`() = runTest {
         // Arrange
         val mockData = mockUnfavoritePlaces.map { it.toEntity() }
-        coEvery { mockCacheDao.getByZipcode(any()) } returns flowOf(mockData)
+        coEvery { mockCacheDao.selectCachedPlaceEntitiesByZipcode(any()) } returns flowOf(mockData)
 
         // Act
         val responses = repository.getPlacesByZipcode("").toList()
@@ -74,14 +74,14 @@ class CacheRepositoryTest {
         assertTrue("Expected 2 responses", responses.size == 2)
         assertTrue("First response should be Loading", responses[0] is Response.Loading)
         assertTrue("Second response should be Success", responses[1] is Response.Success)
-        coVerify(exactly = 1) { mockCacheDao.getByZipcode("") }
+        coVerify(exactly = 1) { mockCacheDao.selectCachedPlaceEntitiesByZipcode("") }
     }
 
     @Test
     fun `getPlacesByZipcode should emit Loading and then Failure when DAO flow throws exception`() = runTest {
         // Arrange
         val exception = SQLiteException("Database read error")
-        coEvery { mockCacheDao.getByZipcode(any()) } returns flow { throw exception }
+        coEvery { mockCacheDao.selectCachedPlaceEntitiesByZipcode(any()) } returns flow { throw exception }
 
         // Act
         val responses = repository.getPlacesByZipcode("").toList()
@@ -90,7 +90,7 @@ class CacheRepositoryTest {
         assertTrue("Expected 2 responses", responses.size == 2)
         assertTrue("First response should be Loading", responses[0] is Response.Loading)
         assertTrue("Second response should be Failure", responses[1] is Response.Failure)
-        coVerify(exactly = 1) { mockCacheDao.getByZipcode("") }
+        coVerify(exactly = 1) { mockCacheDao.selectCachedPlaceEntitiesByZipcode("") }
     }
 
     /** UPDATE **/
@@ -98,7 +98,7 @@ class CacheRepositoryTest {
     fun `updatePlace should emit Loading and then Success on successful DAO update`() = runTest {
         // Arrange
         val placeToUpdate = mockUnfavoritePlaces.first()
-        coEvery { mockCacheDao.update(any()) } returns Unit
+        coEvery { mockCacheDao.updatePlaceEntity(any()) } returns Unit
 
         // Act
         val responses = repository.updatePlace(placeToUpdate).toList()
@@ -107,7 +107,7 @@ class CacheRepositoryTest {
         assertTrue("Expected 2 responses", responses.size == 2)
         assertTrue("First response should be Loading", responses[0] is Response.Loading)
         assertTrue("Second response should be Success", responses[1] is Response.Success)
-        coVerify(exactly = 1) { mockCacheDao.update(placeToUpdate.toEntity()) }
+        coVerify(exactly = 1) { mockCacheDao.updatePlaceEntity(placeToUpdate.toEntity()) }
     }
 
     @Test
@@ -115,7 +115,7 @@ class CacheRepositoryTest {
         // Arrange
         val placeToUpdate = mockUnfavoritePlaces.first()
         val exception = SQLiteException("Update failed")
-        coEvery { mockCacheDao.update(any()) } throws exception
+        coEvery { mockCacheDao.updatePlaceEntity(any()) } throws exception
 
         // Act
         val responses = repository.updatePlace(placeToUpdate).toList()
@@ -124,7 +124,7 @@ class CacheRepositoryTest {
         assertTrue("Expected 2 responses", responses.size == 2)
         assertTrue("First response should be Loading", responses[0] is Response.Loading)
         assertTrue("Second response should be Failure", responses[1] is Response.Failure)
-        coVerify(exactly = 1) { mockCacheDao.update(placeToUpdate.toEntity()) }
+        coVerify(exactly = 1) { mockCacheDao.updatePlaceEntity(placeToUpdate.toEntity()) }
     }
 
     /** DELETE **/
@@ -132,7 +132,7 @@ class CacheRepositoryTest {
     fun `deletePlace should emit Loading and then Success on successful DAO deletion`() = runTest {
         // Arrange
         val placeToDelete = mockUnfavoritePlaces.first()
-        coEvery { mockCacheDao.deleteIfUnfavorite(any()) } returns Unit
+        coEvery { mockCacheDao.deleteCachedPlaceEntity(any()) } returns Unit
 
         // Act
         val responses = repository.deletePlace(placeToDelete).toList()
@@ -141,7 +141,7 @@ class CacheRepositoryTest {
         assertTrue("Expected 2 responses", responses.size == 2)
         assertTrue("First response should be Loading", responses[0] is Response.Loading)
         assertTrue("Second response should be Success", responses[1] is Response.Success)
-        coVerify(exactly = 1) { mockCacheDao.deleteIfUnfavorite(placeToDelete.cep.text) }
+        coVerify(exactly = 1) { mockCacheDao.deleteCachedPlaceEntity(placeToDelete.cep.text) }
     }
 
     @Test
@@ -149,7 +149,7 @@ class CacheRepositoryTest {
         // Arrange
         val placeToDelete = mockUnfavoritePlaces.first()
         val exception = SQLiteException("Delete failed")
-        coEvery { mockCacheDao.deleteIfUnfavorite(any()) } throws exception
+        coEvery { mockCacheDao.deleteCachedPlaceEntity(any()) } throws exception
 
         // Act
         val responses = repository.deletePlace(placeToDelete).toList()
@@ -158,13 +158,13 @@ class CacheRepositoryTest {
         assertTrue("Expected 2 responses", responses.size == 2)
         assertTrue("First response should be Loading", responses[0] is Response.Loading)
         assertTrue("Second response should be Failure", responses[1] is Response.Failure)
-        coVerify(exactly = 1) { mockCacheDao.deleteIfUnfavorite(placeToDelete.cep.text) }
+        coVerify(exactly = 1) { mockCacheDao.deleteCachedPlaceEntity(placeToDelete.cep.text) }
     }
 
     @Test
     fun `deleteAllUnwanted should emit Loading and then Success on successful DAO deletion`() = runTest {
         // Arrange
-        coEvery { mockCacheDao.deleteAllUnwanted() } returns Unit
+        coEvery { mockCacheDao.deleteAllCachedPlaceEntities() } returns Unit
 
         // Act
         val responses = repository.deleteAllUnwanted().toList()
@@ -173,14 +173,14 @@ class CacheRepositoryTest {
         assertTrue("Expected 2 responses", responses.size == 2)
         assertTrue("First response should be Loading", responses[0] is Response.Loading)
         assertTrue("Second response should be Success", responses[1] is Response.Success)
-        coVerify(exactly = 1) { mockCacheDao.deleteAllUnwanted() }
+        coVerify(exactly = 1) { mockCacheDao.deleteAllCachedPlaceEntities() }
     }
 
     @Test
     fun `deleteAllUnwanted should emit Loading and then Failure when DAO throws exception`() = runTest {
         // Arrange
         val exception = SQLiteException("Delete all failed")
-        coEvery { mockCacheDao.deleteAllUnwanted() } throws exception
+        coEvery { mockCacheDao.deleteAllCachedPlaceEntities() } throws exception
 
         // Act
         val responses = repository.deleteAllUnwanted().toList()
@@ -189,6 +189,6 @@ class CacheRepositoryTest {
         assertTrue("Expected 2 responses", responses.size == 2)
         assertTrue("First response should be Loading", responses[0] is Response.Loading)
         assertTrue("Second response should be Failure", responses[1] is Response.Failure)
-        coVerify(exactly = 1) { mockCacheDao.deleteAllUnwanted() }
+        coVerify(exactly = 1) { mockCacheDao.deleteAllCachedPlaceEntities() }
     }
 }

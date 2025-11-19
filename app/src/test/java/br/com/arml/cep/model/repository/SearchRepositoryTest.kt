@@ -30,16 +30,16 @@ class SearchRepositoryTest {
     @Before
     fun setup() {
         repository = SearchRepository(searchService, cacheDao, logDao)
-        coJustRun { logDao.insert(any()) }
+        coJustRun { logDao.insertLogEntity(any()) }
     }
 
     // region Mock Helper Functions
     private fun mockCacheHit(place: Place) {
-        coEvery { cacheDao.findByZipcode(place.cep.text) } returns place.toEntity()
+        coEvery { cacheDao.selectCachedPlaceEntityByZipcode(place.cep.text) } returns place.toEntity()
     }
 
     private fun mockCacheMiss() {
-        coEvery { cacheDao.findByZipcode(any()) } returns null
+        coEvery { cacheDao.selectCachedPlaceEntityByZipcode(any()) } returns null
     }
 
     private fun mockRemoteSuccess(place: Place) {
@@ -63,8 +63,8 @@ class SearchRepositoryTest {
         val responses = repository.getPlace(expected.cep).toList()
 
         responses.assertFlowSuccess { assertEquals(expected, it) }
-        coVerify(exactly = 1) { cacheDao.findByZipcode(expected.cep.text) }
-        coVerify(exactly = 1) { logDao.insert(any()) }
+        coVerify(exactly = 1) { cacheDao.selectCachedPlaceEntityByZipcode(expected.cep.text) }
+        coVerify(exactly = 1) { logDao.insertLogEntity(any()) }
         coVerify(exactly = 0) { searchService.getAddressByCep(any()) }
     }
 
@@ -77,9 +77,9 @@ class SearchRepositoryTest {
         val responses = repository.getPlace(expected.cep).toList()
 
         responses.assertFlowSuccess { assertEquals(expected, it) }
-        coVerify(exactly = 1) { cacheDao.findByZipcode(expected.cep.text) }
+        coVerify(exactly = 1) { cacheDao.selectCachedPlaceEntityByZipcode(expected.cep.text) }
         coVerify(exactly = 1) { searchService.getAddressByCep(expected.cep.text) }
-        coVerify(exactly = 1) { logDao.insert(any()) }
+        coVerify(exactly = 1) { logDao.insertLogEntity(any()) }
     }
 
     @Test
@@ -91,9 +91,9 @@ class SearchRepositoryTest {
         val responses = repository.getPlace(cep).toList()
 
         responses.assertFlowFailure { assertEquals(CepException.NotFoundCepException::class.java, it.javaClass) }
-        coVerify(exactly = 1) { cacheDao.findByZipcode(cep.text) }
+        coVerify(exactly = 1) { cacheDao.selectCachedPlaceEntityByZipcode(cep.text) }
         coVerify(exactly = 1) { searchService.getAddressByCep(cep.text) }
-        coVerify(exactly = 0) { logDao.insert(any()) }
+        coVerify(exactly = 0) { logDao.insertLogEntity(any()) }
     }
 
     @Test
@@ -106,8 +106,8 @@ class SearchRepositoryTest {
         val responses = repository.getPlace(cep).toList()
 
         responses.assertFlowFailure { assertEquals(expectedException, it) }
-        coVerify(exactly = 1) { cacheDao.findByZipcode(cep.text) }
+        coVerify(exactly = 1) { cacheDao.selectCachedPlaceEntityByZipcode(cep.text) }
         coVerify(exactly = 1) { searchService.getAddressByCep(cep.text) }
-        coVerify(exactly = 0) { logDao.insert(any()) }
+        coVerify(exactly = 0) { logDao.insertLogEntity(any()) }
     }
 }

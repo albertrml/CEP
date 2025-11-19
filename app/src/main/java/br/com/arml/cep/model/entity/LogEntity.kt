@@ -10,7 +10,7 @@ import br.com.arml.cep.model.domain.Log
 import java.sql.Timestamp
 
 @Entity(
-    tableName = "logs",
+    tableName = "Logs",
     foreignKeys = [
         ForeignKey(
             entity = PlaceEntity::class,

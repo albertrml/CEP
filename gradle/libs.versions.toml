@@ -12,6 +12,8 @@ junitVersion = "1.3.0"
 kotlin = "2.2.21"
 kotlinKsp = "2.2.20-2.0.3"
 kotlinxCoroutines = "1.10.2"
+kotlinxSerialization = "1.9.0"
+kotlinxSerializationPlugin = "2.2.21"
 lifecycleRuntimeKtx = "2.9.4"
 loggingInterceptor = "5.3.0"
 material3 = "1.4.0"
@@ -39,6 +41,7 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 # Hilt
 android-hilt = { module = "com.google.dagger:hilt-android", version.ref = "androidHilt" }
@@ -90,3 +93,4 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlinKsp" }
 kotlin-hilt = { id = "com.google.dagger.hilt.android", version.ref = "androidHilt" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerializationPlugin" }

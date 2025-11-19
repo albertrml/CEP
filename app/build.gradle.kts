@@ -5,6 +5,11 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.hilt)
+    alias(libs.plugins.kotlinx.serialization)
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 android {
@@ -19,20 +24,12 @@ android {
         versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        defaultConfig {
-            // ...
-            javaCompileOptions {
-                annotationProcessorOptions {
-                    arguments["room.schemaLocation"] = "$projectDir/schemas"
-                }
-            }
-        }
-
     }
 
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
+    sourceSets {
+        getByName("androidTest") {
+            assets.srcDir(File(project.projectDir, "schemas"))
+        }
     }
 
     buildTypes {
@@ -90,6 +87,9 @@ dependencies {
     implementation(libs.android.hilt)
     implementation(libs.androidx.compose.hilt)
     ksp(libs.android.hilt.compiler)
+
+    // Kotlinx Serialization
+    implementation(libs.kotlinx.serialization.json)
 
     // Jetpack Compose
     implementation(libs.androidx.activity.compose)

@@ -5,31 +5,46 @@ import androidx.compose.ui.unit.dp
 
 data class Dimens(
     // Corner radius
+    val xSmallCornerRadius: Dp = 4.dp,
     val smallCornerRadius: Dp = 8.dp,
     val mediumCornerRadius: Dp = 12.dp,
     val largeCornerRadius: Dp = 16.dp,
+    val xLargeCornerRadius: Dp = 24.dp,
+
     // Elevation
+    val xSmallElevation: Dp = 0.dp,
     val smallElevation: Dp = 0.dp,
     val mediumElevation: Dp = 0.dp,
     val largeElevation: Dp = 0.dp,
+    val xLargeElevation: Dp = 0.dp,
+
     // Margin
+    val xSmallMargin: Dp = 0.dp,
     val smallMargin: Dp = 0.dp,
     val mediumMargin: Dp = 0.dp,
     val largeMargin: Dp = 0.dp,
     val xLargeMargin: Dp = 0.dp,
+
     // Padding
     val xSmallPadding: Dp = 0.dp,
     val smallPadding: Dp = 0.dp,
     val mediumPadding: Dp = 0.dp,
     val largePadding: Dp = 0.dp,
+    val xLargePadding: Dp = 0.dp,
+
     // Spacing
+    val xSmallSpacing: Dp = 0.dp,
     val smallSpacing: Dp = 0.dp,
     val mediumSpacing: Dp = 0.dp,
     val largeSpacing: Dp = 0.dp,
+    val xLargeSpacing: Dp = 0.dp,
+
     // Thickness
+    val xSmallThickness: Dp = 0.dp,
     val smallThickness: Dp = 0.dp,
     val mediumThickness: Dp = 0.dp,
     val largeThickness: Dp = 0.dp,
+    val xLargeThickness: Dp = 0.dp,
 )
 
 // Width < 600: Phone in portrait

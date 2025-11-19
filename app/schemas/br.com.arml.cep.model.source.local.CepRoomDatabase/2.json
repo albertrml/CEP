@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "9b1cb02551ddb0ecfb97a3a598168d1c",
+    "identityHash": "9541e5cc15254fe661d18186ba4cd706",
     "entities": [
       {
-        "tableName": "favorites",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zipcode_place` TEXT NOT NULL, `id_note` INTEGER NOT NULL, PRIMARY KEY(`zipcode_place`, `id_note`), FOREIGN KEY(`zipcode_place`) REFERENCES `places`(`zipcode`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_note`) REFERENCES `notes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "tableName": "Favorites",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zipcode_place` TEXT NOT NULL, `id_note` INTEGER NOT NULL, PRIMARY KEY(`zipcode_place`, `id_note`), FOREIGN KEY(`zipcode_place`) REFERENCES `Places`(`zipcode`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_note`) REFERENCES `Notes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "zipcodePlace",
@@ -30,27 +30,27 @@
         },
         "indices": [
           {
-            "name": "index_favorites_zipcode_place",
+            "name": "index_Favorites_zipcode_place",
             "unique": false,
             "columnNames": [
               "zipcode_place"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_favorites_zipcode_place` ON `${TABLE_NAME}` (`zipcode_place`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Favorites_zipcode_place` ON `${TABLE_NAME}` (`zipcode_place`)"
           },
           {
-            "name": "index_favorites_id_note",
+            "name": "index_Favorites_id_note",
             "unique": false,
             "columnNames": [
               "id_note"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_favorites_id_note` ON `${TABLE_NAME}` (`id_note`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Favorites_id_note` ON `${TABLE_NAME}` (`id_note`)"
           }
         ],
         "foreignKeys": [
           {
-            "table": "places",
+            "table": "Places",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
@@ -61,7 +61,7 @@
             ]
           },
           {
-            "table": "notes",
+            "table": "Notes",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
@@ -74,8 +74,8 @@
         ]
       },
       {
-        "tableName": "logs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `zipcode_place` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, FOREIGN KEY(`zipcode_place`) REFERENCES `places`(`zipcode`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "tableName": "Logs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `zipcode_place` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, FOREIGN KEY(`zipcode_place`) REFERENCES `Places`(`zipcode`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -104,27 +104,27 @@
         },
         "indices": [
           {
-            "name": "index_logs_zipcode_place",
+            "name": "index_Logs_zipcode_place",
             "unique": false,
             "columnNames": [
               "zipcode_place"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_logs_zipcode_place` ON `${TABLE_NAME}` (`zipcode_place`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Logs_zipcode_place` ON `${TABLE_NAME}` (`zipcode_place`)"
           },
           {
-            "name": "index_logs_timestamp",
+            "name": "index_Logs_timestamp",
             "unique": false,
             "columnNames": [
               "timestamp"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_logs_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Logs_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
           }
         ],
         "foreignKeys": [
           {
-            "table": "places",
+            "table": "Places",
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
@@ -137,7 +137,7 @@
         ]
       },
       {
-        "tableName": "notes",
+        "tableName": "Notes",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL)",
         "fields": [
           {
@@ -167,18 +167,18 @@
         },
         "indices": [
           {
-            "name": "index_notes_title",
+            "name": "index_Notes_title",
             "unique": true,
             "columnNames": [
               "title"
             ],
             "orders": [],
-            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_notes_title` ON `${TABLE_NAME}` (`title`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_Notes_title` ON `${TABLE_NAME}` (`title`)"
           }
         ]
       },
       {
-        "tableName": "places",
+        "tableName": "Places",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zipcode` TEXT NOT NULL, `street` TEXT NOT NULL, `complement` TEXT NOT NULL, `district` TEXT NOT NULL, `city` TEXT NOT NULL, `state` TEXT NOT NULL, `uf` TEXT NOT NULL, `region` TEXT NOT NULL, `country` TEXT NOT NULL, `ddd` TEXT NOT NULL, PRIMARY KEY(`zipcode`))",
         "fields": [
           {
@@ -250,7 +250,7 @@
         },
         "indices": [
           {
-            "name": "index_places_street_district_city_state",
+            "name": "index_Places_street_district_city_state",
             "unique": false,
             "columnNames": [
               "street",
@@ -259,14 +259,14 @@
               "state"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_street_district_city_state` ON `${TABLE_NAME}` (`street`, `district`, `city`, `state`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Places_street_district_city_state` ON `${TABLE_NAME}` (`street`, `district`, `city`, `state`)"
           }
         ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9b1cb02551ddb0ecfb97a3a598168d1c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9541e5cc15254fe661d18186ba4cd706')"
     ]
   }
 }

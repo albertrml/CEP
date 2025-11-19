@@ -13,21 +13,21 @@ class CacheRepository @Inject constructor(
     private val cacheDao: CacheDao
 ) {
     // Create
-    fun insertPlace(place: Place) = asResponse { cacheDao.insert(place.toEntity()) }
+    fun insertPlace(place: Place) = asResponse { cacheDao.insertPlaceEntity(place.toEntity()) }
 
     // Read
     fun getPlacesByZipcode(query: String) = cacheDao
-        .getByZipcode(query)
+        .selectCachedPlaceEntitiesByZipcode(query)
         .toResponseFlow()
         .mapSuccess { entity -> entity.map { it.toModel() }  }
 
     // Update
-    fun updatePlace(place: Place) = asResponse { cacheDao.update(place.toEntity()) }
+    fun updatePlace(place: Place) = asResponse { cacheDao.updatePlaceEntity(place.toEntity()) }
 
     // Delete
     fun deletePlace(place: Place) = asResponse {
-        cacheDao.deleteIfUnfavorite(place.cep.text)
+        cacheDao.deleteCachedPlaceEntity(place.cep.text)
     }
 
-    fun deleteAllUnwanted() = asResponse { cacheDao.deleteAllUnwanted() }
+    fun deleteAllUnwanted() = asResponse { cacheDao.deleteAllCachedPlaceEntities() }
 }

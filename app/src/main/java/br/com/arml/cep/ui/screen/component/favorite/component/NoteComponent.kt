@@ -1,5 +1,6 @@
 package br.com.arml.cep.ui.screen.component.favorite.component
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,12 +53,17 @@ fun NoteElement(
     onEditNote: (Note) -> Unit
 ) {
     ElevatedCard(
-        modifier = modifier
-            .clickable { onEditNote(note) },
+        modifier = modifier.clickable { onEditNote(note) },
         shape = MaterialTheme.shapes.medium,
     ){
         Row(
             modifier = modifier
+                .padding(MaterialTheme.dimens.xSmallPadding)
+                .border(
+                    width = MaterialTheme.dimens.smallThickness,
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = MaterialTheme.shapes.medium
+                )
                 .padding(MaterialTheme.dimens.smallMargin)
                 .clickable { onEditNote(note) },
             verticalAlignment = Alignment.CenterVertically

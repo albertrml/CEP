@@ -26,7 +26,16 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             )
         """.trimIndent()
         )
-        db.execSQL("CREATE INDEX IF NOT EXISTS `index_places_street_district_city_state` ON `Places` (`street`, `district`, `city`, `state`)")
+        db.execSQL("""
+            CREATE INDEX IF NOT EXISTS index_places_street_district_city_state ON 
+            Places (
+                street, 
+                district, 
+                city, 
+                state
+            )
+        """.trimIndent()
+        )
 
         /** Criação da tabela Logs **/
         db.execSQL(
@@ -59,12 +68,17 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             CREATE TABLE IF NOT EXISTS
             Notes(
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL UNIQUE,
+                title TEXT NOT NULL,
                 content TEXT NOT NULL
             )
         """.trimIndent()
         )
 
+        db.execSQL(
+            """
+                CREATE UNIQUE INDEX IF NOT EXISTS index_notes_title_content ON Notes(title)
+            """.trimIndent()
+        )
 
         /** Crição da tabela Favorites **/
         db.execSQL(
@@ -86,14 +100,6 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_favorites_zipcode_place` ON `Favorites` (`zipcode_place`)")
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_favorites_id_note` ON `Favorites` (`id_note`)")
 
-        /** Migração dos dados da tabela log_table para a tabela Logs **/
-        db.execSQL(
-            """
-            INSERT INTO Logs(zipcode_place, timestamp)
-            SELECT cep, timestamp FROM log_table
-        """.trimIndent()
-        )
-
         /** Migração dos dados da tabela place_table para a tabela Places **/
         db.execSQL("""
             INSERT INTO Places(
@@ -109,7 +115,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 ddd
             )
             SELECT 
-                cep, 
+                address_zipCode, 
                 address_street, 
                 address_complement, 
                 address_district, 
@@ -122,17 +128,35 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             FROM place_table
         """.trimIndent())
 
+        /** Migração dos dados da tabela log_table para a tabela Logs **/
+        /*db.execSQL(
+            """
+            INSERT INTO Logs(zipcode_place, timestamp)
+            SELECT cep, timestamp FROM log_table
+            WHERE cep IN (SELECT zipcode FROM Places) AND timestamp IS NOT NULL
+        """.trimIndent()
+        )*/
+        db.execSQL(
+            """
+            INSERT INTO Logs(zipcode_place, timestamp)
+            SELECT p.address_zipCode, l.timestamp FROM place_table p
+            JOIN log_table l ON l.cep = p.cep
+        """.trimIndent()
+        )
+
+
         /** Migração dos dados correspondentes da tabela place_table às tabelas Favorites e Notes **/
         db.beginTransaction()
         try {
             val cursor = db.query("""
-                SELECT cep, note FROM place_table 
+                SELECT address_zipCode, note FROM place_table 
                 WHERE favorite_status = 1 AND note IS NOT NULL
-            """.trimIndent())
+            """.trimIndent()
+            )
 
             cursor.use { c ->
                 if (c.moveToFirst()){
-                    val cepIndex = c.getColumnIndex("cep")
+                    val cepIndex = c.getColumnIndex("address_zipCode")
                     val noteIndex = c.getColumnIndex("note")
                     val delimiter = "||<NOTE_SEP>||"
 

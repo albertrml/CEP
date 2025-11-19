@@ -30,19 +30,19 @@ class LogRepositoryTest {
     }
 
     private fun mockGetLogByZipcodeSuccess(result: List<LogEntity>) {
-        coEvery { logDao.getLogByZipcode(any()) } returns flowOf(result)
+        coEvery { logDao.selectLogEntitiesByZipcode(any()) } returns flowOf(result)
     }
 
     private fun mockGetLogByZipcodeFailure(exception: Exception) {
-        coEvery { logDao.getLogByZipcode(any()) } returns flow { throw exception }
+        coEvery { logDao.selectLogEntitiesByZipcode(any()) } returns flow { throw exception }
     }
 
     private fun mockGetLogByPeriodSuccess(result: List<LogEntity>) {
-        coEvery { logDao.getLogByPeriod(any(), any()) } returns flowOf(result)
+        coEvery { logDao.selectLogEntitiesByPeriod(any(), any()) } returns flowOf(result)
     }
 
     private fun mockGetLogByPeriodFailure(exception: Exception) {
-        coEvery { logDao.getLogByPeriod(any(), any()) } returns flow { throw exception }
+        coEvery { logDao.selectLogEntitiesByPeriod(any(), any()) } returns flow { throw exception }
     }
 
     // region fetchLogByZipcode tests
@@ -57,7 +57,7 @@ class LogRepositoryTest {
         responses.assertFlowSuccess { actual ->
             assertTrue(actual.containsAll(expectedLogs))
         }
-        coVerify(exactly = 1) { logDao.getLogByZipcode(query) }
+        coVerify(exactly = 1) { logDao.selectLogEntitiesByZipcode(query) }
     }
 
     @Test
@@ -68,7 +68,7 @@ class LogRepositoryTest {
         val responses = logRepository.fetchLogByZipcode(query).toList()
 
         responses.assertFlowSuccess { assertTrue(it.isEmpty()) }
-        coVerify(exactly = 1) { logDao.getLogByZipcode(query) }
+        coVerify(exactly = 1) { logDao.selectLogEntitiesByZipcode(query) }
     }
 
     @Test
@@ -80,7 +80,7 @@ class LogRepositoryTest {
         val responses = logRepository.fetchLogByZipcode(query).toList()
 
         responses.assertFlowFailure { assertEquals(exception.javaClass, it.javaClass) }
-        coVerify(exactly = 1) { logDao.getLogByZipcode(query) }
+        coVerify(exactly = 1) { logDao.selectLogEntitiesByZipcode(query) }
     }
     // endregion
 
@@ -94,7 +94,7 @@ class LogRepositoryTest {
         val responses = logRepository.fetchLogByPeriod(start, end).toList()
 
         responses.assertFlowSuccess { assertTrue(it.containsAll(expectedLogs)) }
-        coVerify(exactly = 1) { logDao.getLogByPeriod(start, end) }
+        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(start, end) }
     }
 
     @Test
@@ -105,7 +105,7 @@ class LogRepositoryTest {
         val responses = logRepository.fetchLogByPeriod().toList()
 
         responses.assertFlowSuccess { assertTrue(it.containsAll(expectedLogs)) }
-        coVerify(exactly = 1) { logDao.getLogByPeriod(any(), any()) }
+        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(any(), any()) }
     }
 
     @Test
@@ -116,30 +116,30 @@ class LogRepositoryTest {
         val responses = logRepository.fetchLogByPeriod().toList()
 
         responses.assertFlowFailure { assertEquals(exception.javaClass, it.javaClass) }
-        coVerify(exactly = 1) { logDao.getLogByPeriod(any(), any()) }
+        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(any(), any()) }
     }
     // endregion
 
     // region deleteAllLogs tests
     @Test
     fun `deleteAllLogs should emit Success`() = runTest {
-        coJustRun { logDao.deleteAll() }
+        coJustRun { logDao.deleteAllLogEntities() }
 
         val responses = logRepository.deleteAllLogs().toList()
 
         responses.assertFlowSuccess { assertEquals(Unit, it) }
-        coVerify(exactly = 1) { logDao.deleteAll() }
+        coVerify(exactly = 1) { logDao.deleteAllLogEntities() }
     }
 
     @Test
     fun `deleteAllLogs should emit Failure`() = runTest {
         val exception = Exception("Database error")
-        coEvery { logDao.deleteAll() } throws exception
+        coEvery { logDao.deleteAllLogEntities() } throws exception
 
         val responses = logRepository.deleteAllLogs().toList()
 
         responses.assertFlowFailure { assertEquals(exception.javaClass, it.javaClass) }
-        coVerify(exactly = 1) { logDao.deleteAll() }
+        coVerify(exactly = 1) { logDao.deleteAllLogEntities() }
     }
     // endregion
 
@@ -147,24 +147,24 @@ class LogRepositoryTest {
     @Test
     fun `deleteLog should emit Success`() = runTest {
         val log = mockLogEntries.first()
-        coJustRun { logDao.delete(any()) }
+        coJustRun { logDao.deleteLogEntity(any()) }
 
         val responses = logRepository.deleteLog(log.toEntity()).toList()
 
         responses.assertFlowSuccess { assertEquals(Unit, it) }
-        coVerify(exactly = 1) { logDao.delete(any()) }
+        coVerify(exactly = 1) { logDao.deleteLogEntity(any()) }
     }
 
     @Test
     fun `deleteLog should emit Failure`() = runTest {
         val log = mockLogEntries.first()
         val exception = Exception("Database error")
-        coEvery { logDao.delete(any()) } throws exception
+        coEvery { logDao.deleteLogEntity(any()) } throws exception
 
         val responses = logRepository.deleteLog(log.toEntity()).toList()
 
         responses.assertFlowFailure { assertEquals(exception.javaClass, it.javaClass) }
-        coVerify(exactly = 1) { logDao.delete(any()) }
+        coVerify(exactly = 1) { logDao.deleteLogEntity(any()) }
     }
     // endregion
 }

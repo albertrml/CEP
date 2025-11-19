@@ -1,5 +1,6 @@
 package br.com.arml.cep.ui.screen.component.favorite.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,6 +50,10 @@ fun FavoriteElement(
             .border(
                 width = MaterialTheme.dimens.smallThickness,
                 color = MaterialTheme.colorScheme.outline,
+                shape = MaterialTheme.shapes.medium
+            )
+            .background(
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = MaterialTheme.shapes.medium
             )
             .padding(MaterialTheme.dimens.mediumPadding),

@@ -12,47 +12,48 @@ import kotlinx.coroutines.flow.Flow
 interface CacheDao {
     /** Create **/
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(entry: PlaceEntity)
+    suspend fun insertPlaceEntity(entry: PlaceEntity)
 
     /** Read **/
     @Query(
         """
-        SELECT * FROM places
+        SELECT * FROM Places
         WHERE 
-            zipcode NOT IN (SELECT DISTINCT zipcode FROM favorites)
+            zipcode NOT IN (SELECT DISTINCT zipcode_place FROM Favorites)
             AND zipcode LIKE '%' || :query || '%'
         ORDER BY zipcode ASC
     """
     )
-    fun getByZipcode(query: String): Flow<List<PlaceEntity>>
+    fun selectCachedPlaceEntitiesByZipcode(query: String): Flow<List<PlaceEntity>>
 
     @Query(
         """
-            SELECT * FROM places
-            WHERE
-                zipcode NOT IN (SELECT DISTINCT zipcode FROM favorites)
-                AND zipcode = :zipcode
+            SELECT * FROM Places
+            WHERE zipcode NOT IN (SELECT DISTINCT zipcode_place FROM Favorites)
+            AND zipcode = :zipcode
         """
     )
-    suspend fun findByZipcode(zipcode: String): PlaceEntity?
+    suspend fun selectCachedPlaceEntityByZipcode(zipcode: String): PlaceEntity?
 
     /** Update **/
     @Update
-    suspend fun update(entry: PlaceEntity)
+    suspend fun updatePlaceEntity(entry: PlaceEntity)
 
     /** Delete **/
-    @Query("""
-        DELETE FROM places
+    @Query(
+        """
+        DELETE FROM Places
         WHERE zipcode = :zipcode
-        AND zipcode NOT IN (SELECT DISTINCT zipcode FROM favorites)
-    """)
-    suspend fun deleteIfUnfavorite(zipcode: String)
+        AND zipcode NOT IN (SELECT DISTINCT zipcode_place FROM Favorites)
+    """
+    )
+    suspend fun deleteCachedPlaceEntity(zipcode: String)
 
     @Query(
         value = """
-            DELETE FROM places
-            WHERE zipcode NOT IN (SELECT DISTINCT zipcode FROM favorites)
+            DELETE FROM Places
+            WHERE zipcode NOT IN (SELECT DISTINCT zipcode_place FROM Favorites)
         """
     )
-    suspend fun deleteAllUnwanted()
+    suspend fun deleteAllCachedPlaceEntities()
 }

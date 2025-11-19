@@ -11,7 +11,7 @@ import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
 
 @Entity(
-    tableName = "places",
+    tableName = "Places",
     indices = [
         Index(
             value = [
@@ -40,7 +40,7 @@ data class PlaceEntity(
 fun PlaceEntity.toModel(notes: List<Note> = emptyList()): Place {
     val isFavorite = !notes.isEmpty()
     return Place(
-        cep = Cep.build(zipcode),
+        cep = Cep.build(zipcode.filter { it.isDigit() }),
         address = Address(
             zipCode = zipcode,
             street = street,

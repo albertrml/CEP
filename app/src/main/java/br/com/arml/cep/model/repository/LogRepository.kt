@@ -16,7 +16,7 @@ class LogRepository @Inject constructor(
 ) {
     /** Read **/
     fun fetchLogByZipcode(query: String): Flow<Response<List<Log>>> = logDao
-        .getLogByZipcode(query)
+        .selectLogEntitiesByZipcode(query)
         .toResponseFlow()
         .mapSuccess { entities -> entities.map { it.toModel() } }
 
@@ -24,12 +24,12 @@ class LogRepository @Inject constructor(
         startDate: Long = 0L,
         endDate: Long = System.currentTimeMillis()
     ): Flow<Response<List<Log>>> = logDao
-        .getLogByPeriod(startDate, endDate)
+        .selectLogEntitiesByPeriod(startDate, endDate)
         .toResponseFlow()
         .mapSuccess { entities -> entities.map { it.toModel() } }
 
     /** Delete **/
-    fun deleteLog(entry: LogEntity) = asResponse { logDao.delete(entry) }
+    fun deleteLog(entry: LogEntity) = asResponse { logDao.deleteLogEntity(entry) }
 
-    fun deleteAllLogs() = asResponse { logDao.deleteAll() }
+    fun deleteAllLogs() = asResponse { logDao.deleteAllLogEntities() }
 }

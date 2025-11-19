@@ -39,20 +39,20 @@ interface FavoriteDao {
     /** Read **/
     // Count all notes in the favorite table with the given zipcode.
     @Transaction
-    @Query("SELECT COUNT(*) FROM favorites WHERE zipcode_place = :zipcode")
+    @Query("SELECT COUNT(*) FROM Favorites WHERE zipcode_place = :zipcode")
     suspend fun countNotesFromFavorite(zipcode: String): Int
 
     // Search for a place with given zipcode.
-    @Query("SELECT EXISTS (SELECT 1 FROM places WHERE zipcode = :zipcode)")
+    @Query("SELECT EXISTS (SELECT 1 FROM Places WHERE zipcode = :zipcode)")
     suspend fun doesPlaceExist(zipcode: String): Boolean
 
     // Search for favorite places that have a note with the given title.
     @Query(
         value = """
             SELECT p.*, n.*
-            FROM places p
-            JOIN favorites f ON p.zipcode = f.zipcode_place
-            JOIN notes n ON f.id_note = n.id
+            FROM Places p
+            JOIN Favorites f ON p.zipcode = f.zipcode_place
+            JOIN Notes n ON f.id_note = n.id
             WHERE n.title LIKE '%' || :query || '%'
         """
     )
@@ -60,14 +60,19 @@ interface FavoriteDao {
 
     // Search for a place with given zipcode and return its notes.
     @Transaction
-    @Query("SELECT * FROM places WHERE zipcode = :zipcode")
+    @Query("""
+        SELECT p.* FROM Places p
+        JOIN Favorites f ON p.zipcode = f.zipcode_place
+        WHERE zipcode = :zipcode"""
+    )
     suspend fun readAFavoriteWithNotes(zipcode: String): PlaceWithNotes?
 
     // Search for all place registers that are favorite.
+    @Transaction
     @Query(
         value = """
-            SELECT DISTINCT p.* FROM places p
-            JOIN favorites f ON p.zipcode = f.zipcode_place
+            SELECT DISTINCT p.* FROM Places p
+            JOIN Favorites f ON p.zipcode = f.zipcode_place
             WHERE p.zipcode LIKE '%' || :query || '%'
         """
     )
@@ -76,8 +81,8 @@ interface FavoriteDao {
     @Query(
         value = """
             SELECT EXISTS (
-                SELECT 1 FROM favorites f
-                JOIN notes n ON f.id_note = n.id
+                SELECT 1 FROM Favorites f
+                JOIN Notes n ON f.id_note = n.id
                 WHERE f.zipcode_place = :zipcode AND n.title = :title AND n.content = :content
             )
         """
@@ -95,9 +100,9 @@ interface FavoriteDao {
     @Transaction
     @Query(
         value = """
-            DELETE FROM notes 
+            DELETE FROM Notes 
             WHERE id IN (
-                SELECT id_note FROM favorites
+                SELECT id_note FROM Favorites
                 WHERE zipcode_place = :zipcode
             )
         """
@@ -111,15 +116,15 @@ interface FavoriteDao {
     /** Export **/
     // Export all notes from favorite places.
     @Transaction
-    /*@Query("""
+    @Query("""
         SELECT DISTINCT p.* FROM places p
         JOIN favorites f ON p.zipcode = f.zipcode_place
-    """)*/
-    @Query("""
-        SELECT * FROM places 
-        WHERE zipcode IN (
-            SELECT DISTINCT zipcode FROM favorites
-        )
     """)
+    /*@Query("""
+        SELECT * FROM Places 
+        WHERE zipcode IN (
+            SELECT DISTINCT zipcode_place FROM Favorites
+        )
+    """)*/
     fun exportFavorites(): Flow<List<PlaceWithNotes>>
 }

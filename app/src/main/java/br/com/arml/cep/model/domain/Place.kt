@@ -11,7 +11,7 @@ data class Place(
 )
 
 fun Place.toEntity() = PlaceEntity(
-    zipcode = cep.text,
+    zipcode = address.zipCode,
     street = address.street,
     complement = address.complement,
     district = address.district,
