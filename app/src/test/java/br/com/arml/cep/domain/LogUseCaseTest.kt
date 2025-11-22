@@ -8,6 +8,7 @@ import br.com.arml.cep.model.mock.mockLogEntries
 import br.com.arml.cep.model.repository.LogRepository
 import br.com.arml.cep.utils.assertFlowFailure
 import br.com.arml.cep.utils.assertFlowSuccess
+import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -136,7 +137,9 @@ class LogUseCaseTest {
         val responses = logUseCase.filterLogsByInitialDate(initialDate.time).toList()
 
         responses.assertFlowSuccess { assertEquals(expectedLogs, it) }
-        coVerify(exactly = 1) { logRepository.fetchLogByPeriod(startDate = initialDate.time) }
+        coVerify(exactly = 1) {
+            logRepository.fetchLogByPeriod(startDate = initialDate.time, endDate = any())
+        }
     }
 
     @Test
@@ -147,7 +150,9 @@ class LogUseCaseTest {
         val responses = logUseCase.filterLogsByInitialDate(initialDate.time).toList()
 
         responses.assertFlowSuccess { assertTrue(it.isEmpty()) }
-        coVerify(exactly = 1) { logRepository.fetchLogByPeriod(startDate = initialDate.time) }
+        coVerify(exactly = 1) {
+            logRepository.fetchLogByPeriod(startDate = initialDate.time, endDate = any())
+        }
     }
 
     @Test
@@ -159,20 +164,25 @@ class LogUseCaseTest {
         val responses = logUseCase.filterLogsByInitialDate(initialDate).toList()
 
         responses.assertFlowFailure { assertEquals(exception, it) }
-        coVerify(exactly = 1) { logRepository.fetchLogByPeriod(startDate = initialDate) }
+        coVerify(exactly = 1) {
+            logRepository.fetchLogByPeriod(startDate = initialDate, endDate = any())
+        }
     }
     // endregion
 
     // region filterLogsByFinalDate tests
     @Test
     fun `filterLogsByFinalDate should emit Success with filtered logs`() = runTest {
+        // Arrange
         val finalDate = mockLogEntries[5].timestamp
         val expectedLogs = mockLogEntries.filter { it.timestamp <= finalDate }
         mockFetchByPeriodSuccess(expectedLogs)
 
+        // Act
         val responses = logUseCase.filterLogsByFinalDate(finalDate.time).toList()
 
-        responses.assertFlowSuccess { assertEquals(expectedLogs, it) }
+        // Assert
+        responses.assertFlowSuccess { assertThat(it).containsExactlyElementsIn(expectedLogs) }
         coVerify(exactly = 1) { logRepository.fetchLogByPeriod(endDate = finalDate.time) }
     }
 

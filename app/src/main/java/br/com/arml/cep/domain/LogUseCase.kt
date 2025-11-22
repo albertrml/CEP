@@ -11,8 +11,10 @@ class LogUseCase @Inject constructor(
     /** Read **/
     fun fetchAllLogs() = repository.fetchLogByZipcode("")
     fun filterLogsByCep(query: String) = repository.fetchLogByZipcode(query)
-    fun filterLogsByInitialDate(initialDate: Long) = repository.fetchLogByPeriod(initialDate)
-    fun filterLogsByFinalDate(finalDate: Long) = repository.fetchLogByPeriod(finalDate)
+    fun filterLogsByInitialDate(initialDate: Long) = repository
+        .fetchLogByPeriod(startDate = initialDate)
+    fun filterLogsByFinalDate(finalDate: Long) = repository
+        .fetchLogByPeriod(endDate = finalDate)
     fun filterLogsByRangeDate(initialDate: Long, finalDate: Long) = repository
         .fetchLogByPeriod(initialDate, finalDate)
 

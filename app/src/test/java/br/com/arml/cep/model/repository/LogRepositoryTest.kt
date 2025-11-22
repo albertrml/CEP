@@ -20,9 +20,6 @@ import org.junit.Before
 import org.junit.Test
 
 class LogRepositoryTest {
-
-    val start = 0L
-    val end = System.currentTimeMillis()
     private val logDao = mockk<LogDao>()
     private lateinit var logRepository: LogRepository
 
@@ -39,25 +36,17 @@ class LogRepositoryTest {
         coEvery { logDao.selectLogEntitiesByZipcode(any()) } returns flow { throw exception }
     }
 
-    private fun mockGetLogByPeriodSuccess(
-        initial: Long = start,
-        final: Long = end,
-        result: List<LogEntity>
-    ) {
-        coEvery { logDao.selectLogEntitiesByPeriod(initial, final) } returns flowOf(result)
+    private fun mockGetLogByPeriodSuccess(result: List<LogEntity>) {
+        coEvery { logDao.selectLogEntitiesByPeriod(any(), any()) } returns flowOf(result)
     }
 
-    private fun mockGetLogByPeriodFailure(
-        initial: Long = start,
-        final: Long = end,
-        exception: Exception
-    ) {
-        coEvery { logDao.selectLogEntitiesByPeriod(initial, final) } returns flow { throw exception }
+    private fun mockGetLogByPeriodFailure(exception: Exception) {
+        coEvery { logDao.selectLogEntitiesByPeriod(any(), any()) } returns flow { throw exception }
     }
 
     // region fetchLogByZipcode tests
     @Test
-    fun `fetchLogByZipcode should emit Success with Logs`() = runTest {
+    fun `fetchLogByZipcode should emits Loading and Success when database returns all logs`() = runTest {
         val query = mockLogEntries.first().cep.text.substring(0, 3)
         val expectedLogs = mockLogEntries.filter { it.cep.text.contains(query) }
         mockGetLogByZipcodeSuccess(expectedLogs.map { it.toEntity() })
@@ -71,7 +60,7 @@ class LogRepositoryTest {
     }
 
     @Test
-    fun `fetchLogByZipcode should emit Success with empty list`() = runTest {
+    fun `fetchLogByZipcode should emits Loading and Success when database returns empty list`() = runTest {
         val query = "12345678"
         mockGetLogByZipcodeSuccess(emptyList())
 
@@ -82,7 +71,7 @@ class LogRepositoryTest {
     }
 
     @Test
-    fun `fetchLogByZipcode should emit Failure`() = runTest {
+    fun `fetchLogByZipcode should emits Loading and Failure when database throws exception`() = runTest {
         val query = "111"
         val exception = Exception("Database error")
         mockGetLogByZipcodeFailure(exception)
@@ -96,14 +85,10 @@ class LogRepositoryTest {
 
     // region fetchLogByPeriod tests
     @Test
-    fun `fetchLogByPeriod should emit Success with Logs by period`() = runTest {
+    fun `fetchLogByPeriod should emits Loading and Success when database returns filtered logs by period`() = runTest {
         val (start, end) = mockLogEntries[2].timestamp.time to mockLogEntries[8].timestamp.time
         val expectedLogs = mockLogEntries.filter { it.timestamp.time in start..end }
-        mockGetLogByPeriodSuccess(
-            initial = start,
-            final = end,
-            result = expectedLogs.map { it.toEntity() }
-        )
+        mockGetLogByPeriodSuccess(result = expectedLogs.map { it.toEntity() })
 
         val responses = logRepository.fetchLogByPeriod(start, end).toList()
 
@@ -112,31 +97,31 @@ class LogRepositoryTest {
     }
 
     @Test
-    fun `fetchLogByPeriod should emit Success with all logs by default`() = runTest {
+    fun `fetchLogByPeriod should emits Loading and Success when database returns all logs by default`() = runTest {
         val expectedLogs = mockLogEntries
         mockGetLogByPeriodSuccess( result = expectedLogs.map { it.toEntity() })
 
-        val responses = logRepository.fetchLogByPeriod(start, end).toList()
+        val responses = logRepository.fetchLogByPeriod().toList()
 
         responses.assertFlowSuccess { assertTrue(it.containsAll(expectedLogs)) }
-        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(start, end) }
+        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(any(),any()) }
     }
 
     @Test
-    fun `fetchLogByPeriod should emit Failure`() = runTest {
+    fun `fetchLogByPeriod should emits Loading and Failure when database throws exception`() = runTest {
         val exception = Exception("Database error")
         mockGetLogByPeriodFailure(exception = exception)
 
-        val responses = logRepository.fetchLogByPeriod(start, end).toList()
+        val responses = logRepository.fetchLogByPeriod().toList()
 
         responses.assertFlowFailure { assertEquals(exception.javaClass, it.javaClass) }
-        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(start, end) }
+        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(any(),any()) }
     }
     // endregion
 
     // region deleteAllLogs tests
     @Test
-    fun `deleteAllLogs should emit Success`() = runTest {
+    fun `deleteAllLogs should emits Loading and Success when database delete all logs`() = runTest {
         coJustRun { logDao.deleteAllLogEntities() }
 
         val responses = logRepository.deleteAllLogs().toList()
@@ -146,7 +131,7 @@ class LogRepositoryTest {
     }
 
     @Test
-    fun `deleteAllLogs should emit Failure`() = runTest {
+    fun `deleteAllLogs should emits Loading and Failure when database throws exception`() = runTest {
         val exception = Exception("Database error")
         coEvery { logDao.deleteAllLogEntities() } throws exception
 
@@ -159,7 +144,7 @@ class LogRepositoryTest {
 
     // region deleteLog tests
     @Test
-    fun `deleteLog should emit Success`() = runTest {
+    fun `deleteLog should emits Loading and Success when database delete a single log`() = runTest {
         val log = mockLogEntries.first()
         coJustRun { logDao.deleteLogEntity(any()) }
 
@@ -170,7 +155,7 @@ class LogRepositoryTest {
     }
 
     @Test
-    fun `deleteLog should emit Failure`() = runTest {
+    fun `deleteLog should emits Loading and Failure when database throws exception`() = runTest {
         val log = mockLogEntries.first()
         val exception = Exception("Database error")
         coEvery { logDao.deleteLogEntity(any()) } throws exception
