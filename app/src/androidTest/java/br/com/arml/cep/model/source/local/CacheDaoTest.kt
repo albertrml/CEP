@@ -76,7 +76,7 @@ class CacheDaoTest {
         cacheDao.insertPlaceEntity(unfavoritePlace)
         cacheDao.insertPlaceEntity(favoritePlace)
         notes.forEach { note ->
-            favoriteDao.createFavorite(favoritePlace.zipcode, note.copy(id = 0))
+            favoriteDao.insertNoteEntityToFavorite(favoritePlace.zipcode, note.copy(id = 0))
         }
 
         val result = cacheDao.selectCachedPlaceEntitiesByZipcode("").first()
@@ -94,13 +94,13 @@ class CacheDaoTest {
         cacheDao.insertPlaceEntity(unfavoritePlace)
         cacheDao.insertPlaceEntity(favoritePlace)
         notes.forEach { note ->
-            favoriteDao.createFavorite(favoritePlace.zipcode, note.copy(id = 0))
+            favoriteDao.insertNoteEntityToFavorite(favoritePlace.zipcode, note.copy(id = 0))
         }
 
         cacheDao.deleteAllCachedPlaceEntities()
 
         val cachedPlaces = cacheDao.selectCachedPlaceEntitiesByZipcode("").first()
-        val actualFavorites = favoriteDao.readFavoritesByZipcode("").first()
+        val actualFavorites = favoriteDao.selectFavoritesByZipcode("").first()
 
         assertThat(cachedPlaces).isEmpty()
         assertThat(actualFavorites).hasSize(1)
@@ -123,11 +123,11 @@ class CacheDaoTest {
         val expectedFavorite = mockFavoritePlaceEntities.first()
         val (favoritePlace, notes) = expectedFavorite
         cacheDao.insertPlaceEntity(favoritePlace)
-        notes.forEach { note -> favoriteDao.createFavorite(favoritePlace.zipcode, note) }
+        notes.forEach { note -> favoriteDao.insertNoteEntityToFavorite(favoritePlace.zipcode, note) }
 
         cacheDao.deleteCachedPlaceEntity(favoritePlace.zipcode)
 
-        val actualFavorites = favoriteDao.readAFavoriteWithNotes(favoritePlace.zipcode)
+        val actualFavorites = favoriteDao.selectFavorite(favoritePlace.zipcode)
         assertThat(actualFavorites).isNotNull()
         assertThat(actualFavorites).isEqualTo(expectedFavorite)
     }

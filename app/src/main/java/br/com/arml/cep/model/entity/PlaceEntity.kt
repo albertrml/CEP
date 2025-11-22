@@ -40,7 +40,7 @@ data class PlaceEntity(
 fun PlaceEntity.toModel(notes: List<Note> = emptyList()): Place {
     val isFavorite = !notes.isEmpty()
     return Place(
-        cep = Cep.build(zipcode.filter { it.isDigit() }),
+        cep = Cep.build(zipcode),
         address = Address(
             zipCode = zipcode,
             street = street,

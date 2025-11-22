@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.model.domain.Cep
+import br.com.arml.cep.model.domain.formattedCep
 import br.com.arml.cep.model.domain.updateCepField
 
 @Composable
@@ -36,20 +36,18 @@ fun SearchCepField(
     }
 
     OutlinedTextField(
-        modifier = modifier.semantics{
-            contentType = ContentType.PostalCode
-        },
+        modifier = modifier.semantics{ contentType = ContentType.PostalCode },
         value = cepFieldValue,
         onValueChange = { newFieldValue ->
             val digitsOnly = updateCepField(
                 oldValue = cepFieldValue.text,
                 newValue = newFieldValue.text
             )
-            onQueryChange(digitsOnly)
             cepFieldValue = newFieldValue.copy(
-                text = Cep.format(digitsOnly),
-                selection = TextRange(Cep.format(digitsOnly).length)
+                text = formattedCep(digitsOnly),
+                selection = TextRange(formattedCep(digitsOnly).length)
             )
+            onQueryChange(cepFieldValue.text)
         },
         label = {
             Text(
@@ -77,7 +75,6 @@ fun SearchCepField(
                     )
                 }
             }
-
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)

@@ -64,6 +64,7 @@ android {
         resources.excludes.add("META-INF/LICENSE.md")
         resources.excludes.add("META-INF/LICENSE-notice.md")
     }
+
 }
 
 dependencies {
@@ -116,6 +117,7 @@ dependencies {
 
     // Test Dependencies
     testImplementation(libs.androidx.ui.test.junit)
+    testImplementation(libs.google.truth)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)

@@ -21,7 +21,7 @@ class FavoriteRepository @Inject constructor(
 ) {
     /** Create **/
     fun addToFavorite(zipcode: String, note: NoteEntity) = asResponse {
-        favoriteDao.createFavorite(zipcode, note)
+        favoriteDao.insertNoteEntityToFavorite(zipcode, note)
     }
 
     /** Read **/
@@ -33,7 +33,7 @@ class FavoriteRepository @Inject constructor(
     }*/
 
     fun getFavoritesByTitle(title: String = "") = favoriteDao
-        .readFavoritesByTitle(title)
+        .selectFavoritesByTitle(title)
         .map{ map ->
             map.map { (place, notes) ->
                 PlaceWithNotes(place, notes)
@@ -43,7 +43,7 @@ class FavoriteRepository @Inject constructor(
         .mapSuccess { entities -> entities.map { it.toModel() } }
 
     fun getFavoritesByZipcode(zipcode: String) = favoriteDao
-        .readFavoritesByZipcode(zipcode)
+        .selectFavoritesByZipcode(zipcode)
         .toResponseFlow()
         .mapSuccess { entities -> entities.map { it.toModel() } }
 
@@ -58,7 +58,7 @@ class FavoriteRepository @Inject constructor(
     }
 
     fun deleteNoteFromFavorite(zipcode: String, note: NoteEntity) = asResponse {
-        val count = favoriteDao.countNotesFromFavorite(zipcode = zipcode)
+        val count = favoriteDao.countNotesEntitiesFromFavorite(zipcode = zipcode)
         if (count <= 1) throw CepDatabaseException.IllegalNoteQuantity()
         favoriteDao.deleteNote(note)
     }
@@ -87,14 +87,13 @@ class FavoriteRepository @Inject constructor(
             if (entries.isEmpty()) throw BackupException.ImportEmptyFavoriteException()
 
             entries.forEach { entry ->
-                if (!doesPlaceExist(entry.place.zipcode))
-                    insertPlace(entry.place)
+                if (!doesPlaceEntityExist(entry.place.zipcode)) insertPlaceEntity(entry.place)
 
                 val zipcode = entry.place.zipcode
 
                 entry.notes.forEach { note ->
-                    if(!doesNoteExist(zipcode, note.title, note.content)){
-                        createFavorite(zipcode, note)
+                    if(!doesNoteEntityExist(zipcode, note.title, note.content)){
+                        insertNoteEntityToFavorite(zipcode, note)
                     }
                 }
             }

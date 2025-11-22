@@ -44,6 +44,7 @@ class SearchRepositoryTest {
 
     private fun mockRemoteSuccess(place: Place) {
         coEvery { searchService.getAddressByCep(place.cep.text) } returns place.address.toAddressDTO()
+        coJustRun { cacheDao.insertPlaceEntity(any()) }
     }
 
     private fun mockRemoteNotFound() {

@@ -26,7 +26,7 @@ interface FavoriteDao {
 
     // Create a new entry into favorite place if a new entry note is created.
     @Transaction
-    suspend fun createFavorite(zipcode: String, note: NoteEntity) {
+    suspend fun insertNoteEntityToFavorite(zipcode: String, note: NoteEntity) {
         val idNote = createNote(note)
         createFavoriteLink(FavoriteEntity(zipcode, idNote))
     }
@@ -34,17 +34,17 @@ interface FavoriteDao {
     // Create a new entry into place table. This method is only used as help function to import data.
     @Transaction
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertPlace(place: PlaceEntity)
+    suspend fun insertPlaceEntity(place: PlaceEntity)
 
     /** Read **/
     // Count all notes in the favorite table with the given zipcode.
     @Transaction
     @Query("SELECT COUNT(*) FROM Favorites WHERE zipcode_place = :zipcode")
-    suspend fun countNotesFromFavorite(zipcode: String): Int
+    suspend fun countNotesEntitiesFromFavorite(zipcode: String): Int
 
     // Search for a place with given zipcode.
     @Query("SELECT EXISTS (SELECT 1 FROM Places WHERE zipcode = :zipcode)")
-    suspend fun doesPlaceExist(zipcode: String): Boolean
+    suspend fun doesPlaceEntityExist(zipcode: String): Boolean
 
     // Search for favorite places that have a note with the given title.
     @Query(
@@ -56,7 +56,7 @@ interface FavoriteDao {
             WHERE n.title LIKE '%' || :query || '%'
         """
     )
-    fun readFavoritesByTitle(query: String): Flow<Map<PlaceEntity, List<NoteEntity>>>
+    fun selectFavoritesByTitle(query: String): Flow<Map<PlaceEntity, List<NoteEntity>>>
 
     // Search for a place with given zipcode and return its notes.
     @Transaction
@@ -65,7 +65,7 @@ interface FavoriteDao {
         JOIN Favorites f ON p.zipcode = f.zipcode_place
         WHERE zipcode = :zipcode"""
     )
-    suspend fun readAFavoriteWithNotes(zipcode: String): PlaceWithNotes?
+    suspend fun selectFavorite(zipcode: String): PlaceWithNotes?
 
     // Search for all place registers that are favorite.
     @Transaction
@@ -76,7 +76,7 @@ interface FavoriteDao {
             WHERE p.zipcode LIKE '%' || :query || '%'
         """
     )
-    fun readFavoritesByZipcode(query: String = ""): Flow<List<PlaceWithNotes>>
+    fun selectFavoritesByZipcode(query: String = ""): Flow<List<PlaceWithNotes>>
 
     @Query(
         value = """
@@ -87,7 +87,7 @@ interface FavoriteDao {
             )
         """
     )
-    suspend fun doesNoteExist(zipcode: String, title: String, content: String): Boolean
+    suspend fun doesNoteEntityExist(zipcode: String, title: String, content: String): Boolean
 
     /** Update **/
     // Update a note.

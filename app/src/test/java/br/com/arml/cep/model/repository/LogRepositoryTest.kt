@@ -21,6 +21,8 @@ import org.junit.Test
 
 class LogRepositoryTest {
 
+    val start = 0L
+    val end = System.currentTimeMillis()
     private val logDao = mockk<LogDao>()
     private lateinit var logRepository: LogRepository
 
@@ -37,12 +39,20 @@ class LogRepositoryTest {
         coEvery { logDao.selectLogEntitiesByZipcode(any()) } returns flow { throw exception }
     }
 
-    private fun mockGetLogByPeriodSuccess(result: List<LogEntity>) {
-        coEvery { logDao.selectLogEntitiesByPeriod(any(), any()) } returns flowOf(result)
+    private fun mockGetLogByPeriodSuccess(
+        initial: Long = start,
+        final: Long = end,
+        result: List<LogEntity>
+    ) {
+        coEvery { logDao.selectLogEntitiesByPeriod(initial, final) } returns flowOf(result)
     }
 
-    private fun mockGetLogByPeriodFailure(exception: Exception) {
-        coEvery { logDao.selectLogEntitiesByPeriod(any(), any()) } returns flow { throw exception }
+    private fun mockGetLogByPeriodFailure(
+        initial: Long = start,
+        final: Long = end,
+        exception: Exception
+    ) {
+        coEvery { logDao.selectLogEntitiesByPeriod(initial, final) } returns flow { throw exception }
     }
 
     // region fetchLogByZipcode tests
@@ -89,7 +99,11 @@ class LogRepositoryTest {
     fun `fetchLogByPeriod should emit Success with Logs by period`() = runTest {
         val (start, end) = mockLogEntries[2].timestamp.time to mockLogEntries[8].timestamp.time
         val expectedLogs = mockLogEntries.filter { it.timestamp.time in start..end }
-        mockGetLogByPeriodSuccess(expectedLogs.map { it.toEntity() })
+        mockGetLogByPeriodSuccess(
+            initial = start,
+            final = end,
+            result = expectedLogs.map { it.toEntity() }
+        )
 
         val responses = logRepository.fetchLogByPeriod(start, end).toList()
 
@@ -100,23 +114,23 @@ class LogRepositoryTest {
     @Test
     fun `fetchLogByPeriod should emit Success with all logs by default`() = runTest {
         val expectedLogs = mockLogEntries
-        mockGetLogByPeriodSuccess(expectedLogs.map { it.toEntity() })
+        mockGetLogByPeriodSuccess( result = expectedLogs.map { it.toEntity() })
 
-        val responses = logRepository.fetchLogByPeriod().toList()
+        val responses = logRepository.fetchLogByPeriod(start, end).toList()
 
         responses.assertFlowSuccess { assertTrue(it.containsAll(expectedLogs)) }
-        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(any(), any()) }
+        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(start, end) }
     }
 
     @Test
     fun `fetchLogByPeriod should emit Failure`() = runTest {
         val exception = Exception("Database error")
-        mockGetLogByPeriodFailure(exception)
+        mockGetLogByPeriodFailure(exception = exception)
 
-        val responses = logRepository.fetchLogByPeriod().toList()
+        val responses = logRepository.fetchLogByPeriod(start, end).toList()
 
         responses.assertFlowFailure { assertEquals(exception.javaClass, it.javaClass) }
-        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(any(), any()) }
+        coVerify(exactly = 1) { logDao.selectLogEntitiesByPeriod(start, end) }
     }
     // endregion
 

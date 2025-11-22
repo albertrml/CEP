@@ -31,7 +31,7 @@ data class LogScreenUiStateHolder(
             snackbarHostState.showSnackbar(
                 message = context.getString(
                     R.string.log_list_clipboard_msg,
-                    entry.cep.toFormattedCep()
+                    clippedCep
                 ),
                 duration = SnackbarDuration.Short
             )

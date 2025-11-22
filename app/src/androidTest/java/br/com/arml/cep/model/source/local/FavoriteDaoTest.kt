@@ -45,20 +45,20 @@ class FavoriteDaoTest {
             cacheDao.insertPlaceEntity(place)
             notes.forEach { note ->
                 // Reset ID to 0 to let Room auto-generate it, simulating a new insertion.
-                favoriteDao.createFavorite(place.zipcode, note.copy(id = 0L))
+                favoriteDao.insertNoteEntityToFavorite(place.zipcode, note.copy(id = 0L))
             }
         }
     }
 
     // region Create tests
     @Test
-    fun createFavorite_shouldInsertCorrectly() = runTest {
+    fun insertNoteEntityToFavorite_shouldInsertCorrectly() = runTest {
         val (expectedPlace, expectedNotes) = mockFavoritePlaceEntities.first()
 
         cacheDao.insertPlaceEntity(expectedPlace)
-        expectedNotes.forEach { note -> favoriteDao.createFavorite(expectedPlace.zipcode, note) }
+        expectedNotes.forEach { note -> favoriteDao.insertNoteEntityToFavorite(expectedPlace.zipcode, note) }
 
-        val actualFavorite = favoriteDao.readAFavoriteWithNotes(expectedPlace.zipcode)
+        val actualFavorite = favoriteDao.selectFavorite(expectedPlace.zipcode)
 
         assertThat(actualFavorite).isNotNull()
         actualFavorite?.run {
@@ -70,14 +70,14 @@ class FavoriteDaoTest {
     }
 
     @Test
-    fun createFavorite_shouldThrowException_whenPlaceDoesNotExist() = runTest {
+    fun insertNoteEntityToFavorite_shouldThrowException_whenPlaceDoesNotExist() = runTest {
         assertFailsWith<SQLiteConstraintException> {
-            favoriteDao.createFavorite("00000-000", mockNotes.first().toEntity())
+            favoriteDao.insertNoteEntityToFavorite("00000-000", mockNotes.first().toEntity())
         }
     }
 
     @Test
-    fun createFavorite_shouldThrowException_whenNoteTitleIsNotUnique() = runTest {
+    fun insertNoteEntityToFavorite_shouldThrowException_whenNoteTitleIsNotUnique() = runTest {
         val (place, notes) = mockFavoritePlaceEntities.first()
 
         cacheDao.insertPlaceEntity(place)
@@ -85,14 +85,14 @@ class FavoriteDaoTest {
 
         // Try to insert it again via createFavorite, which will fail due to UNIQUE constraint
         assertFailsWith<SQLiteConstraintException> {
-            favoriteDao.createFavorite(place.zipcode, notes.first())
+            favoriteDao.insertNoteEntityToFavorite(place.zipcode, notes.first())
         }
     }
     // endregion
 
     // region Read tests
     @Test
-    fun readFavoritesByTitle_shouldReturnCorrectlyFilteredMap() = runTest {
+    fun selectFavoritesByTitle_shouldReturnCorrectlyFilteredMap() = runTest {
         populateDatabase()
         val query = "Title 3"
         val expectedData = mockFavoritePlaceEntities
@@ -101,7 +101,7 @@ class FavoriteDaoTest {
             .filter { it.notes.isNotEmpty() }
             .associate { it.place to it.notes }
 
-        val actualData = favoriteDao.readFavoritesByTitle(query).first()
+        val actualData = favoriteDao.selectFavoritesByTitle(query).first()
 
         assertThat(actualData.keys).isEqualTo(expectedData.keys)
         actualData.forEach { (place, notes) ->
@@ -114,18 +114,18 @@ class FavoriteDaoTest {
     }
 
     @Test
-    fun readFavoritesByTitle_shouldReturnEmptyMap_whenQueryDoesNotMatch() = runTest {
+    fun selectFavoritesByTitle_shouldReturnEmptyMap_whenQueryDoesNotMatch() = runTest {
         populateDatabase()
-        val result = favoriteDao.readFavoritesByTitle("NonExistentQuery").first()
+        val result = favoriteDao.selectFavoritesByTitle("NonExistentQuery").first()
         assertThat(result).isEmpty()
     }
 
     @Test
-    fun readAFavoriteWithNotes_shouldReturnCorrectItem() = runTest {
+    fun selectFavorite_shouldReturnCorrectItem() = runTest {
         val expectedFavorite = mockFavoritePlaceEntities.first()
         populateDatabase(listOf(expectedFavorite))
 
-        val actualFavorite = favoriteDao.readAFavoriteWithNotes(expectedFavorite.place.zipcode)
+        val actualFavorite = favoriteDao.selectFavorite(expectedFavorite.place.zipcode)
         
         assertThat(actualFavorite).isNotNull()
         assertThat(actualFavorite?.place).isEqualTo(expectedFavorite.place)
@@ -135,8 +135,8 @@ class FavoriteDaoTest {
     }
 
     @Test
-    fun readAFavoriteWithNotes_shouldReturnNull_whenZipcodeDoesNotExist() = runTest {
-        val result = favoriteDao.readAFavoriteWithNotes("00000000")
+    fun selectFavorite_shouldReturnNull_whenZipcodeDoesNotExist() = runTest {
+        val result = favoriteDao.selectFavorite("00000000")
         assertThat(result).isNull()
     }
     // endregion
@@ -146,13 +146,16 @@ class FavoriteDaoTest {
     fun updateNote_shouldUpdateNoteCorrectly() = runTest {
         populateDatabase(listOf(mockFavoritePlaceEntities.first()))
         val zipcode = mockFavoritePlaceEntities.first().place.zipcode
-        val originalNote = favoriteDao.readAFavoriteWithNotes(zipcode)!!.notes.first()
-        val updatedNote = originalNote.copy(title = "<<Updated Title>>", content = "<<Updated Content>>")
+        val originalNote = favoriteDao.selectFavorite(zipcode)!!.notes.first()
+        val updatedNote = originalNote.copy(
+            title = "<<Updated Title>>",
+            content = "<<Updated Content>>"
+        )
 
         favoriteDao.updateNote(updatedNote)
 
-        val favoriteAfterUpdate = favoriteDao.readAFavoriteWithNotes(zipcode)!!
-        
+        val favoriteAfterUpdate = favoriteDao.selectFavorite(zipcode)!!
+
         assertThat(favoriteAfterUpdate.notes).contains(updatedNote)
         assertThat(favoriteAfterUpdate.notes).doesNotContain(originalNote)
     }
@@ -161,11 +164,11 @@ class FavoriteDaoTest {
     fun updateNote_shouldDoNothing_whenNoteDoesNotExist() = runTest {
         populateDatabase()
         val nonExistentNote = NoteEntity(id = 9999L, title = "a", content = "b")
-        val stateBeforeUpdate = favoriteDao.readFavoritesByZipcode("").first()
+        val stateBeforeUpdate = favoriteDao.selectFavoritesByZipcode("").first()
 
         favoriteDao.updateNote(nonExistentNote)
 
-        val stateAfterUpdate = favoriteDao.readFavoritesByZipcode("").first()
+        val stateAfterUpdate = favoriteDao.selectFavoritesByZipcode("").first()
         assertThat(stateAfterUpdate).isEqualTo(stateBeforeUpdate)
     }
     // endregion
@@ -178,7 +181,7 @@ class FavoriteDaoTest {
 
         favoriteDao.deleteFromFavorite(zipcode)
 
-        val favoriteResult = favoriteDao.readAFavoriteWithNotes(zipcode)
+        val favoriteResult = favoriteDao.selectFavorite(zipcode)
         val placeResult = cacheDao.selectCachedPlaceEntityByZipcode(zipcode)
 
         assertThat(favoriteResult).isNull()
@@ -196,7 +199,8 @@ class FavoriteDaoTest {
 
         // Compare ignoring the auto-generated IDs
         assertThat(actualData.size).isEqualTo(expectedData.size)
-        assertThat(actualData.map { it.place }).containsExactlyElementsIn(expectedData.map { it.place })
+        assertThat(actualData.map { it.place })
+            .containsExactlyElementsIn(expectedData.map { it.place })
     }
 
     @Test

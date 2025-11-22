@@ -234,7 +234,7 @@ class MigrationOneToTwoTest {
         val expectedPlace = favoriteEntry.toEntity()
         val expectedNote = favoriteEntry.notes.first()
 
-        val favorite = migratedDb.favoriteDao().readAFavoriteWithNotes(expectedPlace.zipcode)
+        val favorite = migratedDb.favoriteDao().selectFavorite(expectedPlace.zipcode)
 
         assertThat(favorite).isNotNull()
         favorite?.let { placeWithNotes ->

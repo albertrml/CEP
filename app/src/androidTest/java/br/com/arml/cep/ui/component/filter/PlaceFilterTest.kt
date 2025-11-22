@@ -84,10 +84,7 @@ class PlaceFilterTest {
                 assertExists()
                 performTextClearance()
                 performTextInput(validQueryWithNonDigit)
-                assertTextContains(Cep
-                    .build(validQueryWithNonDigitFiltered)
-                    .toFormattedCep()
-                )
+                assertTextContains(Cep.build(validQueryWithNonDigitFiltered).text)
             }
         }
     }

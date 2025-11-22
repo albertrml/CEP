@@ -16,7 +16,7 @@ val mockAddress = Address(
 
 fun mockAddress(index: Int = 0): Address {
     return Address(
-        zipCode = "${index}".mockFormat(5) + "-" + "${index}".mockFormat(3),
+        zipCode = mockCep(index).text,
         street = "Rua $index",
         complement = "Complemento $index",
         district = "Bairro $index",

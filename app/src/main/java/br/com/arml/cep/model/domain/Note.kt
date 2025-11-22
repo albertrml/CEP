@@ -13,10 +13,6 @@ data class Note private constructor(
     val title: String,
     val content: String
 ){
-    private fun isTitleEmpty() {
-        if(title.isEmpty()) throw NoteException.EmptyTitleException()
-    }
-
     private fun isTitleTooLong() {
         if(title.length > MAX_TITLE_LENGTH) throw NoteException.TitleTooLongException()
     }
@@ -32,7 +28,6 @@ data class Note private constructor(
     companion object{
         fun build(id: Long = 0L, title: String, content: String): Note {
             val note = Note(id, title, content)
-            note.isTitleEmpty()
             note.isTitleTooLong()
             note.isTitleTooShort()
             note.isContentTooLong()

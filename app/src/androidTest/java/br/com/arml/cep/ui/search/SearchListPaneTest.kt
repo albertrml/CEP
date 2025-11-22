@@ -88,7 +88,7 @@ class SearchListPaneTest {
         composeTestRule.onNodeWithTag(searchListPaneCepField).apply{
             assertExists()
             performTextInput(validQuery)
-            assert(hasText(Cep.build(validQuery).toFormattedCep()))
+            assert(hasText(Cep.build(validQuery).text))
             performClick()
         }
     }
@@ -102,7 +102,7 @@ class SearchListPaneTest {
             performTextInput(validQueryWithNonDigit)
             assert(
                 matcher = hasText(
-                    text = Cep.build(filteredQuery).toFormattedCep())
+                    text = Cep.build(filteredQuery).text)
             )
         }
         composeTestRule.onNodeWithTag(searchListPaneSearchButton).apply{
