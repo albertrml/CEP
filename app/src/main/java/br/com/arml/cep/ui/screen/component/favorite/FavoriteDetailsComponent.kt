@@ -41,7 +41,7 @@ fun FavoriteDetailsComponent(
 ) {
     val tabs = listOf(FavoriteTab.Notes, FavoriteTab.Address)
     val (address, note) = favorite
-    val cep = Cep.build(address.zipCode.filter { it.isDigit() })
+    val cep = Cep.build(address.zipCode)
 
     var selectedTab by rememberSaveable(
         stateSaver = FavoriteTabSaver

@@ -27,6 +27,7 @@ class FavoriteViewModel @Inject constructor(
     val state = _state.asStateFlow()
     private var fetchEntriesJob: Job? = null
 
+    init { fetchFavorites() }
     fun onEvent(event: FavoriteEvent) {
         when (event) {
             is FavoriteEvent.OnClickToUnwanted -> changeFavoriteToUnwanted(event.place)

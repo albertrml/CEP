@@ -3,6 +3,7 @@ package br.com.arml.cep.domain
 import br.com.arml.cep.model.domain.Response.Failure
 import br.com.arml.cep.model.domain.Response.Loading
 import br.com.arml.cep.model.domain.Response.Success
+import br.com.arml.cep.model.entity.NoteEntity
 import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.model.repository.CacheRepository
 import br.com.arml.cep.model.repository.FavoriteRepository
@@ -33,14 +34,16 @@ class CacheUseCaseTest {
     fun `addToFavorite should return Loading and Success when repository performs successfully`() =
         runTest {
             val place = mockUnfavoritePlaces.first()
+            val zipcode = place.cep.text
+            val note = NoteEntity(title = zipcode, content = "")
             coEvery {
                 favoriteRepository.addToFavorite(any(), any())
-            } returns flowOf(Loading, Success(Unit))
+            } returns flowOf(Loading, Success(zipcode))
 
             val responses = useCase.addToFavorite(place).toList()
 
-            responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
-            coVerify(exactly = 1) { favoriteRepository.addToFavorite(any(), any()) }
+            responses.assertFlowSuccess { assertThat(it).isEqualTo(zipcode) }
+            coVerify(exactly = 1) { favoriteRepository.addToFavorite(zipcode, note) }
         }
 
     @Test

@@ -8,7 +8,7 @@ import br.com.arml.cep.ui.utils.PlaceFilterOption
 
 data class FavoriteState(
     /** Create **/
-    val addNoteEntry: Response<Unit> = Response.Loading,
+    val addNoteEntry: Response<String> = Response.Loading,
 
     /** Read **/
     val fetchEntries: Response<List<Place>> = Response.Loading,
@@ -24,7 +24,7 @@ data class FavoriteState(
     /** Remove **/
     // To remove a favorite, we need select a place to remove before to call the operation
     val placeForUnwanted: Place? = null,
-    val deleteNoteEntry: Response<Unit> = Response.Loading,
+    val deleteNoteEntry: Response<String> = Response.Loading,
 
     /** Export **/
     val exportAlert: Boolean = false,

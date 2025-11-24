@@ -12,7 +12,10 @@ class CacheUseCase @Inject constructor(
 ) {
     fun addToFavorite(place: Place) = with(place.cep.text) {
         favoriteRepository
-            .addToFavorite(zipcode = this, note = NoteEntity(title = this, content = ""))
+            .addToFavorite(
+                zipcode = this,
+                note = NoteEntity(title = this, content = "")
+            )
     }
 
     fun clearCache() = cacheRepository.deleteAllUnwanted()

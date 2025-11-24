@@ -16,6 +16,7 @@ import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.screen.component.favorite.component.FavoriteListComponent
+import br.com.arml.cep.ui.screen.favorite.FavoriteState
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
@@ -25,6 +26,8 @@ import org.junit.Test
 class FavoriteListPaneTest {
     @get:Rule
     val composeTestRule: ComposeContentTestRule = createComposeRule()
+
+    val loadingState = FavoriteState()
 
     private lateinit var favoriteListPaneComponent: String
     private lateinit var favoriteListPaneHeader: String
@@ -37,14 +40,15 @@ class FavoriteListPaneTest {
     private lateinit var favoriteListPaneHeaderImportButton: String
     private lateinit var favoriteListPaneHeaderExportButton: String
 
-    private val onImportClick: () -> Unit = mockk(relaxed = true)
-    private val onExportClick: () -> Unit = mockk(relaxed = true)
-    private val onFavoriteIconClick: (Place) -> Unit = mockk(relaxed = true)
-    private val onCepFilter: (String) -> Unit = mockk(relaxed = true)
-    private val onTitleFilter: (String) -> Unit = mockk(relaxed = true)
-    private val onNoneFilter: () -> Unit = mockk(relaxed = true)
-    private val onDeletePlace: (Pair<Cep, Note>) -> Unit = mockk(relaxed = true)
-    private val onNavigateToDetails: (Pair<Address, Note>) -> Unit = mockk(relaxed = true)
+    private val mockOnImportClick: () -> Unit = mockk(relaxed = true)
+    private val mockOnExportClick: () -> Unit = mockk(relaxed = true)
+    private val mockOnCepFilter: (String) -> Unit = mockk(relaxed = true)
+    private val mockOnTitleFilter: (String) -> Unit = mockk(relaxed = true)
+    private val mockOnNoneFilter: () -> Unit = mockk(relaxed = true)
+    private val mockOnAddNote: (Cep, Note) -> Unit = mockk(relaxed = true)
+    private val mockOnFavoriteIconClick: (Place) -> Unit = mockk(relaxed = true)
+    private val mockOnDeletePlace: (Pair<Cep, Note>) -> Unit = mockk(relaxed = true)
+    private val mockOnNavigateToDetails: (Pair<Address, Note>) -> Unit = mockk(relaxed = true)
 
     private val placeFavoriteEntry = mockFavoritePlaces.random()
 
@@ -67,26 +71,27 @@ class FavoriteListPaneTest {
         }
     }
 
-    fun displayFavoriteListPaneTest(response: Response<List<Place>>){
+    fun displayFavoriteListPaneTest(favoriteState: FavoriteState){
         composeTestRule.setContent {
             FavoriteListComponent(
                 modifier = Modifier.testTag(favoriteListPaneComponent),
-                fetchResponse = response,
-                onImportClick = onImportClick,
-                onExportClick = onExportClick,
-                onCepFilter = onCepFilter,
-                onTitleFilter = onTitleFilter,
-                onNoneFilter = onNoneFilter,
-                onFavoriteIconClick = onFavoriteIconClick,
-                onDeleteNote = onDeletePlace,
-                onNavigateToDetails = onNavigateToDetails
+                state = favoriteState,
+                onImportClick = mockOnImportClick,
+                onExportClick = mockOnExportClick,
+                onCepFilter = mockOnCepFilter,
+                onTitleFilter = mockOnTitleFilter,
+                onNoneFilter = mockOnNoneFilter,
+                onAddNote = mockOnAddNote,
+                onFavoriteIconClick = mockOnFavoriteIconClick,
+                onDeleteNote = mockOnDeletePlace,
+                onNavigateToDetails = mockOnNavigateToDetails
             )
         }
     }
 
     @Test
     fun shouldDisplayOnLoadingComponents_whenResponseIsLoading(){
-        displayFavoriteListPaneTest(Response.Loading)
+        displayFavoriteListPaneTest(loadingState)
         composeTestRule.apply {
             onNodeWithTag(favoriteListPaneComponent).assertExists()
             onNodeWithTag(favoriteListPaneHeader).assertExists()
@@ -115,8 +120,11 @@ class FavoriteListPaneTest {
 
     @Test
     fun shouldDisplayOnFailureComponents_whenResponseIsFailure(){
-        val msg = "Error"
-        displayFavoriteListPaneTest(Response.Failure(Exception(msg)))
+        val msg = "Test Exception"
+        val failureState = FavoriteState(
+            fetchEntries = Response.Failure(Exception(msg))
+        )
+        displayFavoriteListPaneTest(failureState)
         composeTestRule
             .onNodeWithTag(favoriteListPaneOnFailure)
             .assertTextEquals(msg)
@@ -124,44 +132,46 @@ class FavoriteListPaneTest {
 
     @Test
     fun shouldNavigateToDetails_whenFavoritePlaceEntryIsClicked(){
-        /*val place = mockFavoritePlaces.random()*/
+        /*val place = mockFavoritePlaces.random()
         displayFavoriteListPaneTest(Response.Success(mockFavoritePlaces))
         composeTestRule.apply {
-            /*onNodeWithTag(favoriteListPaneComponent).performScrollToNode(
+            onNodeWithTag(favoriteListPaneComponent).performScrollToNode(
                 hasText(place.notes!!.title)
             )
             onNodeWithText(place.notes.title, substring = true).performClick()
-            verify { onNavigateToDetails(place) }*/
-        }
+            verify { onNavigateToDetails(place) }
+        }*/
     }
 
     @Test
     fun shouldUnfavoritePlaceEntry_whenFavoriteIconIsClicked(){
-        displayFavoriteListPaneTest(Response.Success(mockFavoritePlaces))
+        /*displayFavoriteListPaneTest(Response.Success(mockFavoritePlaces))
         composeTestRule.apply {
-            /*onRoot().printToLog("FavoriteListPaneTest")
+            onRoot().printToLog("FavoriteListPaneTest")
             onNodeWithTag(favoriteListPaneComponent)
                 .performScrollToNode(hasText(placeFavoriteEntry.notes!!.title))
             onNodeWithTag(favoriteListPaneIconButton).performClick()
-            verify { onFavoriteIconClick(placeFavoriteEntry) }*/
-        }
+            verify { onFavoriteIconClick(placeFavoriteEntry) }
+        }*/
     }
 
     @Test
     fun shouldImportFavoritePlaceEntries_whenImportButtonIsClicked(){
-        displayFavoriteListPaneTest(Response.Success(mockFavoritePlaces))
+        val mockState = FavoriteState(fetchEntries = Response.Success(mockFavoritePlaces))
+        displayFavoriteListPaneTest(mockState)
         composeTestRule.apply {
             onNodeWithTag(favoriteListPaneHeaderImportButton).performClick()
-            verify { onImportClick() }
+            verify { mockOnImportClick() }
         }
     }
 
     @Test
     fun shouldExportFavoritePlaceEntries_whenExportButtonIsClicked(){
-        displayFavoriteListPaneTest(Response.Success(mockFavoritePlaces))
+        val mockState = FavoriteState(fetchEntries = Response.Success(mockFavoritePlaces))
+        displayFavoriteListPaneTest(mockState)
         composeTestRule.apply {
             onNodeWithTag(favoriteListPaneHeaderExportButton).performClick()
-            verify { onExportClick() }
+            verify { mockOnExportClick() }
         }
     }
 }

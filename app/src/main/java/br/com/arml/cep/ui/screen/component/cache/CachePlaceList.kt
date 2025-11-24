@@ -2,9 +2,12 @@ package br.com.arml.cep.ui.screen.component.cache
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,18 +27,21 @@ fun CachePlaceList(
 ){
     val lazyListState = rememberLazyListState()
     ScrollableFab(listState = lazyListState){
-        LazyColumn(
+        LazyVerticalStaggeredGrid(
             modifier = modifier,
-            state = lazyListState,
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
+            columns = StaggeredGridCells.Adaptive(minSize = MaterialTheme.dimens.minSize),
+            verticalItemSpacing = MaterialTheme.dimens.mediumSpacing,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
         ){
             items(places){ place ->
                 CachePlaceElement(
                     modifier = Modifier.clickable(onClick = { onNavigateToDetail(place) }),
                     place = place,
-                    onNavigateToDetail = onNavigateToDetail,
+                    favoriteIcon = Icons.Default.FavoriteBorder,
+                    colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
+                    onDeletePlace = onDeleteIconClick,
                     onFavoriteIconClick = onFavoriteIconClick,
-                    onDeleteIconClick = onDeleteIconClick
+                    onNavigateToDetail = onNavigateToDetail
                 )
             }
         }

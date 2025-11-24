@@ -40,6 +40,7 @@ fun FavoriteElement(
     favoriteIcon: ImageVector,
     colorFavoriteIcon: Color,
     onFavoriteIconClick: (Place) -> Unit,
+    onAddNote: (Cep, Note) -> Unit,
     onDeleteNote: (Pair<Cep, Note>) -> Unit,
     onNavigateToDetail: (Pair<Address, Note>) -> Unit
 ) {
@@ -57,7 +58,7 @@ fun FavoriteElement(
                 shape = MaterialTheme.shapes.medium
             )
             .padding(MaterialTheme.dimens.mediumPadding),
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         FavoritePlaceElement(
             place = place,
@@ -68,7 +69,13 @@ fun FavoriteElement(
 
         FavoriteDivider(
             isShownNotes = isShownNotes,
-            onChangeShownNotes = { isShownNotes = !isShownNotes }
+            onChangeShownNotes = { isShownNotes = !isShownNotes },
+            onAddNote = {
+                onAddNote(
+                    place.cep,
+                    Note.build(title = place.cep.text, content = "")
+                )
+            }
         )
 
         if (isShownNotes) {
@@ -130,9 +137,10 @@ fun FavoritePlaceElementPreview() {
             place = mockFavoritePlaces.first(),
             favoriteIcon = Icons.Default.Favorite,
             colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
-            onNavigateToDetail = {},
             onFavoriteIconClick = {},
+            onAddNote = { _, _ -> },
             onDeleteNote = {},
+            onNavigateToDetail = {},
         )
     }
 }

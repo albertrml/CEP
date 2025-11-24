@@ -20,7 +20,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -49,15 +48,16 @@ class FavoriteUseCaseTest {
     fun `addNoteToFavorite should emits loading and success when repository is successful`() = runTest {
         // Arrange
         val (cep, note) = mockFavoritePlaces.first().let { it.cep to it.notes.first() }
+        val zipcode = cep.text
         coEvery {
             repository.addToFavorite(any(),any())
-        } returns flowOf(Loading, Success(Unit))
+        } returns flowOf(Loading, Success(zipcode))
 
         // Act
         val responses = useCase.addNoteToFavorite(cep, note).toList()
 
         // Assert
-        responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
+        responses.assertFlowSuccess { assertThat(it).isEqualTo(zipcode) }
         coVerify { repository.addToFavorite(cep.text, note.toEntity()) }
     }
 
@@ -230,13 +230,13 @@ class FavoriteUseCaseTest {
         val (zipcode, note) = place.let { it.cep.text to it.notes.first() }
         coEvery {
             repository.deleteNoteFromFavorite(any(),any())
-        } returns flowOf(Loading, Success(Unit))
+        } returns flowOf(Loading, Success(zipcode))
 
         // Act
         val responses = useCase.deleteNote(place.cep, note).toList()
 
         // Assert
-        responses.assertFlowSuccess { assertEquals(Unit, it) }
+        responses.assertFlowSuccess { assertThat(it).isEqualTo(zipcode) }
         coVerify(exactly = 1) { repository.deleteNoteFromFavorite(zipcode, note.toEntity()) }
     }
 

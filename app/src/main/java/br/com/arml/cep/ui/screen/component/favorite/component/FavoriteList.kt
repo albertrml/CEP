@@ -2,9 +2,10 @@ package br.com.arml.cep.ui.screen.component.favorite.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.MaterialTheme
@@ -24,25 +25,28 @@ import br.com.arml.cep.ui.theme.dimens
 fun FavoriteList(
     modifier: Modifier = Modifier,
     places: List<Place>,
-    onDeleteNote: (Pair<Cep,Note>) -> Unit,
     onFavoriteIconClick: (Place) -> Unit,
+    onAddNote: (Cep, Note) -> Unit,
+    onDeleteNote: (Pair<Cep,Note>) -> Unit,
     onNavigateToDetail: (Pair<Address, Note>) -> Unit
 ) {
     val lazyListState = rememberLazyListState()
     ScrollableFab(listState = lazyListState) {
-        LazyColumn(
-            modifier = modifier.padding(vertical = MaterialTheme.dimens.smallPadding),
-            state = lazyListState,
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
-        ) {
+        LazyVerticalStaggeredGrid(
+            modifier = modifier,
+            columns = StaggeredGridCells.Adaptive(minSize = MaterialTheme.dimens.minSize),
+            verticalItemSpacing = MaterialTheme.dimens.mediumSpacing,
+            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
+        ){
             items(places) { place ->
                 FavoriteElement(
                     place = place,
                     favoriteIcon = Icons.Default.Favorite,
                     colorFavoriteIcon = Color.Red,
-                    onNavigateToDetail = onNavigateToDetail,
+                    onAddNote = onAddNote,
                     onFavoriteIconClick = onFavoriteIconClick,
-                    onDeleteNote = onDeleteNote
+                    onDeleteNote = onDeleteNote,
+                    onNavigateToDetail = onNavigateToDetail
                 )
             }
         }
@@ -55,6 +59,7 @@ fun FavoriteListPreview(){
     FavoriteList(
         modifier = Modifier.padding(MaterialTheme.dimens.smallPadding),
         places = mockFavoritePlaces,
+        onAddNote = { _, _ -> },
         onFavoriteIconClick = {},
         onNavigateToDetail = {},
         onDeleteNote = {}

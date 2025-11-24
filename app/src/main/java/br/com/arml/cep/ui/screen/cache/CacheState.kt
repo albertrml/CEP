@@ -8,6 +8,7 @@ import br.com.arml.cep.ui.utils.PlaceFilterOption
 data class CacheState(
     val fetchEntries: Response<List<Place>> = Loading,
     val filterOperation: PlaceFilterOption = PlaceFilterOption.None,
+    val addNoteEntry: Response<String> = Loading,
     val deleteEntry: Response<Unit> = Loading,
     val placeForDetails: Place? = null,
     val placeUpdate: Place? = null

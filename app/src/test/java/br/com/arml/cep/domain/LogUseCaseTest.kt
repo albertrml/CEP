@@ -15,8 +15,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.sql.Timestamp
@@ -64,7 +62,9 @@ class LogUseCaseTest {
 
         val responses = logUseCase.fetchAllLogs().toList()
 
-        responses.assertFlowSuccess { assertEquals(expectedLogs, it.sortedBy { log -> log.timestamp }) }
+        responses.assertFlowSuccess {
+            assertThat(it).containsExactlyElementsIn(expectedLogs).inOrder()
+        }
         coVerify(exactly = 1) { logRepository.fetchLogByZipcode("") }
     }
 
@@ -74,7 +74,7 @@ class LogUseCaseTest {
 
         val responses = logUseCase.fetchAllLogs().toList()
 
-        responses.assertFlowSuccess { assertTrue(it.isEmpty()) }
+        responses.assertFlowSuccess { assertThat(it).isEmpty() }
         coVerify(exactly = 1) { logRepository.fetchLogByZipcode("") }
     }
 
@@ -85,7 +85,7 @@ class LogUseCaseTest {
 
         val responses = logUseCase.fetchAllLogs().toList()
 
-        responses.assertFlowFailure { assertEquals(exception, it) }
+        responses.assertFlowFailure { assertThat(it).isInstanceOf(exception::class.java) }
         coVerify(exactly = 1) { logRepository.fetchLogByZipcode("") }
     }
     // endregion
@@ -99,7 +99,9 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByCep(query).toList()
 
-        responses.assertFlowSuccess { assertEquals(expectedLogs, it) }
+        responses.assertFlowSuccess {
+            assertThat(it).containsExactlyElementsIn(expectedLogs).inOrder()
+        }
         coVerify(exactly = 1) { logRepository.fetchLogByZipcode(query) }
     }
 
@@ -110,7 +112,7 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByCep(query).toList()
 
-        responses.assertFlowSuccess { assertTrue(it.isEmpty()) }
+        responses.assertFlowSuccess { assertThat(it).isEmpty() }
         coVerify { logRepository.fetchLogByZipcode(query) }
     }
 
@@ -122,7 +124,9 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByCep(query).toList()
 
-        responses.assertFlowFailure { assertEquals(exception, it) }
+        responses.assertFlowFailure {
+            assertThat(it).isInstanceOf(exception::class.java)
+        }
         coVerify(exactly = 1) { logRepository.fetchLogByZipcode(query) }
     }
     // endregion
@@ -136,7 +140,9 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByInitialDate(initialDate.time).toList()
 
-        responses.assertFlowSuccess { assertEquals(expectedLogs, it) }
+        responses.assertFlowSuccess {
+            assertThat(it).containsExactlyElementsIn(expectedLogs).inOrder()
+        }
         coVerify(exactly = 1) {
             logRepository.fetchLogByPeriod(startDate = initialDate.time, endDate = any())
         }
@@ -149,7 +155,7 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByInitialDate(initialDate.time).toList()
 
-        responses.assertFlowSuccess { assertTrue(it.isEmpty()) }
+        responses.assertFlowSuccess { assertThat(it).isEmpty() }
         coVerify(exactly = 1) {
             logRepository.fetchLogByPeriod(startDate = initialDate.time, endDate = any())
         }
@@ -163,7 +169,9 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByInitialDate(initialDate).toList()
 
-        responses.assertFlowFailure { assertEquals(exception, it) }
+        responses.assertFlowFailure {
+            assertThat(it).isInstanceOf(exception::class.java)
+        }
         coVerify(exactly = 1) {
             logRepository.fetchLogByPeriod(startDate = initialDate, endDate = any())
         }
@@ -182,7 +190,9 @@ class LogUseCaseTest {
         val responses = logUseCase.filterLogsByFinalDate(finalDate.time).toList()
 
         // Assert
-        responses.assertFlowSuccess { assertThat(it).containsExactlyElementsIn(expectedLogs) }
+        responses.assertFlowSuccess {
+            assertThat(it).containsExactlyElementsIn(expectedLogs).inOrder()
+        }
         coVerify(exactly = 1) { logRepository.fetchLogByPeriod(endDate = finalDate.time) }
     }
 
@@ -193,7 +203,7 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByFinalDate(finalDate.time).toList()
 
-        responses.assertFlowSuccess { assertTrue(it.isEmpty()) }
+        responses.assertFlowSuccess { assertThat(it).isEmpty() }
         coVerify(exactly = 1) { logRepository.fetchLogByPeriod(endDate = finalDate.time) }
     }
 
@@ -205,7 +215,9 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByFinalDate(finalDate).toList()
 
-        responses.assertFlowFailure { assertEquals(exception, it) }
+        responses.assertFlowFailure {
+            assertThat(it).isInstanceOf(exception::class.java)
+        }
         coVerify(exactly = 1) { logRepository.fetchLogByPeriod(endDate = finalDate) }
     }
     // endregion
@@ -220,7 +232,9 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByRangeDate(initialDate.time, finalDate.time).toList()
 
-        responses.assertFlowSuccess { assertEquals(expectedLogs, it) }
+        responses.assertFlowSuccess {
+            assertThat(it).containsExactlyElementsIn(expectedLogs).inOrder()
+        }
         coVerify(exactly = 1) { logRepository.fetchLogByPeriod(initialDate.time, finalDate.time) }
     }
 
@@ -232,7 +246,7 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByRangeDate(initialDate.time, finalDate.time).toList()
 
-        responses.assertFlowSuccess { assertTrue(it.isEmpty()) }
+        responses.assertFlowSuccess { assertThat(it).isEmpty() }
         coVerify(exactly = 1) { logRepository.fetchLogByPeriod(initialDate.time, finalDate.time) }
     }
 
@@ -245,7 +259,9 @@ class LogUseCaseTest {
 
         val responses = logUseCase.filterLogsByRangeDate(initialDate, finalDate).toList()
 
-        responses.assertFlowFailure { assertEquals(exception, it) }
+        responses.assertFlowFailure {
+            assertThat(it).isInstanceOf(exception::class.java)
+        }
         coVerify(exactly = 1) { logRepository.fetchLogByPeriod(initialDate, finalDate) }
     }
     // endregion

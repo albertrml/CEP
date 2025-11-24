@@ -58,7 +58,7 @@ fun LogInfo(
 ){
     Column(modifier = modifier) {
         Text(
-            text = stringResource(R.string.log_cep_field, log.cep),
+            text = stringResource(R.string.log_cep_field, log.cep.text),
             style = MaterialTheme.typography.titleMedium
         )
         Text(
@@ -76,7 +76,7 @@ fun LogInfo(
 fun LogElementPreview(){
     LogElement(
         log = Log(
-            cep = Cep.build("99999999"),
+            cep = Cep.build("99999-999"),
             timestamp = Timestamp(System.currentTimeMillis())
         ),
         onClickToDelete = {},

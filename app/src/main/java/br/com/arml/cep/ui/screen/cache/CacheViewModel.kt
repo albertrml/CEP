@@ -87,7 +87,7 @@ class CacheViewModel @Inject constructor(
     private fun addCacheItemToFavorites(place: Place) {
         viewModelScope.launch {
             cacheUseCase.addToFavorite(place).collect { response ->
-                _state.update { it.copy(deleteEntry = response) }
+                _state.update { it.copy(addNoteEntry = response) }
             }
         }
     }

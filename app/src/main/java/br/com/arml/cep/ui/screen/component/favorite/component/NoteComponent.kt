@@ -57,12 +57,12 @@ fun NoteElement(
         shape = MaterialTheme.shapes.medium,
     ){
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .padding(MaterialTheme.dimens.xSmallPadding)
                 .border(
                     width = MaterialTheme.dimens.smallThickness,
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = MaterialTheme.shapes.medium
+                    color = MaterialTheme.colorScheme.onSurface,
+                    shape = MaterialTheme.shapes.small
                 )
                 .padding(MaterialTheme.dimens.smallMargin)
                 .clickable { onEditNote(note) },

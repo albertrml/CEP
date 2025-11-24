@@ -42,42 +42,6 @@ interface FavoriteDao {
     @Query("SELECT COUNT(*) FROM Favorites WHERE zipcode_place = :zipcode")
     suspend fun countNotesEntitiesFromFavorite(zipcode: String): Int
 
-    // Search for a place with given zipcode.
-    @Query("SELECT EXISTS (SELECT 1 FROM Places WHERE zipcode = :zipcode)")
-    suspend fun doesPlaceEntityExist(zipcode: String): Boolean
-
-    // Search for favorite places that have a note with the given title.
-    @Query(
-        value = """
-            SELECT p.*, n.*
-            FROM Places p
-            JOIN Favorites f ON p.zipcode = f.zipcode_place
-            JOIN Notes n ON f.id_note = n.id
-            WHERE n.title LIKE '%' || :query || '%'
-        """
-    )
-    fun selectFavoritesByTitle(query: String): Flow<Map<PlaceEntity, List<NoteEntity>>>
-
-    // Search for a place with given zipcode and return its notes.
-    @Transaction
-    @Query("""
-        SELECT p.* FROM Places p
-        JOIN Favorites f ON p.zipcode = f.zipcode_place
-        WHERE zipcode = :zipcode"""
-    )
-    suspend fun selectFavorite(zipcode: String): PlaceWithNotes?
-
-    // Search for all place registers that are favorite.
-    @Transaction
-    @Query(
-        value = """
-            SELECT DISTINCT p.* FROM Places p
-            JOIN Favorites f ON p.zipcode = f.zipcode_place
-            WHERE p.zipcode LIKE '%' || :query || '%'
-        """
-    )
-    fun selectFavoritesByZipcode(query: String = ""): Flow<List<PlaceWithNotes>>
-
     @Query(
         value = """
             SELECT EXISTS (
@@ -88,6 +52,47 @@ interface FavoriteDao {
         """
     )
     suspend fun doesNoteEntityExist(zipcode: String, title: String, content: String): Boolean
+
+    // Search for a place with given zipcode.
+    @Query("SELECT EXISTS (SELECT 1 FROM Places WHERE zipcode = :zipcode)")
+    suspend fun doesPlaceEntityExist(zipcode: String): Boolean
+
+    @Query("SELECT EXISTS (SELECT 1 FROM Notes WHERE title = :title)")
+    suspend fun doesTitleExist(title: String): Boolean
+
+    // Search for a place with given zipcode and return its notes.
+    @Transaction
+    @Query("""
+        SELECT p.* FROM Places p
+        JOIN Favorites f ON p.zipcode = f.zipcode_place
+        WHERE zipcode = :zipcode"""
+    )
+    suspend fun selectFavorite(zipcode: String): PlaceWithNotes?
+
+    // Search for favorite places that have a note with the given title.
+    @Query(
+        value = """
+            SELECT p.*, n.*
+            FROM Places p
+            JOIN Favorites f ON p.zipcode = f.zipcode_place
+            JOIN Notes n ON f.id_note = n.id
+            WHERE n.title LIKE '%' || :query || '%'
+            ORDER BY p.zipcode ASC, n.title ASC
+        """
+    )
+    fun selectFavoritesByTitle(query: String): Flow<Map<PlaceEntity, List<NoteEntity>>>
+
+    // Search for all place registers that are favorite.
+    @Transaction
+    @Query(
+        value = """
+            SELECT DISTINCT p.* FROM Places p
+            JOIN Favorites f ON p.zipcode = f.zipcode_place
+            WHERE p.zipcode LIKE '%' || :query || '%'
+            ORDER BY p.zipcode ASC
+        """
+    )
+    fun selectFavoritesByZipcode(query: String = ""): Flow<List<PlaceWithNotes>>
 
     /** Update **/
     // Update a note.
@@ -120,11 +125,5 @@ interface FavoriteDao {
         SELECT DISTINCT p.* FROM places p
         JOIN favorites f ON p.zipcode = f.zipcode_place
     """)
-    /*@Query("""
-        SELECT * FROM Places 
-        WHERE zipcode IN (
-            SELECT DISTINCT zipcode_place FROM Favorites
-        )
-    """)*/
     fun exportFavorites(): Flow<List<PlaceWithNotes>>
 }

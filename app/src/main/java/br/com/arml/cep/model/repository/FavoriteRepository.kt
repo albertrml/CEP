@@ -21,17 +21,21 @@ class FavoriteRepository @Inject constructor(
 ) {
     /** Create **/
     fun addToFavorite(zipcode: String, note: NoteEntity) = asResponse {
-        favoriteDao.insertNoteEntityToFavorite(zipcode, note)
+        with(favoriteDao){
+            var quantity = countNotesEntitiesFromFavorite(zipcode) + 1
+            var suggestedTitle = note.title
+            while (favoriteDao.doesTitleExist(suggestedTitle)){
+                suggestedTitle = "${note.title} (${quantity++})"
+            }
+
+            val newNote = note.copy(title = suggestedTitle)
+            insertNoteEntityToFavorite(zipcode, newNote)
+        }
+        zipcode
     }
 
-    /** Read **/
-    /*fun getAFavoriteWithNotes(query: String) = asResponse {
-        val result = favoriteDao
-            .readAFavoriteWithNotes(query)
-            ?: throw CepDatabaseException.FavoriteNotFound()
-        result
-    }*/
 
+    /** Read **/
     fun getFavoritesByTitle(title: String = "") = favoriteDao
         .selectFavoritesByTitle(title)
         .map{ map ->
@@ -61,6 +65,7 @@ class FavoriteRepository @Inject constructor(
         val count = favoriteDao.countNotesEntitiesFromFavorite(zipcode = zipcode)
         if (count <= 1) throw CepDatabaseException.IllegalNoteQuantity()
         favoriteDao.deleteNote(note)
+        zipcode
     }
 
     /** Export **/

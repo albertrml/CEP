@@ -32,6 +32,9 @@ data class Dimens(
     val largePadding: Dp = 0.dp,
     val xLargePadding: Dp = 0.dp,
 
+    // Size
+    val minSize: Dp = 320.dp,
+
     // Spacing
     val xSmallSpacing: Dp = 0.dp,
     val smallSpacing: Dp = 0.dp,
