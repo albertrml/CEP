@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.favorite.component
+package br.com.arml.cep.ui.screen.component.favorite.detailpane.note
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -18,7 +18,7 @@ import br.com.arml.cep.model.domain.isValidTitleNoteSize
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun FavoriteUpdateButton(
+fun NoteFormsButton(
     modifier: Modifier = Modifier,
     id: Long,
     title: String,
@@ -53,8 +53,8 @@ fun FavoriteUpdateButton(
 
 @Preview(showBackground = true)
 @Composable
-fun FavoriteUpdateButtonPreview() {
-    FavoriteUpdateButton(
+fun NoteFormsButtonPreview() {
+    NoteFormsButton(
         id = 1,
         title = "teste",
         content = "teste",

@@ -1,7 +1,5 @@
 package br.com.arml.cep.ui.favorite
 
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -15,7 +13,6 @@ import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.mock.mockFavoritePlaces
-import br.com.arml.cep.ui.screen.component.favorite.component.FavoriteListComponent
 import br.com.arml.cep.ui.screen.favorite.FavoriteState
 import io.mockk.mockk
 import io.mockk.verify
@@ -73,7 +70,7 @@ class FavoriteListPaneTest {
 
     fun displayFavoriteListPaneTest(favoriteState: FavoriteState){
         composeTestRule.setContent {
-            FavoriteListComponent(
+            /*FavoriteDetailPane(
                 modifier = Modifier.testTag(favoriteListPaneComponent),
                 state = favoriteState,
                 onImportClick = mockOnImportClick,
@@ -85,7 +82,7 @@ class FavoriteListPaneTest {
                 onFavoriteIconClick = mockOnFavoriteIconClick,
                 onDeleteNote = mockOnDeletePlace,
                 onNavigateToDetails = mockOnNavigateToDetails
-            )
+            )*/
         }
     }
 

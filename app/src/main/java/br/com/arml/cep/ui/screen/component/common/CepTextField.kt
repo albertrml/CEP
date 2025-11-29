@@ -1,6 +1,5 @@
 package br.com.arml.cep.ui.screen.component.common
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -36,8 +35,7 @@ fun CepTextField(
 
     Column {
         OutlinedTextField(
-            modifier = modifier
-                .background(color = MaterialTheme.colorScheme.background),
+            modifier = modifier,
             value = text,
             onValueChange = { newText ->
                 if (newText.length <= maxSize) {

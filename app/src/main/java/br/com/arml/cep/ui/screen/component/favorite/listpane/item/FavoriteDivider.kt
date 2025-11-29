@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.favorite.component
+package br.com.arml.cep.ui.screen.component.favorite.listpane.item
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

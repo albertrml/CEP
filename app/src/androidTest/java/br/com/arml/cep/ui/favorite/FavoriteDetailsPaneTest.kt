@@ -12,7 +12,7 @@ import br.com.arml.cep.model.domain.Address
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.mock.mockFavoritePlaces
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteDetailsComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoriteDetailPaneComponent
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
@@ -53,7 +53,7 @@ class FavoriteDetailsPaneTest {
 
     fun displayFavoriteDetailComponent(favorite: Pair<Address, Note?> = mockFavorite) {
         composeTestRule.setContent {
-            FavoriteDetailsComponent(
+            FavoriteDetailPaneComponent(
                 modifier = Modifier.testTag(favoriteScreenComponent),
                 favorite = favorite,
                 onNavigateBackToList = onNavigateBackToList,

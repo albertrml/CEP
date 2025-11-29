@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.favorite
+package br.com.arml.cep.ui.screen.component.favorite.detailpane
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

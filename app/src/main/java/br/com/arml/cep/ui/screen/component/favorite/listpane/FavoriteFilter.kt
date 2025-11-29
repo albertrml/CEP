@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.favorite.component
+package br.com.arml.cep.ui.screen.component.favorite.listpane
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -17,7 +17,6 @@ fun mockPlaces(size: Int, favorite: Boolean): List<Place> {
 }
 
 fun mockPlaceWithNotes(size: Int) = mockPlaces(size, true).map { it.toPlaceWithNotes() }
-
 val mockUnfavoritePlaceEntities = mockPlaces(10, false).map { it.toPlaceWithNotes() }
 val mockUnfavoritePlaces = mockUnfavoritePlaceEntities.map { it.toModel() }
 val mockFavoritePlaceEntities = mockPlaces(10, true).map { it.toPlaceWithNotes() }

@@ -15,44 +15,48 @@ fun CepAlertDialog(
     modifier: Modifier = Modifier,
     dialogTitle: String,
     dialogText: String,
+    isVisibility: Boolean = true,
     onDismissRequest: () -> Unit,
     onConfirmationRequest: () -> Unit
 ) {
-    AlertDialog(
-        modifier = modifier,
-        title = {
-            Text(
-                text = dialogTitle,
-                style = MaterialTheme.typography.headlineMedium
-            )
-        },
-        text = {
-            Text(
-                text = dialogText,
-                style = MaterialTheme.typography.bodyLarge
-            )
-        },
-        onDismissRequest = onDismissRequest,
-        confirmButton = {
-            TextButton(onClick = onConfirmationRequest) {
+    if(isVisibility){
+        AlertDialog(
+            modifier = modifier,
+            title = {
                 Text(
-                    text = stringResource(R.string.alert_dialog_confirm_button),
-                    style = MaterialTheme.typography.titleMedium
+                    text = dialogTitle,
+                    style = MaterialTheme.typography.headlineMedium
                 )
-            }
-        },
-        dismissButton = {
-            TextButton(
-                modifier = Modifier,
-                onClick = onDismissRequest) {
+            },
+            text = {
                 Text(
-                    text = stringResource(R.string.alert_dialog_dismiss_button),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.error
+                    text = dialogText,
+                    style = MaterialTheme.typography.bodyLarge
                 )
+            },
+            onDismissRequest = onDismissRequest,
+            confirmButton = {
+                TextButton(onClick = onConfirmationRequest) {
+                    Text(
+                        text = stringResource(R.string.alert_dialog_confirm_button),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    modifier = Modifier,
+                    onClick = onDismissRequest
+                ) {
+                    Text(
+                        text = stringResource(R.string.alert_dialog_dismiss_button),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Preview

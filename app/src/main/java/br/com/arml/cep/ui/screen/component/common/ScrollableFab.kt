@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -95,13 +96,12 @@ fun ScrollableFab(
             if(!isListCanScroll || totalItemsCount == 0){
                 false to false
             } else {
-                val itemsBeforeFirstVisible = firstVisibleItemIndex
                 val itemsAfterLastVisible = totalItemsCount - lastVisibleItem - 1
 
-                if (itemsBeforeFirstVisible == 0 && itemsAfterLastVisible == 0) {
+                if (firstVisibleItemIndex == 0 && itemsAfterLastVisible == 0) {
                     false to false
                 } else {
-                    true to (itemsAfterLastVisible >= itemsBeforeFirstVisible)
+                    true to (itemsAfterLastVisible >= firstVisibleItemIndex)
                 }
             }
         }
@@ -126,6 +126,69 @@ fun ScrollableFab(
                         } else {
                             listState.animateScrollToItem(0)
                         }
+                    }
+                },
+            ) {
+                Icon(
+                    imageVector = if (isFabPointsDown) Icons.Filled.KeyboardArrowDown
+                    else Icons.Filled.KeyboardArrowUp,
+                    contentDescription = null
+                )
+                Text(
+                    text = if (isFabPointsDown) {
+                        stringResource(R.string.scrollable_button_down)
+                    } else {
+                        stringResource(R.string.scrollable_button_up)
+                    },
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ScrollableFab(
+    modifier: Modifier = Modifier,
+    staggeredGridState: LazyStaggeredGridState,
+    content: @Composable () -> Unit
+){
+    val scope = rememberCoroutineScope()
+    val scrollDirectionState by remember {
+        derivedStateOf {
+            val layoutInfo = staggeredGridState.layoutInfo
+            val firstVisibleItemIndex = staggeredGridState.firstVisibleItemIndex
+            val totalItemsCount = layoutInfo.totalItemsCount
+            val lastVisibleItem = staggeredGridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            val isListCanScroll = staggeredGridState.run { (canScrollBackward || canScrollForward) }
+
+            if(!isListCanScroll || totalItemsCount == 0) { false to false }
+            else {
+                val itemsAfterLastVisible = totalItemsCount - lastVisibleItem - 1
+                if (firstVisibleItemIndex == 0 && itemsAfterLastVisible == 0) { false to false }
+                else { true to (itemsAfterLastVisible >= firstVisibleItemIndex) }
+            }
+        }
+    }
+    val (isFabVisible, isFabPointsDown) = scrollDirectionState
+
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.TopCenter
+    ) {
+        content()
+        if (isFabVisible) {
+            Button(
+                modifier = Modifier.align(
+                    if (isFabPointsDown) Alignment.BottomCenter else Alignment.TopCenter
+                ),
+                onClick = {
+                    scope.launch {
+                        if (isFabPointsDown) {
+                            val lastItem = staggeredGridState.layoutInfo.totalItemsCount-1
+                            staggeredGridState.animateScrollToItem(lastItem)
+                        }
+                        else { staggeredGridState.animateScrollToItem(0) }
                     }
                 },
             ) {

@@ -2,8 +2,9 @@ package br.com.arml.cep.ui.screen.component.favorite
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
@@ -27,12 +28,14 @@ import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.mock.mockAddress
 import br.com.arml.cep.model.mock.mockNotes
-import br.com.arml.cep.ui.screen.component.favorite.component.FavoriteDetailsHeader
-import br.com.arml.cep.ui.screen.component.search.AddressForms
+import br.com.arml.cep.ui.screen.component.common.Header
+import br.com.arml.cep.ui.screen.component.favorite.detailpane.FavoriteTab
+import br.com.arml.cep.ui.screen.component.favorite.detailpane.FavoriteTabSaver
+import br.com.arml.cep.ui.screen.component.favorite.detailpane.FormsComponent
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun FavoriteDetailsComponent(
+fun FavoriteDetailPaneComponent(
     modifier: Modifier = Modifier,
     favorite: Pair<Address, Note?>,
     onNavigateBackToList: () -> Unit,
@@ -47,24 +50,22 @@ fun FavoriteDetailsComponent(
         stateSaver = FavoriteTabSaver
     ) { mutableStateOf(FavoriteTab.Notes) }
 
-    val selectedTabIndex by remember {
-        derivedStateOf { tabs.indexOf(selectedTab) }
-    }
+    val selectedTabIndex by remember { derivedStateOf { tabs.indexOf(selectedTab) } }
 
     Scaffold(
         modifier = modifier,
         topBar = {
-            FavoriteDetailsHeader(
+            Header(
                 modifier = Modifier
                     .testTag(stringResource(R.string.testTag_favoriteDetails_header)),
-                onNavigateBackToList = onNavigateBackToList
+                logo = Icons.AutoMirrored.Filled.ArrowBack,
+                title = stringResource(R.string.favorite_details_title),
+                onClickLogo = onNavigateBackToList
             )
         }
     ) { contentPadding ->
         Column(
-            modifier = Modifier
-                .padding(contentPadding)
-                .fillMaxSize(),
+            modifier = Modifier.padding(contentPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
         ) {
@@ -84,8 +85,7 @@ fun FavoriteDetailsComponent(
                     )
                 }
             }
-
-            NoteFromFavoriteFragment(
+            FormsComponent(
                 modifier = Modifier
                     .weight(1f)
                     .padding(horizontal = MaterialTheme.dimens.smallPadding),
@@ -100,37 +100,10 @@ fun FavoriteDetailsComponent(
     }
 }
 
-@Composable
-fun NoteFromFavoriteFragment(
-    modifier: Modifier = Modifier,
-    selectedTab: FavoriteTab,
-    address: Address,
-    note: Note?,
-    onClick: (Note) -> Unit,
-){
-    when (selectedTab) {
-        FavoriteTab.Address -> {
-            AddressForms(
-                modifier = modifier
-                    .padding(horizontal = MaterialTheme.dimens.smallPadding),
-                address = address
-            )
-        }
-
-        FavoriteTab.Notes -> {
-            FavoriteNotesComponent(
-                modifier = modifier,
-                note = note,
-                onClick = { note -> onClick(note) }
-            )
-        }
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
-fun PlaceDetailsPreview() {
-    FavoriteDetailsComponent(
+fun FavoriteDetailPaneComponentPreview() {
+    FavoriteDetailPaneComponent(
         modifier = Modifier,
         favorite = mockAddress(1) to mockNotes[0],
         onNavigateBackToList = {},

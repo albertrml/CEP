@@ -44,7 +44,7 @@ fun CepFilter(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
     ) {
         SearchCepField(
-            modifier = modifier
+            modifier = Modifier
                 .testTag(stringResource(R.string.testTag_cepFilter_searchField)),
             onQueryChange = { zipCode = it }
         )
@@ -69,7 +69,7 @@ fun TitleFilter(
     var text by remember { mutableStateOf("") }
     val isButtonActive by remember {
         derivedStateOf {
-            text.length >= MIN_TITLE_LENGTH && text.length <= MAX_TITLE_LENGTH
+            text.length in MIN_TITLE_LENGTH..MAX_TITLE_LENGTH
         }
     }
 

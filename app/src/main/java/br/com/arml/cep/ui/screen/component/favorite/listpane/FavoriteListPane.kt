@@ -1,11 +1,11 @@
-package br.com.arml.cep.ui.screen.component.favorite.component
+package br.com.arml.cep.ui.screen.component.favorite.listpane
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.MaterialTheme
@@ -19,10 +19,11 @@ import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.screen.component.common.ScrollableFab
+import br.com.arml.cep.ui.screen.component.favorite.listpane.item.FavoriteItem
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun FavoriteList(
+fun FavoriteListComponent(
     modifier: Modifier = Modifier,
     places: List<Place>,
     onFavoriteIconClick: (Place) -> Unit,
@@ -30,16 +31,19 @@ fun FavoriteList(
     onDeleteNote: (Pair<Cep,Note>) -> Unit,
     onNavigateToDetail: (Pair<Address, Note>) -> Unit
 ) {
-    val lazyListState = rememberLazyListState()
-    ScrollableFab(listState = lazyListState) {
+    val scrollState = rememberLazyStaggeredGridState()
+    ScrollableFab(
+        modifier = modifier,
+        staggeredGridState = scrollState
+    ) {
         LazyVerticalStaggeredGrid(
-            modifier = modifier,
+            state = scrollState,
             columns = StaggeredGridCells.Adaptive(minSize = MaterialTheme.dimens.minSize),
             verticalItemSpacing = MaterialTheme.dimens.mediumSpacing,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
         ){
             items(places) { place ->
-                FavoriteElement(
+                FavoriteItem(
                     place = place,
                     favoriteIcon = Icons.Default.Favorite,
                     colorFavoriteIcon = Color.Red,
@@ -55,8 +59,8 @@ fun FavoriteList(
 
 @Preview(showBackground = true)
 @Composable
-fun FavoriteListPreview(){
-    FavoriteList(
+fun FavoriteListComponentPreview(){
+    FavoriteListComponent(
         modifier = Modifier.padding(MaterialTheme.dimens.smallPadding),
         places = mockFavoritePlaces,
         onAddNote = { _, _ -> },
