@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.common
+package br.com.arml.cep.ui.screen.component.common.field
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
@@ -6,18 +6,16 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import br.com.arml.cep.R
 
 @Composable
-fun CepTextField(
+fun AppTextField(
     modifier: Modifier = Modifier,
     nameField: String,
     text: String,
@@ -30,23 +28,22 @@ fun CepTextField(
     maxLines: Int = 1,
     showInputSize: Boolean = false
 ){
-
-    var currentTextSize by rememberSaveable { mutableIntStateOf(text.length) }
-
     Column {
         OutlinedTextField(
-            modifier = modifier,
+            modifier = modifier
+                .testTag(stringResource(R.string.appTextField_component_testTag)),
             value = text,
             onValueChange = { newText ->
                 if (newText.length <= maxSize) {
                     onChangeText(newText)
-                    currentTextSize = newText.length
+                } else {
+                    onChangeText(newText.take(maxSize))
                 }
             },
             label = {
                 Text(
                     text = nameField,
-                    style = textStyle
+                    style = MaterialTheme.typography.labelLarge
                 )
             },
             textStyle = textStyle,
@@ -69,9 +66,10 @@ fun CepTextField(
         if(showInputSize){
             Text(
                 modifier = Modifier
-                    .align(Alignment.End),
-                text = "$currentTextSize/$maxSize",
-                style = MaterialTheme.typography.labelLarge
+                    .align(Alignment.End)
+                    .testTag(stringResource(R.string.appTextField_inputCounter_testTag)),
+                text = "${text.length}/$maxSize",
+                style = MaterialTheme.typography.labelLarge,
             )
         }
     }
@@ -79,12 +77,11 @@ fun CepTextField(
 
 @Preview(showBackground = true)
 @Composable
-fun CepTextFieldPreview(){
-    var text by rememberSaveable { mutableStateOf("") }
-    CepTextField(
+fun AppTextFieldPreview(){
+    AppTextField(
         nameField = "Name",
-        text = text,
-        onChangeText = { newText -> text = newText },
+        text = "",
+        onChangeText = { },
         maxSize = 100,
         maxLines = 3
     )

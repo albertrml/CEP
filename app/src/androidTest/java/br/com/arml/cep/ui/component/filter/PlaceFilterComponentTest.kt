@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component
+package br.com.arml.cep.ui.component.filter
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -10,14 +10,14 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.place.PlaceFilterComponent
+import br.com.arml.cep.ui.screen.component.common.filter.chip.PlaceFilterComponent
 import br.com.arml.cep.ui.utils.PlaceFilterOption
 import br.com.arml.cep.ui.utils.favoriteFilterOptions
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class PlaceFilterChipTest {
+class PlaceFilterComponentTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -27,7 +27,7 @@ class PlaceFilterChipTest {
     private val placeFilterByCepChip: String = PlaceFilterOption.ByCep.name
     private val placeFilterByTitleChip: String = PlaceFilterOption.ByTitle.name
 
-    private lateinit var cepFilterTextField: String
+    private lateinit var searchCepField: String
     private lateinit var cepFilterSearchButton: String
     private lateinit var titleFilterTextField: String
     private lateinit var titleFilterSearchButton: String
@@ -35,16 +35,17 @@ class PlaceFilterChipTest {
 
     @Before
     fun setUp(){
-        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        InstrumentationRegistry.getInstrumentation().targetContext.apply{
+            placeFilterChipComponent = getString(R.string.testTag_placeFilter_component)
+            placeFilterChipComposable = getString(R.string.testTag_placeFilter_composable)
 
-        placeFilterChipComponent = ctx.getString(R.string.testTag_placeFilter_component)
-        placeFilterChipComposable = ctx.getString(R.string.testTag_placeFilter_composable)
+            searchCepField = getString(R.string.searchCepField_component_testTag)
+            cepFilterSearchButton = getString(R.string.cepFilter_filterButton)
 
-        cepFilterTextField = ctx.getString(R.string.testTag_cepFilter_searchField)
-        cepFilterSearchButton = ctx.getString(R.string.testTag_cepFilter_searchButton)
+            titleFilterTextField = getString(R.string.titleFilter_searchField_testTag)
+            titleFilterSearchButton = getString(R.string.titleFilter_filterButton_testTag)
+        }
 
-        titleFilterTextField = ctx.getString(R.string.testTag_titleFilter_field)
-        titleFilterSearchButton = ctx.getString(R.string.testTag_titleFilter_button)
 
         displayPlaceFilterComponent()
     }
@@ -76,7 +77,7 @@ class PlaceFilterChipTest {
                 .performScrollToNode(matcher = hasText(placeFilterByCepChip))
             onNodeWithText(placeFilterByCepChip).performClick()
             waitForIdle()
-            onNodeWithTag(cepFilterTextField).assertExists()
+            onNodeWithTag(searchCepField).assertExists()
             onNodeWithTag(cepFilterSearchButton).assertExists()
         }
     }

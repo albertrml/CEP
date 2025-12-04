@@ -10,7 +10,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.model.utils.toFormattedBR
-import br.com.arml.cep.ui.screen.component.common.SingleDateFilter
+import br.com.arml.cep.ui.screen.component.common.filter.DateFilter
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,7 +22,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-class SingleDateFilterTest {
+class DateFilterTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -52,18 +52,18 @@ class SingleDateFilterTest {
     fun setUp(){
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
             /*** Filter Composable ***/
-            singleDateFilterComposable = getString(R.string.testTag_singleDateFilter_composable)
-            singleDateFilterDateField = getString(R.string.testTag_singleDateFilter_field)
-            singleDateFilterButton = getString(R.string.testTag_singleDateFilter_button)
+            singleDateFilterComposable = getString(R.string.singleDateFilter_component_testTag)
+            singleDateFilterDateField = getString(R.string.singleDateFilter_startDateField_testTag)
+            singleDateFilterButton = getString(R.string.singleDateFilter_filterButton_testTag)
+            singleDateLabel = getString(R.string.singleDateFilter_filterButton_label)
 
             /*** DatePicker ***/
             datePickerModal = getString(R.string.testTag_datePickerModal)
-            singleDateLabel = getString(R.string.log_filter_initial_date_label)
             confirmTextButton = getString(R.string.testTag_datePicker_confirmTextButton)
         }
 
         composeTestRule.setContent {
-            SingleDateFilter(
+            DateFilter(
                 labelId = R.string.log_filter_initial_date_label,
                 onFilterByDate = mockOnFilterByDate
             )

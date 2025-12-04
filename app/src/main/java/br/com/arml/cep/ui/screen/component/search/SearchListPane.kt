@@ -25,7 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Cep
-import br.com.arml.cep.ui.screen.component.common.Header
+import br.com.arml.cep.ui.screen.component.common.field.SearchCepField
+import br.com.arml.cep.ui.screen.component.common.header.Header
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable

@@ -89,24 +89,24 @@ val compactTypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
         letterSpacing = 0.sp,
         textAlign = TextAlign.Justify
     ),
     bodyMedium = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.sp,
         textAlign = TextAlign.Justify
     ),
     bodySmall = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 16.sp,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
         letterSpacing = 0.sp,
         textAlign = TextAlign.Justify
     ),

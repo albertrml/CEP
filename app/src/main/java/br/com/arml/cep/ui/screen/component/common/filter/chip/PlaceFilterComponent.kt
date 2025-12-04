@@ -1,22 +1,12 @@
-package br.com.arml.cep.ui.screen.component.place
+package br.com.arml.cep.ui.screen.component.common.filter.chip
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,11 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
-import br.com.arml.cep.ui.screen.component.common.CepFilter
-import br.com.arml.cep.ui.screen.component.common.TitleFilter
+import br.com.arml.cep.ui.screen.component.common.filter.CepFilter
+import br.com.arml.cep.ui.screen.component.common.filter.TitleFilter
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.PlaceFilterOption
 import br.com.arml.cep.ui.utils.favoriteFilterOptions
@@ -55,7 +44,7 @@ fun PlaceFilterComponent(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        PlaceFilterChips(
+        PlaceFilterList(
             filters = filters,
             selectedFilter = selectedFilter,
             onSelectedFilter = { selectedFilter = it }
@@ -76,6 +65,7 @@ fun PlaceFilterComponent(
                         }
                     )
                 }
+
                 PlaceFilterOption.ByTitle -> {
                     TitleFilter(
                         nameFilter = stringResource(R.string.favorite_title_field_filter),
@@ -86,6 +76,7 @@ fun PlaceFilterComponent(
                         }
                     )
                 }
+
                 PlaceFilterOption.None -> {
                     keyboardController?.hide()
                     onNoneFilter()
@@ -95,75 +86,16 @@ fun PlaceFilterComponent(
     }
 }
 
-@Composable
-fun PlaceFilterChips(
-    modifier: Modifier = Modifier,
-    filters: List<PlaceFilterOption>,
-    selectedFilter: PlaceFilterOption,
-    onSelectedFilter: (PlaceFilterOption) -> Unit
-) {
-    LazyRow(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        items(filters) { topic ->
-            PlaceFilterChip(
-                labelFilter = topic,
-                isSelected = topic === selectedFilter,
-                onSelected = { topic -> onSelectedFilter(topic) }
-            )
-        }
-    }
-}
-
-@Composable
-fun PlaceFilterChip(
-    modifier: Modifier = Modifier,
-    labelFilter: PlaceFilterOption,
-    isSelected: Boolean,
-    onSelected: (PlaceFilterOption) -> Unit
-) {
-    FilterChip(
-        modifier = modifier,
-        selected = isSelected,
-        onClick = { onSelected(labelFilter) },
-        label = { Text(labelFilter.name) },
-        leadingIcon = {
-            if (isSelected) {
-                Icon(
-                    imageVector = Icons.Filled.Check,
-                    contentDescription = stringResource(
-                        R.string.log_selected_filter_description,
-                        labelFilter.name
-                    ),
-                    modifier = Modifier.padding(
-                        start = 0.dp,
-                        end = MaterialTheme.dimens.smallSpacing
-                    )
-                )
-            } else {
-                null
-            }
-        }
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
-fun PlaceFilterPreview() {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        PlaceFilterComponent(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = MaterialTheme.dimens.largeMargin * 2)
-                .padding(horizontal = MaterialTheme.dimens.mediumMargin),
-            filters = favoriteFilterOptions,
-            onFilterByCep = {},
-            onFilterByTitle = {},
-            onNoneFilter = {}
-        )
-    }
+fun PlaceFilterComponentPreview() {
+    PlaceFilterComponent(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(MaterialTheme.dimens.smallMargin),
+        filters = favoriteFilterOptions,
+        onFilterByCep = {  },
+        onFilterByTitle = {  },
+        onNoneFilter = {  }
+    )
 }

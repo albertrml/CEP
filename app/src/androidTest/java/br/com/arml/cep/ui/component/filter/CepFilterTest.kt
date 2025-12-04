@@ -13,8 +13,8 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.model.domain.Cep
-import br.com.arml.cep.ui.screen.component.common.CepFilter
+import br.com.arml.cep.ui.screen.component.common.filter.CepFilter
+import br.com.arml.cep.utils.hasEditableText
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -22,7 +22,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class PlaceFilterTest {
+class CepFilterTest {
 
     @get:Rule
     val composeTestRule: ComposeContentTestRule = createComposeRule()
@@ -33,35 +33,21 @@ class PlaceFilterTest {
 
     private val mockOnCepFilter: (String) -> Unit = mockk(relaxed = true)
 
-    /*** Queries ***/
-    private lateinit var validQuery: String
-    private lateinit var validQueryWithNonDigit: String
-    private lateinit var validQueryWithNonDigitFiltered: String
-    private lateinit var invalidQuery: String
-    private lateinit var invalidQueryFiltered: String
-
     @Before
-    fun setUp(){
+    fun setup(){
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
-            cepFilterComposable = getString(R.string.testTag_cepFilter_composable)
-            cepFilterField = getString(R.string.testTag_cepFilter_searchField)
-            cepFilterButton = getString(R.string.testTag_cepFilter_searchButton)
+            cepFilterComposable = getString(R.string.cepFilter_component_testTag)
+            cepFilterField = getString(R.string.searchCepField_component_testTag)
+            cepFilterButton = getString(R.string.cepFilter_filterButton)
         }
 
         every { mockOnCepFilter(any()) } answers { println("mockOnCepFilter ${args[0]}") }
-
-        /*** Queries ***/
-        validQuery = "12345678"
-        validQueryWithNonDigit = "a1@2;3*4/5a6w7Q8"
-        invalidQuery = "a1@2"
-        validQueryWithNonDigitFiltered = validQueryWithNonDigit.filter { it.isDigit() }
-        invalidQueryFiltered = invalidQuery.filter { it.isDigit() }
 
         composeTestRule.setContent { CepFilter(onFilterByCep = mockOnCepFilter) }
     }
 
     @Test
-    fun shouldDisplayComposableFieldAndButton_whenCepFilterIsCalled(){
+    fun cepFilter_shouldDisplayFieldAndButton(){
         composeTestRule.apply {
             onNodeWithTag(cepFilterComposable).assertExists()
             onNodeWithTag(cepFilterField).assertExists()
@@ -79,23 +65,27 @@ class PlaceFilterTest {
 
     @Test
     fun shouldContainsOnlyDigits_whenUserInputsTextContainingAnyKindCharacters(){
+        val query = "a1@2;3*4/5a6w7Q8"
+        val expectedQuery = "12345-678"
         composeTestRule.apply {
             onNodeWithTag(cepFilterField).apply {
                 assertExists()
                 performTextClearance()
-                performTextInput(validQueryWithNonDigit)
-                assertTextContains(Cep.build(validQueryWithNonDigitFiltered).text)
+                performTextInput(query)
+                assertTextContains(expectedQuery)
             }
         }
     }
 
     @Test
     fun shouldUnableButton_whenUserInputsTextLesserThanMinLength(){
+        val query = "a1@2"
+        val expectedQuery = "12"
         composeTestRule.apply {
             onNodeWithTag(cepFilterField).apply {
                 performTextClearance()
-                performTextInput(invalidQuery)
-                assert(hasText("12"))
+                performTextInput(query)
+                assert(hasEditableText(expectedQuery))
             }
             onNodeWithTag(cepFilterButton).assertIsNotEnabled()
         }
@@ -103,11 +93,13 @@ class PlaceFilterTest {
 
     @Test
     fun shouldOnlyAcceptsEightDigits_whenUserInputsTextGreaterThanMaxLength(){
+        val input = "1234567890123"
+        val expectedInput = "12345-678"
         composeTestRule.apply {
             onNodeWithTag(cepFilterField).apply {
                 performTextClearance()
-                performTextInput(validQueryWithNonDigit+"91234")
-                assert(hasText("12345-678"))
+                performTextInput(input)
+                assert(hasEditableText(expectedInput))
             }
             onNodeWithTag(cepFilterButton).assertIsEnabled()
         }
@@ -115,10 +107,12 @@ class PlaceFilterTest {
 
     @Test
     fun shouldFilter_whenInputsValidQuery(){
+        val query = "12345678"
+        val expectedQuery = "12345-678"
         composeTestRule.apply {
-            onNodeWithTag(cepFilterField).performTextInput(validQuery)
+            onNodeWithTag(cepFilterField).performTextInput(query)
             onNodeWithTag(cepFilterButton).performClick()
-            verify { mockOnCepFilter(validQuery) }
+            verify { mockOnCepFilter(expectedQuery) }
         }
     }
 }

@@ -21,7 +21,7 @@ import br.com.arml.cep.model.domain.Log
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
 import br.com.arml.cep.model.mock.mockLogEntries
 import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
-import br.com.arml.cep.ui.screen.component.common.Header
+import br.com.arml.cep.ui.screen.component.common.header.Header
 import br.com.arml.cep.ui.screen.log.LogState
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults

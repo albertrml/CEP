@@ -1,4 +1,9 @@
 <resources>
+    <string name="addressField_component_testTag">AddressFieldComponent</string>
+    <string name="addressField_title_testTag">TitleAddressField</string>
+    <string name="addressField_value_testTag">ValueAddressField</string>
+    <string name="addressForms_component_testTag">AddressFormsComponent</string>
+
     <string name="alert_dialog_confirm_button">Confirmar</string>
     <string name="alert_dialog_dismiss_button">Cancelar</string>
 
@@ -60,6 +65,11 @@
     <string name="favorite_notes_show_all_button">Mostrar anotações</string>
     <string name="favorite_notes_hide_all_button">Esconder anotações</string>
 
+    <string name="header_component_testTag">HeaderComponent</string>
+    <string name="header_icon_testTag">IconHeader</string>
+    <string name="header_logo_description">Botão do cabeçalho</string>
+    <string name="header_title_testTag">TitleHeader</string>
+
     <string name="icon_button_tag">back_button</string>
 
     <string name="log_cep_field">CEP: %1$s</string>
@@ -83,10 +93,12 @@
     <string name="scrollable_button_down">Fim</string>
     <string name="scrollable_button_up">Topo</string>
 
+    <string name="searchCepField_clearTrailingIcon">Limpar campo cep</string>
+    <string name="searchCepField_label">CEP</string>
+    <string name="searchCepField_hint">Digite o CEP</string>
+    <string name="searchCepField_component_testTag">SearchCepFieldComponent</string>
+
     <string name="search_button_label">Pesquisar</string>
-    <string name="search_cep_clear_button">Limpar campo cep</string>
-    <string name="search_cep_field_name">CEP</string>
-    <string name="search_cep_hint">Digite o CEP</string>
     <string name="search_title">Busca</string>
 
     <string name="show_delete_alert_button">Todos</string>
@@ -94,8 +106,8 @@
     <string name="show_delete_alert_description">Botão para deletar todos os registros do %1$s</string>
     <string name="show_delete_alert_log">histórico</string>
 
-    <string name="testTag_cepFilter_composable">CepFilterComposable</string>
-    <string name="testTag_cepFilter_searchButton">CepFilterSearchButton</string>
+    <string name="cepFilter_component_testTag">CepFilterComponent</string>
+    <string name="cepFilter_filterButton">CepFilterSearchButton</string>
     <string name="testTag_cepFilter_searchField">CepFilterSearchField</string>
 
     <string name="testTag_deleteAllComponent">DeleteAllComponentCompose</string>
@@ -107,8 +119,6 @@
     <string name="testTag_datePicker_cancelTextButton">DatePickerCancelTextButton</string>
     <string name="testTag_datePicker_confirmTextButton">DatePickerConfirmTextButton</string>
 
-    <string name="testTag_header_icon">IconHeader</string>
-    <string name="testTag_header_title">TitleHeader</string>
 
     <string name="testTag_logScreen_DeleteAllLogAlert">LogScreenDeleteAllLogAlert</string>
     <string name="testTag_logScreen_fetching_OnFailure">LogScreenOnFailure</string>
@@ -118,10 +128,15 @@
     <string name="testTag_logScreen_filter_deleteAllComponent">LogScreenDeleteAllComponent</string>
     <string name="testTag_logScreen_header">LogScreenHeader</string>
 
-    <string name="testTag_periodFilter_button">PeriodFilterButton</string>
-    <string name="testTag_periodFilter_composable">PeriodFilterComposable</string>
-    <string name="testTag_periodFilter_endDateField">PeriodFilterEndDateField</string>
-    <string name="testTag_periodFilter_startDateField">PeriodFilterStartDateField</string>
+    <string name="periodFilter_filterButton_testTag">PeriodFilterButton</string>
+    <string name="periodFilter_composable_testTag">PeriodFilterComposable</string>
+    <string name="periodFilter_endDateField_testTag">PeriodFilterEndDateField</string>
+    <string name="periodFilter_startDateField_testTag">PeriodFilterStartDateField</string>
+    <string name="periodFilter_endDateField_supportText">A data inicial deve ser menor que a final</string>
+    <string name="periodFilter_filterButton_text">Filtrar</string>
+    <string name="periodFilter_startDateField_label">De</string>
+    <string name="periodFilter_endDateField_label">Até</string>
+
 
     <string name="testTag_searchScreen_detailPane_header">SearchScreenDetailPaneHeader</string>
     <string name="testTag_searchScreen_detailPane_onFailure">SearchScreenDetailPaneOnFailure</string>
@@ -133,13 +148,14 @@
     <string name="testTag_searchScreen_listPane_header">SearchScreenListPaneHeader</string>
     <string name="testTag_searchScreen_listPane_searchButton">SearchScreenListPaneSearchButton</string>
 
-    <string name="testTag_singleDateFilter_button">SingleDateFilterButton</string>
-    <string name="testTag_singleDateFilter_composable">SingleDateFilterComposable</string>
-    <string name="testTag_singleDateFilter_field">SingleDateFilterField</string>
+    <string name="singleDateFilter_filterButton_testTag">SingleDateFilterButton</string>
+    <string name="singleDateFilter_component_testTag">SingleDateFilterComposable</string>
+    <string name="singleDateFilter_startDateField_testTag">SingleDateFilterField</string>
+    <string name="singleDateFilter_filterButton_label">Filtrar</string>
 
-    <string name="testTag_titleFilter_button">TitleFilterButton</string>
-    <string name="testTag_titleFilter_composable">TitleFilterComposable</string>
-    <string name="testTag_titleFilter_field">TitleFilterField</string>
+    <string name="titleFilter_filterButton_testTag">TitleFilterButton</string>
+    <string name="titleFilter_component_testTag">TitleFilterComposable</string>
+    <string name="titleFilter_searchField_testTag">TitleFilterField</string>
     <string name="testTag_logFilter_composable">LogFilterComposable</string>
     <string name="testTag_placeFilter_component">PlaceFilterComponent</string>
     <string name="testTag_placeFilter_composable">PlaceFilterComposable</string>
@@ -165,4 +181,18 @@
     <string name="testTag_favoriteDetails_addressContent">FavoriteDetailsAddressContent</string>
     <string name="testTag_favoriteDetails_notesContent">FavoriteDetailsNotesContent</string>
     <string name="favorite_details_save_button">Criar</string>
+    <string name="appTextField_component_testTag">AppTextFieldComponent</string>
+    <string name="appTextField_inputCounter_testTag">AppTextFieldInputCounter</string>
+    <string name="fastScroll_component_testTag">FastScrollComponent</string>
+    <string name="fastScroll_fabToEnd_contentDescription">Mover para o fim da lista</string>
+    <string name="fastScroll_fabToStart_contentDescription">Mover para o início da lista</string>
+    <string name="fastScroll_fab_testTag">FastScrollFabTag</string>
+    <string name="fastScrollList_fabToEnd_contentDescription">FastScrollListFabToEnd</string>
+    <string name="fastScrollList_fabToStart_contentDescription">FastScrollListFabToStart</string>
+    <string name="fastScrollList_fab_testTag">FastScrollListFab</string>
+    <string name="fastScrollList_component_testTag">FastScrollListComponent</string>
+    <string name="fastScrollGrid_fab_testTag">FastScrollGridFab</string>
+    <string name="fastScrollGrid_fabToEnd_contentDescription">FastScrollGridFabToEnd</string>
+    <string name="fastScrollGrid_fabToStart_contentDescription">FastScrollGridFabToStart</string>
+    <string name="fastScrollGrid_component_testTag">FastScrollGridComponent</string>
 </resources>

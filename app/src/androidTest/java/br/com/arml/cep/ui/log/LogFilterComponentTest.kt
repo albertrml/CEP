@@ -50,17 +50,17 @@ class LogFilterComponentTest {
             logFilterComponent = getString(R.string.testTag_logFilter_composable)
 
             cepFilterTextField = getString(R.string.testTag_cepFilter_searchField)
-            cepFilterSearchButton = getString(R.string.testTag_cepFilter_searchButton)
+            cepFilterSearchButton = getString(R.string.cepFilter_filterButton)
 
-            periodFilterStartDateField = getString(R.string.testTag_periodFilter_startDateField)
-            periodFilterEndDateField = getString(R.string.testTag_periodFilter_endDateField)
-            periodFilterButton = getString(R.string.testTag_periodFilter_button)
+            periodFilterStartDateField = getString(R.string.periodFilter_startDateField_testTag)
+            periodFilterEndDateField = getString(R.string.periodFilter_endDateField_testTag)
+            periodFilterButton = getString(R.string.periodFilter_filterButton_testTag)
 
-            singleDateFilterField = getString(R.string.testTag_singleDateFilter_field)
-            singleDateFilterButton = getString(R.string.testTag_singleDateFilter_button)
+            singleDateFilterField = getString(R.string.singleDateFilter_startDateField_testTag)
+            singleDateFilterButton = getString(R.string.singleDateFilter_filterButton_testTag)
 
-            titleFilterField = getString(R.string.testTag_titleFilter_field)
-            titleFilterButton = getString(R.string.testTag_titleFilter_button)
+            titleFilterField = getString(R.string.titleFilter_searchField_testTag)
+            titleFilterButton = getString(R.string.titleFilter_filterButton_testTag)
         }
 
         displayLogFilterComponent()

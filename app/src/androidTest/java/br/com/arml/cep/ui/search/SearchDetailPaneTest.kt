@@ -62,8 +62,8 @@ class SearchDetailPaneTest {
         /*** Header ***/
         searchDetailPaneHeader = context.getString(
             R.string.testTag_searchScreen_detailPane_header)
-        searchDetailPaneTitleHeader = context.getString(R.string.testTag_header_title)
-        searchDetailPaneIconHeader = context.getString(R.string.testTag_header_icon)
+        searchDetailPaneTitleHeader = context.getString(R.string.header_title_testTag)
+        searchDetailPaneIconHeader = context.getString(R.string.header_icon_testTag)
         backButton = context.getString(R.string.icon_button_tag)
         every { mockOnBackPress() } answers { println("mockOnBackPress CALLED") }
 

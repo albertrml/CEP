@@ -1,8 +1,8 @@
 package br.com.arml.cep.ui.component.filter
 
-import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -14,7 +14,8 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
 import br.com.arml.cep.model.domain.MIN_TITLE_LENGTH
 import br.com.arml.cep.model.mock.mockFavoritePlaces
-import br.com.arml.cep.ui.screen.component.common.TitleFilter
+import br.com.arml.cep.ui.screen.component.common.filter.TitleFilter
+import br.com.arml.cep.utils.hasEditableText
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Before
@@ -27,8 +28,6 @@ class TitleFilterTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
-
-    private lateinit var ctx: Context
     private val mockPlace = mockFavoritePlaces.first()
     private lateinit var titleFilterComposable: String
     private lateinit var titleFilterField: String
@@ -42,10 +41,11 @@ class TitleFilterTest {
 
     @Before
     fun setUp() {
-        ctx = InstrumentationRegistry.getInstrumentation().targetContext
-        titleFilterComposable = ctx.getString(R.string.testTag_titleFilter_composable)
-        titleFilterField = ctx.getString(R.string.testTag_titleFilter_field)
-        titleFilterButton = ctx.getString(R.string.testTag_titleFilter_button)
+        InstrumentationRegistry.getInstrumentation().targetContext.apply {
+            titleFilterComposable = getString(R.string.titleFilter_component_testTag)
+            titleFilterField = getString(R.string.titleFilter_searchField_testTag)
+            titleFilterButton = getString(R.string.titleFilter_filterButton_testTag)
+        }
 
         every { mockOnTitleFilter(any()) } answers { println("OnTitleFilter CALLED") }
 
@@ -64,7 +64,7 @@ class TitleFilterTest {
     }
 
     @Test
-    fun shouldDisplayComposableTitleAndButtonNode_whenTitleFilterIsCalled() {
+    fun titleFilter_shouldDisplayComposableTitleAndButtonNode() {
         composeTestRule.apply {
             onNodeWithTag(titleFilterComposable).assertExists()
             onNodeWithTag(titleFilterField).assertExists()
@@ -73,7 +73,7 @@ class TitleFilterTest {
     }
 
     @Test
-    fun shouldUnableFilterButton_whenQueryDoesNotAttendMinSize() {
+    fun titleFilter_shouldUnableFilterButton_whenQueryDoesNotAttendMinSize() {
         composeTestRule.apply{
             onNodeWithTag(titleFilterField).performTextInput(invalidQueryByMinLength)
             onNodeWithTag(titleFilterButton).assertIsNotEnabled()
@@ -81,10 +81,13 @@ class TitleFilterTest {
     }
 
     @Test
-    fun shouldUnableFilterButton_whenQueryDoesNotAttendMaxSize() {
+    fun titleFilter_shouldEnableFilterButtonButDoesNotExceedMaxSize_whenQueryDoesNotAttendMaxSize() {
+        val expectedQuery = "A".repeat(MAX_TITLE_LENGTH)
         composeTestRule.apply{
-            onNodeWithTag(titleFilterField).performTextInput(invalidQueryByMaxLength)
-            onNodeWithTag(titleFilterButton).assertIsNotEnabled()
+            onNodeWithTag(titleFilterField).apply {
+                performTextInput(invalidQueryByMaxLength)
+                assert(hasEditableText(expectedQuery))
+            }
         }
     }
 

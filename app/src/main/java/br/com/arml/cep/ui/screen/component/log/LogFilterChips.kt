@@ -29,9 +29,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.common.CepFilter
-import br.com.arml.cep.ui.screen.component.common.PeriodFilter
-import br.com.arml.cep.ui.screen.component.common.SingleDateFilter
+import br.com.arml.cep.ui.screen.component.common.filter.CepFilter
+import br.com.arml.cep.ui.screen.component.common.filter.PeriodFilter
+import br.com.arml.cep.ui.screen.component.common.filter.DateFilter
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.LogFilterOption
 import br.com.arml.cep.ui.utils.filterEnterTransition
@@ -84,7 +84,7 @@ fun LogFilterComponent(
                 }
 
                 LogFilterOption.ByInitialDate -> {
-                    SingleDateFilter(
+                    DateFilter(
                         labelId = R.string.log_filter_initial_date_label,
                         onFilterByDate = { start ->
                             keyboardController?.hide()
@@ -94,7 +94,7 @@ fun LogFilterComponent(
                 }
 
                 LogFilterOption.ByFinalDate -> {
-                    SingleDateFilter(
+                    DateFilter(
                         labelId = R.string.log_filter_final_date_label,
                         onFilterByDate = { end ->
                             keyboardController?.hide()
@@ -167,8 +167,6 @@ fun LogFilterChip(
                         end = MaterialTheme.dimens.smallSpacing
                     )
                 )
-            } else {
-                null
             }
         }
     )

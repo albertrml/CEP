@@ -62,8 +62,8 @@ class LogScreenListPaneTest {
 
             /*** Header ***/
             logScreenHeader = ctx.getString(R.string.testTag_logScreen_header)
-            logScreenTitleHeader = ctx.getString(R.string.testTag_header_title)
-            logScreenIconHeader = ctx.getString(R.string.testTag_header_icon)
+            logScreenTitleHeader = ctx.getString(R.string.header_title_testTag)
+            logScreenIconHeader = ctx.getString(R.string.header_icon_testTag)
 
             /*** Filters ***/
             logScreenFilterComponent = ctx.getString(R.string.testTag_logScreen_filterComponent)

@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.model.domain.Log
 import br.com.arml.cep.model.mock.mockLogEntries
-import br.com.arml.cep.ui.screen.component.common.ScrollableFab
+import br.com.arml.cep.ui.screen.component.common.fastscroll.FastScrollList
 import br.com.arml.cep.ui.theme.dimens
 
 
@@ -25,8 +25,9 @@ fun LogList(
     onClickToDelete: (Log) -> Unit,
     onCopyToClipboard: (Log) -> Unit
 ){
-    val listState = rememberLazyListState()
-    ScrollableFab(listState = listState) {
+    FastScrollList(
+        listState = rememberLazyListState()
+    ) { listState ->
         LazyColumn(
             modifier = modifier,
             state = listState,

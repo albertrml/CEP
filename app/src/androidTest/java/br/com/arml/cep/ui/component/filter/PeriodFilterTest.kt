@@ -12,7 +12,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.model.utils.toFormattedBR
-import br.com.arml.cep.ui.screen.component.common.PeriodFilter
+import br.com.arml.cep.ui.screen.component.common.filter.PeriodFilter
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -62,16 +62,15 @@ class PeriodFilterTest {
     @Before
     fun setUp() {
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
-            periodFilterComposable = getString(R.string.testTag_periodFilter_composable)
-            periodFilterStartDateField = getString(R.string.testTag_periodFilter_startDateField)
-            periodFilterEndDateField = getString(R.string.testTag_periodFilter_endDateField)
-            periodFilterButton = getString(R.string.testTag_periodFilter_button)
+            periodFilterComposable = getString(R.string.periodFilter_composable_testTag)
+            periodFilterStartDateField = getString(R.string.periodFilter_startDateField_testTag)
+            periodFilterEndDateField = getString(R.string.periodFilter_endDateField_testTag)
+            periodFilterButton = getString(R.string.periodFilter_filterButton_testTag)
+            initialDateLabel = getString(R.string.periodFilter_startDateField_label)
+            finalDateLabel = getString(R.string.periodFilter_endDateField_label)
 
             datePickerModal = getString(R.string.testTag_datePickerModal)
             confirmTextButton = getString(R.string.testTag_datePicker_confirmTextButton)
-
-            initialDateLabel = getString(R.string.log_filter_initial_date_label)
-            finalDateLabel = getString(R.string.log_filter_final_date_label)
         }
 
         composeTestRule.setContent {
@@ -97,14 +96,14 @@ class PeriodFilterTest {
     }
 
     @Test
-    fun shouldDisplayAPartirDeAndAteFieldsAndFilterButton_whenPeriodFilterIsCalled() {
+    fun periodFilter_shouldDisplayAPartirDeAndAteFieldsAndFilterButton_whenPeriodFilterIsCalled() {
         composeTestRule.onNodeWithTag(periodFilterComposable).assertExists()
         composeTestRule.onNodeWithTag(periodFilterStartDateField).assertExists()
         composeTestRule.onNodeWithTag(periodFilterEndDateField).assertExists()
     }
 
     @Test
-    fun shouldDisplayYesterdayDate_whenYesterdayIsSelected_inStartDateField() {
+    fun periodFilter_shouldDisplayYesterdayDate_whenYesterdayIsSelected_inStartDateField() {
         composeTestRule.apply {
             onNodeWithTag(periodFilterStartDateField).performClick()
             selectDateInPicker(yesterdayFormatted)
@@ -113,7 +112,7 @@ class PeriodFilterTest {
     }
 
     @Test
-    fun shouldDisplayTodayDate_whenTodayIsSelected_inEndDateField() {
+    fun periodFilter_shouldDisplayTodayDate_whenTodayIsSelected_inEndDateField() {
         composeTestRule.apply {
             onNodeWithTag(periodFilterEndDateField).performClick()
             selectDateInPicker(todayFormatted)
@@ -122,7 +121,7 @@ class PeriodFilterTest {
     }
 
     @Test
-    fun shouldUnableButton_whenNoDatesAreSelected() {
+    fun periodFilter_shouldUnableButton_whenNoDatesAreSelected() {
         composeTestRule.apply {
             onNodeWithText(initialDateLabel)
                 .assertExists()
@@ -135,7 +134,7 @@ class PeriodFilterTest {
     }
 
     @Test
-    fun shouldUnableButton_whenOnlyInitialDateIsSelected() {
+    fun periodFilter_shouldUnableButton_whenOnlyInitialDateIsSelected() {
         composeTestRule.apply {
             onNodeWithTag(periodFilterStartDateField).performClick()
             selectDateInPicker(yesterdayFormatted)
@@ -147,7 +146,7 @@ class PeriodFilterTest {
     }
 
     @Test
-    fun shouldUnableButton_whenOnlyEndDateIsSelected() {
+    fun periodFilter_shouldUnableButton_whenOnlyEndDateIsSelected() {
         composeTestRule.apply {
             onNodeWithText(initialDateLabel)
                 .assertExists()
@@ -159,7 +158,7 @@ class PeriodFilterTest {
     }
 
     @Test
-    fun shouldActiveButton_whenBothDatesAreSelected() {
+    fun periodFilter_shouldActiveButton_whenBothDatesAreSelected() {
         composeTestRule.apply {
             onNodeWithTag(periodFilterStartDateField).performClick()
             selectDateInPicker(yesterdayFormatted)
@@ -170,7 +169,7 @@ class PeriodFilterTest {
     }
 
     @Test
-    fun shouldFilter_whenFilterButtonIsActiveAndClicked() {
+    fun periodFilter_shouldFilter_whenFilterButtonIsActiveAndClicked() {
         composeTestRule.apply{
             onNodeWithTag(periodFilterStartDateField).performClick()
             selectDateInPicker(yesterdayFormatted)

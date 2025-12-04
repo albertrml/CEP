@@ -1,7 +1,6 @@
-package br.com.arml.cep.ui.screen.component.common
+package br.com.arml.cep.ui.screen.component.common.header
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.sharp.Home
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,65 +26,49 @@ import br.com.arml.cep.R
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun Header(
+fun HeaderContent(
     modifier: Modifier = Modifier,
-    logo: ImageVector,
     title: String,
+    logo: ImageVector,
     onClickLogo: () -> Unit = {},
     menu: @Composable () -> Unit = {}
 ){
-    Column(
+    Row(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
+        IconButton(
+            modifier = Modifier.testTag(stringResource(id = R.string.header_icon_testTag)),
+            onClick = onClickLogo
         ) {
-            IconButton(
-                modifier = Modifier.testTag(
-                    stringResource(R.string.testTag_header_icon)
-                ),
-                onClick = onClickLogo
-            ) {
-                Icon(
-                    modifier = Modifier.fillMaxSize(),
-                    imageVector = logo,
-                    contentDescription = title
-                )
-            }
-            Text(
-                modifier = Modifier.testTag(
-                    stringResource(R.string.testTag_header_title)
-                ),
-                text = title,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
+            Icon(
+                modifier = Modifier.fillMaxSize(),
+                imageVector = logo,
+                contentDescription = stringResource(R.string.header_logo_description)
             )
-            menu()
         }
-        HorizontalDivider(
+        Text(
             modifier = Modifier
-                .fillMaxWidth(),
-            thickness = MaterialTheme.dimens.largeThickness,
-            color = MaterialTheme.colorScheme.onBackground
+                .weight(1f),
+            text = title,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
         )
+        menu()
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun HeaderPreview(){
-    Header(
-        modifier = Modifier.fillMaxSize(),
+fun HeaderContentPreview(){
+    HeaderContent(
+        modifier = Modifier.fillMaxWidth(),
         logo = Icons.AutoMirrored.Filled.ArrowBack,
         title = "Header",
         onClickLogo = {},
         menu = {
             Row(
-                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ){
@@ -101,7 +83,7 @@ fun HeaderPreview(){
                 }
 
                 Spacer(Modifier.padding(horizontal = MaterialTheme.dimens.smallSpacing))
-                
+
                 IconButton(
                     onClick = {}
                 ) {

@@ -19,7 +19,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -28,7 +27,7 @@ import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.mock.mockAddress
 import br.com.arml.cep.model.mock.mockNotes
-import br.com.arml.cep.ui.screen.component.common.Header
+import br.com.arml.cep.ui.screen.component.common.header.Header
 import br.com.arml.cep.ui.screen.component.favorite.detailpane.FavoriteTab
 import br.com.arml.cep.ui.screen.component.favorite.detailpane.FavoriteTabSaver
 import br.com.arml.cep.ui.screen.component.favorite.detailpane.FormsComponent
@@ -56,8 +55,6 @@ fun FavoriteDetailPaneComponent(
         modifier = modifier,
         topBar = {
             Header(
-                modifier = Modifier
-                    .testTag(stringResource(R.string.testTag_favoriteDetails_header)),
                 logo = Icons.AutoMirrored.Filled.ArrowBack,
                 title = stringResource(R.string.favorite_details_title),
                 onClickLogo = onNavigateBackToList

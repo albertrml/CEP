@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component
+package br.com.arml.cep.ui.component.datepicker
 
 import android.content.Context
 import androidx.compose.ui.test.assert
@@ -10,7 +10,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.model.utils.toFormattedBR
-import br.com.arml.cep.ui.screen.component.common.DatePickerFieldToModal
+import br.com.arml.cep.ui.screen.component.common.datepicker.DatePickerFieldToModal
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Before
@@ -93,7 +93,6 @@ class DatePickerTest {
             ).performClick()
             onNodeWithTag(confirmTextButton).performClick()
             waitForIdle()
-            //onAllNodes(isRoot())[0].printToLog("DialogRootDatePickerTest $currentDate")
             onNodeWithTag(datePickerField).assert(hasText(currentDate))
         }
     }

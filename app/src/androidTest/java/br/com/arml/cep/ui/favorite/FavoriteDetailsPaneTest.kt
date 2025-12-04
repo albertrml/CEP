@@ -45,7 +45,7 @@ class FavoriteDetailsPaneTest {
             favoriteScreenHeader = getString(R.string.testTag_favoriteDetails_header)
             favoriteScreenContent = getString(R.string.testTag_favoriteDetails_content)
             favoriteScreenNavigateToExtraButton = getString(R.string.testTag_favoriteDetails_button)
-            favoriteScreenNavigateToListButton = getString(R.string.testTag_header_icon)
+            favoriteScreenNavigateToListButton = getString(R.string.header_icon_testTag)
         }
 
         displayFavoriteDetailComponent()

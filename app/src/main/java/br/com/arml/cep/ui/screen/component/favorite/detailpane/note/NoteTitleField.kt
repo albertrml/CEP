@@ -10,7 +10,7 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
 import br.com.arml.cep.model.domain.MIN_TITLE_LENGTH
 import br.com.arml.cep.model.domain.isValidTitleNoteSize
-import br.com.arml.cep.ui.screen.component.common.CepTextField
+import br.com.arml.cep.ui.screen.component.common.field.AppTextField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -19,7 +19,7 @@ fun NoteTitleField(
     title: String,
     onTitleChange: (String) -> Unit
 ){
-    CepTextField(
+    AppTextField(
         modifier = modifier,
         nameField = stringResource(R.string.place_details_title),
         text = title,

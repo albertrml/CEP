@@ -18,7 +18,7 @@ import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.mock.mockFavoritePlaces
-import br.com.arml.cep.ui.screen.component.common.ScrollableFab
+import br.com.arml.cep.ui.screen.component.common.fastscroll.FastScrollGrid
 import br.com.arml.cep.ui.screen.component.favorite.listpane.item.FavoriteItem
 import br.com.arml.cep.ui.theme.dimens
 
@@ -31,13 +31,12 @@ fun FavoriteListComponent(
     onDeleteNote: (Pair<Cep,Note>) -> Unit,
     onNavigateToDetail: (Pair<Address, Note>) -> Unit
 ) {
-    val scrollState = rememberLazyStaggeredGridState()
-    ScrollableFab(
+    FastScrollGrid(
         modifier = modifier,
-        staggeredGridState = scrollState
-    ) {
+        staggeredGridState = rememberLazyStaggeredGridState()
+    ) { staggeredGridState ->
         LazyVerticalStaggeredGrid(
-            state = scrollState,
+            state = staggeredGridState,
             columns = StaggeredGridCells.Adaptive(minSize = MaterialTheme.dimens.minSize),
             verticalItemSpacing = MaterialTheme.dimens.mediumSpacing,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)

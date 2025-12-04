@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.search
+package br.com.arml.cep.ui.screen.component.common.field
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -15,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentType
 import androidx.compose.ui.semantics.semantics
@@ -36,7 +37,9 @@ fun SearchCepField(
     }
 
     OutlinedTextField(
-        modifier = modifier.semantics{ contentType = ContentType.PostalCode },
+        modifier = modifier
+            .semantics { contentType = ContentType.PostalCode }
+            .testTag(stringResource(R.string.searchCepField_component_testTag)),
         value = cepFieldValue,
         onValueChange = { newFieldValue ->
             val digitsOnly = updateCepField(
@@ -51,14 +54,14 @@ fun SearchCepField(
         },
         label = {
             Text(
-                text = stringResource(R.string.search_cep_field_name),
-                style = MaterialTheme.typography.bodyLarge
+                text = stringResource(R.string.searchCepField_label),
+                style = MaterialTheme.typography.labelLarge
             )
         },
         placeholder = {
             Text(
-                text = stringResource(R.string.search_cep_hint),
-                style = MaterialTheme.typography.bodyLarge
+                text = stringResource(R.string.searchCepField_hint),
+                style = MaterialTheme.typography.labelLarge
             )
         },
         trailingIcon = {
@@ -71,11 +74,12 @@ fun SearchCepField(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Clear,
-                        contentDescription = stringResource(R.string.search_cep_clear_button)
+                        contentDescription = stringResource(R.string.searchCepField_clearTrailingIcon)
                     )
                 }
             }
         },
+        textStyle = MaterialTheme.typography.bodyMedium,
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
@@ -83,6 +87,6 @@ fun SearchCepField(
 
 @Preview (showBackground = true)
 @Composable
-fun CepFieldPreview(){
+fun SearchCepFieldPreview(){
     SearchCepField(onQueryChange = {})
 }

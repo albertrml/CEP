@@ -3,7 +3,6 @@ package br.com.arml.cep.ui.screen.component.favorite.listpane.header
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Icon
@@ -20,11 +19,12 @@ import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun FavoriteListPaneHeaderMenu(
+    modifier: Modifier = Modifier,
     onExportClick: () -> Unit = {},
     onImportClick: () -> Unit = {}
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {

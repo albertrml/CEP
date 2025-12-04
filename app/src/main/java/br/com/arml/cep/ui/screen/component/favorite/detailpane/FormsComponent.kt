@@ -10,7 +10,7 @@ import br.com.arml.cep.model.domain.Address
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.screen.component.favorite.detailpane.note.NoteForms
-import br.com.arml.cep.ui.screen.component.search.AddressForms
+import br.com.arml.cep.ui.screen.component.common.address.AddressForms
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
