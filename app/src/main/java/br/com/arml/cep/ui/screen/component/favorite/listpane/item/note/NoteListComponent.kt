@@ -36,7 +36,7 @@ fun NoteList(
 
 
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0x222222FF)
 @Composable
 fun NoteListPreview(){
     NoteList(

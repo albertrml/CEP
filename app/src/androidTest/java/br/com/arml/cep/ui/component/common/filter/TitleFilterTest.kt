@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.filter
+package br.com.arml.cep.ui.component.common.filter
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier

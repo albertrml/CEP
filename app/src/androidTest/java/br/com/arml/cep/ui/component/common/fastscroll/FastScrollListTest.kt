@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.fastscroll
+package br.com.arml.cep.ui.component.common.fastscroll
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items

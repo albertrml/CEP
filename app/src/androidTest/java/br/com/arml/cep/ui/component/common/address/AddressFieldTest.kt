@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.address
+package br.com.arml.cep.ui.component.common.address
 
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.ComposeContentTestRule

@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.field
+package br.com.arml.cep.ui.component.common.field
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

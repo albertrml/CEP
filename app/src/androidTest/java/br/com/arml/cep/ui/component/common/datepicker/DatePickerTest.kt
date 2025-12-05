@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.datepicker
+package br.com.arml.cep.ui.component.common.datepicker
 
 import android.content.Context
 import androidx.compose.ui.test.assert

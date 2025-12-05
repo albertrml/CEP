@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.header
+package br.com.arml.cep.ui.component.common.header
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons

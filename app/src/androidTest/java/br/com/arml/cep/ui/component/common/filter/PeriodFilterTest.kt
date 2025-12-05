@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.filter
+package br.com.arml.cep.ui.component.common.filter
 
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsEnabled

@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.field
+package br.com.arml.cep.ui.component.common.field
 
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.junit4.createComposeRule

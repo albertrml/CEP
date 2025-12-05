@@ -195,4 +195,7 @@
     <string name="fastScrollGrid_fabToEnd_contentDescription">FastScrollGridFabToEnd</string>
     <string name="fastScrollGrid_fabToStart_contentDescription">FastScrollGridFabToStart</string>
     <string name="fastScrollGrid_component_testTag">FastScrollGridComponent</string>
+    <string name="noteItem_component_testTag">NoteItemComponent</string>
+    <string name="noteItem_deleteIconButton_testTag">NoteItemDeleteIconButton</string>
+    <string name="noteItem_titleText_testTag">NoteItemTitleTestTag</string>
 </resources>

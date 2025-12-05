@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component
+package br.com.arml.cep.ui.component.common
 
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule

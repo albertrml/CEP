@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.filter
+package br.com.arml.cep.ui.component.common.filter
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag

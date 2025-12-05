@@ -14,7 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.theme.dimens
@@ -27,7 +30,9 @@ fun NoteItem(
     onEditNote: (Note) -> Unit
 ) {
     ElevatedCard(
-        modifier = modifier.clickable { onEditNote(note) },
+        modifier = modifier
+            .clickable { onEditNote(note) }
+            .testTag(stringResource(R.string.noteItem_component_testTag)),
         shape = MaterialTheme.shapes.medium,
     ){
         Row(
@@ -43,12 +48,16 @@ fun NoteItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag(stringResource(R.string.noteItem_titleText_testTag)),
                 text = note.title,
                 style = MaterialTheme.typography.titleMedium
             )
             IconButton(
-                modifier = Modifier.align(Alignment.CenterVertically),
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .testTag(stringResource(R.string.noteItem_deleteIconButton_testTag)),
                 onClick = { onDeleteNote(note) }
             ) {
                 Icon(
