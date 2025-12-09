@@ -23,22 +23,23 @@ import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun FavoriteItemHeader(
+fun FavoriteItemActionBar(
     modifier: Modifier = Modifier,
     place: Place,
     favoriteIcon: ImageVector,
     colorFavoriteIcon: Color,
-    onFavoriteIconClick: (Place) -> Unit = {},
+    onFavoriteChanges: (Place) -> Unit = {},
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(stringResource(R.string.favoriteItemActionBar_component_testTag)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             modifier = Modifier.weight(1f),
             text = stringResource(
-                R.string.favorite_place_element_zipcode,
-                place.address.zipCode
+                R.string.favoriteItemActionBar_titleText_zipcode,
+                place.cep.text
             ),
             style = MaterialTheme.typography.titleMedium
         )
@@ -47,15 +48,17 @@ fun FavoriteItemHeader(
                 .align(Alignment.CenterVertically)
                 .testTag(
                     stringResource(
-                        R.string.testTag_placeElement_favoriteIconButton,
+                        R.string.favoriteItemActionBar_favoriteIcon_testTag,
                         place.cep.text
                     )
                 ),
-            onClick = { onFavoriteIconClick(place) },
+            onClick = { onFavoriteChanges(place) },
         ) {
             Icon(
                 imageVector = favoriteIcon,
-                contentDescription = null,
+                contentDescription = stringResource(
+                    R.string.favoriteItemActionBar_favoriteIcon_description
+                ),
                 tint = colorFavoriteIcon
             )
         }
@@ -64,9 +67,9 @@ fun FavoriteItemHeader(
 
 @Preview(showBackground = true)
 @Composable
-fun FavoriteItemHeaderPreview() {
+fun FavoriteItemActionBarPreview() {
     Surface {
-        FavoriteItemHeader(
+        FavoriteItemActionBar(
             modifier = Modifier.padding(MaterialTheme.dimens.smallMargin),
             place = mockFavoritePlaces.first(),
             favoriteIcon = Icons.Default.Favorite,

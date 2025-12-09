@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.favorite.detailpane.item.note
+package br.com.arml.cep.ui.component.favorite.listpane.item.note
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertTextEquals

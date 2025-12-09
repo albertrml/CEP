@@ -10,20 +10,19 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Address
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.mock.mockFavoritePlaces
-import br.com.arml.cep.ui.screen.component.favorite.listpane.item.note.NoteList
+import br.com.arml.cep.ui.screen.component.favorite.listpane.item.note.NoteListComponent
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -37,8 +36,6 @@ fun FavoriteItem(
     onDeleteNote: (Pair<Cep, Note>) -> Unit,
     onNavigateToDetail: (Pair<Address, Note>) -> Unit
 ) {
-    var isShownNotes by rememberSaveable { mutableStateOf(false) }
-
     Column(
         modifier = modifier
             .border(
@@ -50,19 +47,21 @@ fun FavoriteItem(
                 color = MaterialTheme.colorScheme.primaryContainer,
                 shape = MaterialTheme.shapes.medium
             )
-            .padding(MaterialTheme.dimens.mediumPadding),
+            .padding(MaterialTheme.dimens.mediumPadding)
+            .testTag(stringResource(R.string.favoriteItem_component_testTag)),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        FavoriteItemHeader(
+        FavoriteItemActionBar(
             place = place,
             favoriteIcon = favoriteIcon,
             colorFavoriteIcon = colorFavoriteIcon,
-            onFavoriteIconClick = onFavoriteIconClick
+            onFavoriteChanges = onFavoriteIconClick
         )
 
-        FavoriteDivider(
-            isShownNotes = isShownNotes,
-            onChangeShownNotes = { isShownNotes = !isShownNotes },
+        NoteListComponent(
+            notes = place.notes,
+            onDeleteNote = { note -> onDeleteNote(place.cep to note) },
+            onEditNote = { note -> onNavigateToDetail(place.address to note) },
             onAddNote = {
                 onAddNote(
                     place.cep,
@@ -70,14 +69,6 @@ fun FavoriteItem(
                 )
             }
         )
-
-        if (isShownNotes) {
-            NoteList(
-                notes = place.notes,
-                onDeleteNote = { note -> onDeleteNote(place.cep to note) },
-                onEditNote = { note -> onNavigateToDetail(place.address to note) }
-            )
-        }
     }
 }
 
