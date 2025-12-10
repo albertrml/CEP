@@ -18,7 +18,7 @@ fun FavoriteListPaneHeader(
     Header(
         modifier = modifier,
         logo = Icons.Filled.Favorite,
-        title = stringResource(R.string.favorite_title),
+        title = stringResource(R.string.favoriteListPaneHeader_title_label),
         menu = {
             FavoriteListPaneHeaderMenu(
                 onImportClick = onImportClick,

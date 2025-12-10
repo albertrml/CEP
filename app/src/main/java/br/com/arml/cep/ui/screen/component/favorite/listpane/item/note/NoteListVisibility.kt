@@ -29,6 +29,18 @@ fun NoteListVisibility(
     onChangeShownNotes: () -> Unit,
     isShownNotes: Boolean
 ) {
+    val headerText = if (isShownNotes)
+        stringResource(id = R.string.noteListVisibility_hideList_Text)
+    else
+        stringResource(id = R.string.noteListVisibility_showList_Text)
+
+    val headerIconDescription = if (isShownNotes)
+        stringResource(id = R.string.noteListVisibility_hideIcon_description)
+    else
+        stringResource(id = R.string.noteListVisibility_showIcon_description)
+
+    val headerIcon = if (isShownNotes) Icons.Filled.ArrowUpward else Icons.Filled.ArrowDownward
+
     Row(
         modifier = modifier
             .clickable { onChangeShownNotes() }
@@ -42,17 +54,12 @@ fun NoteListVisibility(
             tint = MaterialTheme.colorScheme.onSurface
         )
         Text(
-            text = if (isShownNotes)
-                stringResource(id = R.string.noteListVisibility_hideText)
-            else
-                stringResource(id = R.string.noteListVisibility_showText),
+            text = headerText,
+            style = MaterialTheme.typography.bodyMedium,
         )
         Icon(
-            imageVector = if (isShownNotes) Icons.Filled.ArrowUpward else Icons.Filled.ArrowDownward,
-            contentDescription = if (isShownNotes)
-                stringResource(id = R.string.noteListVisibility_hideIcon_description)
-            else
-                stringResource(id = R.string.noteListVisibility_showIcon_description),
+            imageVector = headerIcon,
+            contentDescription = headerIconDescription,
             tint = MaterialTheme.colorScheme.onSurface
         )
     }

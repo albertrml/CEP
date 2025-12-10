@@ -3,7 +3,6 @@ package br.com.arml.cep.ui.screen.component.common.address
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -31,8 +30,8 @@ fun AddressForms(
     FastScroll { scrollState ->
         Column(
             modifier = modifier
+                .fillMaxSize()
                 .verticalScroll(scrollState)
-                .fillMaxWidth()
                 .testTag(stringResource(R.string.addressForms_component_testTag)),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing),
         ){
@@ -61,8 +60,5 @@ fun AddressForms(
 )
 @Composable
 fun AddressScreenPreview() {
-    AddressForms(
-        modifier = Modifier.fillMaxSize(),
-        address = mockAddress
-    )
+    AddressForms(address = mockAddress)
 }

@@ -57,7 +57,7 @@ fun HeaderPreview(){
     Header(
         modifier = Modifier.fillMaxSize(),
         logo = Icons.AutoMirrored.Filled.ArrowBack,
-        title = "Header",
+        title = stringResource(R.string.header_titleText),
         onClickLogo = {},
         menu = {
             Row(

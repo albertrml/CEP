@@ -39,13 +39,13 @@ fun HeaderContent(
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            modifier = Modifier.testTag(stringResource(id = R.string.header_icon_testTag)),
+            modifier = Modifier.testTag(stringResource(id = R.string.headerContent_iconButton_testTag)),
             onClick = onClickLogo
         ) {
             Icon(
                 modifier = Modifier.fillMaxSize(),
                 imageVector = logo,
-                contentDescription = stringResource(R.string.header_logo_description)
+                contentDescription = stringResource(R.string.headerContent_iconButton_description)
             )
         }
         Text(

@@ -56,10 +56,10 @@ class LogFilterComponentTest {
             periodFilterEndDateField = getString(R.string.periodFilter_endDateField_testTag)
             periodFilterButton = getString(R.string.periodFilter_filterButton_testTag)
 
-            singleDateFilterField = getString(R.string.singleDateFilter_startDateField_testTag)
-            singleDateFilterButton = getString(R.string.singleDateFilter_filterButton_testTag)
+            singleDateFilterField = getString(R.string.dateFilter_startDateField_testTag)
+            singleDateFilterButton = getString(R.string.dateFilter_filterButton_testTag)
 
-            titleFilterField = getString(R.string.titleFilter_searchField_testTag)
+            titleFilterField = getString(R.string.titleFilter_titleField_testTag)
             titleFilterButton = getString(R.string.titleFilter_filterButton_testTag)
         }
 

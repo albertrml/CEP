@@ -13,15 +13,15 @@ sealed class FavoriteTab(
     @field:StringRes val contentDescription: Int
 ) {
     data object Address : FavoriteTab(
-        label = R.string.favorite_address_tab,
+        label = R.string.favoriteTab_addressTab_label,
         icon = Icons.Outlined.LocationOn,
-        contentDescription = R.string.favorite_address_tab_description
+        contentDescription = R.string.favoriteTab_addressTab_description
     )
 
     data object Notes : FavoriteTab(
-        label = R.string.favorite_notes_tab,
+        label = R.string.favoriteTab_noteTab_label,
         icon = Icons.Outlined.LocationOn,
-        contentDescription = R.string.favorite_notes_tab_description
+        contentDescription = R.string.favoriteTab_noteTab_description
     )
 
 }

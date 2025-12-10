@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.common.datepicker.DatePickerFieldToModal
+import br.com.arml.cep.ui.screen.component.common.datepicker.DatePickerField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -31,23 +31,24 @@ fun DateFilter(
 
     Column(
         modifier = modifier
-            .testTag(stringResource(R.string.singleDateFilter_component_testTag)),
+            .testTag(stringResource(R.string.dateFilter_component_testTag)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
     ) {
-        DatePickerFieldToModal(
+        DatePickerField(
             modifier = Modifier
-                .testTag(stringResource(R.string.singleDateFilter_startDateField_testTag)),
+                .testTag(stringResource(R.string.dateFilter_startDateField_testTag)),
             label = stringResource(labelId),
+            date = initialDate,
             onSelectDate = { initialDate = it }
         )
         Button(
             modifier = Modifier
-                .testTag(stringResource(R.string.singleDateFilter_filterButton_testTag)),
+                .testTag(stringResource(R.string.dateFilter_filterButton_testTag)),
             enabled = isButtonActive,
             onClick = { initialDate?.let { onFilterByDate(it) } },
         ) {
-            Text(text = stringResource(R.string.singleDateFilter_filterButton_label))
+            Text(text = stringResource(R.string.dateFilter_filterButton_label))
         }
     }
 }

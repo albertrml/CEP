@@ -37,7 +37,6 @@ class SearchDetailPaneTest {
     private lateinit var searchDetailPaneHeader: String
     private lateinit var searchDetailPaneTitleHeader: String
     private lateinit var searchDetailPaneIconHeader: String
-    private lateinit var backButton: String
     private val mockOnBackPress: () -> Unit = mockk()
 
     /*** On Success ***/
@@ -62,9 +61,8 @@ class SearchDetailPaneTest {
         /*** Header ***/
         searchDetailPaneHeader = context.getString(
             R.string.testTag_searchScreen_detailPane_header)
-        searchDetailPaneTitleHeader = context.getString(R.string.header_title_testTag)
-        searchDetailPaneIconHeader = context.getString(R.string.header_icon_testTag)
-        backButton = context.getString(R.string.icon_button_tag)
+        searchDetailPaneTitleHeader = context.getString(R.string.header_titleText)
+        searchDetailPaneIconHeader = context.getString(R.string.headerContent_iconButton_testTag)
         every { mockOnBackPress() } answers { println("mockOnBackPress CALLED") }
 
         /*** On Loading ***/

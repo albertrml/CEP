@@ -22,25 +22,19 @@ class NoteItemTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val noteItemTestTag = InstrumentationRegistry
-        .getInstrumentation()
-        .targetContext
-        .getString(R.string.noteItem_component_testTag)
+    val note = mockNotes.first()
+    private val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+    private val noteItemTestTag = ctx.getString(
+        R.string.noteItem_component_testTag,
+        note.id
+    )
 
-    private val noteItemDeleteButtonTestTag = InstrumentationRegistry
-        .getInstrumentation()
-        .targetContext
-        .getString(R.string.noteItem_deleteIconButton_testTag)
+    private val noteItemDeleteButtonTestTag = ctx.getString(R.string.noteItem_deleteIconButton_testTag)
 
-    private val noteItemTitleTestTag = InstrumentationRegistry
-        .getInstrumentation()
-        .targetContext
-        .getString(R.string.noteItem_titleText_testTag)
+    private val noteItemTitleTestTag = ctx.getString(R.string.noteItem_titleText_testTag)
 
     @Test
     fun noteItem_whenRendered_displaysTitleAndActionButtons(){
-        val note = mockNotes.first()
-
         composeTestRule.setContent {
             NoteItem(
                 note = note,

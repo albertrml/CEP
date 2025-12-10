@@ -26,6 +26,7 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.exception.CepException
+import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.ui.screen.component.common.address.AddressForms
 import br.com.arml.cep.ui.screen.component.common.header.Header
@@ -105,7 +106,9 @@ fun SearchDetailPaneOnSuccess(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .testTag(
-                    stringResource(R.string.testTag_searchScreen_detailPane_saveAddressButton)
+                    stringResource(
+                        R.string.testTag_searchScreen_detailPane_saveAddressButton
+                    )
                 ),
             enabled = !place.isFavorite.value,
             onClick = { onFavoriteClick(place) }
@@ -203,6 +206,19 @@ fun DisplayScreenPreview() {
             .fillMaxSize()
             .padding(MaterialTheme.dimens.mediumMargin),
         response = Response.Success(mockUnfavoritePlaces.first()),
+        onBackPress = {},
+        onFavoriteClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DisplayScreenWithFavoritePreview() {
+    SearchDetailPane(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(MaterialTheme.dimens.mediumMargin),
+        response = Response.Success(mockFavoritePlaces.first()),
         onBackPress = {},
         onFavoriteClick = {}
     )

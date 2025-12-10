@@ -42,7 +42,7 @@ class PlaceFilterComponentTest {
             searchCepField = getString(R.string.searchCepField_component_testTag)
             cepFilterSearchButton = getString(R.string.cepFilter_filterButton)
 
-            titleFilterTextField = getString(R.string.titleFilter_searchField_testTag)
+            titleFilterTextField = getString(R.string.titleFilter_titleField_testTag)
             titleFilterSearchButton = getString(R.string.titleFilter_filterButton_testTag)
         }
 

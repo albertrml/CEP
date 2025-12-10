@@ -1,14 +1,17 @@
 package br.com.arml.cep.ui.screen.component.common
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
+import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun CepAlertDialog(
@@ -21,7 +24,8 @@ fun CepAlertDialog(
 ) {
     if(isVisibility){
         AlertDialog(
-            modifier = modifier,
+            modifier = modifier
+                .testTag(stringResource(R.string.CepAlertdialog_component_testTag)),
             title = {
                 Text(
                     text = dialogTitle,
@@ -31,27 +35,36 @@ fun CepAlertDialog(
             text = {
                 Text(
                     text = dialogText,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyMedium
                 )
             },
             onDismissRequest = onDismissRequest,
-            confirmButton = {
-                TextButton(onClick = onConfirmationRequest) {
-                    Text(
-                        text = stringResource(R.string.alert_dialog_confirm_button),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                }
-            },
             dismissButton = {
                 TextButton(
-                    modifier = Modifier,
+                    border = BorderStroke(
+                        width = MaterialTheme.dimens.smallThickness,
+                        color = MaterialTheme.colorScheme.error
+                    ),
                     onClick = onDismissRequest
                 ) {
                     Text(
-                        text = stringResource(R.string.alert_dialog_dismiss_button),
+                        text = stringResource(R.string.CepAlertdialog_dismissButton_text),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    border = BorderStroke(
+                        width = MaterialTheme.dimens.smallThickness,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                    onClick = onConfirmationRequest
+                ) {
+                    Text(
+                        text = stringResource(R.string.CepAlertdialog_confirmButton_text),
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
             }

@@ -19,9 +19,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
 import br.com.arml.cep.ui.screen.component.favorite.FavoriteDetailPaneComponent
-import br.com.arml.cep.ui.screen.component.favorite.listpane.FavoriteChangeAlert
-import br.com.arml.cep.ui.screen.component.favorite.listpane.FavoriteExport
-import br.com.arml.cep.ui.screen.component.favorite.listpane.FavoriteImport
+import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteChangeAlert
+import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteExport
+import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteImport
 import br.com.arml.cep.ui.screen.component.favorite.FavoriteListPaneComponent
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.exportBackupLauncher

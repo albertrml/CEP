@@ -15,9 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
 import br.com.arml.cep.ui.screen.component.common.filter.CepFilter
 import br.com.arml.cep.ui.screen.component.common.filter.TitleFilter
@@ -68,7 +66,6 @@ fun PlaceFilterComponent(
 
                 PlaceFilterOption.ByTitle -> {
                     TitleFilter(
-                        nameFilter = stringResource(R.string.favorite_title_field_filter),
                         maxSize = MAX_TITLE_LENGTH,
                         onFilterByTitle = { title ->
                             keyboardController?.hide()

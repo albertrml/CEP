@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "br.com.arml.cep"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 6
         versionName = "2.0"

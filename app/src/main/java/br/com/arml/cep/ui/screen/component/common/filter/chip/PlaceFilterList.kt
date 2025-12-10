@@ -28,7 +28,6 @@ fun PlaceFilterList(
             PlaceFilterChip(
                 labelFilter = topic,
                 isSelected = topic === selectedFilter,
-                //selectedLabelFilter = selectedFilter,
                 onSelected = { topic -> onSelectedFilter(topic) }
             )
         }

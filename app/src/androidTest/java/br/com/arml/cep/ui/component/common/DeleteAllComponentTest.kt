@@ -35,14 +35,14 @@ class DeleteAllComponentTest {
     @Before
     fun steUp(){
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
-            deleteAllComponent = getString(R.string.testTag_deleteAllComponent)
-            deleteAllComponentDivider = getString(R.string.testTag_deleteAllComponent_divider)
-            deleteAllComponentButton = getString(R.string.testTag_deleteAllComponent_button)
-            logScreenDeleteAllLogAlert = getString(R.string.testTag_logScreen_DeleteAllLogAlert)
+            deleteAllComponent = getString(R.string.deleteAllComponent_component_testTag)
+            deleteAllComponentDivider = getString(R.string.deleteAllComponent_horizontalDivider_testTag)
+            deleteAllComponentButton = getString(R.string.deleteAllComponent_button_testTag)
+            logScreenDeleteAllLogAlert = getString(R.string.CepAlertdialog_component_testTag)
             logScreenDeleteAllLogAlertTitle = getString(R.string.log_delete_all_log_title)
             logScreenDeleteAllLogAlertMessage = getString(R.string.log_delete_all_log_alert)
-            logScreenDeleteAllLogAlertConfirmButton = getString(R.string.alert_dialog_confirm_button)
-            logScreenDeleteAllLogAlertDismissButton = getString(R.string.alert_dialog_dismiss_button)
+            logScreenDeleteAllLogAlertConfirmButton = getString(R.string.CepAlertdialog_confirmButton_text)
+            logScreenDeleteAllLogAlertDismissButton = getString(R.string.CepAlertdialog_dismissButton_text)
         }
 
         every { onConfirmDeleteAllEntries() } answers { println("onConfirmDeleteAllEntries") }

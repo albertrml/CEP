@@ -37,19 +37,19 @@ fun DeleteAllComponent(
 
     Row(
         modifier = modifier
-            .testTag(stringResource(R.string.testTag_deleteAllComponent)),
+            .testTag(stringResource(R.string.deleteAllComponent_component_testTag)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         HorizontalDivider(
             modifier = Modifier
                 .weight(1f)
-                .testTag(stringResource(R.string.testTag_deleteAllComponent_divider)),
+                .testTag(stringResource(R.string.deleteAllComponent_horizontalDivider_testTag)),
             thickness = MaterialTheme.dimens.mediumThickness
         )
         Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.dimens.smallPadding))
         Button(
             modifier = Modifier
-                .testTag(stringResource(R.string.testTag_deleteAllComponent_button)),
+                .testTag(stringResource(R.string.deleteAllComponent_button_testTag)),
             colors = ButtonColors(
                 containerColor = MaterialTheme.colorScheme.error,
                 contentColor = MaterialTheme.colorScheme.onError,
@@ -61,23 +61,19 @@ fun DeleteAllComponent(
         ) {
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription =
-                    stringResource(
-                        id =R.string.show_delete_alert_description,
-                        stringResource(R.string.log_title)
-                    ),
+                contentDescription = stringResource(
+                    R.string.deleteAllComponent_icon_description
+                ),
             )
             Text(
-                text = stringResource(R.string.show_delete_alert_button),
-                style = MaterialTheme.typography.titleMedium,
+                text = stringResource(R.string.deleteAllComponent_button_label),
+                style = MaterialTheme.typography.labelLarge,
             )
         }
     }
 
     if (showDeleteAlert) {
         CepAlertDialog(
-            modifier = modifier
-                .testTag(stringResource(R.string.testTag_logScreen_DeleteAllLogAlert)),
             dialogTitle = stringResource(deleteLogAlertTitleId),
             dialogText = stringResource(deleteLogAlertTextId),
             onDismissRequest = { showDeleteAlert = false },

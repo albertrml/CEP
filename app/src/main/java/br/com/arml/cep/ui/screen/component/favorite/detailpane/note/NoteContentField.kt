@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -20,8 +21,9 @@ fun NoteContentField(
     onContentChange: (String) -> Unit
 ){
     AppTextField(
-        modifier = modifier,
-        nameField = stringResource(R.string.place_details_content),
+        modifier = modifier
+            .testTag(stringResource(R.string.noteContentField_component_testTag)),
+        nameField = stringResource(R.string.noteContentField_nameField_text),
         text = content,
         onChangeText = { onContentChange(it) },
         maxSize = MAX_CONTENT_LENGTH,

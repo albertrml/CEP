@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.favorite.listpane
+package br.com.arml.cep.ui.screen.component.favorite.dialog
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,7 +19,7 @@ fun FavoriteChangeAlert(
     place?.apply {
         val title = place.cep.text
         val text = stringResource(
-            R.string.favorite_unwanted_alert_text,
+            R.string.favoriteChangeAlert_message_text,
             address.zipCode
         )
         CepAlertDialog(

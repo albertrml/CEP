@@ -21,7 +21,6 @@ fun PlaceFilterChip(
     modifier: Modifier = Modifier,
     labelFilter: PlaceFilterOption,
     isSelected: Boolean,
-    //selectedLabelFilter: PlaceFilterOption,
     onSelected: (PlaceFilterOption) -> Unit
 ) {
 
@@ -35,7 +34,7 @@ fun PlaceFilterChip(
                 Icon(
                     imageVector = Icons.Filled.Check,
                     contentDescription = stringResource(
-                        R.string.log_selected_filter_description,
+                        R.string.placeFilterChip_leadingIcon_description,
                         labelFilter.name
                     ),
                     modifier = Modifier.padding(

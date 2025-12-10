@@ -1,6 +1,5 @@
 package br.com.arml.cep.ui.screen.component.favorite.detailpane
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -41,11 +40,12 @@ fun FormsComponent(
 
 @Preview(showBackground = true)
 @Composable
-fun NoteFormsComponentPreview(){
-    val (address, note) = mockFavoritePlaces.first().let { it.address to it.notes.first() }
+fun AddressFormsComponentPreview(){
+    val (address, note) = mockFavoritePlaces
+        .first().let { it.address to it.notes.first() }
     FormsComponent(
-        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.dimens.smallPadding),
-        selectedTab = FavoriteTab.Notes,
+        modifier = Modifier.padding(MaterialTheme.dimens.smallPadding),
+        selectedTab = FavoriteTab.Address,
         address = address,
         note = note,
         onClick = {}
@@ -54,11 +54,11 @@ fun NoteFormsComponentPreview(){
 
 @Preview(showBackground = true)
 @Composable
-fun AddressFormsComponentPreview(){
+fun NoteFormsComponentPreview(){
     val (address, note) = mockFavoritePlaces.first().let { it.address to it.notes.first() }
     FormsComponent(
-        modifier = Modifier.fillMaxWidth().padding(MaterialTheme.dimens.smallPadding),
-        selectedTab = FavoriteTab.Address,
+        modifier = Modifier.padding(MaterialTheme.dimens.smallPadding),
+        selectedTab = FavoriteTab.Notes,
         address = address,
         note = note,
         onClick = {}

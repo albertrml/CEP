@@ -43,7 +43,7 @@ class TitleFilterTest {
     fun setUp() {
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
             titleFilterComposable = getString(R.string.titleFilter_component_testTag)
-            titleFilterField = getString(R.string.titleFilter_searchField_testTag)
+            titleFilterField = getString(R.string.titleFilter_titleField_testTag)
             titleFilterButton = getString(R.string.titleFilter_filterButton_testTag)
         }
 
@@ -56,7 +56,6 @@ class TitleFilterTest {
         composeTestRule.setContent {
             TitleFilter(
                 modifier = Modifier.fillMaxSize(),
-                nameFilter = "Teste",
                 maxSize = MAX_TITLE_LENGTH,
                 onFilterByTitle = {}
             )

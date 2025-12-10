@@ -88,9 +88,9 @@ fun FastScrollList(
                 )
                 Text(
                     text = if (isFabPointsDown) {
-                        stringResource(R.string.scrollable_button_down)
+                        stringResource(R.string.fastScrollList_downButton_text)
                     } else {
-                        stringResource(R.string.scrollable_button_up)
+                        stringResource(R.string.fastScrollList_upButton_text)
                     },
                     style = MaterialTheme.typography.bodyMedium
                 )

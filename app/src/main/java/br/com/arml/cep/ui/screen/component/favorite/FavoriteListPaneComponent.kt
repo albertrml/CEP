@@ -29,12 +29,13 @@ import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
 import br.com.arml.cep.model.mock.mockFavoritePlaces
-import br.com.arml.cep.ui.screen.component.favorite.listpane.FavoriteFilter
+import br.com.arml.cep.ui.screen.component.common.filter.chip.PlaceFilterComponent
 import br.com.arml.cep.ui.screen.component.favorite.listpane.FavoriteListComponent
 import br.com.arml.cep.ui.screen.component.favorite.listpane.header.FavoriteListPaneHeader
 import br.com.arml.cep.ui.screen.favorite.FavoriteState
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
+import br.com.arml.cep.ui.utils.favoriteFilterOptions
 
 @Composable
 fun FavoriteListPaneComponent(
@@ -90,10 +91,11 @@ fun FavoriteListPaneComponent(
                         verticalArrangement = Arrangement
                             .spacedBy(MaterialTheme.dimens.mediumPadding)
                     ) {
-                        FavoriteFilter(
+                        PlaceFilterComponent(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .testTag(stringResource(R.string.testTag_favoriteList_filter)),
+                            filters = favoriteFilterOptions,
                             onFilterByCep = { query -> onCepFilter(query) },
                             onFilterByTitle = { query -> onTitleFilter(query) },
                             onNoneFilter = { onNoneFilter() }

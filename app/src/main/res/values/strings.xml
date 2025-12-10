@@ -1,30 +1,50 @@
 <resources>
-    <string name="appTextField_component_testTag">AppTextFieldComponent</string>
-    <string name="appTextField_inputCounter_testTag">AppTextFieldInputCounter</string>
+    <string name="app_name">CEP</string>
 
+    <!-- Address -->
     <string name="addressField_component_testTag">AddressFieldComponent</string>
     <string name="addressField_title_testTag">TitleAddressField</string>
     <string name="addressField_value_testTag">ValueAddressField</string>
     <string name="addressForms_component_testTag">AddressFormsComponent</string>
 
-    <string name="alert_dialog_confirm_button">Confirmar</string>
-    <string name="alert_dialog_dismiss_button">Cancelar</string>
+    <!-- App-wide -->
+    <string name="appTextField_component_testTag">AppTextFieldComponent</string>
+    <string name="appTextField_inputCounter_testTag">AppTextFieldInputCounter</string>
 
-    <string name="app_name">CEP</string>
-
-    <string name="cache_delete_alert">Esta ação apagará todos os CEPS não favoritados, bem como seus registros no histórico. Desejas prosseguir?</string>
+    <!-- Cache -->
     <string name="cache_text_alert">Todos os dados serão apagados do cache que são favoritos serão apagados. Desejas continuar?</string>
     <string name="cache_title">Cache</string>
     <string name="cache_title_alert">Apagar cache</string>
 
+    <!-- CEP -->
+    <string name="CepAlertdialog_component_testTag">CepAlertdialogComponentTag</string>
+    <string name="CepAlertdialog_confirmButton_text">Confirmar</string>
+    <string name="CepAlertdialog_dismissButton_text">Cancelar</string>
     <string name="cepFilter_component_testTag">CepFilterComponent</string>
     <string name="cepFilter_filterButton">CepFilterSearchButton</string>
 
-    <string name="date_picker_confirm_button">OK</string>
-    <string name="date_picker_confirm_cancel">Cancelar</string>
-    <string name="date_picker_description">Selecionar data</string>
-    <string name="date_time_pattern_from_brazil">DD/MM/YYYY</string>
+    <!-- Date -->
+    <string name="datePickerField_brazilDateTimePattern_text">DD/MM/YYYY</string>
+    <string name="datePickerField_component_testTag">DatePickerModalComponentTag</string>
+    <string name="datePickerField_trailingIcon_description">Selecionar data</string>
+    <string name="datePickerModal_component_testTag">DatePickerModal</string>
+    <string name="datePickerModal_confirmButton_label">OK</string>
+    <string name="datePickerModal_confirmButton_testTag">DatePickerModalConfirmButton</string>
+    <string name="datePickerModal_dismissButton_label">Cancelar</string>
+    <string name="datePickerModal_dismissButton_testTag">DatePickerModalDismissButton</string>
+    <string name="dateFilter_component_testTag">SingleDateFilterComposable</string>
+    <string name="dateFilter_startDateField_testTag">SingleDateFilterField</string>
+    <string name="dateFilter_filterButton_testTag">SingleDateFilterButton</string>
+    <string name="dateFilter_filterButton_label">Filtrar</string>
 
+    <!-- Delete -->
+    <string name="deleteAllComponent_component_testTag">DeleteAllComponentCompose</string>
+    <string name="deleteAllComponent_button_testTag">DeleteAllComponentButton</string>
+    <string name="deleteAllComponent_button_label">Todos</string>
+    <string name="deleteAllComponent_icon_description">Botão para deletar todos os registros do Histórico</string>
+    <string name="deleteAllComponent_horizontalDivider_testTag">DeleteAllComponentDivider</string>
+
+    <!-- Destination -->
     <string name="destination_cache">Cache</string>
     <string name="destination_favorite">Favorito</string>
     <string name="destination_favorite_description">Ceps favoritos</string>
@@ -33,6 +53,7 @@
     <string name="destination_search">Procurar</string>
     <string name="destination_search_description">Procurar CEP</string>
 
+    <!-- Display -->
     <string name="display_address_title">Endereço</string>
     <string name="display_city_field">"Cidade: "</string>
     <string name="display_complement_field">"Complemento: "</string>
@@ -49,54 +70,69 @@
     <string name="display_uf_field">"UF: "</string>
     <string name="display_zipcode_field">"CEP: "</string>
 
-    <string name="fastScrollGrid_component_testTag">FastScrollGridComponent</string>
-    <string name="fastScrollGrid_fabToEnd_contentDescription">FastScrollGridFabToEnd</string>
-    <string name="fastScrollGrid_fabToStart_contentDescription">FastScrollGridFabToStart</string>
-    <string name="fastScrollGrid_fab_testTag">FastScrollGridFab</string>
-    <string name="fastScrollList_component_testTag">FastScrollListComponent</string>
-    <string name="fastScrollList_fabToEnd_contentDescription">FastScrollListFabToEnd</string>
-    <string name="fastScrollList_fabToStart_contentDescription">FastScrollListFabToStart</string>
-    <string name="fastScrollList_fab_testTag">FastScrollListFab</string>
+    <!-- Fast Scroll -->
     <string name="fastScroll_component_testTag">FastScrollComponent</string>
     <string name="fastScroll_fabToEnd_contentDescription">Mover para o fim da lista</string>
     <string name="fastScroll_fabToStart_contentDescription">Mover para o início da lista</string>
     <string name="fastScroll_fab_testTag">FastScrollFabTag</string>
+    <string name="fastScrollGrid_component_testTag">FastScrollGridComponent</string>
+    <string name="fastScrollGrid_downButton_text">Fim</string>
+    <string name="fastScrollGrid_fab_testTag">FastScrollGridFab</string>
+    <string name="fastScrollGrid_fabToEnd_contentDescription">FastScrollGridFabToEnd</string>
+    <string name="fastScrollGrid_fabToStart_contentDescription">FastScrollGridFabToStart</string>
+    <string name="fastScrollGrid_upButton_text">Topo</string>
+    <string name="fastScrollList_component_testTag">FastScrollListComponent</string>
+    <string name="fastScrollList_downButton_text">Fim</string>
+    <string name="fastScrollList_fabToEnd_contentDescription">FastScrollListFabToEnd</string>
+    <string name="fastScrollList_fabToStart_contentDescription">FastScrollListFabToStart</string>
+    <string name="fastScrollList_fab_testTag">FastScrollListFab</string>
+    <string name="fastScrollList_upButton_text">Topo</string>
 
+    <!-- Favorite -->
     <string name="favorite_address_button">Anotação</string>
+    <string name="favorite_address_tab">Endereço</string>
+    <string name="favorite_address_tab_description">Aba de endereço</string>
     <string name="favorite_details_save_button">Criar</string>
     <string name="favorite_details_title">Endereço</string>
     <string name="favorite_details_title_error_msg">O título deve conter entre %1$s e %2$s caracteres</string>
     <string name="favorite_details_update_button">Atualizar</string>
     <string name="favorite_details_update_button_description">Botão para atualizar nota do cep</string>
     <string name="favorite_extra_title">Anotação</string>
-    <string name="favorite_list_export_msg">Deseja exportar os registros salvos como favoritos?</string>
-    <string name="favorite_list_export_title">Exportar</string>
-    <string name="favorite_list_import_msg">Deseja selecionar arquivo de backup para importar?</string>
-    <string name="favorite_list_import_title">Importar</string>
+    <string name="favorite_notes_tab">Anotação</string>
+    <string name="favorite_notes_tab_description">Aba de anotações</string>
     <string name="favorite_place_element_zipcode">CEP: %1$s</string>
     <string name="favorite_title">Favoritos</string>
     <string name="favorite_title_field_filter">Título</string>
     <string name="favorite_unwanted_alert_text">O %1$s será removido da lista dos favoritos e perderá sua nota, mas permanecerá em cache. Desejas prosseguir?</string>
     <string name="favorite_unwanted_alert_title">Favorito</string>
-    <string name="favorite_address_tab">Endereço</string>
-    <string name="favorite_notes_tab">Anotação</string>
-    <string name="favorite_address_tab_description">Aba de endereço</string>
-    <string name="favorite_notes_tab_description">Aba de anotações</string>
-
+    <string name="favoriteChangeAlert_message_text">O %1$s será removido da lista dos favoritos e perderá sua nota, mas permanecerá em cache. Desejas prosseguir?</string>
+    <string name="favoriteExport_message_text">Deseja exportar os registros salvos como favoritos?</string>
+    <string name="favoriteExport_title_text">Exportar</string>
+    <string name="favoriteImport_message_text">Deseja selecionar arquivo de backup para importar?</string>
+    <string name="favoriteImport_title_text">Importar</string>
     <string name="favoriteItem_component_testTag">FavoriteItemComponentTag</string>
-
     <string name="favoriteItemActionBar_component_testTag">FavoriteItemActionBarComponentTestTag</string>
     <string name="favoriteItemActionBar_favoriteIcon_description">Botão para desfavoritar Cep</string>
     <string name="favoriteItemActionBar_favoriteIcon_testTag">PlaceElementFavoriteIconButton</string>
     <string name="favoriteItemActionBar_titleText_zipcode">CEP: %1$s</string>
+    <string name="favoriteListPaneHeader_title_label">Favoritos</string>
+    <string name="favoriteListPaneHeaderMenu_component_testTag">FavoriteListPaneHeaderMenuTestTag</string>
+    <string name="favoriteListPaneHeaderMenu_exportButton_description">Botão para exportar os favoritos</string>
+    <string name="favoriteListPaneHeaderMenu_exportButton_testTag">FavoriteListPaneHeaderMenuExportButtonTestTag</string>
+    <string name="favoriteListPaneHeaderMenu_importButton_description">Botão para importar os favoritos</string>
+    <string name="favoriteListPaneHeaderMenu_importButton_testTag">FavoriteListPaneHeaderMenuImportButtonTestTag</string>
+    <string name="favoriteTab_addressTab_label">Endereço</string>
+    <string name="favoriteTab_addressTab_description">Aba de endereço</string>
+    <string name="favoriteTab_noteTab_label">Anotações</string>
+    <string name="favoriteTab_noteTab_description">Aba de anotações</string>
 
+    <!-- Header -->
     <string name="header_component_testTag">HeaderComponent</string>
-    <string name="header_icon_testTag">IconHeader</string>
-    <string name="header_logo_description">Botão do cabeçalho</string>
-    <string name="header_title_testTag">TitleHeader</string>
+    <string name="header_titleText">Header</string>
+    <string name="headerContent_iconButton_testTag">IconHeader</string>
+    <string name="headerContent_iconButton_description">Botão do cabeçalho</string>
 
-    <string name="icon_button_tag">back_button</string>
-
+    <!-- Log -->
     <string name="log_cep_field">CEP: %1$s</string>
     <string name="log_delete_all_log_alert">Esta ação apagará todo o histórico de pesquisa. Desejas prosseguir?</string>
     <string name="log_delete_all_log_title">Apagar histórico</string>
@@ -112,71 +148,91 @@
     <string name="log_timestamp_field">Pesquisado em: %1$s</string>
     <string name="log_title">Histórico</string>
 
-    <string name="noteItem_component_testTag">NoteItemComponent</string>
+    <!-- Note -->
+    <string name="noteContentField_component_testTag">NoteContentFieldComponentTestTag</string>
+    <string name="noteContentField_nameField_text">Note</string>
+    <string name="noteTitleField_component_testTag">NoteTitleFieldComponentTestTag</string>
+    <string name="noteTitleField_nameField_text">Título</string>
+    <string name="noteForms_component_testTag">NoteFormsComponentTestTag</string>
+    <string name="noteFormsButton_component_testTag">NoteFormsButtonComponentTestTag</string>
+    <string name="noteFormsButton_saveButton_text">Criar</string>
+    <string name="noteFormsButton_saveButton_description">Botão para criar nota</string>
+    <string name="noteFormsButton_updateButton_text">Atualizar</string>
+    <string name="noteFormsButton_updateButton_description">Botão para atualizar nota</string>
+    <string name="noteItem_component_testTag">NoteItemComponentTestTag %1$s</string>
     <string name="noteItem_deleteIconButton_testTag">NoteItemDeleteIconButton</string>
+    <string name="noteItem_deleteIconButton_description">Botão para remover a anotação %1$s</string>
     <string name="noteItem_titleText_testTag">NoteItemTitleTestTag</string>
-
+    <string name="noteListComponent_component_testTag">NoteListComponentComponentTestTag</string>
+    <string name="noteList_component_testTag">NoteListComponentTestTag</string>
     <string name="noteListMenu_addNoteButton_testTag">NoteListMenuAddNoteButtonTag</string>
     <string name="noteListMenu_component_testTag">NoteListMenuComponent</string>
     <string name="noteListMenu_horizontalDivider_testTag">NoteListMenuHorizontalDivider</string>
     <string name="noteListMenu_noteAdd_description">Botão adicionar anotação</string>
-
     <string name="noteListVisibility_component_testTag">NoteListVisibilityComponent</string>
     <string name="noteListVisibility_hideIcon_description">Ícone de esconder anotações</string>
-    <string name="noteListVisibility_hideText">Esconder anotações</string>
+    <string name="noteListVisibility_hideList_Text">Esconder anotações</string>
     <string name="noteListVisibility_showIcon_description">Ícone de mostra anotações</string>
-    <string name="noteListVisibility_showText">Mostrar anotações</string>
+    <string name="noteListVisibility_showList_Text">Mostrar anotações</string>
 
-    <string name="noteList_component_testTag">NoteListComponent</string>
-
-    <string name="noteListComponent_component_testTag">NoteListComponentTestTag</string>
-
+    <!-- Period -->
     <string name="periodFilter_composable_testTag">PeriodFilterComposable</string>
+    <string name="periodFilter_startDateField_label">De</string>
+    <string name="periodFilter_startDateField_testTag">PeriodFilterStartDateField</string>
     <string name="periodFilter_endDateField_label">Até</string>
     <string name="periodFilter_endDateField_supportText">A data inicial deve ser menor que a final</string>
     <string name="periodFilter_endDateField_testTag">PeriodFilterEndDateField</string>
+    <string name="periodFilter_filterButton_label">Filtrar</string>
     <string name="periodFilter_filterButton_testTag">PeriodFilterButton</string>
-    <string name="periodFilter_filterButton_text">Filtrar</string>
-    <string name="periodFilter_startDateField_label">De</string>
-    <string name="periodFilter_startDateField_testTag">PeriodFilterStartDateField</string>
 
+    <!-- Place -->
     <string name="place_details_content">Note</string>
     <string name="place_details_title">Título</string>
+    <string name="placeFilterChip_leadingIcon_description">Filtro %1$s selecionado</string>
 
-    <string name="scrollable_button_down">Fim</string>
-    <string name="scrollable_button_up">Topo</string>
-
+    <!-- Search -->
     <string name="searchCepField_clearTrailingIcon">Limpar campo cep</string>
-    <string name="searchCepField_label">CEP</string>
-    <string name="searchCepField_hint">Digite o CEP</string>
     <string name="searchCepField_component_testTag">SearchCepFieldComponent</string>
-
+    <string name="searchCepField_hint">Digite o CEP</string>
+    <string name="searchCepField_label">CEP</string>
     <string name="search_button_label">Pesquisar</string>
     <string name="search_title">Busca</string>
 
+    <!-- Show -->
     <string name="show_delete_alert_button">Todos</string>
     <string name="show_delete_alert_cache">cache</string>
     <string name="show_delete_alert_description">Botão para deletar todos os registros do %1$s</string>
     <string name="show_delete_alert_log">histórico</string>
 
-    <string name="singleDateFilter_filterButton_testTag">SingleDateFilterButton</string>
-    <string name="singleDateFilter_component_testTag">SingleDateFilterComposable</string>
-    <string name="singleDateFilter_startDateField_testTag">SingleDateFilterField</string>
-    <string name="singleDateFilter_filterButton_label">Filtrar</string>
-
-    <string name="titleFilter_filterButton_testTag">TitleFilterButton</string>
+    <!-- Title -->
     <string name="titleFilter_component_testTag">TitleFilterComposable</string>
-    <string name="titleFilter_searchField_testTag">TitleFilterField</string>
+    <string name="titleFilter_filterButton_testTag">TitleFilterButton</string>
+    <string name="titleFilter_titleField_label">Título</string>
+    <string name="titleFilter_titleField_testTag">TitleFilterField</string>
 
-    <string name="testTag_deleteAllComponent">DeleteAllComponentCompose</string>
-    <string name="testTag_deleteAllComponent_divider">DeleteAllComponentDivider</string>
-    <string name="testTag_deleteAllComponent_button">DeleteAllComponentButton</string>
-
-    <string name="testTag_datePickerField">DatePickerField</string>
-    <string name="testTag_datePickerModal">DatePickerModal</string>
-    <string name="testTag_datePicker_cancelTextButton">DatePickerCancelTextButton</string>
-    <string name="testTag_datePicker_confirmTextButton">DatePickerConfirmTextButton</string>
-
+    <!-- Test Tags -->
+    <string name="testTag_addressForms_component">AddressFormsComponent</string>
+    <string name="testTag_cepFilter_searchField">CepFilterSearchField</string>
+    <string name="testTag_favoriteDetails_addressContent">FavoriteDetailsAddressContent</string>
+    <string name="testTag_favoriteDetails_button">FavoriteDetailsButton</string>
+    <string name="testTag_favoriteDetails_component">FavoriteDetailsComponent</string>
+    <string name="testTag_favoriteDetails_content">FavoriteDetailsContent</string>
+    <string name="testTag_favoriteDetails_header">FavoriteDetailsHeader</string>
+    <string name="testTag_favoriteDetails_notesContent">FavoriteDetailsNotesContent</string>
+    <string name="testTag_favoriteExtraScreen_contentNoteField">FavoriteExtraScreenContentNoteField</string>
+    <string name="testTag_favoriteExtraScreen_header_component">FavoriteExtraScreenHeaderComponent</string>
+    <string name="testTag_favoriteExtraScreen_titleNoteField">FavoriteExtraScreenTitleNoteField</string>
+    <string name="testTag_favoriteExtraScreen_updateButton">FavoriteExtraScreenUpdateButton</string>
+    <string name="testTag_favoriteListHeader_exportButton">FavoriteListHeaderExportButton</string>
+    <string name="testTag_favoriteListHeader_importButton">FavoriteListHeaderImportButton</string>
+    <string name="testTag_favoriteList_component">FavoriteListPaneComponent</string>
+    <string name="testTag_favoriteList_filter">FavoriteListPaneFilter</string>
+    <string name="testTag_favoriteList_header">FavoriteListPaneHeader</string>
+    <string name="testTag_favoriteList_list">FavoriteListPaneList</string>
+    <string name="testTag_favoriteList_onFailure">FavoriteListPaneOnFailure</string>
+    <string name="testTag_favoriteList_onLoading">FavoriteListPaneOnLoading</string>
+    <string name="testTag_favoriteList_onSuccess">FavoriteListPaneOnSuccess</string>
+    <string name="testTag_logFilter_composable">LogFilterComposable</string>
     <string name="testTag_logScreen_DeleteAllLogAlert">LogScreenDeleteAllLogAlert</string>
     <string name="testTag_logScreen_fetching_OnFailure">LogScreenOnFailure</string>
     <string name="testTag_logScreen_fetching_OnLoading">LogScreenOnLoading</string>
@@ -184,7 +240,9 @@
     <string name="testTag_logScreen_filterComponent">LogScreenFilterComponent</string>
     <string name="testTag_logScreen_filter_deleteAllComponent">LogScreenDeleteAllComponent</string>
     <string name="testTag_logScreen_header">LogScreenHeader</string>
-
+    <string name="testTag_placeElement_favoriteIconButton">PlaceElementFavoriteIconButton %1$s</string>
+    <string name="testTag_placeFilter_component">PlaceFilterComponent</string>
+    <string name="testTag_placeFilter_composable">PlaceFilterComposable</string>
     <string name="testTag_searchScreen_detailPane_header">SearchScreenDetailPaneHeader</string>
     <string name="testTag_searchScreen_detailPane_onFailure">SearchScreenDetailPaneOnFailure</string>
     <string name="testTag_searchScreen_detailPane_onLoading">SearchScreenDetailPaneOnLoading</string>
@@ -194,31 +252,4 @@
     <string name="testTag_searchScreen_listPane_cepField">SearchScreenListPaneCepField</string>
     <string name="testTag_searchScreen_listPane_header">SearchScreenListPaneHeader</string>
     <string name="testTag_searchScreen_listPane_searchButton">SearchScreenListPaneSearchButton</string>
-
-    <string name="testTag_logFilter_composable">LogFilterComposable</string>
-    <string name="testTag_placeFilter_component">PlaceFilterComponent</string>
-    <string name="testTag_placeFilter_composable">PlaceFilterComposable</string>
-    <string name="testTag_favoriteExtraScreen_header_component">FavoriteExtraScreenHeaderComponent</string>
-    <string name="testTag_favoriteExtraScreen_titleNoteField">FavoriteExtraScreenTitleNoteField</string>
-    <string name="testTag_favoriteExtraScreen_contentNoteField">FavoriteExtraScreenContentNoteField</string>
-    <string name="testTag_favoriteExtraScreen_updateButton">FavoriteExtraScreenUpdateButton</string>
-    <string name="testTag_favoriteDetails_component">FavoriteDetailsComponent</string>
-    <string name="testTag_favoriteDetails_header">FavoriteDetailsHeader</string>
-    <string name="testTag_favoriteDetails_content">FavoriteDetailsContent</string>
-    <string name="testTag_favoriteDetails_button">FavoriteDetailsButton</string>
-    <string name="testTag_addressForms_component">AddressFormsComponent</string>
-    <string name="testTag_favoriteList_component">FavoriteListPaneComponent</string>
-    <string name="testTag_favoriteList_header">FavoriteListPaneHeader</string>
-    <string name="testTag_favoriteList_list">FavoriteListPaneList</string>
-    <string name="testTag_favoriteList_filter">FavoriteListPaneFilter</string>
-    <string name="testTag_favoriteList_onSuccess">FavoriteListPaneOnSuccess</string>
-    <string name="testTag_favoriteList_onLoading">FavoriteListPaneOnLoading</string>
-    <string name="testTag_favoriteList_onFailure">FavoriteListPaneOnFailure</string>
-    <string name="testTag_placeElement_favoriteIconButton">PlaceElementFavoriteIconButton %1$s</string>
-    <string name="testTag_favoriteListHeader_exportButton">FavoriteListHeaderExportButton</string>
-    <string name="testTag_favoriteListHeader_importButton">FavoriteListHeaderImportButton</string>
-    <string name="testTag_favoriteDetails_addressContent">FavoriteDetailsAddressContent</string>
-    <string name="testTag_favoriteDetails_notesContent">FavoriteDetailsNotesContent</string>
-
-    <string name="testTag_cepFilter_searchField">CepFilterSearchField</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -25,13 +26,19 @@ fun NoteFormsButton(
     content: String,
     onClick: (Note) -> Unit
 ){
-    val textButton = if(id == 0L)
-        stringResource(R.string.favorite_details_save_button)
+    val buttonText = if(id == 0L)
+        stringResource(R.string.noteFormsButton_saveButton_text)
     else
-        stringResource(R.string.favorite_details_update_button)
+        stringResource(R.string.noteFormsButton_updateButton_text)
+
+    val buttonDescription = if(id == 0L)
+        stringResource(R.string.noteFormsButton_saveButton_description)
+    else
+        stringResource(R.string.noteFormsButton_updateButton_description)
 
     Button(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(stringResource(R.string.noteFormsButton_component_testTag)),
         enabled = title.isValidTitleNoteSize(),
         onClick = {
             val newNote = Note.build(
@@ -44,10 +51,10 @@ fun NoteFormsButton(
     ) {
         Icon(
             imageVector = Icons.Filled.Create,
-            contentDescription = stringResource(R.string.favorite_details_update_button_description)
+            contentDescription = buttonDescription
         )
         Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
-        Text(text = textButton)
+        Text(text = buttonText)
     }
 }
 

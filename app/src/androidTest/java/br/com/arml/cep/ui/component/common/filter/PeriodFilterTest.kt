@@ -20,6 +20,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -29,50 +30,28 @@ class PeriodFilterTest {
     @get:Rule
     val composeTestRule: ComposeContentTestRule = createComposeRule()
 
+    private val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+
     /*** DatePicker ***/
-    private lateinit var datePickerModal: String
-    private lateinit var confirmTextButton: String
-    private lateinit var initialDateLabel: String
-    private lateinit var finalDateLabel: String
+    private val confirmButtonDatePickerTag = ctx.getString(R.string.datePickerModal_confirmButton_testTag)
 
     /*** Filter Composable ***/
-    private lateinit var periodFilterComposable: String
-    private val formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy", Locale.getDefault())
+    private val periodFilterComposable = ctx.getString(R.string.periodFilter_composable_testTag)
 
     /*** End Date ***/
-    private lateinit var periodFilterEndDateField: String
-    private val currentTimeMillis = System.currentTimeMillis()
-    private val currentDate = currentTimeMillis.toFormattedBR()
-    private val todayFormatted = Instant.ofEpochMilli(currentTimeMillis)
-        .atZone(ZoneId.systemDefault())
-        .format(formatter)
+    private val periodFilterEndDateField = ctx.getString(R.string.periodFilter_endDateField_testTag)
+    private val periodFilterEndDateFieldLabel = ctx.getString(R.string.periodFilter_endDateField_label)
 
     /*** Initial Date ***/
-    private lateinit var periodFilterStartDateField: String
-    private val yesterdayTimestamp = currentTimeMillis - 24 * 60 * 60 * 1000
-    private val yesterdayDate = yesterdayTimestamp.toFormattedBR()
-    private val yesterdayFormatted = Instant.ofEpochMilli(yesterdayTimestamp)
-        .atZone(ZoneId.systemDefault())
-        .format(formatter)
+    private val periodFilterStartDateField = ctx.getString(R.string.periodFilter_startDateField_testTag)
+    private val periodFilterStartDateFieldLabel = ctx.getString(R.string.periodFilter_startDateField_label)
 
     /*** Filter Button ***/
-    private lateinit var periodFilterButton: String
+    private val periodFilterButton = ctx.getString(R.string.periodFilter_filterButton_testTag)
     private val mockOnFilterByPeriod: (Long, Long) -> Unit = mockk(relaxed = true)
 
     @Before
     fun setUp() {
-        InstrumentationRegistry.getInstrumentation().targetContext.apply {
-            periodFilterComposable = getString(R.string.periodFilter_composable_testTag)
-            periodFilterStartDateField = getString(R.string.periodFilter_startDateField_testTag)
-            periodFilterEndDateField = getString(R.string.periodFilter_endDateField_testTag)
-            periodFilterButton = getString(R.string.periodFilter_filterButton_testTag)
-            initialDateLabel = getString(R.string.periodFilter_startDateField_label)
-            finalDateLabel = getString(R.string.periodFilter_endDateField_label)
-
-            datePickerModal = getString(R.string.testTag_datePickerModal)
-            confirmTextButton = getString(R.string.testTag_datePicker_confirmTextButton)
-        }
-
         composeTestRule.setContent {
             PeriodFilter(onFilterByInitialDate = mockOnFilterByPeriod)
         }
@@ -82,7 +61,40 @@ class PeriodFilterTest {
         }
     }
 
-    private fun selectDateInPicker(dateFormatted: String) {
+    private fun mockDates(): Pair<Long, Long> {
+        val zone = ZoneId.systemDefault()
+        val today = LocalDate.now(zone)
+
+        val start = if(today.dayOfMonth == 14) 13 else 14
+        val end = if(today.dayOfMonth == 16) 17 else 16
+
+        val startDate = today
+            .withDayOfMonth(start)
+            .atStartOfDay(zone)
+            .toInstant()
+            .toEpochMilli()
+
+        val endDate = today
+            .withDayOfMonth(end)
+            .atStartOfDay(zone)
+            .toInstant()
+            .toEpochMilli()
+
+        return startDate to endDate
+    }
+
+    private fun nodeDateFormat(timeInMillis: Long): String{
+        val formatter = DateTimeFormatter
+            .ofPattern("EEEE, MMMM d, yyyy", Locale.getDefault())
+
+        return Instant.ofEpochMilli(timeInMillis)
+            .atZone(ZoneId.systemDefault())
+            .format(formatter)
+    }
+
+    private fun selectDateInPicker(timeInMillis: Long) {
+        val dateFormatted = nodeDateFormat(timeInMillis)
+
         composeTestRule.apply {
             onNodeWithText(
                 text = dateFormatted,
@@ -90,7 +102,7 @@ class PeriodFilterTest {
                 ignoreCase = true,
                 useUnmergedTree = true
             ).performClick()
-            onNodeWithTag(confirmTextButton).performClick()
+            onNodeWithTag(confirmButtonDatePickerTag).performClick()
             waitForIdle()
         }
     }
@@ -103,30 +115,43 @@ class PeriodFilterTest {
     }
 
     @Test
-    fun periodFilter_shouldDisplayYesterdayDate_whenYesterdayIsSelected_inStartDateField() {
+    fun periodFilter_shouldDisplayStartDate_whenStartDatIsSelected_inStartDateField() {
+        val date = mockDates().first
+        val expectedDate = date.toFormattedBR()
         composeTestRule.apply {
+            onNodeWithTag(periodFilterStartDateField)
+                .assert(hasText(periodFilterStartDateFieldLabel))
             onNodeWithTag(periodFilterStartDateField).performClick()
-            selectDateInPicker(yesterdayFormatted)
-            onNodeWithText(yesterdayDate).assert(hasText(yesterdayDate))
+            selectDateInPicker(date)
+            onNodeWithTag(periodFilterStartDateField).assert(
+                hasText(expectedDate)
+            )
         }
     }
 
     @Test
-    fun periodFilter_shouldDisplayTodayDate_whenTodayIsSelected_inEndDateField() {
+    fun periodFilter_shouldDisplayEndDate_whenTodayIsSelected_inEndDateField() {
+        val date = mockDates().second
+        val expectedDate = date.toFormattedBR()
         composeTestRule.apply {
-            onNodeWithTag(periodFilterEndDateField).performClick()
-            selectDateInPicker(todayFormatted)
-            onNodeWithText(currentDate).assert(hasText(currentDate))
+            onNodeWithTag(periodFilterEndDateField)
+                .assert(hasText(periodFilterEndDateFieldLabel))
+                .performClick()
+
+            selectDateInPicker(date)
+
+            onNodeWithTag(periodFilterEndDateField)
+                .assert(hasText(expectedDate))
         }
     }
 
     @Test
     fun periodFilter_shouldUnableButton_whenNoDatesAreSelected() {
         composeTestRule.apply {
-            onNodeWithText(initialDateLabel)
+            onNodeWithTag(periodFilterStartDateField)
                 .assertExists()
                 .assert(hasText(""))
-            onNodeWithText(finalDateLabel)
+            onNodeWithTag(periodFilterEndDateField)
                 .assertExists()
                 .assert(hasText(""))
             onNodeWithTag(periodFilterButton).assertIsNotEnabled()
@@ -135,10 +160,11 @@ class PeriodFilterTest {
 
     @Test
     fun periodFilter_shouldUnableButton_whenOnlyInitialDateIsSelected() {
+        val date = mockDates().first
         composeTestRule.apply {
             onNodeWithTag(periodFilterStartDateField).performClick()
-            selectDateInPicker(yesterdayFormatted)
-            onNodeWithText(finalDateLabel)
+            selectDateInPicker(date)
+            onNodeWithTag(periodFilterEndDateField)
                 .assertExists()
                 .assert(hasText(""))
             onNodeWithTag(periodFilterButton).assertIsNotEnabled()
@@ -147,36 +173,41 @@ class PeriodFilterTest {
 
     @Test
     fun periodFilter_shouldUnableButton_whenOnlyEndDateIsSelected() {
+        val date = mockDates().second
         composeTestRule.apply {
-            onNodeWithText(initialDateLabel)
+            onNodeWithText(periodFilterStartDateFieldLabel)
                 .assertExists()
                 .assert(hasText(""))
             onNodeWithTag(periodFilterEndDateField).performClick()
-            selectDateInPicker(todayFormatted)
+            selectDateInPicker(date)
             onNodeWithTag(periodFilterButton).assertIsNotEnabled()
         }
     }
 
     @Test
     fun periodFilter_shouldActiveButton_whenBothDatesAreSelected() {
+        val (startDate, endDate) = mockDates()
         composeTestRule.apply {
             onNodeWithTag(periodFilterStartDateField).performClick()
-            selectDateInPicker(yesterdayFormatted)
+            selectDateInPicker(startDate)
             onNodeWithTag(periodFilterEndDateField).performClick()
-            selectDateInPicker(todayFormatted)
+            selectDateInPicker(endDate)
             onNodeWithTag(periodFilterButton).assertIsEnabled()
         }
     }
 
     @Test
     fun periodFilter_shouldFilter_whenFilterButtonIsActiveAndClicked() {
+        val (startDate, endDate) = mockDates()
         composeTestRule.apply{
             onNodeWithTag(periodFilterStartDateField).performClick()
-            selectDateInPicker(yesterdayFormatted)
+            selectDateInPicker(startDate)
+            waitForIdle()
             onNodeWithTag(periodFilterEndDateField).performClick()
-            selectDateInPicker(todayFormatted)
-            onNodeWithTag(periodFilterButton).performClick()
-            verify { mockOnFilterByPeriod(any(),any()) }
+            selectDateInPicker(endDate)
+            waitForIdle()
+            onNodeWithTag(periodFilterButton).assertIsEnabled().performClick()
+            verify { mockOnFilterByPeriod(startDate,endDate) }
         }
     }
 }

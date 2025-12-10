@@ -33,30 +33,25 @@ fun NoteForms(
     var content by rememberSaveable { mutableStateOf(note?.content ?: "") }
 
     Column(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(stringResource(R.string.noteForms_component_testTag)),
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         NoteTitleField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(stringResource(R.string.testTag_favoriteExtraScreen_titleNoteField)),
+            modifier = Modifier.fillMaxWidth(),
             title = title,
             onTitleChange = { title = it }
         )
 
         NoteContentField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(stringResource(R.string.testTag_favoriteExtraScreen_contentNoteField)),
+            modifier = Modifier.fillMaxWidth(),
             content = content,
             onContentChange = { content = it }
         )
 
         NoteFormsButton(
-            modifier = Modifier
-                .testTag(stringResource(R.string.testTag_favoriteExtraScreen_updateButton)),
             id = id,
             title = title,
             content = content,

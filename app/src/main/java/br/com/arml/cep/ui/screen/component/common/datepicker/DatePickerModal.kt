@@ -11,37 +11,38 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.model.utils.addCurrentHour
+import br.com.arml.cep.model.utils.adjustDay
 
 @Composable
 fun DatePickerModal(
+    modifier: Modifier = Modifier,
     onDateSelected: (Long?) -> Unit,
     onDismiss: () -> Unit
 ) {
     val datePickerState = rememberDatePickerState()
 
     DatePickerDialog(
-        modifier = Modifier.testTag(stringResource(R.string.testTag_datePickerModal)),
+        modifier = modifier
+            .testTag(stringResource(R.string.datePickerModal_component_testTag)),
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
                 modifier = Modifier
-                    .testTag(stringResource(R.string.testTag_datePicker_confirmTextButton)),
+                    .testTag(stringResource(R.string.datePickerModal_confirmButton_testTag)),
                 onClick = {
-                    onDateSelected(datePickerState.selectedDateMillis?.addCurrentHour())
-                    onDismiss()
+                    onDateSelected(datePickerState.selectedDateMillis?.adjustDay())
                 }
             ) {
-                Text(stringResource(R.string.date_picker_confirm_button))
+                Text(stringResource(R.string.datePickerModal_confirmButton_label))
             }
         },
         dismissButton = {
             TextButton(
                 modifier = Modifier
-                    .testTag(stringResource(R.string.testTag_datePicker_cancelTextButton)),
+                    .testTag(stringResource(R.string.datePickerModal_dismissButton_testTag)),
                 onClick = onDismiss
             ) {
-                Text(stringResource(R.string.date_picker_confirm_cancel))
+                Text(stringResource(R.string.datePickerModal_dismissButton_label))
             }
         }
     ) {

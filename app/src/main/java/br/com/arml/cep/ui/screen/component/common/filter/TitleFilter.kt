@@ -23,7 +23,6 @@ import br.com.arml.cep.ui.screen.component.common.field.AppTextField
 @Composable
 fun TitleFilter(
     modifier: Modifier = Modifier,
-    nameFilter: String,
     maxSize: Int,
     onFilterByTitle: (String) -> Unit,
 ) {
@@ -42,8 +41,8 @@ fun TitleFilter(
     ) {
         AppTextField(
             modifier = Modifier
-                .testTag(stringResource(R.string.titleFilter_searchField_testTag)),
-            nameField = nameFilter,
+                .testTag(stringResource(R.string.titleFilter_titleField_testTag)),
+            nameField = stringResource(R.string.titleFilter_titleField_label),
             text = text,
             onChangeText = { newText -> text = newText },
             maxSize = maxSize
@@ -63,7 +62,6 @@ fun TitleFilter(
 @Composable
 fun FieldFilterPreview() {
     TitleFilter(
-        nameFilter = "Name",
         maxSize = 100,
         onFilterByTitle = {}
     )

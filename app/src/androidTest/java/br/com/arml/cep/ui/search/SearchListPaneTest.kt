@@ -44,8 +44,8 @@ class SearchListPaneTest {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         context.apply {
             searchListPaneHeader = getString(R.string.testTag_searchScreen_listPane_header)
-            searchListPaneIconHeader = getString(R.string.header_icon_testTag)
-            searchListPaneTitleHeader = getString(R.string.header_title_testTag)
+            searchListPaneIconHeader = getString(R.string.headerContent_iconButton_testTag)
+            searchListPaneTitleHeader = getString(R.string.header_titleText)
             searchListPaneCepField = getString(R.string.testTag_searchScreen_listPane_cepField)
             searchListPaneSearchButton = getString(R.string.testTag_searchScreen_listPane_searchButton)
         }

@@ -32,7 +32,12 @@ fun NoteItem(
     ElevatedCard(
         modifier = modifier
             .clickable { onEditNote(note) }
-            .testTag(stringResource(R.string.noteItem_component_testTag)),
+            .testTag(
+                stringResource(
+                    R.string.noteItem_component_testTag,
+                    note.id
+                )
+            ),
         shape = MaterialTheme.shapes.medium,
     ){
         Row(
@@ -43,8 +48,7 @@ fun NoteItem(
                     color = MaterialTheme.colorScheme.onSurface,
                     shape = MaterialTheme.shapes.small
                 )
-                .padding(MaterialTheme.dimens.smallMargin)
-                .clickable { onEditNote(note) },
+                .padding(MaterialTheme.dimens.smallMargin),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -62,7 +66,10 @@ fun NoteItem(
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
-                    contentDescription = null,
+                    contentDescription = stringResource(
+                        R.string.noteItem_deleteIconButton_description,
+                        note.title
+                    ),
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }

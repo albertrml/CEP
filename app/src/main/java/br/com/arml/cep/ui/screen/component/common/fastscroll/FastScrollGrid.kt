@@ -95,9 +95,9 @@ fun FastScrollGrid(
                 )
                 Text(
                     text = if (isFabPointsDown) {
-                        stringResource(R.string.scrollable_button_down)
+                        stringResource(R.string.fastScrollGrid_downButton_text)
                     } else {
-                        stringResource(R.string.scrollable_button_up)
+                        stringResource(R.string.fastScrollGrid_upButton_text)
                     },
                     style = MaterialTheme.typography.bodyMedium
                 )

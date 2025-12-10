@@ -42,10 +42,15 @@ fun FastScroll(
     val canScrollForward by remember { derivedStateOf { scrollState.value < scrollState.maxValue } }
     val showFab by remember { derivedStateOf { scrollState.maxValue > 0 } }
 
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.TopCenter
-    ) {
+    val iconButton = if (canScrollForward)
+        Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowUp
+
+    val iconButtonDescription = if (canScrollForward)
+        stringResource(R.string.fastScroll_fabToEnd_contentDescription)
+    else
+        stringResource(R.string.fastScroll_fabToStart_contentDescription)
+
+    Box(modifier = modifier) {
         content(scrollState)
         if (showFab) {
             FloatingActionButton(
@@ -69,12 +74,8 @@ fun FastScroll(
                 }
             ) {
                 Icon(
-                    imageVector = if (canScrollForward)
-                        Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowUp,
-                    contentDescription = if (canScrollForward)
-                        stringResource(R.string.fastScroll_fabToEnd_contentDescription)
-                    else
-                        stringResource(R.string.fastScroll_fabToStart_contentDescription)
+                    imageVector = iconButton,
+                    contentDescription = iconButtonDescription
                 )
             }
         }

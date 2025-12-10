@@ -19,53 +19,57 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.utils.toFormattedBR
 
 @Composable
-fun DatePickerFieldToModal(
+fun DatePickerField(
     modifier: Modifier = Modifier,
     label: String,
-    onSelectDate: (Long) -> Unit,
+    date: Long? = null,
+    onSelectDate: (Long?) -> Unit = {},
     isError: Boolean = false,
     supportingText: @Composable (() -> Unit)? = null
 ) {
-    var selectedDate by remember { mutableStateOf<Long?>(null) }
     var showModal by remember { mutableStateOf(false) }
 
     OutlinedTextField(
-        value = selectedDate?.toFormattedBR() ?: "",
+        modifier = modifier
+            .pointerInput(date) {
+                awaitEachGesture {
+                    awaitFirstDown(pass = PointerEventPass.Initial)
+                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
+                    if (upEvent != null) {
+                        showModal = true
+                    }
+                }
+            },
+        value = date?.toFormattedBR() ?: "",
         onValueChange = { },
         label = { Text(label) },
-        placeholder = { Text(stringResource(R.string.date_time_pattern_from_brazil)) },
+        placeholder = {
+            Text(stringResource(R.string.datePickerField_brazilDateTimePattern_text))
+        },
         trailingIcon = {
             Icon(
                 Icons.Default.DateRange,
-                contentDescription = stringResource(R.string.date_picker_description)
+                contentDescription = stringResource(
+                    R.string.datePickerField_trailingIcon_description
+                )
             )
         },
         readOnly = true,
         isError = isError,
         supportingText = supportingText,
-        modifier = modifier
-            .pointerInput(selectedDate) {
-                awaitEachGesture {
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (upEvent != null) { showModal = true }
-                }
-            }
-            .testTag(stringResource(R.string.testTag_datePickerField))
     )
 
     if (showModal) {
         DatePickerModal(
             onDateSelected = {
-                selectedDate = it
-                it?.let { onSelectDate(it) }
+                onSelectDate(it)
+                showModal = false
             },
             onDismiss = { showModal = false }
         )
@@ -74,8 +78,8 @@ fun DatePickerFieldToModal(
 
 @Preview(showBackground = true)
 @Composable
-fun DatePickerFieldToModalPreview() {
-    DatePickerFieldToModal(
+fun DatePickerFieldPreview() {
+    DatePickerField(
         label = "Date",
         onSelectDate = {}
     )

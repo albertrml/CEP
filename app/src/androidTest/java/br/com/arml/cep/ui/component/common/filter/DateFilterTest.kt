@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
+import br.com.arml.cep.model.utils.adjustDay
 import br.com.arml.cep.model.utils.toFormattedBR
 import br.com.arml.cep.ui.screen.component.common.filter.DateFilter
 import io.mockk.every
@@ -26,42 +27,33 @@ class DateFilterTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
+    private val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+
     /*** DatePicker ***/
-    private lateinit var datePickerModal: String
-    private lateinit var confirmTextButton: String
-    private lateinit var singleDateLabel: String
+    private val confirmTextButton = ctx.getString(R.string.datePickerModal_confirmButton_testTag)
 
     /*** Filter Composable ***/
-    private lateinit var singleDateFilterComposable: String
+    private val singleDateFilterComposable = ctx
+        .getString(R.string.dateFilter_component_testTag)
     private val formatter = DateTimeFormatter
         .ofPattern("EEEE, MMMM d, yyyy", Locale.getDefault())
 
     /*** Date Field ***/
-    private lateinit var singleDateFilterDateField: String
-    private val todayInMillis = System.currentTimeMillis()
+    private val singleDateFilterDateField = ctx
+        .getString(R.string.dateFilter_startDateField_testTag)
+    private val todayInMillis = System.currentTimeMillis().adjustDay()
     private val today = todayInMillis.toFormattedBR()
     private val formattedToday = Instant.ofEpochMilli(todayInMillis)
         .atZone(ZoneId.systemDefault())
         .format(formatter)
 
     /*** Filter Button ***/
-    private lateinit var singleDateFilterButton: String
+    private val singleDateFilterButton = ctx
+        .getString(R.string.dateFilter_filterButton_testTag)
     private val mockOnFilterByDate: (Long) -> Unit = mockk(relaxed = true)
 
     @Before
     fun setUp(){
-        InstrumentationRegistry.getInstrumentation().targetContext.apply {
-            /*** Filter Composable ***/
-            singleDateFilterComposable = getString(R.string.singleDateFilter_component_testTag)
-            singleDateFilterDateField = getString(R.string.singleDateFilter_startDateField_testTag)
-            singleDateFilterButton = getString(R.string.singleDateFilter_filterButton_testTag)
-            singleDateLabel = getString(R.string.singleDateFilter_filterButton_label)
-
-            /*** DatePicker ***/
-            datePickerModal = getString(R.string.testTag_datePickerModal)
-            confirmTextButton = getString(R.string.testTag_datePicker_confirmTextButton)
-        }
-
         composeTestRule.setContent {
             DateFilter(
                 labelId = R.string.log_filter_initial_date_label,
@@ -130,7 +122,7 @@ class DateFilterTest {
             onNodeWithTag(singleDateFilterDateField).performClick()
             selectDateInPicker(formattedToday)
             onNodeWithTag(singleDateFilterButton).performClick()
-            verify { mockOnFilterByDate(any()) }
+            verify { mockOnFilterByDate(todayInMillis) }
         }
     }
 }

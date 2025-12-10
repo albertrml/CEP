@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.favorite.listpane
+package br.com.arml.cep.ui.screen.component.favorite.dialog
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -12,23 +12,6 @@ import br.com.arml.cep.R
 import br.com.arml.cep.ui.screen.component.common.CepAlertDialog
 
 @Composable
-fun FavoriteExport(
-    modifier: Modifier = Modifier,
-    isVisibility: Boolean,
-    onConfirmationRequest: () -> Unit = {},
-    onDismissRequest: () -> Unit = {}
-) {
-    CepAlertDialog(
-        modifier = modifier,
-        dialogTitle = stringResource(R.string.favorite_list_export_title),
-        dialogText = stringResource(R.string.favorite_list_export_msg),
-        isVisibility = isVisibility,
-        onDismissRequest = onDismissRequest,
-        onConfirmationRequest = onConfirmationRequest,
-    )
-}
-
-@Composable
 fun FavoriteImport(
     modifier: Modifier = Modifier,
     isVisibility: Boolean,
@@ -37,22 +20,11 @@ fun FavoriteImport(
 ) {
     CepAlertDialog(
         modifier = modifier,
-        dialogTitle = stringResource(R.string.favorite_list_import_title),
-        dialogText = stringResource(R.string.favorite_list_import_msg),
+        dialogTitle = stringResource(R.string.favoriteImport_title_text),
+        dialogText = stringResource(R.string.favoriteImport_message_text),
         isVisibility = isVisibility,
         onDismissRequest = onDismissRequest,
         onConfirmationRequest = onConfirmationRequest,
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FavoriteExportPreview() {
-    var isVisibility by rememberSaveable { mutableStateOf(true) }
-    FavoriteExport(
-        isVisibility = isVisibility,
-        onDismissRequest = { isVisibility = false },
-        onConfirmationRequest = {}
     )
 }
 

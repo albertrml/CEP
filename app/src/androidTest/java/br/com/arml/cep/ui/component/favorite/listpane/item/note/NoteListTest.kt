@@ -1,5 +1,6 @@
 package br.com.arml.cep.ui.component.favorite.listpane.item.note
 
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -28,7 +29,6 @@ class NoteListTest {
 
     private val noteListTag: String = ctx.getString(R.string.noteList_component_testTag)
     private val noteItemDeleteTag: String = ctx.getString(R.string.noteItem_deleteIconButton_testTag)
-    private val noteItemEditTag: String = ctx.getString(R.string.noteItem_component_testTag)
 
     private val mockOnEditNote: (Note) -> Unit = mockk(relaxed = true)
     private val mockOnDeleteNote: (Note) -> Unit = mockk(relaxed = true)
@@ -50,15 +50,15 @@ class NoteListTest {
                 noteItemDeleteTag,
                 true
             )
-            val noteItemEditButtons = onAllNodesWithTag(
-                noteItemEditTag,
-                true
-            )
 
             notes.forEachIndexed { index, note ->
+                val tag = ctx.getString(
+                    R.string.noteItem_component_testTag,
+                    note.id
+                )
+                onNodeWithTag(tag).assertExists().assertHasClickAction()
                 onNodeWithText(note.title).assertExists()
                 noteItemDeleteButtons[index].assertExists()
-                noteItemEditButtons[index].assertExists()
             }
         }
     }
@@ -75,13 +75,11 @@ class NoteListTest {
                 )
             }
 
-            val noteItemEditButtons = onAllNodesWithTag(
-                noteItemEditTag,
-                true
-            )
-
-            notes.forEachIndexed { index, note ->
-                noteItemEditButtons[index].performClick()
+            notes.forEach { note ->
+                val tag = ctx.getString(
+                    R.string.noteItem_component_testTag, note.id
+                )
+                onNodeWithTag(tag).performClick()
                 verify(exactly = 1) { mockOnEditNote(note) }
             }
         }

@@ -28,7 +28,7 @@ import kotlin.test.Test
 class HeaderTest {
     @get:Rule
     val composeTestRule: ComposeContentTestRule = createComposeRule()
-    lateinit var titleHeaderTag: String
+    lateinit var titleHeaderText: String
     lateinit var iconHeaderTag: String
 
     val mockOnClickLogo: () -> Unit = mockk(relaxed = true)
@@ -37,8 +37,8 @@ class HeaderTest {
     @Before
     fun setup(){
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
-            titleHeaderTag = getString(R.string.header_title_testTag)
-            iconHeaderTag = getString(R.string.header_logo_description)
+            titleHeaderText = getString(R.string.header_titleText)
+            iconHeaderTag = getString(R.string.headerContent_iconButton_description)
         }
     }
 
@@ -49,12 +49,12 @@ class HeaderTest {
                 Header(
                     modifier = Modifier.padding(MaterialTheme.dimens.mediumMargin),
                     logo = Icons.AutoMirrored.Filled.ArrowBack,
-                    title = titleHeaderTag,
+                    title = titleHeaderText,
                     onClickLogo = mockOnClickLogo,
                     menu = mockMenu
                 )
             }
-            onNodeWithText(titleHeaderTag).assertExists()
+            onNodeWithText(titleHeaderText).assertExists()
             onNodeWithContentDescription(iconHeaderTag).assertExists()
         }
     }
@@ -66,7 +66,7 @@ class HeaderTest {
             setContent {
                 Header(
                     logo = Icons.AutoMirrored.Filled.ArrowBack,
-                    title = titleHeaderTag,
+                    title = titleHeaderText,
                     onClickLogo = { clicked = true }
                 )
             }

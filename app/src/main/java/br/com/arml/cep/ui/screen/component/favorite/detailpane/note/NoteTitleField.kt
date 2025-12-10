@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -20,8 +21,9 @@ fun NoteTitleField(
     onTitleChange: (String) -> Unit
 ){
     AppTextField(
-        modifier = modifier,
-        nameField = stringResource(R.string.place_details_title),
+        modifier = modifier
+            .testTag(stringResource(R.string.noteTitleField_component_testTag)),
+        nameField = stringResource(R.string.noteTitleField_nameField_text),
         text = title,
         textStyle = MaterialTheme.typography.titleMedium,
         onChangeText = { onTitleChange(it) },

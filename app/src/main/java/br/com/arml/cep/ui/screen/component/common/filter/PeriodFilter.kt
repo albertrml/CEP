@@ -1,7 +1,9 @@
 package br.com.arml.cep.ui.screen.component.common.filter
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,7 +18,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.common.datepicker.DatePickerFieldToModal
+import br.com.arml.cep.ui.screen.component.common.datepicker.DatePickerField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -41,13 +43,14 @@ fun PeriodFilter(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
     ) {
-        DatePickerFieldToModal(
+        DatePickerField(
             modifier = Modifier
                 .testTag(stringResource(R.string.periodFilter_startDateField_testTag)),
             label = stringResource(R.string.periodFilter_startDateField_label),
+            date = initialDate,
             onSelectDate = { initialDate = it }
         )
-        DatePickerFieldToModal(
+        DatePickerField(
             modifier = Modifier
                 .testTag(stringResource(R.string.periodFilter_endDateField_testTag)),
             label = stringResource(R.string.periodFilter_endDateField_label),
@@ -57,6 +60,7 @@ fun PeriodFilter(
                     Text(text = stringResource(R.string.periodFilter_endDateField_supportText))
                 }
             },
+            date = finalDate,
             onSelectDate = { finalDate = it }
         )
         Button(
@@ -65,7 +69,7 @@ fun PeriodFilter(
             enabled = isButtonActive,
             onClick = { onFilterByInitialDate(initialDate!!, finalDate!!) },
         ) {
-            Text(text = stringResource(R.string.periodFilter_filterButton_text))
+            Text(text = stringResource(R.string.periodFilter_filterButton_label))
         }
     }
 }
@@ -73,7 +77,12 @@ fun PeriodFilter(
 @Preview(showBackground = true)
 @Composable
 fun PeriodFilterPreview() {
-    PeriodFilter(
-        onFilterByInitialDate = { _, _ -> }
-    )
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ){
+        PeriodFilter(
+            onFilterByInitialDate = { _, _ -> }
+        )
+    }
 }

@@ -24,20 +24,31 @@ fun FavoriteListPaneHeaderMenu(
     onImportClick: () -> Unit = {}
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(
+                stringResource(
+                    R.string.favoriteListPaneHeaderMenu_component_testTag
+                )
+            ),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
 
         IconButton(
             modifier = Modifier
-                .testTag(stringResource(R.string.testTag_favoriteListHeader_exportButton)),
+                .testTag(
+                    stringResource(
+                        R.string.favoriteListPaneHeaderMenu_exportButton_testTag
+                    )
+                ),
             onClick = onExportClick
         ) {
             Icon(
                 modifier = Modifier.wrapContentSize(),
                 painter = painterResource(R.drawable.ic_export),
-                contentDescription = "Export favorite",
+                contentDescription = stringResource(
+                    R.string.favoriteListPaneHeaderMenu_exportButton_description
+                ),
             )
         }
 
@@ -45,13 +56,19 @@ fun FavoriteListPaneHeaderMenu(
 
         IconButton(
             modifier = Modifier
-                .testTag(stringResource(R.string.testTag_favoriteListHeader_importButton)),
+                .testTag(
+                    stringResource(
+                        R.string.favoriteListPaneHeaderMenu_importButton_testTag
+                    )
+                ),
             onClick = onImportClick
         ) {
             Icon(
                 modifier = Modifier.wrapContentSize(),
                 painter = painterResource(R.drawable.ic_import),
-                contentDescription = "Import favorite"
+                contentDescription = stringResource(
+                    R.string.favoriteListPaneHeaderMenu_importButton_description
+                )
             )
         }
     }

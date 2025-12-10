@@ -13,9 +13,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.R.string.noteListVisibility_hideIcon_description
-import br.com.arml.cep.R.string.noteListVisibility_hideText
+import br.com.arml.cep.R.string.noteListVisibility_hideList_Text
 import br.com.arml.cep.R.string.noteListVisibility_showIcon_description
-import br.com.arml.cep.R.string.noteListVisibility_showText
+import br.com.arml.cep.R.string.noteListVisibility_showList_Text
 import br.com.arml.cep.ui.screen.component.favorite.listpane.item.note.NoteListVisibility
 import org.junit.Rule
 import org.junit.Test
@@ -32,10 +32,10 @@ class NoteListVisibilityTest {
         R.string.noteListVisibility_component_testTag
     )
     private val noteListVisibilityHideText = ctx.getString(
-        noteListVisibility_hideText
+        noteListVisibility_hideList_Text
     )
     private val noteListVisibilityShowText = ctx.getString(
-        noteListVisibility_showText
+        noteListVisibility_showList_Text
     )
     private val noteListVisibilityShowIconDescription = ctx.getString(
         noteListVisibility_showIcon_description
