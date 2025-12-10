@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import br.com.arml.cep.model.entity.PlaceEntity
+import br.com.arml.cep.model.entity.relation.PlaceWithNotes
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -34,6 +35,12 @@ interface CacheDao {
         """
     )
     suspend fun selectCachedPlaceEntityByZipcode(zipcode: String): PlaceEntity?
+
+    @Query("""
+        SELECT * FROM Places
+        WHERE zipcode = :zipcode
+    """)
+    suspend fun selectPlaceWithNotesByZipcode(zipcode: String): PlaceWithNotes?
 
     /** Update **/
     @Update

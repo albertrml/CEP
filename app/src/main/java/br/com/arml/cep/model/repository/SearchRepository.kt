@@ -22,10 +22,13 @@ class SearchRepository @Inject constructor(
     fun getPlace(cep: Cep): Flow<Response<Place>> = asResponse {
         /* get the entry from the database */
         val zipCode = cep.text
-        val entryDB = cacheDao.selectCachedPlaceEntityByZipcode(zipCode)
+        val resultDB = cacheDao.selectPlaceWithNotesByZipcode(zipCode)
+        val placeEntryDB = resultDB?.place
+        val notesDB = resultDB?.notes?.map { it.toModel() } ?: emptyList()
+
 
         /* if the entry is not in the database, get from api and save in the database */
-        val entry = entryDB?:run {
+        val placeEntry = placeEntryDB?:run {
             val address = searchService.getAddressByCep(zipCode)
             if (address.erro == "true") throw CepException.NotFoundCepException()
             val placeEntity = Place(
@@ -43,6 +46,6 @@ class SearchRepository @Inject constructor(
         logDao.insertLogEntity(logEntity)
 
         /* return the entry from the database */
-        entry.toModel()
+        placeEntry.toModel(notesDB)
     }
 }
