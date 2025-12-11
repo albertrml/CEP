@@ -38,11 +38,11 @@ class DeleteAllComponentTest {
             deleteAllComponent = getString(R.string.deleteAllComponent_component_testTag)
             deleteAllComponentDivider = getString(R.string.deleteAllComponent_horizontalDivider_testTag)
             deleteAllComponentButton = getString(R.string.deleteAllComponent_button_testTag)
-            logScreenDeleteAllLogAlert = getString(R.string.CepAlertdialog_component_testTag)
+            logScreenDeleteAllLogAlert = getString(R.string.cepAlertdialog_component_testTag)
             logScreenDeleteAllLogAlertTitle = getString(R.string.log_delete_all_log_title)
             logScreenDeleteAllLogAlertMessage = getString(R.string.log_delete_all_log_alert)
-            logScreenDeleteAllLogAlertConfirmButton = getString(R.string.CepAlertdialog_confirmButton_text)
-            logScreenDeleteAllLogAlertDismissButton = getString(R.string.CepAlertdialog_dismissButton_text)
+            logScreenDeleteAllLogAlertConfirmButton = getString(R.string.cepAlertdialog_confirmButton_text)
+            logScreenDeleteAllLogAlertDismissButton = getString(R.string.cepAlertdialog_dismissButton_text)
         }
 
         every { onConfirmDeleteAllEntries() } answers { println("onConfirmDeleteAllEntries") }

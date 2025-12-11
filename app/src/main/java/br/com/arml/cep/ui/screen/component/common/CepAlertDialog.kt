@@ -25,7 +25,7 @@ fun CepAlertDialog(
     if(isVisibility){
         AlertDialog(
             modifier = modifier
-                .testTag(stringResource(R.string.CepAlertdialog_component_testTag)),
+                .testTag(stringResource(R.string.cepAlertdialog_component_testTag)),
             title = {
                 Text(
                     text = dialogTitle,
@@ -48,7 +48,7 @@ fun CepAlertDialog(
                     onClick = onDismissRequest
                 ) {
                     Text(
-                        text = stringResource(R.string.CepAlertdialog_dismissButton_text),
+                        text = stringResource(R.string.cepAlertdialog_dismissButton_text),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.error
                     )
@@ -63,7 +63,7 @@ fun CepAlertDialog(
                     onClick = onConfirmationRequest
                 ) {
                     Text(
-                        text = stringResource(R.string.CepAlertdialog_confirmButton_text),
+                        text = stringResource(R.string.cepAlertdialog_confirmButton_text),
                         style = MaterialTheme.typography.titleMedium
                     )
                 }

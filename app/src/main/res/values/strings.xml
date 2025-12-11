@@ -17,9 +17,9 @@
     <string name="cache_title_alert">Apagar cache</string>
 
     <!-- CEP -->
-    <string name="CepAlertdialog_component_testTag">CepAlertdialogComponentTag</string>
-    <string name="CepAlertdialog_confirmButton_text">Confirmar</string>
-    <string name="CepAlertdialog_dismissButton_text">Cancelar</string>
+    <string name="cepAlertdialog_component_testTag">CepAlertdialogComponentTag</string>
+    <string name="cepAlertdialog_confirmButton_text">Confirmar</string>
+    <string name="cepAlertdialog_dismissButton_text">Cancelar</string>
     <string name="cepFilter_component_testTag">CepFilterComponent</string>
     <string name="cepFilter_filterButton">CepFilterSearchButton</string>
 
@@ -105,9 +105,12 @@
     <string name="favorite_title_field_filter">Título</string>
     <string name="favorite_unwanted_alert_text">O %1$s será removido da lista dos favoritos e perderá sua nota, mas permanecerá em cache. Desejas prosseguir?</string>
     <string name="favorite_unwanted_alert_title">Favorito</string>
+    <string name="favoriteChangeAlert_component_testTag">FavoriteChangeAlertComponent</string>
     <string name="favoriteChangeAlert_message_text">O %1$s será removido da lista dos favoritos e perderá sua nota, mas permanecerá em cache. Desejas prosseguir?</string>
+    <string name="favoriteExport_component_testTag">FavoriteExportComponentTestTag</string>
     <string name="favoriteExport_message_text">Deseja exportar os registros salvos como favoritos?</string>
     <string name="favoriteExport_title_text">Exportar</string>
+    <string name="favoriteImport_component_testTag">FavoriteImportComponentTestTag</string>
     <string name="favoriteImport_message_text">Deseja selecionar arquivo de backup para importar?</string>
     <string name="favoriteImport_title_text">Importar</string>
     <string name="favoriteItem_component_testTag">FavoriteItemComponentTag</string>

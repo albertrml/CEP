@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
@@ -19,7 +20,8 @@ fun FavoriteImport(
     onDismissRequest: () -> Unit = {}
 ) {
     CepAlertDialog(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(stringResource(R.string.favoriteImport_component_testTag)),
         dialogTitle = stringResource(R.string.favoriteImport_title_text),
         dialogText = stringResource(R.string.favoriteImport_message_text),
         isVisibility = isVisibility,

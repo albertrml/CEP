@@ -78,8 +78,8 @@ class LogScreenListPaneTest {
             logScreenDeleteAllAlertDialog = ctx.getString(R.string.testTag_logScreen_DeleteAllLogAlert)
             logScreenDeleteAllDialogAlertTitle = ctx.getString(R.string.log_delete_all_log_title)
             logScreenDeleteAllDialogAlertMessage = ctx.getString(R.string.log_delete_all_log_alert)
-            logScreenDeleteAllDialogAlertConfirmButton = ctx.getString(R.string.CepAlertdialog_confirmButton_text)
-            logScreenDeleteAllDialogAlertDismissButton = ctx.getString(R.string.CepAlertdialog_dismissButton_text)
+            logScreenDeleteAllDialogAlertConfirmButton = ctx.getString(R.string.cepAlertdialog_confirmButton_text)
+            logScreenDeleteAllDialogAlertDismissButton = ctx.getString(R.string.cepAlertdialog_dismissButton_text)
 
             every { mockOnConfirmDeleteAllEntries() } answers { println("onConfirmDeleteAllEntries") }
 
