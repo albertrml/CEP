@@ -30,12 +30,14 @@ class FavoriteItemActionBarTest {
 
     private val favoriteItemActionBarTag = ctx
         .getString(R.string.favoriteItemActionBar_component_testTag)
-    private val favoriteItemActionBarIconButtonTag = ctx
-        .getString(R.string.favoriteItemActionBar_favoriteIcon_testTag)
 
     @Test
     fun favoriteItemActionBar_shouldDisplayTitleTextAndFavoriteIconButton(){
         val place = mockFavoritePlaces.first()
+        val favoriteItemActionBarIconButtonTag = ctx.getString(
+            R.string.favoriteItemActionBar_favoriteIcon_testTag,
+            place.cep.text
+        )
         val expectedTitle = ctx.getString(
             R.string.favoriteItemActionBar_titleText_zipcode,
             place.cep.text
@@ -60,6 +62,10 @@ class FavoriteItemActionBarTest {
     fun favoriteItemActionBar_shouldInvokesOnFavoriteChangesCallback_whenFavoriteIconIsClicked(){
         val place = mockFavoritePlaces.first()
         val onFavoriteChanges: (Place) -> Unit = mockk(relaxed = true)
+        val favoriteItemActionBarIconButtonTag = ctx.getString(
+            R.string.favoriteItemActionBar_favoriteIcon_testTag,
+            place.cep.text
+        )
 
         composeTestRule.apply {
             setContent {

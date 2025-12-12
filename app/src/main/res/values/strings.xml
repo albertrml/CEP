@@ -248,7 +248,7 @@
     <string name="testTag_logScreen_filterComponent">LogScreenFilterComponent</string>
     <string name="testTag_logScreen_filter_deleteAllComponent">LogScreenDeleteAllComponent</string>
     <string name="testTag_logScreen_header">LogScreenHeader</string>
-    <string name="testTag_placeElement_favoriteIconButton">PlaceElementFavoriteIconButton %1$s</string>
+    <!--string name="testTag_placeElement_favoriteIconButton">PlaceElementFavoriteIconButton %1$s</string-->
     <string name="testTag_placeFilter_component">PlaceFilterComponent</string>
     <string name="testTag_placeFilter_composable">PlaceFilterComposable</string>
     <string name="testTag_searchScreen_detailPane_header">SearchScreenDetailPaneHeader</string>
