@@ -41,10 +41,10 @@ fun CepFilter(
         SearchCepField(onQueryChange = { zipcode = it })
         Button(
             modifier = Modifier
-                .testTag(stringResource(R.string.cepFilter_filterButton)),
+                .testTag(stringResource(R.string.cepFilter_filterButton_testTag)),
             enabled = isButtonActive,
             onClick = { onFilterByCep(zipcode) },
-        ) { Text(text = stringResource(R.string.log_filter_button)) }
+        ) { Text(text = stringResource(R.string.cepFilter_filterButton_label)) }
     }
 }
 

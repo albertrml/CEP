@@ -53,7 +53,7 @@ fun TitleFilter(
             enabled = isButtonActive,
             onClick = { onFilterByTitle(text) },
         ) {
-            Text(text = stringResource(R.string.log_filter_button))
+            Text(text = stringResource(R.string.titleFilter_filterButton_label))
         }
     }
 }

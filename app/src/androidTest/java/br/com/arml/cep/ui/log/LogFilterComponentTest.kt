@@ -50,7 +50,7 @@ class LogFilterComponentTest {
             logFilterComponent = getString(R.string.testTag_logFilter_composable)
 
             cepFilterTextField = getString(R.string.testTag_cepFilter_searchField)
-            cepFilterSearchButton = getString(R.string.cepFilter_filterButton)
+            cepFilterSearchButton = getString(R.string.cepFilter_filterButton_testTag)
 
             periodFilterStartDateField = getString(R.string.periodFilter_startDateField_testTag)
             periodFilterEndDateField = getString(R.string.periodFilter_endDateField_testTag)

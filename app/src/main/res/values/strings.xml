@@ -21,7 +21,8 @@
     <string name="cepAlertdialog_confirmButton_text">Confirmar</string>
     <string name="cepAlertdialog_dismissButton_text">Cancelar</string>
     <string name="cepFilter_component_testTag">CepFilterComponent</string>
-    <string name="cepFilter_filterButton">CepFilterSearchButton</string>
+    <string name="cepFilter_filterButton_testTag">CepFilterSearchButton</string>
+    <string name="cepFilter_filterButton_label">Filtrar</string>
 
     <!-- Date -->
     <string name="datePickerField_brazilDateTimePattern_text">DD/MM/YYYY</string>
@@ -116,8 +117,11 @@
     <string name="favoriteItem_component_testTag">FavoriteItemComponentTag</string>
     <string name="favoriteItemActionBar_component_testTag">FavoriteItemActionBarComponentTestTag</string>
     <string name="favoriteItemActionBar_favoriteIcon_description">Botão para desfavoritar Cep</string>
-    <string name="favoriteItemActionBar_favoriteIcon_testTag">PlaceElementFavoriteIconButton</string>
+    <string name="favoriteItemActionBar_favoriteIcon_testTag">PlaceElementFavoriteIconButton %1$s</string>
     <string name="favoriteItemActionBar_titleText_zipcode">CEP: %1$s</string>
+    <string name="favoriteListPaneComponent_component_testTag">FavoriteListPaneComponentTestTag</string>
+    <string name="favoriteListPaneComponent_favoriteListComponent_testTag">FavoriteListPaneComponentFavoriteListComponentTestTag</string>
+    <string name="favoriteListPaneComponent_placeFilterComponent_testTag">FavoriteListPaneComponentPlaceFilterComponentTestTag</string>
     <string name="favoriteListPaneHeader_title_label">Favoritos</string>
     <string name="favoriteListPaneHeaderMenu_component_testTag">FavoriteListPaneHeaderMenuTestTag</string>
     <string name="favoriteListPaneHeaderMenu_exportButton_description">Botão para exportar os favoritos</string>
@@ -209,6 +213,7 @@
 
     <!-- Title -->
     <string name="titleFilter_component_testTag">TitleFilterComposable</string>
+    <string name="titleFilter_filterButton_label">Filtrar</string>
     <string name="titleFilter_filterButton_testTag">TitleFilterButton</string>
     <string name="titleFilter_titleField_label">Título</string>
     <string name="titleFilter_titleField_testTag">TitleFilterField</string>
@@ -232,9 +237,9 @@
     <string name="testTag_favoriteList_filter">FavoriteListPaneFilter</string>
     <string name="testTag_favoriteList_header">FavoriteListPaneHeader</string>
     <string name="testTag_favoriteList_list">FavoriteListPaneList</string>
-    <string name="testTag_favoriteList_onFailure">FavoriteListPaneOnFailure</string>
-    <string name="testTag_favoriteList_onLoading">FavoriteListPaneOnLoading</string>
-    <string name="testTag_favoriteList_onSuccess">FavoriteListPaneOnSuccess</string>
+    <string name="favoriteListPaneOnFailure_component_testTag">FavoriteListPaneOnFailure</string>
+    <string name="favoriteListPaneOnLoading_component_testTag">FavoriteListPaneOnLoading</string>
+    <string name="favoriteListPaneOnSuccess_component_testTag">FavoriteListPaneOnSuccess</string>
     <string name="testTag_logFilter_composable">LogFilterComposable</string>
     <string name="testTag_logScreen_DeleteAllLogAlert">LogScreenDeleteAllLogAlert</string>
     <string name="testTag_logScreen_fetching_OnFailure">LogScreenOnFailure</string>

@@ -38,7 +38,7 @@ class CepFilterTest {
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
             cepFilterComposable = getString(R.string.cepFilter_component_testTag)
             cepFilterField = getString(R.string.searchCepField_component_testTag)
-            cepFilterButton = getString(R.string.cepFilter_filterButton)
+            cepFilterButton = getString(R.string.cepFilter_filterButton_testTag)
         }
 
         every { mockOnCepFilter(any()) } answers { println("mockOnCepFilter ${args[0]}") }

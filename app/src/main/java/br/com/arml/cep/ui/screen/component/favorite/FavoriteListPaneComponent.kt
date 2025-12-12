@@ -25,8 +25,8 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Address
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
-import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.domain.Place
+import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
 import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.screen.component.common.filter.chip.PlaceFilterComponent
@@ -44,13 +44,13 @@ fun FavoriteListPaneComponent(
     snackbarMsg: String? = null,
     onImportClick: () -> Unit = {},
     onExportClick: () -> Unit = {},
-    onCepFilter: (String) -> Unit,
-    onTitleFilter: (String) -> Unit,
-    onNoneFilter: () -> Unit,
-    onAddNote: (Cep, Note) -> Unit,
-    onFavoriteIconClick: (Place) -> Unit,
-    onDeleteNote: (Pair<Cep, Note>) -> Unit,
-    onNavigateToDetails: (Pair<Address, Note>) -> Unit
+    onCepFilter: (String) -> Unit = {},
+    onTitleFilter: (String) -> Unit = {},
+    onNoneFilter: () -> Unit = {},
+    onAddNote: (Cep, Note) -> Unit = { _, _ -> },
+    onFavoriteIconClick: (Place) -> Unit = {},
+    onDeleteNote: (Pair<Cep, Note>) -> Unit = {},
+    onNavigateToDetails: (Pair<Address, Note>) -> Unit = {}
 ) {
     val fetchResponse = state.fetchEntries
     val snackbarHostState = remember { SnackbarHostState() }
@@ -65,7 +65,8 @@ fun FavoriteListPaneComponent(
     }
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(stringResource(R.string.favoriteListPaneComponent_component_testTag)),
         topBar = {
             FavoriteListPaneHeader(
                 modifier = Modifier
@@ -84,45 +85,31 @@ fun FavoriteListPaneComponent(
         ) {
             fetchResponse.ShowResults(
                 successContent = { places ->
-                    Column(
+                    FavoriteListPaneComponentOnSuccess(
                         modifier = Modifier
                             .align(Alignment.TopCenter)
-                            .padding(vertical = MaterialTheme.dimens.mediumPadding),
-                        verticalArrangement = Arrangement
-                            .spacedBy(MaterialTheme.dimens.mediumPadding)
-                    ) {
-                        PlaceFilterComponent(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag(stringResource(R.string.testTag_favoriteList_filter)),
-                            filters = favoriteFilterOptions,
-                            onFilterByCep = { query -> onCepFilter(query) },
-                            onFilterByTitle = { query -> onTitleFilter(query) },
-                            onNoneFilter = { onNoneFilter() }
-                        )
-
-                        FavoriteListComponent(
-                            modifier = Modifier
-                                //.align(Alignment.TopCenter)
-                                .testTag(stringResource(R.string.testTag_favoriteList_onSuccess)),
-                            places = places,
-                            onAddNote = onAddNote,
-                            onFavoriteIconClick = onFavoriteIconClick,
-                            onDeleteNote = onDeleteNote,
-                            onNavigateToDetail = onNavigateToDetails
-                        )
-                    }
+                            .padding(vertical = MaterialTheme.dimens.mediumPadding)
+                            .testTag(stringResource(R.string.favoriteListPaneOnSuccess_component_testTag)),
+                        onCepFilter = onCepFilter,
+                        onTitleFilter = onTitleFilter,
+                        onNoneFilter = onNoneFilter,
+                        places = places,
+                        onAddNote = onAddNote,
+                        onFavoriteIconClick = onFavoriteIconClick,
+                        onDeleteNote = onDeleteNote,
+                        onNavigateToDetails = onNavigateToDetails
+                    )
                 },
                 loadingContent = {
                     CircularProgressIndicator(
                         modifier = Modifier
-                            .testTag(stringResource(R.string.testTag_favoriteList_onLoading))
+                            .testTag(stringResource(R.string.favoriteListPaneOnLoading_component_testTag))
                     )
                 },
                 failureContent = { exception ->
                     Text(
                         modifier = Modifier
-                            .testTag(stringResource(R.string.testTag_favoriteList_onFailure)),
+                            .testTag(stringResource(R.string.favoriteListPaneOnFailure_component_testTag)),
                         text = exception.message ?: FetchPlaceException().message,
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyLarge
@@ -130,6 +117,49 @@ fun FavoriteListPaneComponent(
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun FavoriteListPaneComponentOnSuccess(
+    modifier: Modifier = Modifier,
+    onCepFilter: (String) -> Unit,
+    onTitleFilter: (String) -> Unit,
+    onNoneFilter: () -> Unit,
+    places: List<Place>,
+    onAddNote: (Cep, Note) -> Unit,
+    onFavoriteIconClick: (Place) -> Unit,
+    onDeleteNote: (Pair<Cep, Note>) -> Unit,
+    onNavigateToDetails: (Pair<Address, Note>) -> Unit
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement
+            .spacedBy(MaterialTheme.dimens.mediumPadding)
+    ) {
+        PlaceFilterComponent(
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(stringResource(
+                    R.string.favoriteListPaneComponent_placeFilterComponent_testTag)
+                ),
+            filters = favoriteFilterOptions,
+            onFilterByCep = { query -> onCepFilter(query) },
+            onFilterByTitle = { query -> onTitleFilter(query) },
+            onNoneFilter = { onNoneFilter() }
+        )
+
+        FavoriteListComponent(
+            modifier = Modifier
+                .testTag(stringResource(
+                    R.string.favoriteListPaneComponent_favoriteListComponent_testTag)
+                ),
+            places = places,
+            onAddNote = onAddNote,
+            onFavoriteIconClick = onFavoriteIconClick,
+            onDeleteNote = onDeleteNote,
+            onNavigateToDetail = onNavigateToDetails
+        )
     }
 }
 
