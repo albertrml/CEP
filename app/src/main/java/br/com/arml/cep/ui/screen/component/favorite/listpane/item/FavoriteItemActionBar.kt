@@ -1,9 +1,11 @@
 package br.com.arml.cep.ui.screen.component.favorite.listpane.item
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,8 +35,13 @@ fun FavoriteItemActionBar(
     Row(
         modifier = modifier
             .testTag(stringResource(R.string.favoriteItemActionBar_component_testTag)),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
     ) {
+        Icon(
+            imageVector = Icons.Default.Place,
+            contentDescription = null
+        )
         Text(
             modifier = Modifier.weight(1f),
             text = stringResource(

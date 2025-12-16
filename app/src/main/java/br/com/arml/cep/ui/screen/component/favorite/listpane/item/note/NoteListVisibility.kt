@@ -55,7 +55,7 @@ fun NoteListVisibility(
         )
         Text(
             text = headerText,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.labelMedium,
         )
         Icon(
             imageVector = headerIcon,

@@ -1,8 +1,10 @@
 package br.com.arml.cep.ui.screen.component.common.address
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -27,16 +29,22 @@ fun AddressForms(
         .mapOfFields()
         .map { stringResource(it.key) to it.value }
 
-    FastScroll { scrollState ->
+    FastScroll(modifier = modifier) { scrollState ->
         Column(
-            modifier = modifier
-                .fillMaxSize()
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    width = MaterialTheme.dimens.mediumThickness,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    shape = MaterialTheme.shapes.large
+                )
+                .padding(MaterialTheme.dimens.largePadding)
                 .verticalScroll(scrollState)
                 .testTag(stringResource(R.string.addressForms_component_testTag)),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing),
-        ){
+        ) {
             mapFields.forEach { (field, value) ->
-                AddressField(title = field,value = value)
+                AddressField(title = field, value = value)
             }
         }
     }
@@ -60,5 +68,8 @@ fun AddressForms(
 )
 @Composable
 fun AddressScreenPreview() {
-    AddressForms(address = mockAddress)
+    AddressForms(
+        modifier = Modifier.padding(MaterialTheme.dimens.mediumPadding),
+        address = mockAddress
+    )
 }

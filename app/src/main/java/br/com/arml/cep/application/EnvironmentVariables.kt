@@ -17,4 +17,9 @@ sealed class EnvironmentVariables(){
         fun getAddingNoteToFavoriteSuccessMessage(zipcode: String) = "Nota adicionada ao cep $zipcode"
         fun getDeletingNoteFromFavoriteSuccessMessage(zipcode: String) = "Nota removida do cep $zipcode"
     }
+
+    data object SearchReducerVariables: EnvironmentVariables(){
+        const val ADDING_TO_FAVORITE_FAILURE_MSG = "Não foi possível adicionar ao favorito"
+        fun getAddingToFavoriteSuccessMessage(zipcode: String) = "CEP $zipcode adicionado aos favoritos"
+    }
 }

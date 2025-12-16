@@ -1,6 +1,7 @@
 package br.com.arml.cep.ui.component.favorite
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -68,6 +69,8 @@ class FavoriteListPaneComponentTest {
                 FavoriteListPaneComponent(state = loadingState)
             }
             onNodeWithTag(favoriteListPaneOnLoading).assertIsDisplayed()
+            onNodeWithTag(placeFilterComponent).assertDoesNotExist()
+            onNodeWithTag(favoriteListComponent).assertDoesNotExist()
         }
     }
 
@@ -79,6 +82,9 @@ class FavoriteListPaneComponentTest {
                 FavoriteListPaneComponent(state = failureState)
             }
             onNodeWithTag(favoriteListPaneOnFailure).assertIsDisplayed()
+            onNodeWithTag(favoriteListPaneOnSuccess).assertIsNotDisplayed()
+            onNodeWithTag(favoriteListPaneOnLoading).assertIsNotDisplayed()
+
             onNodeWithText(expectedMsg).assertIsDisplayed()
         }
     }
@@ -90,6 +96,9 @@ class FavoriteListPaneComponentTest {
                 FavoriteListPaneComponent(state = successState)
             }
             onNodeWithTag(favoriteListPaneOnSuccess).assertIsDisplayed()
+            onNodeWithTag(favoriteListPaneOnLoading).assertIsNotDisplayed()
+            onNodeWithTag(favoriteListPaneOnFailure).assertIsNotDisplayed()
+
             onNodeWithTag(placeFilterComponent).assertIsDisplayed()
             onNodeWithTag(favoriteListComponent).assertIsDisplayed()
         }

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -38,36 +39,27 @@ fun SearchListPane(
     val isActive by remember { derivedStateOf { Cep.isValid(query) } }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    Column(
+    Scaffold(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Header(
-            modifier = Modifier
-                .testTag(
-                    stringResource(R.string.testTag_searchScreen_listPane_header)
-                ),
-            title = stringResource(R.string.search_title),
-            logo = Icons.Default.Search
-        )
+        topBar = {
+            Header(
+                title = stringResource(R.string.search_title),
+                logo = Icons.Default.Search
+            )
+        }
+    ) { paddingValues ->
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
-        ) {
-            SearchCepField(
-                modifier = Modifier
-                    .testTag(
-                        stringResource(R.string.testTag_searchScreen_listPane_cepField)
-                    ),
-                onQueryChange = { query = it }
-            )
-            Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
+        ){
+            SearchCepField(onQueryChange = { query = it })
+            Spacer(modifier = Modifier.padding(MaterialTheme.dimens.mediumSpacing))
             Button(
-                modifier = Modifier
-                    .testTag(stringResource(
-                        R.string.testTag_searchScreen_listPane_searchButton)
+                modifier = Modifier.testTag(
+                    stringResource(R.string.searchListPane_searchButton_testTag)
                     ),
                 onClick = {
                     keyboardController?.hide()
@@ -75,7 +67,7 @@ fun SearchListPane(
                 },
                 enabled = isActive
             ) {
-                Text(text = stringResource(R.string.search_button_label))
+                Text(text = stringResource(R.string.searchListPane_searchButton_label))
             }
         }
     }

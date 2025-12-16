@@ -104,10 +104,10 @@
     <string name="favorite_place_element_zipcode">CEP: %1$s</string>
     <string name="favorite_title">Favoritos</string>
     <string name="favorite_title_field_filter">Título</string>
-    <string name="favorite_unwanted_alert_text">O %1$s será removido da lista dos favoritos e perderá sua nota, mas permanecerá em cache. Desejas prosseguir?</string>
+    <string name="favorite_unwanted_alert_text">O CEP %1$s será removido da lista dos favoritos e perderá suas notas, mas ainda permanecerá em cache. Desejas prosseguir?</string>
     <string name="favorite_unwanted_alert_title">Favorito</string>
     <string name="favoriteChangeAlert_component_testTag">FavoriteChangeAlertComponent</string>
-    <string name="favoriteChangeAlert_message_text">O %1$s será removido da lista dos favoritos e perderá sua nota, mas permanecerá em cache. Desejas prosseguir?</string>
+    <string name="favoriteChangeAlert_message_text">O CEP %1$s será removido da lista dos favoritos e perderá suas notas, mas ainda permanecerá em cache. Desejas prosseguir?</string>
     <string name="favoriteExport_component_testTag">FavoriteExportComponentTestTag</string>
     <string name="favoriteExport_message_text">Deseja exportar os registros salvos como favoritos?</string>
     <string name="favoriteExport_title_text">Exportar</string>
@@ -157,7 +157,7 @@
 
     <!-- Note -->
     <string name="noteContentField_component_testTag">NoteContentFieldComponentTestTag</string>
-    <string name="noteContentField_nameField_text">Note</string>
+    <string name="noteContentField_nameField_text">Anotação</string>
     <string name="noteTitleField_component_testTag">NoteTitleFieldComponentTestTag</string>
     <string name="noteTitleField_nameField_text">Título</string>
     <string name="noteForms_component_testTag">NoteFormsComponentTestTag</string>
@@ -202,7 +202,7 @@
     <string name="searchCepField_component_testTag">SearchCepFieldComponent</string>
     <string name="searchCepField_hint">Digite o CEP</string>
     <string name="searchCepField_label">CEP</string>
-    <string name="search_button_label">Pesquisar</string>
+    <string name="searchListPane_searchButton_label">Pesquisar</string>
     <string name="search_title">Busca</string>
 
     <!-- Show -->
@@ -251,13 +251,13 @@
     <!--string name="testTag_placeElement_favoriteIconButton">PlaceElementFavoriteIconButton %1$s</string-->
     <string name="testTag_placeFilter_component">PlaceFilterComponent</string>
     <string name="testTag_placeFilter_composable">PlaceFilterComposable</string>
-    <string name="testTag_searchScreen_detailPane_header">SearchScreenDetailPaneHeader</string>
-    <string name="testTag_searchScreen_detailPane_onFailure">SearchScreenDetailPaneOnFailure</string>
-    <string name="testTag_searchScreen_detailPane_onLoading">SearchScreenDetailPaneOnLoading</string>
-    <string name="testTag_searchScreen_detailPane_onLoading_circularProgressIndicator">ShowsCircularProgressIndicatorOnSearchScreenDetailPaneOnLoading</string>
-    <string name="testTag_searchScreen_detailPane_onSuccess">SearchScreenDetailPaneOnSuccess</string>
-    <string name="testTag_searchScreen_detailPane_saveAddressButton">SearchScreenDetailPaneSaveAddressButton</string>
+    <string name="favoriteDetailPaneComponent_header_testTag">SearchScreenDetailPaneHeader</string>
+    <string name="favoriteDetailPaneComponent_onFailure_testTag">SearchScreenDetailPaneOnFailure</string>
+    <string name="favoriteDetailPaneComponent_onLoading_testTag">SearchScreenDetailPaneOnLoading</string>
+    <string name="favoriteDetailPaneComponent_circularProgressIndicator_testTag">ShowsCircularProgressIndicatorOnSearchScreenDetailPaneOnLoading</string>
+    <string name="favoriteDetailPaneComponent_onSuccess_testTag">SearchScreenDetailPaneOnSuccess</string>
+    <string name="favoriteDetailPaneComponent_saveButton_testTag">SearchScreenDetailPaneSaveAddressButton</string>
     <string name="testTag_searchScreen_listPane_cepField">SearchScreenListPaneCepField</string>
     <string name="testTag_searchScreen_listPane_header">SearchScreenListPaneHeader</string>
-    <string name="testTag_searchScreen_listPane_searchButton">SearchScreenListPaneSearchButton</string>
+    <string name="searchListPane_searchButton_testTag">SearchScreenListPaneSearchButton</string>
 </resources>

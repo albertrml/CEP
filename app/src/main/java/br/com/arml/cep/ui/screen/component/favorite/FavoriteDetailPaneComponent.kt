@@ -85,7 +85,7 @@ fun FavoriteDetailPaneComponent(
             FormsComponent(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = MaterialTheme.dimens.smallPadding),
+                    .padding(vertical = MaterialTheme.dimens.smallPadding),
                 selectedTab = selectedTab,
                 address = address,
                 note = note,

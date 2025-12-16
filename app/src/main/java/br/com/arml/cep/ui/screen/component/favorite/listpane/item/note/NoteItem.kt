@@ -31,6 +31,11 @@ fun NoteItem(
 ) {
     ElevatedCard(
         modifier = modifier
+            .border(
+                width = MaterialTheme.dimens.smallThickness,
+                color = MaterialTheme.colorScheme.onSurface,
+                shape = MaterialTheme.shapes.medium
+            )
             .clickable { onEditNote(note) }
             .testTag(
                 stringResource(
@@ -42,12 +47,6 @@ fun NoteItem(
     ){
         Row(
             modifier = Modifier
-                .padding(MaterialTheme.dimens.xSmallPadding)
-                .border(
-                    width = MaterialTheme.dimens.smallThickness,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    shape = MaterialTheme.shapes.small
-                )
                 .padding(MaterialTheme.dimens.smallMargin),
             verticalAlignment = Alignment.CenterVertically
         ) {

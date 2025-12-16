@@ -4,8 +4,9 @@ import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.domain.asResponse
-import br.com.arml.cep.model.domain.toEntity
+import br.com.arml.cep.model.domain.toPlaceWithNotes
 import br.com.arml.cep.model.entity.LogEntity
+import br.com.arml.cep.model.entity.relation.PlaceWithNotes
 import br.com.arml.cep.model.entity.toModel
 import br.com.arml.cep.model.exception.CepException
 import br.com.arml.cep.model.source.local.CacheDao
@@ -20,32 +21,35 @@ class SearchRepository @Inject constructor(
     private val logDao: LogDao
 ) {
     fun getPlace(cep: Cep): Flow<Response<Place>> = asResponse {
-        /* get the entry from the database */
-        val zipCode = cep.text
-        val resultDB = cacheDao.selectPlaceWithNotesByZipcode(zipCode)
-        val placeEntryDB = resultDB?.place
-        val notesDB = resultDB?.notes?.map { it.toModel() } ?: emptyList()
-
-
-        /* if the entry is not in the database, get from api and save in the database */
-        val placeEntry = placeEntryDB?:run {
-            val address = searchService.getAddressByCep(zipCode)
-            if (address.erro == "true") throw CepException.NotFoundCepException()
-            val placeEntity = Place(
-                cep = cep,
-                address = address.toAddress()
-            ).toEntity()
-            cacheDao.insertPlaceEntity(placeEntity)
-            placeEntity
+        val resultDB = cacheDao.selectPlaceWithNotesByZipcode(cep.text)
+        var gotFromAPI = false
+        val (placeEntity, noteEntities) = resultDB ?: run {
+            gotFromAPI = true
+            getPlaceFromApi(cep)
         }
+        val notes = noteEntities.map { it.toModel() }
 
+        if (gotFromAPI) cacheDao.insertPlaceEntity(placeEntity)
+        logAccess(cep)
+
+        placeEntity.toModel(notes)
+    }
+
+    private suspend fun getPlaceFromApi(cep: Cep): PlaceWithNotes {
+        val address = searchService.getAddressByCep(cep.text)
+        if (address.erro == "true") throw CepException.NotFoundCepException()
+        val placeWithNotes = Place(
+            cep = cep,
+            address = address.toAddress()
+        ).toPlaceWithNotes()
+        return placeWithNotes
+    }
+
+    private suspend fun logAccess(cep: Cep){
         val logEntity = LogEntity(
             zipcodePlace = cep.text,
             timestamp = System.currentTimeMillis()
         )
         logDao.insertLogEntity(logEntity)
-
-        /* return the entry from the database */
-        placeEntry.toModel(notesDB)
     }
 }

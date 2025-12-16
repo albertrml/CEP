@@ -68,7 +68,7 @@ val compactTypography = Typography(
     titleLarge = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
+        fontSize = 20.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp,
     ),
@@ -89,7 +89,7 @@ val compactTypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
+        fontSize = 20.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp,
         textAlign = TextAlign.Justify
@@ -113,21 +113,21 @@ val compactTypography = Typography(
     labelLarge = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
+        fontSize = 18.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp,
     ),
     labelMedium = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
+        fontSize = 16.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.sp,
     ),
     labelSmall = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 11.sp,
+        fontSize = 14.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.sp,
     ),
@@ -179,29 +179,29 @@ val mediumTypography = Typography(
     ),
     titleLarge = TextStyle(
         fontFamily = inriaSerifFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
-        lineHeight = 28.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.sp,
     ),
     titleMedium = TextStyle(
         fontFamily = inriaSerifFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
-        lineHeight = 24.sp,
+        lineHeight = 20.sp,
         letterSpacing = 0.sp,
     ),
     titleSmall = TextStyle(
         fontFamily = inriaSerifFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
-        lineHeight = 20.sp,
+        lineHeight = 16.sp,
         letterSpacing = 0.sp,
     ),
     bodyLarge = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 20.sp,
+        fontSize = 24.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.sp,
         textAlign = TextAlign.Justify
@@ -209,7 +209,7 @@ val mediumTypography = Typography(
     bodyMedium = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 20.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp,
         textAlign = TextAlign.Justify
@@ -217,7 +217,7 @@ val mediumTypography = Typography(
     bodySmall = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
+        fontSize = 16.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.sp,
         textAlign = TextAlign.Justify
@@ -225,21 +225,21 @@ val mediumTypography = Typography(
     labelLarge = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 20.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp,
     ),
     labelMedium = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
+        fontSize = 18.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp,
     ),
     labelSmall = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
+        fontSize = 16.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.sp,
     )
@@ -291,23 +291,23 @@ val expandedTypography = Typography(
     ),
     titleLarge = TextStyle(
         fontFamily = inriaSerifFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 28.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp,
-    ),
-    titleMedium = TextStyle(
-        fontFamily = inriaSerifFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.sp,
     ),
-    titleSmall = TextStyle(
+    titleMedium = TextStyle(
         fontFamily = inriaSerifFamily,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 20.sp,
+        letterSpacing = 0.sp,
+    ),
+    titleSmall = TextStyle(
+        fontFamily = inriaSerifFamily,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 16.sp,
         letterSpacing = 0.sp,
     ),
     bodyLarge = TextStyle(
@@ -337,21 +337,21 @@ val expandedTypography = Typography(
     labelLarge = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp,
+        fontSize = 20.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp,
     ),
     labelMedium = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 18.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.sp,
     ),
     labelSmall = TextStyle(
         fontFamily = inriaSerifFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.sp,
     )
