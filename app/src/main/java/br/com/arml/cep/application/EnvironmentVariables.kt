@@ -22,4 +22,9 @@ sealed class EnvironmentVariables(){
         const val ADDING_TO_FAVORITE_FAILURE_MSG = "Não foi possível adicionar ao favorito"
         fun getAddingToFavoriteSuccessMessage(zipcode: String) = "CEP $zipcode adicionado aos favoritos"
     }
+
+    data object LogReducerVariables: EnvironmentVariables() {
+        const val DELETE_ALL_LOGS_SUCCESS_MSG = "Todos os logs foram deletados"
+        const val DELETE_ALL_LOGS_FAILURE_MSG = "Não foi possível deletar todos os logs"
+    }
 }

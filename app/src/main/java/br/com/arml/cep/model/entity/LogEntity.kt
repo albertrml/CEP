@@ -33,6 +33,7 @@ data class LogEntity(
 )
 
 fun LogEntity.toModel() = Log(
+    id = id,
     cep = Cep.build(zipcodePlace),
     timestamp = Timestamp(timestamp)
 )

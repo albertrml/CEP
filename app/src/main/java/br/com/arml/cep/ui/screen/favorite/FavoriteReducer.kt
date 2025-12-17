@@ -72,10 +72,10 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
 
             /** Events associated with making favorite as unwanted **/
             is FavoriteEvent.OnAddNoteToFavoriteResponse -> {
-                when(event.response){
+                when(val response = event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
-                        val zipcode = event.response.result
+                        val zipcode = response.result
                         val msg = getAddingNoteToFavoriteSuccessMessage(zipcode)
                         previousState to ShowSnackbar(msg)
                     }
@@ -88,10 +88,10 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
 
             /** Events associated with Delete Note from Favorite **/
             is FavoriteEvent.OnDeleteNoteFromFavoriteResponse -> {
-                when(event.response){
+                when(val response = event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
-                        val zipcode = event.response.result
+                        val zipcode = response.result
                         val msg = getDeletingNoteFromFavoriteSuccessMessage(zipcode)
                         previousState to ShowSnackbar(msg)
                     }
@@ -137,13 +137,13 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
 
             /** Events associated with Fetch and Filter Favorites **/
             is FavoriteEvent.OnFetchFavoritesResponse -> {
-                when(event.response){
+                when(val response = event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
-                        previousState.copy(fetchEntries = event.response) to null
+                        previousState.copy(fetchEntries = response) to null
                     }
                     is Response.Failure -> {
-                        previousState.copy(fetchEntries = event.response) to null
+                        previousState.copy(fetchEntries = response) to null
                     }
                 }
             }
@@ -157,21 +157,21 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
                 previousState.copy(isVisibleImportAlert = false) to null
             }
             is FavoriteEvent.OnConfirmImportResponse -> {
-                when(event.response){
+                when(val response = event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
                         val updatedState = previousState.copy(
                             isVisibleImportAlert = false,
-                            importedFavorites = event.response
+                            importedFavorites = response
                         )
                         updatedState to ShowSnackbar(IMPORTING_FAVORITES_SUCCESS_MSG)
                     }
                     is Response.Failure -> {
                         val updatedState = previousState.copy(
                             isVisibleImportAlert = false,
-                            importedFavorites = event.response
+                            importedFavorites = response
                         )
-                        val msg = event.response.exception.message ?: IMPORTING_FAVORITES_FAILURE_MSG
+                        val msg = response.exception.message ?: IMPORTING_FAVORITES_FAILURE_MSG
                         updatedState to ShowSnackbar(msg)
                     }
                 }

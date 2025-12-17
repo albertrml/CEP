@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -23,6 +24,16 @@ fun LogScreen(modifier: Modifier = Modifier) {
         .fillMaxSize()
         .padding(horizontal = MaterialTheme.dimens.mediumMargin)
 
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is LogEffect.ShowSnackbar -> {
+                    uiStateHolder.snackbarHostState.showSnackbar(effect.message)
+                }
+            }
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         snackbarHost = { SnackbarHost(uiStateHolder.snackbarHostState) }
@@ -31,17 +42,23 @@ fun LogScreen(modifier: Modifier = Modifier) {
             modifier = marginScreen.padding(innerPadding),
             state = state,
             onFilterByCep = { query -> viewModel.onEvent(LogEvent.OnFilterByCep(query)) },
-            onFilterByInitialDate = { from -> viewModel.onEvent(LogEvent.OnFilterByInitialDate(from)) },
-            onFilterByFinalDate = { until -> viewModel.onEvent(LogEvent.OnFilterByFinalDate(until)) },
+            onFilterByInitialDate = { from ->
+                viewModel.onEvent(LogEvent.OnFilterByInitialDate(from))
+            },
+            onFilterByFinalDate = { until ->
+                viewModel.onEvent(LogEvent.OnFilterByFinalDate(until))
+            },
             onFilterByRangeDate = { from, until ->
-                viewModel.onEvent(LogEvent.OnFilterByRangeDate(from, until))
+                viewModel.onEvent(
+                    LogEvent.OnFilterByRangeDate(from, until)
+                )
             },
             onFilterByNone = { viewModel.onEvent(LogEvent.OnFilterByNone) },
-            onClickToDeleteEntry = { entry -> viewModel.onEvent(LogEvent.OnDeleteEntry(entry)) },
-            onConfirmDeleteAllEntries = { viewModel.onEvent(LogEvent.OnDeleteAllEntries) },
-            onCopyToClipboard = { entry ->
-                uiStateHolder.onCopyToClipboard(entry)
-            }
+            onClickToDeleteEntry = { entry ->
+                viewModel.onEvent(LogEvent.OnDeleteLog(entry))
+            },
+            onConfirmDeleteAllEntries = { viewModel.onEvent(LogEvent.OnDeleteAllLogs) },
+            onCopyToClipboard = { entry -> uiStateHolder.onCopyToClipboard(entry) }
         )
     }
 }

@@ -2,10 +2,8 @@ package br.com.arml.cep.ui.screen.log
 
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.domain.Log
-import br.com.arml.cep.ui.utils.LogFilterOption
-
+import br.com.arml.cep.ui.common.Reducer
 data class LogState(
     val fetchEntries: Response<List<Log>> = Response.Loading,
-    val deleteLog: Response<Unit> = Response.Loading,
-    val filterOperation: LogFilterOption = LogFilterOption.None
-)
+    val showDeleteAllLogAlert: Boolean = false
+): Reducer.ViewState
