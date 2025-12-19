@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.favorite.listpane.item.note
+package br.com.arml.cep.ui.screen.component.log.listpane.item
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -10,68 +10,67 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.model.domain.Note
-import br.com.arml.cep.model.mock.mockFavoritePlaces
+import br.com.arml.cep.model.domain.Cep
+import br.com.arml.cep.model.domain.Log
+import br.com.arml.cep.model.utils.toFormattedUTC
 import br.com.arml.cep.ui.theme.dimens
+import java.sql.Timestamp
 
 @Composable
-fun NoteItem(
+fun LogElement(
     modifier: Modifier = Modifier,
-    note: Note,
-    onDeleteNote: (Note) -> Unit,
-    onEditNote: (Note) -> Unit
+    log: Log,
+    onClickToDelete: (Log) -> Unit,
+    onClickToDetail: (Log) -> Unit
 ) {
-    Surface (
+    Surface(
         modifier = modifier
-            .clickable { onEditNote(note) }
+            .clickable { onClickToDetail(log) }
             .testTag(
                 stringResource(
-                    R.string.noteItem_component_testTag,
-                    note.id
+                    R.string.logElement_component_testTag,
+                    log.toString()
                 )
             ),
         shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onSurface,
         border = BorderStroke(
             width = MaterialTheme.dimens.smallThickness,
             color = MaterialTheme.colorScheme.outline
-        ),
-        color = MaterialTheme.colorScheme.secondaryContainer
-    ){
+        )
+    ) {
         Row(
             modifier = Modifier
-                .padding(MaterialTheme.dimens.smallMargin),
+                .padding(MaterialTheme.dimens.mediumPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+
+            LogElementContent(
                 modifier = Modifier
                     .weight(1f)
-                    .testTag(stringResource(R.string.noteItem_titleText_testTag)),
-                text = note.title,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSecondaryContainer
+                    .testTag(stringResource(R.string.logElementContent_component_testTag)),
+                log = log
             )
             IconButton(
                 modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .testTag(stringResource(R.string.noteItem_deleteIconButton_testTag)),
-                onClick = { onDeleteNote(note) }
+                    .testTag(stringResource(R.string.logElementContent_deleteButton_testTag)),
+                onClick = { onClickToDelete(log) },
             ) {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = Icons.Filled.Delete,
+                    tint = MaterialTheme.colorScheme.error,
                     contentDescription = stringResource(
-                        R.string.noteItem_deleteIconButton_description,
-                        note.title
-                    ),
-                    tint = Color.Red
+                        R.string.logElementContent_deleteButton_description,
+                        log.cep.text, log.timestamp.toFormattedUTC()
+                    )
                 )
             }
         }
@@ -80,12 +79,14 @@ fun NoteItem(
 
 @Preview(showBackground = true)
 @Composable
-fun NoteItemPreview(){
-    val notes = mockFavoritePlaces.first().notes
-    NoteItem(
-        modifier = Modifier.padding(MaterialTheme.dimens.smallMargin),
-        note = notes.first(),
-        onDeleteNote = {},
-        onEditNote = {}
+fun LogElementPreview() {
+    LogElement(
+        modifier = Modifier.padding(MaterialTheme.dimens.smallPadding),
+        log = Log(
+            cep = Cep.build("99999-999"),
+            timestamp = Timestamp(System.currentTimeMillis())
+        ),
+        onClickToDelete = {},
+        onClickToDetail = {}
     )
 }

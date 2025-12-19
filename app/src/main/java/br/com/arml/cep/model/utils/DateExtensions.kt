@@ -16,6 +16,9 @@ private fun Timestamp.toFormatted(pattern: String): String {
 
 fun Timestamp.toFormattedUTC(): String = this.toFormatted("yyyy-MM-dd HH:mm")
 
+fun Timestamp.toFormattedUTCDate(): String = this.toFormatted("yyyy-MM-dd")
+
+
 fun Long.toFormattedBR(): String = Timestamp(this).toFormatted("dd/MM/yyyy")
 
 fun Long.adjustDay(): Long = Instant.ofEpochMilli(this)

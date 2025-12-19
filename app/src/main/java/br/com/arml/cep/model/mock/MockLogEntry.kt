@@ -12,4 +12,4 @@ val mockLogEntries = List<Log>(15){ i ->
     )
 }
 
-fun getMockDate(index: Int = 0) = Timestamp(BASE_TIMESTAMP + 1000000*index)
+fun getMockDate(index: Int = 0) = Timestamp(BASE_TIMESTAMP + 50000000*index)

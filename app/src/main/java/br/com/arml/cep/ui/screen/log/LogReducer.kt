@@ -14,27 +14,27 @@ class LogReducer : Reducer<LogState, LogEvent, LogEffect> {
     ): Pair<LogState, LogEffect?> {
         return when(event){
             is LogEvent.OnFetchAllLogsResponse -> {
-                val updatedState = previousState.copy(fetchEntries = event.response)
-                updatedState to null
-            }
-            is LogEvent.OnDeleteAllLogs -> {
-                val updatedState = previousState.copy(showDeleteAllLogAlert = true)
+                val updatedState = when(event.response){
+                    is Loading -> previousState
+                    else -> previousState.copy(
+                        fetchEntries = event.response
+                    )
+                }
                 updatedState to null
             }
             is LogEvent.OnDeleteAllLogsResponse -> {
-                when(event.response){
-                    is Loading -> { previousState to null }
+                val effect = when(event.response){
+                    is Loading -> null
                     is Success -> {
-                        val updatedState = previousState.copy(showDeleteAllLogAlert = false)
                         val successMsg = DELETE_ALL_LOGS_SUCCESS_MSG
-                        updatedState to LogEffect.ShowSnackbar(successMsg)
+                        LogEffect.ShowSnackbar(successMsg)
                     }
                     is Failure -> {
-                        val updatedState = previousState.copy(showDeleteAllLogAlert = false)
                         val failureMsg = DELETE_ALL_LOGS_FAILURE_MSG
-                        updatedState to LogEffect.ShowSnackbar(failureMsg)
+                        LogEffect.ShowSnackbar(failureMsg)
                     }
                 }
+                previousState to effect
             }
             else -> previousState to null
         }

@@ -1,7 +1,10 @@
 package br.com.arml.cep.ui.screen.component.common.fastscroll
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -19,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import kotlinx.coroutines.launch
 
@@ -94,6 +98,22 @@ fun FastScrollList(
                     },
                     style = MaterialTheme.typography.bodyMedium
                 )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FastScrollListPreview(){
+    val elements = List<Int>(100){ it }
+    FastScrollList() { lazyListState ->
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            state = lazyListState
+        ) {
+            items(elements){
+                Text(it.toString())
             }
         }
     }

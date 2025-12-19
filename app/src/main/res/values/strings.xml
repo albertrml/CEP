@@ -140,18 +140,18 @@
     <string name="headerContent_iconButton_description">Botão do cabeçalho</string>
 
     <!-- Log -->
-    <string name="log_cep_field">CEP: %1$s</string>
+    <string name="logElementContent_cepField_label">CEP: %1$s</string>
     <string name="log_delete_all_log_alert">Esta ação apagará todo o histórico de pesquisa. Desejas prosseguir?</string>
     <string name="log_delete_all_log_title">Apagar histórico</string>
     <string name="log_error_unknown">Erro desconhecido</string>
     <string name="log_filter_button">Filtrar</string>
-    <string name="log_filter_final_date_label">Até</string>
+    <string name="logFilterComponent_finalDate_label">Até</string>
     <string name="log_filter_final_date_support_text">A data inicial deve ser menor que a final</string>
-    <string name="log_filter_initial_date_label">De</string>
+    <string name="logFilterComponent_initialDate_label">De</string>
     <string name="log_list_clipboard_msg">CEP %1$s copied ao clipboard</string>
     <string name="log_list_delete_all_button">Todos</string>
     <string name="log_list_delete_all_button_description">Botão para deletar todos os registros do histórico</string>
-    <string name="log_selected_filter_description">Filtro %1$s selecionado</string>
+    <string name="logFilterChip_filterSelected_description">Filtro %1$s selecionado</string>
     <string name="log_timestamp_field">Pesquisado em: %1$s</string>
     <string name="log_title">Histórico</string>
 
@@ -240,14 +240,14 @@
     <string name="favoriteListPaneOnFailure_component_testTag">FavoriteListPaneOnFailure</string>
     <string name="favoriteListPaneOnLoading_component_testTag">FavoriteListPaneOnLoading</string>
     <string name="favoriteListPaneOnSuccess_component_testTag">FavoriteListPaneOnSuccess</string>
-    <string name="testTag_logFilter_composable">LogFilterComposable</string>
+    <string name="logFilterComponent_component_testTag">LogFilterComposable</string>
     <string name="testTag_logScreen_DeleteAllLogAlert">LogScreenDeleteAllLogAlert</string>
-    <string name="testTag_logScreen_fetching_OnFailure">LogScreenOnFailure</string>
-    <string name="testTag_logScreen_fetching_OnLoading">LogScreenOnLoading</string>
+    <string name="logListPaneOnFailure_component_testTag">LogScreenOnFailure</string>
+    <string name="logListPaneOnLoading_component_testTag">LogScreenOnLoading</string>
     <string name="testTag_logScreen_fetching_OnSuccess">LogScreenOnSuccess</string>
     <string name="testTag_logScreen_filterComponent">LogScreenFilterComponent</string>
     <string name="testTag_logScreen_filter_deleteAllComponent">LogScreenDeleteAllComponent</string>
-    <string name="testTag_logScreen_header">LogScreenHeader</string>
+    <string name="logListPaneComponent_header_testTag">LogScreenHeader</string>
     <!--string name="testTag_placeElement_favoriteIconButton">PlaceElementFavoriteIconButton %1$s</string-->
     <string name="testTag_placeFilter_component">PlaceFilterComponent</string>
     <string name="testTag_placeFilter_composable">PlaceFilterComposable</string>
@@ -260,4 +260,16 @@
     <string name="testTag_searchScreen_listPane_cepField">SearchScreenListPaneCepField</string>
     <string name="testTag_searchScreen_listPane_header">SearchScreenListPaneHeader</string>
     <string name="searchListPane_searchButton_testTag">SearchScreenListPaneSearchButton</string>
+    <string name="logFilterChip_component_testTag">LogFilterChipComponentTestTag</string>
+    <string name="logFilterList_component_testTag">LogFilterListComponentTestTag</string>
+    <string name="logFilterComponent_initialDate_testTag">LogFilterComponentInitialDateTestTag</string>
+    <string name="logFilterComponent_finalDate_testTag">LogFilterComponentFinalDateTestTag</string>
+    <string name="logElementContent_cepField_description">Cep %1$s pesquisado</string>
+    <string name="logElementContent_timestampField_description">Cep pesquisado em %1$s</string>
+    <string name="logElementContent_component_testTag">LogElementContentComponentTestTag</string>
+    <string name="logElementContent_deleteButton_testTag">LogElementContentDeleteButtonTestTag</string>
+    <string name="logElementContent_deleteButton_description">Botão para apagar o cep %1$s pesquisado em %2$s</string>
+    <string name="logElement_component_testTag">LogElementComponentTestTag %1$s</string>
+    <string name="logListPaneOnSuccess_component_testTag">LogScreenListComponentOnSuccessTestTag</string>
+    <string name="logList_component_testTag">LogListComponentTestTag</string>
 </resources>

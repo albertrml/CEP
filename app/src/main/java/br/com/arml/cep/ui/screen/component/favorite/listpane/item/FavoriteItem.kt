@@ -1,7 +1,6 @@
 package br.com.arml.cep.ui.screen.component.favorite.listpane.item
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -36,39 +35,41 @@ fun FavoriteItem(
     onDeleteNote: (Pair<Cep, Note>) -> Unit,
     onNavigateToDetail: (Pair<Address, Note>) -> Unit
 ) {
-    Column(
+    Surface(
         modifier = modifier
-            .border(
-                width = MaterialTheme.dimens.smallThickness,
-                color = MaterialTheme.colorScheme.outline,
-                shape = MaterialTheme.shapes.medium
-            )
-            .background(
-                color = MaterialTheme.colorScheme.primaryContainer,
-                shape = MaterialTheme.shapes.medium
-            )
-            .padding(MaterialTheme.dimens.mediumPadding)
             .testTag(stringResource(R.string.favoriteItem_component_testTag)),
-        verticalArrangement = Arrangement.SpaceBetween
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        border = BorderStroke(
+            width = MaterialTheme.dimens.smallThickness,
+            color = MaterialTheme.colorScheme.outline
+        ),
     ) {
-        FavoriteItemActionBar(
-            place = place,
-            favoriteIcon = favoriteIcon,
-            colorFavoriteIcon = colorFavoriteIcon,
-            onFavoriteChanges = onFavoriteIconClick
-        )
+        Column(
+            modifier = Modifier
+                .padding(MaterialTheme.dimens.mediumPadding),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            FavoriteItemActionBar(
+                place = place,
+                favoriteIcon = favoriteIcon,
+                colorFavoriteIcon = colorFavoriteIcon,
+                onFavoriteChanges = onFavoriteIconClick
+            )
 
-        NoteListComponent(
-            notes = place.notes,
-            onDeleteNote = { note -> onDeleteNote(place.cep to note) },
-            onEditNote = { note -> onNavigateToDetail(place.address to note) },
-            onAddNote = {
-                onAddNote(
-                    place.cep,
-                    Note.build(title = place.cep.text, content = "")
-                )
-            }
-        )
+            NoteListComponent(
+                notes = place.notes,
+                onDeleteNote = { note -> onDeleteNote(place.cep to note) },
+                onEditNote = { note -> onNavigateToDetail(place.address to note) },
+                onAddNote = {
+                    onAddNote(
+                        place.cep,
+                        Note.build(title = place.cep.text, content = "")
+                    )
+                }
+            )
+        }
     }
 }
 

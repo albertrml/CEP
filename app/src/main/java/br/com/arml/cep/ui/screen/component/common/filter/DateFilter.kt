@@ -57,7 +57,7 @@ fun DateFilter(
 @Composable
 fun DateFilterPreview() {
     DateFilter(
-        labelId = R.string.log_filter_initial_date_label,
+        labelId = R.string.logFilterComponent_initialDate_label,
         onFilterByDate = {}
     )
 }

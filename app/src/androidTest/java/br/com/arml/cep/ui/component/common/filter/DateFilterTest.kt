@@ -56,7 +56,7 @@ class DateFilterTest {
     fun setUp(){
         composeTestRule.setContent {
             DateFilter(
-                labelId = R.string.log_filter_initial_date_label,
+                labelId = R.string.logFilterComponent_initialDate_label,
                 onFilterByDate = mockOnFilterByDate
             )
         }
