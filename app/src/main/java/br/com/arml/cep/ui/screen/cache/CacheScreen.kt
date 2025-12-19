@@ -13,7 +13,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
-import br.com.arml.cep.ui.screen.component.cache.CachePlaceListComponent
+import br.com.arml.cep.ui.screen.component.cache.CacheListPaneComponent
 import br.com.arml.cep.ui.screen.component.search.SearchDetailPane
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.paneEnterTransition
@@ -40,16 +40,13 @@ fun CacheScreen(
                 enterTransition = paneEnterTransition,
                 exitTransition = paneExitTransition
             ) {
-                CachePlaceListComponent(
+                CacheListPaneComponent(
                     modifier = marginScreen,
                     fetchResponse = state.fetchEntries,
-                    onFavoriteIconClick = { place ->
-                        viewModel.onEvent(CacheEvent.OnUpdate(place))
-                    },
-                    onDeleteCacheClick = {
+                    onDeleteAllCache = {
                         viewModel.onEvent(CacheEvent.OnDeleteAll)
                     },
-                    onDeleteIconClick = { place ->
+                    onDeletePlace = { place ->
                         viewModel.onEvent(CacheEvent.OnDelete(place))
                     },
                     onCepFilter = { query ->

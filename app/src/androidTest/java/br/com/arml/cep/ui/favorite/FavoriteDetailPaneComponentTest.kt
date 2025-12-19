@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.component.favorite
+package br.com.arml.cep.ui.favorite
 
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties

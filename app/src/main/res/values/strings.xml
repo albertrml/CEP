@@ -12,9 +12,9 @@
     <string name="appTextField_inputCounter_testTag">AppTextFieldInputCounter</string>
 
     <!-- Cache -->
-    <string name="cache_text_alert">Todos os dados serão apagados do cache que são favoritos serão apagados. Desejas continuar?</string>
+    <string name="cachePlaceAlert_content_text">Todos os dados serão apagados do cache que são favoritos serão apagados. Desejas continuar?</string>
     <string name="cache_title">Cache</string>
-    <string name="cache_title_alert">Apagar cache</string>
+    <string name="cachePlaceAlert_title_text">Apagar cache</string>
 
     <!-- CEP -->
     <string name="cepAlertdialog_component_testTag">CepAlertdialogComponentTag</string>
@@ -101,7 +101,7 @@
     <string name="favorite_extra_title">Anotação</string>
     <string name="favorite_notes_tab">Anotação</string>
     <string name="favorite_notes_tab_description">Aba de anotações</string>
-    <string name="favorite_place_element_zipcode">CEP: %1$s</string>
+    <string name="place_zipcode_text">CEP: %1$s</string>
     <string name="favorite_title">Favoritos</string>
     <string name="favorite_title_field_filter">Título</string>
     <string name="favorite_unwanted_alert_text">O CEP %1$s será removido da lista dos favoritos e perderá suas notas, mas ainda permanecerá em cache. Desejas prosseguir?</string>
@@ -272,4 +272,16 @@
     <string name="logElement_component_testTag">LogElementComponentTestTag %1$s</string>
     <string name="logListPaneOnSuccess_component_testTag">LogScreenListComponentOnSuccessTestTag</string>
     <string name="logList_component_testTag">LogListComponentTestTag</string>
+    <string name="cacheListPaneComponent_component_testTag">CacheListPaneComponentTestTag</string>
+    <string name="cacheListPaneComponent_header_testTag">CacheListPaneComponentHeaderTestTag</string>
+    <string name="cacheListPaneComponent_header_title">Cache</string>
+    <string name="cacheListPaneOnSuccess_placeFilterComponent_testTag">CachePlaceFilterComponentTestTag</string>
+    <string name="cacheListPaneOnSuccess_deleteAllComponent_testTag">CacheListPaneOnSuccessDeleteAllComponentTestTag</string>
+    <string name="cacheListPaneOnSuccess_cachePlaceList_testTag">CacheListPaneOnSuccessCachePlaceListTestTag</string>
+    <string name="cachePlaceElement_component_testTag">CachePlaceElementComponentTestTag %1$s</string>
+    <string name="cachePlaceElement_deleteIcon_description">Botão para apagar o CEP %1$s do cache</string>
+    <string name="cachePlaceElement_deleteIcon_testTag">CachePlaceElementDeleteIconTestTag %1$s</string>
+    <string name="cacheListPaneOnLoading_component_testTag">CacheListPaneOnLoadingComponentTestTag</string>
+    <string name="cacheListPaneOnFailure_component_testTag">CacheListPaneOnFailureComponentTestTag</string>
+    <string name="cacheListPaneOnSuccess_component_testTag">CacheListPaneOnSuccessComponentTestTag</string>
 </resources>

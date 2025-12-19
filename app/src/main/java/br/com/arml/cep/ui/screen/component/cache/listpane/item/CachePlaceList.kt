@@ -1,13 +1,10 @@
-package br.com.arml.cep.ui.screen.component.cache
+package br.com.arml.cep.ui.screen.component.cache.listpane.item
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,8 +18,7 @@ import br.com.arml.cep.ui.theme.dimens
 fun CachePlaceList(
     modifier: Modifier = Modifier,
     places: List<Place>,
-    onDeleteIconClick: (Place) -> Unit,
-    onFavoriteIconClick: (Place) -> Unit,
+    onDeletePlace: (Place) -> Unit,
     onNavigateToDetail: (Place) -> Unit
 ){
     FastScrollGrid(
@@ -37,12 +33,8 @@ fun CachePlaceList(
         ){
             items(places){ place ->
                 CachePlaceElement(
-                    modifier = Modifier.clickable(onClick = { onNavigateToDetail(place) }),
                     place = place,
-                    favoriteIcon = Icons.Default.FavoriteBorder,
-                    colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
-                    onDeletePlace = onDeleteIconClick,
-                    onFavoriteIconClick = onFavoriteIconClick,
+                    onDeletePlace = onDeletePlace,
                     onNavigateToDetail = onNavigateToDetail
                 )
             }
@@ -55,8 +47,7 @@ fun CachePlaceList(
 fun CachePlaceListPreview(){
     CachePlaceList(
         places = mockUnfavoritePlaces,
-        onDeleteIconClick = {},
-        onFavoriteIconClick = {},
+        onDeletePlace = {},
         onNavigateToDetail = {},
     )
 }
