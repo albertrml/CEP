@@ -1,5 +1,8 @@
 package br.com.arml.cep.ui.component.common.filter
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.hasText
@@ -51,10 +54,13 @@ class PlaceFilterComponentTest {
     }
 
     fun displayPlaceFilterComponent(){
+        var selectedFilter by mutableStateOf<PlaceFilterOption>(PlaceFilterOption.None)
         composeTestRule.setContent {
             PlaceFilterComponent(
                 modifier = Modifier.testTag(placeFilterChipComponent),
-                filters = favoriteFilterOptions
+                filters = favoriteFilterOptions,
+                selectedFilter = selectedFilter,
+                onSelectedFilter = { selectedFilter = it },
             )
         }
     }

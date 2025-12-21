@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.log.listpane
+package br.com.arml.cep.ui.screen.component.favorite.listpane
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -6,13 +6,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun LogListPaneOnFailure(
+fun FavoriteListPaneComponentOnFailure(
     modifier: Modifier = Modifier,
-    failureMsg: String
+    failureMessage: String
 ){
     Text(
         modifier = modifier,
-        text = failureMsg,
+        text = failureMessage,
         color = MaterialTheme.colorScheme.error,
         style = MaterialTheme.typography.bodyLarge
     )

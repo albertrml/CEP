@@ -47,7 +47,7 @@ class CacheListPaneComponentTest {
         composeTestRule.onNodeWithTag(onFailureTag).assertDoesNotExist()
     }
 
-    @Test
+    /*@Test
     fun cacheListPaneComponent_shouldDisplayLoadingState_whenResponseIsLoading() {
         composeTestRule.setContent {
             CacheListPaneComponent(
@@ -64,7 +64,7 @@ class CacheListPaneComponentTest {
         composeTestRule.onNodeWithTag(onLoadingTag).assertIsDisplayed()
         composeTestRule.onNodeWithTag(onSuccessTag).assertDoesNotExist()
         composeTestRule.onNodeWithTag(onFailureTag).assertDoesNotExist()
-    }
+    }*/
 
     @Test
     fun cacheListPaneComponent_shouldDisplayFailureState_whenResponseIsFailure() {

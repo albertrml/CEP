@@ -7,6 +7,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -18,9 +22,9 @@ import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
 import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.ui.screen.component.cache.listpane.CacheListPaneOnFailure
-import br.com.arml.cep.ui.screen.component.cache.listpane.CacheListPaneOnLoading
 import br.com.arml.cep.ui.screen.component.cache.listpane.CacheListPaneOnSuccess
 import br.com.arml.cep.ui.screen.component.common.header.Header
+import br.com.arml.cep.ui.utils.PlaceFilterOption
 import br.com.arml.cep.ui.utils.ShowResults
 
 @Composable
@@ -33,6 +37,9 @@ fun CacheListPaneComponent(
     onDeleteAllCache: () -> Unit,
     onNavigateToDetail: (Place) -> Unit,
 ) {
+    var selectedFilter by rememberSaveable(stateSaver = PlaceFilterOption.saver) {
+        mutableStateOf(PlaceFilterOption.None)
+    }
     Scaffold(
         modifier = modifier
             .testTag(stringResource(R.string.cacheListPaneComponent_component_testTag)),
@@ -56,6 +63,8 @@ fun CacheListPaneComponent(
                 successContent = { places ->
                     CacheListPaneOnSuccess(
                         places = places,
+                        selectedFilter = selectedFilter,
+                        onSelectedFilter = { selectedFilter = it },
                         onCepFilter = { query -> onCepFilter(query) },
                         onClearFilter = { onClearFilter() },
                         onDeletePlace = { place -> onDeletePlace(place) },
@@ -63,9 +72,9 @@ fun CacheListPaneComponent(
                         onNavigateToDetail = { place -> onNavigateToDetail(place) }
                     )
                 },
-                loadingContent = {
+                /*loadingContent = {
                     CacheListPaneOnLoading(modifier = Modifier.align(Alignment.Center))
-                },
+                },*/
                 failureContent = { exception ->
                     CacheListPaneOnFailure(
                         modifier = Modifier.align(Alignment.Center),

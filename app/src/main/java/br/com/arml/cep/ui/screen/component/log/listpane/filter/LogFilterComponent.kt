@@ -25,6 +25,7 @@ import br.com.arml.cep.ui.screen.component.common.filter.DateFilter
 import br.com.arml.cep.ui.screen.component.common.filter.PeriodFilter
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.LogFilterOption
+import br.com.arml.cep.ui.utils.PlaceFilterOption
 import br.com.arml.cep.ui.utils.filterEnterTransition
 import br.com.arml.cep.ui.utils.filterExitTransition
 import br.com.arml.cep.ui.utils.logFilterOptions
@@ -34,6 +35,8 @@ const val oneSecondForTomorrow = 86399000L
 @Composable
 fun LogFilterComponent(
     modifier: Modifier = Modifier,
+    selectedFilter: LogFilterOption,
+    onFilterChange: (LogFilterOption) -> Unit,
     onFilterByCep: (String) -> Unit,
     onFilterByInitialDate: (Long) -> Unit,
     onFilterByFinalDate: (Long) -> Unit,
@@ -41,9 +44,6 @@ fun LogFilterComponent(
     onNoneFilter: () -> Unit
 ) {
     val filters = logFilterOptions
-    var selectedFilter by rememberSaveable(stateSaver = LogFilterOption.saver) {
-        mutableStateOf(LogFilterOption.None)
-    }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
@@ -55,7 +55,12 @@ fun LogFilterComponent(
                 .testTag(stringResource(R.string.logFilterComponent_component_testTag)),
             filters = filters,
             selectedFilter = selectedFilter,
-            onSelectedFilter = { selectedFilter = it }
+            onSelectedFilter = {
+                onFilterChange(it)
+                if (it == PlaceFilterOption.None) {
+                    onNoneFilter()
+                }
+            }
         )
         AnimatedContent(
             targetState = selectedFilter,
@@ -106,10 +111,7 @@ fun LogFilterComponent(
                         }
                     )
                 }
-                LogFilterOption.None -> {
-                    keyboardController?.hide()
-                    onNoneFilter()
-                }
+                LogFilterOption.None -> { keyboardController?.hide() }
             }
         }
     }
@@ -118,12 +120,17 @@ fun LogFilterComponent(
 @Preview(showBackground = true)
 @Composable
 fun LogFilterPreview() {
+    var selectedFilter by rememberSaveable(stateSaver = LogFilterOption.saver) {
+        mutableStateOf(LogFilterOption.None)
+    }
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
         LogFilterComponent(
             modifier = Modifier
                 .padding(MaterialTheme.dimens.largeMargin),
+            selectedFilter = selectedFilter,
+            onFilterChange = { selectedFilter = it },
             onFilterByCep = {},
             onFilterByInitialDate = {},
             onFilterByFinalDate = {},

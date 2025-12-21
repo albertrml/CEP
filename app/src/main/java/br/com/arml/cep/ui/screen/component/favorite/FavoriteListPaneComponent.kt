@@ -1,41 +1,40 @@
 package br.com.arml.cep.ui.screen.component.favorite
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
+import br.com.arml.cep.R.string.favoriteListPaneOnFailure_component_testTag
 import br.com.arml.cep.model.domain.Address
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
-import br.com.arml.cep.model.mock.mockFavoritePlaces
-import br.com.arml.cep.ui.screen.component.common.filter.chip.PlaceFilterComponent
-import br.com.arml.cep.ui.screen.component.favorite.listpane.FavoriteListComponent
+import br.com.arml.cep.ui.screen.component.favorite.listpane.FavoriteListPaneComponentOnFailure
+import br.com.arml.cep.ui.screen.component.favorite.listpane.FavoriteListPaneComponentOnSuccess
 import br.com.arml.cep.ui.screen.component.favorite.listpane.header.FavoriteListPaneHeader
 import br.com.arml.cep.ui.screen.favorite.FavoriteState
 import br.com.arml.cep.ui.theme.dimens
+import br.com.arml.cep.ui.utils.PlaceFilterOption
 import br.com.arml.cep.ui.utils.ShowResults
-import br.com.arml.cep.ui.utils.favoriteFilterOptions
 
 @Composable
 fun FavoriteListPaneComponent(
@@ -52,8 +51,11 @@ fun FavoriteListPaneComponent(
     onDeleteNote: (Pair<Cep, Note>) -> Unit = {},
     onNavigateToDetails: (Pair<Address, Note>) -> Unit = {}
 ) {
-    val fetchResponse = state.fetchEntries
+    val fetchResponse = state.places
     val snackbarHostState = remember { SnackbarHostState() }
+    var selectedFilter by rememberSaveable(stateSaver = PlaceFilterOption.saver) {
+        mutableStateOf(PlaceFilterOption.None)
+    }
 
     LaunchedEffect(snackbarMsg) {
         snackbarMsg?.let { message ->
@@ -90,6 +92,8 @@ fun FavoriteListPaneComponent(
                             .align(Alignment.TopCenter)
                             .padding(vertical = MaterialTheme.dimens.mediumPadding)
                             .testTag(stringResource(R.string.favoriteListPaneOnSuccess_component_testTag)),
+                        selectedFilter = selectedFilter,
+                        onSelectedFilter = { selectedFilter = it },
                         onCepFilter = onCepFilter,
                         onTitleFilter = onTitleFilter,
                         onNoneFilter = onNoneFilter,
@@ -100,85 +104,23 @@ fun FavoriteListPaneComponent(
                         onNavigateToDetails = onNavigateToDetails
                     )
                 },
-                loadingContent = {
-                    CircularProgressIndicator(
-                        modifier = Modifier
+                /*loadingContent = {
+                    FavoriteListPaneComponentOnSuccess(
+                        Modifier
                             .testTag(stringResource(R.string.favoriteListPaneOnLoading_component_testTag))
                     )
-                },
+                },*/
                 failureContent = { exception ->
-                    Text(
+                    FavoriteListPaneComponentOnFailure(
                         modifier = Modifier
-                            .testTag(stringResource(R.string.favoriteListPaneOnFailure_component_testTag)),
-                        text = exception.message ?: FetchPlaceException().message,
-                        color = MaterialTheme.colorScheme.error,
-                        style = MaterialTheme.typography.bodyLarge
+                            .testTag(stringResource(favoriteListPaneOnFailure_component_testTag)),
+                        failureMessage = exception.message ?: FetchPlaceException().message
                     )
                 }
             )
         }
     }
 }
-
-@Composable
-private fun FavoriteListPaneComponentOnSuccess(
-    modifier: Modifier = Modifier,
-    onCepFilter: (String) -> Unit,
-    onTitleFilter: (String) -> Unit,
-    onNoneFilter: () -> Unit,
-    places: List<Place>,
-    onAddNote: (Cep, Note) -> Unit,
-    onFavoriteIconClick: (Place) -> Unit,
-    onDeleteNote: (Pair<Cep, Note>) -> Unit,
-    onNavigateToDetails: (Pair<Address, Note>) -> Unit
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement
-            .spacedBy(MaterialTheme.dimens.mediumPadding)
-    ) {
-        PlaceFilterComponent(
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag(stringResource(
-                    R.string.favoriteListPaneComponent_placeFilterComponent_testTag)
-                ),
-            filters = favoriteFilterOptions,
-            onFilterByCep = { query -> onCepFilter(query) },
-            onFilterByTitle = { query -> onTitleFilter(query) },
-            onNoneFilter = { onNoneFilter() }
-        )
-
-        FavoriteListComponent(
-            modifier = Modifier
-                .testTag(stringResource(
-                    R.string.favoriteListPaneComponent_favoriteListComponent_testTag)
-                ),
-            places = places,
-            onAddNote = onAddNote,
-            onFavoriteIconClick = onFavoriteIconClick,
-            onDeleteNote = onDeleteNote,
-            onNavigateToDetail = onNavigateToDetails
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FavoriteDetailPaneComponentOnSuccessPreview() {
-    val response = Response.Success(mockFavoritePlaces)
-    FavoriteListPaneComponent(
-        state = FavoriteState(fetchEntries = response),
-        onCepFilter = {},
-        onTitleFilter = {},
-        onNoneFilter = {},
-        onAddNote = { _, _ -> },
-        onFavoriteIconClick = {},
-        onDeleteNote = {},
-        onNavigateToDetails = {},
-    )
-}
-
 
 @Preview(showBackground = true)
 @Composable
@@ -200,7 +142,7 @@ fun FavoriteDetailPaneComponentOnLoadingPreview() {
 fun FavoriteDetailPaneComponentOnFailurePreview() {
     val response = Response.Failure(FetchPlaceException())
     FavoriteListPaneComponent(
-        state = FavoriteState(fetchEntries = response),
+        state = FavoriteState(places = response),
         onCepFilter = {},
         onTitleFilter = {},
         onNoneFilter = {},

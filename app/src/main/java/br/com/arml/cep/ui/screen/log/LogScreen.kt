@@ -25,7 +25,7 @@ fun LogScreen(modifier: Modifier = Modifier) {
         .fillMaxSize()
         .padding(horizontal = MaterialTheme.dimens.mediumMargin)
 
-    Log.d("LogScreen", "LogScreen: ${state.fetchEntries}")
+    Log.d("LogScreen", "LogScreen: ${state.logs}")
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -43,7 +43,7 @@ fun LogScreen(modifier: Modifier = Modifier) {
     ) { innerPadding ->
         LogListPaneComponent(
             modifier = marginScreen.padding(innerPadding),
-            entries = state.fetchEntries,
+            entries = state.logs,
             onFilterByCep = { query -> viewModel.onEvent(LogEvent.OnFilterByCep(query)) },
             onFilterByInitialDate = { from ->
                 viewModel.onEvent(LogEvent.OnFilterByInitialDate(from))
@@ -57,7 +57,7 @@ fun LogScreen(modifier: Modifier = Modifier) {
                 )
             },
             onFilterByNone = {
-                Log.d("LogScreen", "onFilterByNone: ${state.fetchEntries}")
+                Log.d("LogScreen", "onFilterByNone: ${state.logs}")
                 viewModel.onEvent(LogEvent.OnFilterByNone)
             },
             onClickToDelete = { entry ->

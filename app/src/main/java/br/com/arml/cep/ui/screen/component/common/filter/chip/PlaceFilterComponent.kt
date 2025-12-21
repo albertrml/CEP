@@ -29,13 +29,12 @@ import br.com.arml.cep.ui.utils.filterExitTransition
 fun PlaceFilterComponent(
     modifier: Modifier = Modifier,
     filters: List<PlaceFilterOption>,
+    selectedFilter: PlaceFilterOption,
+    onSelectedFilter: (PlaceFilterOption) -> Unit,
     onFilterByCep: (String) -> Unit = {},
     onFilterByTitle: (String) -> Unit = {},
     onNoneFilter: () -> Unit = {}
 ) {
-    var selectedFilter by rememberSaveable(stateSaver = PlaceFilterOption.saver) {
-        mutableStateOf(PlaceFilterOption.None)
-    }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
@@ -46,7 +45,7 @@ fun PlaceFilterComponent(
             filters = filters,
             selectedFilter = selectedFilter,
             onSelectedFilter = {
-                selectedFilter = it
+                onSelectedFilter(it)
                 if (it == PlaceFilterOption.None) {
                     onNoneFilter()
                 }
@@ -90,10 +89,15 @@ fun PlaceFilterComponent(
 @Preview(showBackground = true)
 @Composable
 fun PlaceFilterComponentPreview() {
+    var selectedFilter by rememberSaveable(stateSaver = PlaceFilterOption.saver) {
+        mutableStateOf(PlaceFilterOption.None)
+    }
     PlaceFilterComponent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(MaterialTheme.dimens.smallMargin),
+        selectedFilter = selectedFilter,
+        onSelectedFilter = { selectedFilter = it },
         filters = favoriteFilterOptions,
         onFilterByCep = {  },
         onFilterByTitle = {  },

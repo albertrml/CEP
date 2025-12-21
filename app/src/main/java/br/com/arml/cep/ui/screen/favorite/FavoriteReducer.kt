@@ -143,13 +143,10 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
             is FavoriteEvent.OnFetchFavoritesResponse -> {
                 when(val response = event.response){
                     is Response.Loading -> previousState to null
-                    is Response.Success -> {
-                        previousState.copy(fetchEntries = response) to null
-                    }
-                    is Response.Failure -> {
-                        previousState.copy(fetchEntries = response) to null
-                    }
+                    else -> previousState.copy(places = response) to null
                 }
+                /*val updatedState = previousState.copy(places = event.response)
+                updatedState to null*/
             }
             /** End events associated with Fetch and Filter Favorites **/
 

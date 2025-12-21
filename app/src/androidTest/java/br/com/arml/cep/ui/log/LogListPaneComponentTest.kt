@@ -54,7 +54,7 @@ class LogListPaneComponentTest {
         }
     }
 
-    @Test
+    /*@Test
     fun logListPaneComponent_shouldDisplayLoadingComponents_whenEntriesIsLoading(){
         val onLoading = Response.Loading
         composeTestRule.apply {
@@ -77,7 +77,7 @@ class LogListPaneComponentTest {
             onNodeWithTag(logListPaneOnLoadingTag).assertIsDisplayed()
             onNodeWithTag(logListPaneOnFailureTag).assertIsNotDisplayed()
         }
-    }
+    }*/
 
     @Test
     fun logListPaneComponent_shouldDisplayFailureComponents_whenEntriesIsFailure(){

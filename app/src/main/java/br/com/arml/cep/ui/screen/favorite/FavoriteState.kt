@@ -18,7 +18,7 @@ data class FavoriteState(
     val selectedAddressToDetail: Address? = null,
 
     /** Fetch and Filter **/
-    val fetchEntries: Response<List<Place>> = Response.Loading,
+    val places: Response<List<Place>> = Response.Loading,
 
     /** Import and Export **/
     val exportedFavorites: Response<String> = Response.Loading,

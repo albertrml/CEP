@@ -10,6 +10,10 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -22,10 +26,10 @@ import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
 import br.com.arml.cep.model.mock.mockLogEntries
 import br.com.arml.cep.ui.screen.component.common.header.Header
 import br.com.arml.cep.ui.screen.component.log.listpane.LogListPaneOnFailure
-import br.com.arml.cep.ui.screen.component.log.listpane.LogListPaneOnLoading
 import br.com.arml.cep.ui.screen.component.log.listpane.LogListPaneOnSuccess
 import br.com.arml.cep.ui.screen.component.log.listpane.filter.LogFilterComponent
 import br.com.arml.cep.ui.theme.dimens
+import br.com.arml.cep.ui.utils.LogFilterOption
 import br.com.arml.cep.ui.utils.ShowResults
 
 
@@ -42,6 +46,9 @@ fun LogListPaneComponent(
     onClickToDeleteAll: () -> Unit,
     onCopyToClipboard: (Log) -> Unit
 ) {
+    var selectedFilter by rememberSaveable(stateSaver = LogFilterOption.saver) {
+        mutableStateOf(LogFilterOption.None)
+    }
 
     Scaffold(
         modifier = modifier,
@@ -63,6 +70,8 @@ fun LogListPaneComponent(
         ) {
             LogFilterComponent(
                 modifier = Modifier.padding(MaterialTheme.dimens.smallPadding),
+                selectedFilter = selectedFilter,
+                onFilterChange = { selectedFilter = it },
                 onFilterByCep = { query -> onFilterByCep(query) },
                 onFilterByInitialDate = { from -> onFilterByInitialDate(from) },
                 onFilterByFinalDate = { until -> onFilterByFinalDate(until) },
@@ -73,24 +82,35 @@ fun LogListPaneComponent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                contentAlignment = Alignment.TopCenter
+                contentAlignment = Alignment.Center
             ) {
                 entries.ShowResults(
                     successContent = { logList ->
                         LogListPaneOnSuccess(
-                            modifier = Modifier.padding(horizontal = MaterialTheme.dimens.smallPadding),
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(horizontal = MaterialTheme.dimens.smallPadding),
                             logList = logList,
                             onClickToDelete = onClickToDelete,
                             onClickToDeleteAll = onClickToDeleteAll,
                             onCopyToClipboard = onCopyToClipboard
                         )
                     },
-                    loadingContent = {
-                        LogListPaneOnLoading(modifier = Modifier.align(Alignment.Center))
-                    },
+                    /*loadingContent = {
+                        LogListPaneOnLoading(modifier = Modifier
+                            .testTag(
+                                stringResource(logListPaneOnLoading_component_testTag)
+                            )
+                        )
+                    },*/
                     failureContent = { exception ->
                         LogListPaneOnFailure(
-                            modifier = Modifier.align(Alignment.Center),
+                            modifier = Modifier
+                                .testTag(
+                                    stringResource(
+                                        R.string.logListPaneOnFailure_component_testTag
+                                    )
+                                ),
                             failureMsg = exception.message ?: FetchPlaceException().message,
                         )
                     }

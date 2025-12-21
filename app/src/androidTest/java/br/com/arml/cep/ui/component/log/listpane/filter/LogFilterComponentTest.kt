@@ -1,5 +1,8 @@
 package br.com.arml.cep.ui.component.log.listpane.filter
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
@@ -33,10 +36,12 @@ class LogFilterComponentTest {
     @Test
     fun logFilterComponent_shouldDisplayCepFilter_whenCepChipIsClicked(){
         val cepFilterText = LogFilterOption.ByCep.name
-
+        var selectedFilter by mutableStateOf<LogFilterOption>(LogFilterOption.None)
         composeTestRule.apply{
             setContent {
                 LogFilterComponent(
+                    selectedFilter = selectedFilter,
+                    onFilterChange = { selectedFilter = it },
                     onFilterByCep = {},
                     onFilterByInitialDate = {},
                     onFilterByFinalDate = {},
@@ -62,10 +67,12 @@ class LogFilterComponentTest {
     @Test
     fun logFilterComponent_shouldDisplayDateFilter_whenAPartirDeChipIsClicked(){
         val filterText = LogFilterOption.ByInitialDate.name
-
+        var selectedFilter by mutableStateOf<LogFilterOption>(LogFilterOption.None)
         composeTestRule.apply{
             setContent {
                 LogFilterComponent(
+                    selectedFilter = selectedFilter,
+                    onFilterChange = { selectedFilter = it },
                     onFilterByCep = {},
                     onFilterByInitialDate = {},
                     onFilterByFinalDate = {},
@@ -90,10 +97,12 @@ class LogFilterComponentTest {
     @Test
     fun logFilterComponent_shouldDisplayDateFilter_whenAteChipIsClicked(){
         val filterText = LogFilterOption.ByFinalDate.name
-
+        var selectedFilter by mutableStateOf<LogFilterOption>(LogFilterOption.None)
         composeTestRule.apply{
             setContent {
                 LogFilterComponent(
+                    selectedFilter = selectedFilter,
+                    onFilterChange = { selectedFilter = it },
                     onFilterByCep = {},
                     onFilterByInitialDate = {},
                     onFilterByFinalDate = {},
@@ -118,10 +127,12 @@ class LogFilterComponentTest {
     @Test
     fun logFilterComponent_shouldDisplayRangeFilter_whenAteChipIsClicked(){
         val filterText = LogFilterOption.ByRangeDate.name
-
+        var selectedFilter by mutableStateOf<LogFilterOption>(LogFilterOption.None)
         composeTestRule.apply{
             setContent {
                 LogFilterComponent(
+                    selectedFilter = selectedFilter,
+                    onFilterChange = { selectedFilter = it },
                     onFilterByCep = {},
                     onFilterByInitialDate = {},
                     onFilterByFinalDate = {},

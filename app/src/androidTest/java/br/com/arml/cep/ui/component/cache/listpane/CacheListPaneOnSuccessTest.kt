@@ -1,5 +1,8 @@
 package br.com.arml.cep.ui.component.cache.listpane
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
@@ -52,11 +55,13 @@ class CacheListPaneOnSuccessTest {
             setContent {
                 CacheListPaneOnSuccess(
                     places = mockUnfavoritePlaces,
-                    onDeletePlace = {},
+                    selectedFilter = PlaceFilterOption.None,
+                    onSelectedFilter = {},
                     onCepFilter = {},
                     onClearFilter = {},
+                    onDeletePlace = {},
+                    onDeleteAllCache = {},
                     onNavigateToDetail = {},
-                    onDeleteAllCache = {}
                 )
             }
             onNodeWithTag(filterTag).assertIsDisplayed()
@@ -67,6 +72,7 @@ class CacheListPaneOnSuccessTest {
 
     @Test
     fun cacheListPaneOnSuccess_shouldInvokesOnCepFilterCallback_whenFilterButtonIsSelected(){
+        var selectedFilter by mutableStateOf<PlaceFilterOption>(PlaceFilterOption.None)
         val expectedQuery = "111"
         val mockOnCepFilter: (String) -> Unit = mockk(relaxed = true)
         val isCheckBox = SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Checkbox)
@@ -75,11 +81,13 @@ class CacheListPaneOnSuccessTest {
             setContent {
                 CacheListPaneOnSuccess(
                     places = mockUnfavoritePlaces,
-                    onDeletePlace = {},
+                    selectedFilter = selectedFilter,
+                    onSelectedFilter = { selectedFilter = it },
                     onCepFilter = { query -> mockOnCepFilter(query) },
                     onClearFilter = {},
+                    onDeletePlace = {},
+                    onDeleteAllCache = {},
                     onNavigateToDetail = {},
-                    onDeleteAllCache = {}
                 )
             }
             onNode(checkBoxName and isCheckBox).performClick()
@@ -91,6 +99,7 @@ class CacheListPaneOnSuccessTest {
 
     @Test
     fun cacheListPaneOnSuccess_shouldInvokesOnClearFilter_whenNoneFilterIsSelected(){
+        var selectedFilter by mutableStateOf<PlaceFilterOption>(PlaceFilterOption.None)
         val mockOnClearFilter: () -> Unit = mockk(relaxed = true)
         val isCheckBox = SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Checkbox)
         val cepCheckBoxName = hasTextExactly(PlaceFilterOption.ByCep.name)
@@ -99,11 +108,13 @@ class CacheListPaneOnSuccessTest {
             setContent {
                 CacheListPaneOnSuccess(
                     places = mockUnfavoritePlaces,
-                    onDeletePlace = {},
+                    selectedFilter = selectedFilter,
+                    onSelectedFilter = { selectedFilter = it },
                     onCepFilter = {},
                     onClearFilter = mockOnClearFilter,
+                    onDeletePlace = {},
+                    onDeleteAllCache = {},
                     onNavigateToDetail = {},
-                    onDeleteAllCache = {}
                 )
             }
             onNode(cepCheckBoxName and isCheckBox).performClick()
@@ -114,17 +125,20 @@ class CacheListPaneOnSuccessTest {
 
     @Test
     fun cacheListPaneOnSuccess_shouldInvokesOnDeletePlace_whenPlaceDeleteButtonIsClicked(){
+        var selectedFilter by mutableStateOf<PlaceFilterOption>(PlaceFilterOption.None)
         val expectedPlace = mockUnfavoritePlaces.first()
         val mockOnDeletePlace: (Place) -> Unit = mockk(relaxed = true)
         composeTestRule.apply {
             setContent {
                 CacheListPaneOnSuccess(
                     places = mockUnfavoritePlaces,
-                    onDeletePlace = { place -> mockOnDeletePlace(place) },
+                    selectedFilter = selectedFilter,
+                    onSelectedFilter = { selectedFilter = it },
                     onCepFilter = {},
                     onClearFilter = {},
+                    onDeletePlace = { place -> mockOnDeletePlace(place) },
+                    onDeleteAllCache = {},
                     onNavigateToDetail = {},
-                    onDeleteAllCache = {}
                 )
             }
             val deleteButtonTag = ctx.getString(
@@ -138,17 +152,20 @@ class CacheListPaneOnSuccessTest {
 
     @Test
     fun cacheListPaneOnSuccess_shouldInvokesOnNavigateToDetailCallback_whenPlaceElementIsClicked(){
+        var selectedFilter by mutableStateOf<PlaceFilterOption>(PlaceFilterOption.None)
         val expectedPlace = mockUnfavoritePlaces.first()
         val onNavigateToDetail: (Place) -> Unit = mockk(relaxed = true)
         composeTestRule.apply {
             setContent {
                 CacheListPaneOnSuccess(
                     places = mockUnfavoritePlaces,
-                    onDeletePlace = {},
+                    selectedFilter = selectedFilter,
+                    onSelectedFilter = { selectedFilter = it },
                     onCepFilter = {},
                     onClearFilter = {},
+                    onDeletePlace = {},
+                    onDeleteAllCache = {},
                     onNavigateToDetail = { place -> onNavigateToDetail(place) },
-                    onDeleteAllCache = {}
                 )
             }
             val placeElementTag = ctx.getString(
@@ -162,6 +179,7 @@ class CacheListPaneOnSuccessTest {
 
     @Test
     fun cacheListPaneOnSuccess_shouldInvokesOnDeleteAllCache_whenDeleteAllButtonIsClicked(){
+        var selectedFilter by mutableStateOf<PlaceFilterOption>(PlaceFilterOption.None)
         val deleteAllButtonTag = ctx.getString(
             R.string.deleteAllComponent_button_testTag
         )
@@ -173,11 +191,13 @@ class CacheListPaneOnSuccessTest {
             setContent {
                 CacheListPaneOnSuccess(
                     places = mockUnfavoritePlaces,
-                    onDeletePlace = {},
+                    selectedFilter = selectedFilter,
+                    onSelectedFilter = { selectedFilter = it },
                     onCepFilter = {},
                     onClearFilter = {},
+                    onDeletePlace = {},
+                    onDeleteAllCache = mockOnDeleteAll,
                     onNavigateToDetail = {},
-                    onDeleteAllCache = mockOnDeleteAll
                 )
             }
             onNodeWithTag(deleteAllButtonTag).performClick()

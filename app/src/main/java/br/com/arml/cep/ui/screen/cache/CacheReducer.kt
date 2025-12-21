@@ -54,8 +54,12 @@ class CacheReducer: Reducer<CacheState, CacheEvent, CacheEffect> {
             }
 
             is OnFetchCacheResponse -> {
-                val updatedState = previousState.copy(places = event.response)
-                updatedState to null
+                when(val response = event.response){
+                    is Loading -> previousState to null
+                    else -> previousState.copy(places = response) to null
+                }
+                /*val updatedState = previousState.copy(places = event.response)
+                updatedState to null*/
             }
 
             is OnNavigateToDetailPane -> {

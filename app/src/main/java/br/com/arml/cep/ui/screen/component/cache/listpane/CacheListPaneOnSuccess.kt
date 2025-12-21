@@ -4,6 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -19,12 +23,15 @@ import br.com.arml.cep.ui.screen.component.cache.listpane.item.CachePlaceList
 import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
 import br.com.arml.cep.ui.screen.component.common.filter.chip.PlaceFilterComponent
 import br.com.arml.cep.ui.theme.dimens
+import br.com.arml.cep.ui.utils.PlaceFilterOption
 import br.com.arml.cep.ui.utils.cacheFilterOptions
 
 @Composable
 fun CacheListPaneOnSuccess(
     modifier: Modifier = Modifier,
     places: List<Place>,
+    selectedFilter: PlaceFilterOption,
+    onSelectedFilter: (PlaceFilterOption) -> Unit,
     onCepFilter: (String) -> Unit,
     onClearFilter: () -> Unit,
     onDeletePlace: (Place) -> Unit,
@@ -41,6 +48,8 @@ fun CacheListPaneOnSuccess(
             modifier = Modifier
                 .testTag(stringResource(cacheListPaneOnSuccess_placeFilterComponent_testTag)),
             filters = cacheFilterOptions,
+            selectedFilter = selectedFilter,
+            onSelectedFilter = { selectedFilter -> onSelectedFilter(selectedFilter) },
             onFilterByCep = { query -> onCepFilter(query) },
             onNoneFilter = { onClearFilter() }
         )
@@ -64,12 +73,17 @@ fun CacheListPaneOnSuccess(
 @Preview(showBackground = true)
 @Composable
 fun CacheListPaneOnSuccessPreview(){
+    var selectedFilter by rememberSaveable(stateSaver = PlaceFilterOption.saver) {
+        mutableStateOf(PlaceFilterOption.None)
+    }
     CacheListPaneOnSuccess(
         places = mockUnfavoritePlaces,
-        onDeletePlace = {},
+        selectedFilter = selectedFilter,
+        onSelectedFilter = { selectedFilter = it },
         onCepFilter = {},
         onClearFilter = {},
+        onDeletePlace = {},
+        onDeleteAllCache = {},
         onNavigateToDetail = {},
-        onDeleteAllCache = {}
     )
 }
