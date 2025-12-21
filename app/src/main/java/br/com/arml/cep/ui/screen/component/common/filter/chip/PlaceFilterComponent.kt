@@ -45,7 +45,12 @@ fun PlaceFilterComponent(
         PlaceFilterList(
             filters = filters,
             selectedFilter = selectedFilter,
-            onSelectedFilter = { selectedFilter = it }
+            onSelectedFilter = {
+                selectedFilter = it
+                if (it == PlaceFilterOption.None) {
+                    onNoneFilter()
+                }
+            }
         )
         AnimatedContent(
             targetState = selectedFilter,
@@ -76,7 +81,6 @@ fun PlaceFilterComponent(
 
                 PlaceFilterOption.None -> {
                     keyboardController?.hide()
-                    onNoneFilter()
                 }
             }
         }

@@ -48,16 +48,15 @@ class FavoriteUseCaseTest {
     fun `addNoteToFavorite should emits loading and success when repository is successful`() = runTest {
         // Arrange
         val (cep, note) = mockFavoritePlaces.first().let { it.cep to it.notes.first() }
-        val zipcode = cep.text
         coEvery {
             repository.addToFavorite(any(),any())
-        } returns flowOf(Loading, Success(zipcode))
+        } returns flowOf(Loading, Success(Unit))
 
         // Act
         val responses = useCase.addNoteToFavorite(cep, note).toList()
 
         // Assert
-        responses.assertFlowSuccess { assertThat(it).isEqualTo(zipcode) }
+        responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
         coVerify { repository.addToFavorite(cep.text, note.toEntity()) }
     }
 

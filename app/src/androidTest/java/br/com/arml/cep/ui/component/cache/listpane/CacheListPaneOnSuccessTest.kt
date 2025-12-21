@@ -92,6 +92,9 @@ class CacheListPaneOnSuccessTest {
     @Test
     fun cacheListPaneOnSuccess_shouldInvokesOnClearFilter_whenNoneFilterIsSelected(){
         val mockOnClearFilter: () -> Unit = mockk(relaxed = true)
+        val isCheckBox = SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Checkbox)
+        val cepCheckBoxName = hasTextExactly(PlaceFilterOption.ByCep.name)
+        val noneCheckBoxName = hasTextExactly(PlaceFilterOption.None.name)
         composeTestRule.apply {
             setContent {
                 CacheListPaneOnSuccess(
@@ -103,6 +106,8 @@ class CacheListPaneOnSuccessTest {
                     onDeleteAllCache = {}
                 )
             }
+            onNode(cepCheckBoxName and isCheckBox).performClick()
+            onNode(noneCheckBoxName and isCheckBox).performClick()
             verify (exactly = 1) { mockOnClearFilter() }
         }
     }

@@ -16,7 +16,11 @@ import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.common.Reducer
 import br.com.arml.cep.ui.screen.favorite.FavoriteEffect.ShowSnackbar
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnAddNoteToFavoriteResponse
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelFavoriteToUnwanted
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmFavoriteToUnwantedResponse
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnDeleteNoteFromFavoriteResponse
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnNavigateToDetailPane
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnSelectFavoriteToUnwanted
 
 class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
@@ -43,7 +47,7 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
                 )
                 updatedState to null
             }
-            is FavoriteEvent.OnConfirmFavoriteToUnwantedResponse -> {
+            is OnConfirmFavoriteToUnwantedResponse -> {
                 val zipcode = previousState.selectedFavoriteToUnwanted?.cep?.text
                     ?: return previousState to ShowSnackbar(UNWANTED_FAVORITE_SELECTED_NONE)
 
@@ -71,23 +75,23 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
             /** End vents associated with making favorite as unwanted **/
 
             /** Events associated with making favorite as unwanted **/
-            is FavoriteEvent.OnAddNoteToFavoriteResponse -> {
-                when(val response = event.response){
-                    is Response.Loading -> previousState to null
+            is OnAddNoteToFavoriteResponse -> {
+                val (response, zipcode) = event
+                val effect = when(response){
+                    is Response.Loading -> null
                     is Response.Success -> {
-                        val zipcode = response.result
-                        val msg = getAddingNoteToFavoriteSuccessMessage(zipcode)
-                        previousState to ShowSnackbar(msg)
+                        ShowSnackbar(getAddingNoteToFavoriteSuccessMessage(zipcode))
                     }
                     is Response.Failure -> {
-                        previousState to ShowSnackbar(ADDING_NOTE_TO_FAVORITE_FAILURE_MSG)
+                        ShowSnackbar(ADDING_NOTE_TO_FAVORITE_FAILURE_MSG)
                     }
                 }
+                previousState to effect
             }
             /** End events associated with making favorite as unwanted **/
 
             /** Events associated with Delete Note from Favorite **/
-            is FavoriteEvent.OnDeleteNoteFromFavoriteResponse -> {
+            is OnDeleteNoteFromFavoriteResponse -> {
                 when(val response = event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
@@ -103,7 +107,7 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
             /** End events associated with Delete Note to Favorite **/
 
             /** Events associated with Navigate to Detail Pane **/
-            is FavoriteEvent.OnNavigateToDetailPane -> {
+            is OnNavigateToDetailPane -> {
                 val updatedState = previousState.copy(
                     selectedNoteToDetail = event.note,
                     selectedAddressToDetail = event.address,

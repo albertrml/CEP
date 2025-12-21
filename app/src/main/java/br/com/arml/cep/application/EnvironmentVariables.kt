@@ -27,4 +27,14 @@ sealed class EnvironmentVariables(){
         const val DELETE_ALL_LOGS_SUCCESS_MSG = "Todos os logs foram deletados"
         const val DELETE_ALL_LOGS_FAILURE_MSG = "Não foi possível deletar todos os logs"
     }
+
+    data object CacheReducerVariables: EnvironmentVariables() {
+        const val DELETE_ALL_CACHE_SUCCESS_MSG = "Todos registros em cache foram excluídos"
+        const val DELETE_ALL_CACHE_FAILURE_MSG = "Não foi possível excluir todos os registros em cache"
+        fun getDeletingCacheSuccessMessage(zipcode: String) = "CEP $zipcode removido do cache"
+        fun getDeletingCacheFailureMessage(zipcode: String) = "Não foi possível remover o CEP $zipcode do cache"
+        fun getAddingFavoriteSuccessMessage(zipcode: String) = "CEP $zipcode adicionado aos favoritos"
+        fun getAddingFavoriteFailureMessage(zipcode: String) = "Não foi possível adicionar o CEP $zipcode aos favoritos"
+
+    }
 }

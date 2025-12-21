@@ -27,7 +27,7 @@ class SearchViewModel @Inject constructor(
     private fun favoriteCep(place: Place) {
         viewModelScope.launch {
             useCase.addToFavorite(place).collect { response ->
-                sendEventForEffect(SearchEvent.OnFavoriteResponse(response))
+                sendEventForEffect(SearchEvent.OnFavoriteResponse(response, place.cep.text))
             }
         }
     }

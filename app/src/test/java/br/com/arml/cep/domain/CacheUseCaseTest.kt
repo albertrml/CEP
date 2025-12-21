@@ -38,11 +38,11 @@ class CacheUseCaseTest {
             val note = NoteEntity(title = zipcode, content = "")
             coEvery {
                 favoriteRepository.addToFavorite(any(), any())
-            } returns flowOf(Loading, Success(zipcode))
+            } returns flowOf(Loading, Success(Unit))
 
             val responses = useCase.addToFavorite(place).toList()
 
-            responses.assertFlowSuccess { assertThat(it).isEqualTo(zipcode) }
+            responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
             coVerify(exactly = 1) { favoriteRepository.addToFavorite(zipcode, note) }
         }
 

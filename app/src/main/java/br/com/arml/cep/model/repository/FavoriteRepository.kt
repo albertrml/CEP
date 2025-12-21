@@ -31,7 +31,6 @@ class FavoriteRepository @Inject constructor(
             val newNote = note.copy(title = suggestedTitle)
             insertNoteEntityToFavorite(zipcode, newNote)
         }
-        zipcode
     }
 
 

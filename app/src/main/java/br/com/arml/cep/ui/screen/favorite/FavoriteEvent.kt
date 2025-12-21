@@ -17,7 +17,7 @@ sealed class FavoriteEvent: Reducer.ViewEvent {
 
     /** Events associated with Add Note to Favorite **/
     data class OnAddNoteToFavorite(val cep: Cep, val note: Note) : FavoriteEvent()
-    data class OnAddNoteToFavoriteResponse(val response: Response<String>) : FavoriteEvent()
+    data class OnAddNoteToFavoriteResponse(val response: Response<Unit>, val zipcode: String) : FavoriteEvent()
     /** End events associated with Add Note to Favorite **/
 
     /** Events associated with Delete Note from Favorite **/

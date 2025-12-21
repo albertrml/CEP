@@ -44,7 +44,7 @@ class FavoriteRepositoryTest {
 
         val responses = favoriteRepository.addToFavorite(zipcode, note).toList()
 
-        responses.assertFlowSuccess { assertThat(it).isEqualTo(zipcode) }
+        responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
         coVerify(exactly = 1) { favoriteDao.insertNoteEntityToFavorite(zipcode, note) }
     }
 
@@ -62,7 +62,7 @@ class FavoriteRepositoryTest {
 
         val responses = favoriteRepository.addToFavorite(zipcode, note).toList()
 
-        responses.assertFlowSuccess { assertThat(it).isEqualTo(zipcode) }
+        responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
         coVerify(exactly = 1) {
             favoriteDao.insertNoteEntityToFavorite(zipcode, expectedNote)
         }

@@ -53,7 +53,7 @@ class FavoriteViewModel @Inject constructor(
     private fun addNoteToFavorite(cep: Cep, note: Note){
         viewModelScope.launch {
             favoriteUseCase.addNoteToFavorite(cep, note).collect { response ->
-                sendEventForEffect(OnAddNoteToFavoriteResponse(response))
+                sendEventForEffect(OnAddNoteToFavoriteResponse(response, cep.text))
             }
         }
     }

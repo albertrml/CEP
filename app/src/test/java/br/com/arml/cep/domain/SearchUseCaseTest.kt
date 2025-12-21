@@ -2,6 +2,7 @@ package br.com.arml.cep.domain
 
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
+import br.com.arml.cep.model.entity.NoteEntity
 import br.com.arml.cep.model.exception.CepException
 import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.model.repository.FavoriteRepository
@@ -45,8 +46,7 @@ class SearchUseCaseTest {
         coEvery {
             favoriteRepository.addToFavorite(any(), any())
         } answers  {
-            val capturedZipcode = invocation.args[0] as String
-            flowOf(Response.Loading, Response.Success(capturedZipcode))
+            flowOf(Response.Loading, Response.Success(Unit))
         }
     }
 
@@ -102,13 +102,14 @@ class SearchUseCaseTest {
     @Test
     fun `addToFavorite should emit Success`() = runTest {
         val place = mockUnfavoritePlaces.first()
-        val expectedZipcode = place.cep.text
+        val zipcode = place.cep.text
+        val note = NoteEntity(title = zipcode, content = "")
         mockAddFavoriteSuccess()
 
         val responses = searchUseCase.addToFavorite(place).toList()
 
-        responses.assertFlowSuccess { assertThat(it).isEqualTo(expectedZipcode) }
-        coVerify(exactly = 1) { favoriteRepository.addToFavorite(any(), any()) }
+        responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
+        coVerify(exactly = 1) { favoriteRepository.addToFavorite(zipcode, note) }
     }
 
     @Test

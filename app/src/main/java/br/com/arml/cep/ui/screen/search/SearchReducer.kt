@@ -6,6 +6,7 @@ import br.com.arml.cep.model.domain.Response.Failure
 import br.com.arml.cep.model.domain.Response.Loading
 import br.com.arml.cep.model.domain.Response.Success
 import br.com.arml.cep.ui.common.Reducer
+import br.com.arml.cep.ui.screen.search.SearchEffect.ShowSnackbar
 import br.com.arml.cep.ui.screen.search.SearchEvent.OnClear
 import br.com.arml.cep.ui.screen.search.SearchEvent.OnFavoriteResponse
 import br.com.arml.cep.ui.screen.search.SearchEvent.OnSearchResponse
@@ -21,19 +22,17 @@ class SearchReducer: Reducer<SearchState, SearchEvent, SearchEffect> {
                 updatedState to null
             }
             is OnFavoriteResponse -> {
-                when(event.response){
-                    is Loading -> previousState to null
+                val (response, zipcode) = event
+                val effect = when(response){
+                    is Loading -> null
                     is Success -> {
-                        val zipcode = event.response.result
-                        val successMessage = getAddingToFavoriteSuccessMessage(zipcode)
-                        val effect = SearchEffect.ShowSnackbar(successMessage)
-                        previousState to effect
+                        ShowSnackbar(getAddingToFavoriteSuccessMessage(zipcode))
                     }
                     is Failure -> {
-                        val effect = SearchEffect.ShowSnackbar(ADDING_TO_FAVORITE_FAILURE_MSG)
-                        previousState to effect
+                        ShowSnackbar(ADDING_TO_FAVORITE_FAILURE_MSG)
                     }
                 }
+                previousState to effect
             }
             is OnSearchResponse -> {
                 val place = event.response

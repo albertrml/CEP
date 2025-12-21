@@ -223,7 +223,7 @@ class FavoriteListPaneComponentTest {
             }
             onNodeWithText(cepFilterOption).performClick()
             onNodeWithText(noneFilterOption).performClick()
-            verify(exactly = 2) { mockOnNoneFilter() }
+            verify(exactly = 1) { mockOnNoneFilter() }
         }
     }
 
