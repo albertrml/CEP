@@ -71,8 +71,6 @@ fun FavoriteListPaneComponent(
             .testTag(stringResource(R.string.favoriteListPaneComponent_component_testTag)),
         topBar = {
             FavoriteListPaneHeader(
-                modifier = Modifier
-                    .testTag(stringResource(R.string.testTag_favoriteList_header)),
                 onImportClick = onImportClick,
                 onExportClick = onExportClick
             )

@@ -28,7 +28,7 @@ import br.com.arml.cep.model.domain.formattedCep
 import br.com.arml.cep.model.domain.updateCepField
 
 @Composable
-fun SearchCepField(
+fun CepSearchField(
     modifier: Modifier = Modifier,
     onQueryChange: (String) -> Unit
 ){
@@ -39,7 +39,7 @@ fun SearchCepField(
     OutlinedTextField(
         modifier = modifier
             .semantics { contentType = ContentType.PostalCode }
-            .testTag(stringResource(R.string.searchCepField_component_testTag)),
+            .testTag(stringResource(R.string.cepSearchField_component_testTag)),
         value = cepFieldValue,
         onValueChange = { newFieldValue ->
             val digitsOnly = updateCepField(
@@ -54,13 +54,13 @@ fun SearchCepField(
         },
         label = {
             Text(
-                text = stringResource(R.string.searchCepField_label),
+                text = stringResource(R.string.cepSearchField_label),
                 style = MaterialTheme.typography.labelLarge
             )
         },
         placeholder = {
             Text(
-                text = stringResource(R.string.searchCepField_hint),
+                text = stringResource(R.string.cepSearchField_hint),
                 style = MaterialTheme.typography.labelLarge
             )
         },
@@ -74,7 +74,7 @@ fun SearchCepField(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Clear,
-                        contentDescription = stringResource(R.string.searchCepField_clearTrailingIcon)
+                        contentDescription = stringResource(R.string.cepSearchField_clearTrailingIcon)
                     )
                 }
             }
@@ -87,6 +87,6 @@ fun SearchCepField(
 
 @Preview (showBackground = true)
 @Composable
-fun SearchCepFieldPreview(){
-    SearchCepField(onQueryChange = {})
+fun CepSearchFieldPreview(){
+    CepSearchField(onQueryChange = {})
 }

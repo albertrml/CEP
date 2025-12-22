@@ -12,7 +12,7 @@ import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.common.field.AppTextField
+import br.com.arml.cep.ui.screen.component.common.field.CepTextField
 import br.com.arml.cep.utils.hasEditableText
 import org.junit.Before
 import org.junit.Rule
@@ -34,8 +34,8 @@ class AppTextFieldTest {
     @Before
     fun setup() {
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
-            appTextFieldTest = getString(R.string.appTextField_component_testTag)
-            appTextFieldInputCounter = getString(R.string.appTextField_inputCounter_testTag)
+            appTextFieldTest = getString(R.string.cepTextField_component_testTag)
+            appTextFieldInputCounter = getString(R.string.cepTextField_inputCounter_testTag)
         }
     }
 
@@ -48,7 +48,7 @@ class AppTextFieldTest {
         showInputSize: Boolean = false,
     ) {
         composeTestRule.setContent {
-            AppTextField(
+            CepTextField(
                 nameField = nameField,
                 text = text.value,
                 onChangeText = { text.value = it },

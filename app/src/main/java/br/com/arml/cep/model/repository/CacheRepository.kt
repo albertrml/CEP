@@ -12,22 +12,21 @@ import jakarta.inject.Inject
 class CacheRepository @Inject constructor(
     private val cacheDao: CacheDao
 ) {
-    // Create
+    /** Create **/
     fun insertPlace(place: Place) = asResponse { cacheDao.insertPlaceEntity(place.toEntity()) }
 
-    // Read
+    /** Reade **/
     fun getPlacesByZipcode(query: String) = cacheDao
         .selectCachedPlaceEntitiesByZipcode(query)
         .toResponseFlow()
         .mapSuccess { entity -> entity.map { it.toModel() }  }
 
-    // Update
+    /** Update **/
     fun updatePlace(place: Place) = asResponse { cacheDao.updatePlaceEntity(place.toEntity()) }
 
-    // Delete
+    /** Delete **/
     fun deletePlace(place: Place) = asResponse {
         cacheDao.deleteCachedPlaceEntity(place.cep.text)
     }
-
     fun deleteAllUnwanted() = asResponse { cacheDao.deleteAllCachedPlaceEntities() }
 }

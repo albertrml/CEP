@@ -54,21 +54,19 @@ fun LogElement(
         ) {
 
             LogElementContent(
-                modifier = Modifier
-                    .weight(1f)
-                    .testTag(stringResource(R.string.logElementContent_component_testTag)),
+                modifier = Modifier.weight(1f),
                 log = log
             )
             IconButton(
                 modifier = Modifier
-                    .testTag(stringResource(R.string.logElementContent_deleteButton_testTag)),
+                    .testTag(stringResource(R.string.logElement_deleteButton_testTag)),
                 onClick = { onClickToDelete(log) },
             ) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
                     tint = MaterialTheme.colorScheme.error,
                     contentDescription = stringResource(
-                        R.string.logElementContent_deleteButton_description,
+                        R.string.logElement_deleteButton_description,
                         log.cep.text, log.timestamp.toFormattedUTC()
                     )
                 )

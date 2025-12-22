@@ -3,8 +3,6 @@ package br.com.arml.cep.ui.component.common.fastscroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -48,9 +46,7 @@ class FastScrollListTest {
 
     fun fastScrollListContent(list: List<String> = items) {
         composeTestRule.setContent {
-            FastScrollList(
-                modifier = Modifier.testTag(fastScrollListTag)
-            ){ lazyListState ->
+            FastScrollList { lazyListState ->
                 LazyColumn(state = lazyListState) {
                     items(list){ item -> Text(item) }
                 }

@@ -43,29 +43,4 @@ object RoomDatabaseModule {
     @Provides
     @Singleton
     fun provideLogs(db: CepRoomDatabase): LogDao { return db.logDao() }
-
-    /*@Provides
-    @Singleton
-    fun provideDatabase(@ApplicationContext ctx: Context): CepRoomDatabase {
-        return Room
-            .databaseBuilder(
-                ctx.applicationContext,
-                CepRoomDatabase::class.java,
-                DATABASE_NAME
-            )
-            .build()
-    }
-
-    @Provides
-    @Singleton
-    fun providePlaceDao(database: CepRoomDatabase): PlaceLocalDataSource {
-        return database.placeDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideLogDao(database: CepRoomDatabase): LogLocalDataSource {
-        return database.logDao()
-    }
-    */
 }

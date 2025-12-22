@@ -34,16 +34,16 @@ class SearchDetailPaneTest {
 
     private val headerTag = ctx.getString(R.string.header_component_testTag)
     private val saveButtonTag =
-        ctx.getString(R.string.favoriteDetailPaneComponent_saveButton_testTag)
+        ctx.getString(R.string.searchDetailPaneOnSuccess_saveButton_testTag)
     private val goBackButtonTag = ctx.getString(R.string.headerContent_iconButton_testTag)
     private val addressFormTag = ctx.getString(R.string.addressForms_component_testTag)
     private val circularProgressIndicatorTag = ctx.getString(
-        R.string.favoriteDetailPaneComponent_onLoading_testTag
+        R.string.searchDetailPaneOnLoading_component_testTag
     )
 
-    private val loadingTag = ctx.getString(R.string.favoriteDetailPaneComponent_onLoading_testTag)
-    private val successTag = ctx.getString(R.string.favoriteDetailPaneComponent_onSuccess_testTag)
-    private val failureTag = ctx.getString(R.string.favoriteDetailPaneComponent_onFailure_testTag)
+    private val loadingTag = ctx.getString(R.string.searchDetailPaneOnLoading_loading_testTag)
+    private val successTag = ctx.getString(R.string.searchDetailPaneOnSuccess_component_testTag)
+    private val failureTag = ctx.getString(R.string.searchDetailPaneOnFailure_component_testTag)
 
     private val mockOnBackPress: () -> Unit = mockk(relaxed = true)
     private val mockOnFavorite: (Place) -> Unit = mockk(relaxed = true)

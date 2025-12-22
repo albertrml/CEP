@@ -18,7 +18,7 @@ fun FavoriteListPaneHeader(
 ) {
     Header(
         modifier = modifier
-            .testTag(stringResource(R.string.testTag_favoriteList_header)),
+            .testTag(stringResource(R.string.favoriteListPaneHeader_component_testTag)),
         logo = Icons.Filled.Favorite,
         title = stringResource(R.string.favoriteListPaneHeader_title_label),
         menu = {

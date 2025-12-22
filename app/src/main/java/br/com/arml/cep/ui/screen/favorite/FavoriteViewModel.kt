@@ -27,10 +27,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
-    private val favoriteUseCase: FavoriteUseCase
+    private val favoriteUseCase: FavoriteUseCase,
+    initialState: FavoriteState,
+    reducer: FavoriteReducer
 ): BaseViewModel<FavoriteState, FavoriteEvent, FavoriteEffect>(
-    initialState = FavoriteState(),
-    reducer = FavoriteReducer()
+    initialState = initialState,
+    reducer = reducer
 ) {
 
     init { fetchFavorites() }

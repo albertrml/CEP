@@ -29,10 +29,11 @@ class LogElementTest {
     private val log = mockLogEntries.first()
 
     private val contentTag = ctx.getString(
-        R.string.logElementContent_component_testTag
+        R.string.logElementContent_component_testTag,
+        log.toString()
     )
     private val deleteButtonTag = ctx.getString(
-        R.string.logElementContent_deleteButton_testTag
+        R.string.logElement_deleteButton_testTag
     )
 
     @Test

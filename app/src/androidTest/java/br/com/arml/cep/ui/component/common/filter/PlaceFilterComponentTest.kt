@@ -25,7 +25,6 @@ class PlaceFilterComponentTest {
     val composeTestRule = createComposeRule()
 
     private lateinit var placeFilterChipComponent: String
-    private lateinit var placeFilterChipComposable: String
 
     private val placeFilterByCepChip: String = PlaceFilterOption.ByCep.name
     private val placeFilterByTitleChip: String = PlaceFilterOption.ByTitle.name
@@ -39,10 +38,9 @@ class PlaceFilterComponentTest {
     @Before
     fun setUp(){
         InstrumentationRegistry.getInstrumentation().targetContext.apply{
-            placeFilterChipComponent = getString(R.string.testTag_placeFilter_component)
-            placeFilterChipComposable = getString(R.string.testTag_placeFilter_composable)
+            placeFilterChipComponent = getString(R.string.placeFilter_component_testTag)
 
-            searchCepField = getString(R.string.searchCepField_component_testTag)
+            searchCepField = getString(R.string.cepSearchField_component_testTag)
             cepFilterSearchButton = getString(R.string.cepFilter_filterButton_testTag)
 
             titleFilterTextField = getString(R.string.titleFilter_titleField_testTag)

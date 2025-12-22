@@ -20,7 +20,7 @@ import br.com.arml.cep.R.string.cacheListPaneOnSuccess_placeFilterComponent_test
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.ui.screen.component.cache.listpane.item.CachePlaceList
-import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
+import br.com.arml.cep.ui.screen.component.common.dialog.DeleteAllComponent
 import br.com.arml.cep.ui.screen.component.common.filter.chip.PlaceFilterComponent
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.PlaceFilterOption
@@ -56,8 +56,8 @@ fun CacheListPaneOnSuccess(
         DeleteAllComponent(
             modifier = Modifier
                 .testTag(stringResource(cacheListPaneOnSuccess_deleteAllComponent_testTag)),
-            deleteLogAlertTitleId = R.string.cachePlaceAlert_title_text,
-            deleteLogAlertTextId = R.string.cachePlaceAlert_content_text,
+            deleteLogAlertTitleId = R.string.cacheListPaneOnSuccess_cachePlaceAlert_title,
+            deleteLogAlertTextId = R.string.cacheListPaneOnSuccess_cachePlaceAlert_content,
             onConfirmDeleteAllEntries = { onDeleteAllCache() }
         )
         CachePlaceList(

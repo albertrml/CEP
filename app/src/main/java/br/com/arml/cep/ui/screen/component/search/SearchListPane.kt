@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Cep
-import br.com.arml.cep.ui.screen.component.common.field.SearchCepField
+import br.com.arml.cep.ui.screen.component.common.field.CepSearchField
 import br.com.arml.cep.ui.screen.component.common.header.Header
 import br.com.arml.cep.ui.theme.dimens
 
@@ -43,7 +43,7 @@ fun SearchListPane(
         modifier = modifier,
         topBar = {
             Header(
-                title = stringResource(R.string.search_title),
+                title = stringResource(R.string.searchListPane_header_label),
                 logo = Icons.Default.Search
             )
         }
@@ -55,7 +55,7 @@ fun SearchListPane(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
-            SearchCepField(onQueryChange = { query = it })
+            CepSearchField(onQueryChange = { query = it })
             Spacer(modifier = Modifier.padding(MaterialTheme.dimens.mediumSpacing))
             Button(
                 modifier = Modifier.testTag(

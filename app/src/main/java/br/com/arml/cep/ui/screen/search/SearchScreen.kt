@@ -14,6 +14,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
 import br.com.arml.cep.ui.screen.component.search.SearchDetailPane
 import br.com.arml.cep.ui.screen.component.search.SearchListPane
+import br.com.arml.cep.ui.screen.search.SearchEvent.OnClear
+import br.com.arml.cep.ui.screen.search.SearchEvent.OnFavorite
+import br.com.arml.cep.ui.screen.search.SearchEvent.OnSearch
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.paneEnterTransition
 import br.com.arml.cep.ui.utils.paneExitTransition
@@ -43,7 +46,7 @@ fun SearchScreen(
                     modifier = marginScreen,
                     onSearchCep = { query ->
                         uiStateHolder.navigateToDetailPane {
-                            viewModel.onEvent(SearchEvent.OnSearch(query))
+                            viewModel.onEvent(OnSearch(query))
                         }
                     }
                 )
@@ -60,12 +63,12 @@ fun SearchScreen(
                         response = uiState.entry,
                         onBackPress = {
                             uiStateHolder.navigateBackToListPane {
-                                viewModel.onEvent(SearchEvent.OnClear)
+                                viewModel.onEvent(OnClear)
                             }
                         },
                         onFavoriteClick = { placeEntry ->
                             uiStateHolder.navigateBackToListPane {
-                                viewModel.onEvent(SearchEvent.OnFavorite(placeEntry))
+                                viewModel.onEvent(OnFavorite(placeEntry))
                             }
                         }
                     )

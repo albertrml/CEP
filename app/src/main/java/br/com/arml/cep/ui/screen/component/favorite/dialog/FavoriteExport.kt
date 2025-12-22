@@ -10,7 +10,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.common.CepAlertDialog
+import br.com.arml.cep.ui.screen.component.common.dialog.CepAlertDialog
 
 @Composable
 fun FavoriteExport(

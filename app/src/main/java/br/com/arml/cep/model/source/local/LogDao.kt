@@ -25,14 +25,16 @@ interface LogDao {
     fun selectLogEntitiesByZipcode(query: String = ""): Flow<List<LogEntity>>
 
     // Search for logs which are in the given period of time
-    @Query("""
+    @Query(
+        """
         SELECT * FROM logs
         WHERE timestamp >= :start AND timestamp <= :end
         ORDER BY timestamp DESC
-    """)
+    """
+    )
     fun selectLogEntitiesByPeriod(
         start: Long = 0L,
-        end : Long = System.currentTimeMillis()
+        end: Long = System.currentTimeMillis()
     ): Flow<List<LogEntity>>
 
     /** Delete **/

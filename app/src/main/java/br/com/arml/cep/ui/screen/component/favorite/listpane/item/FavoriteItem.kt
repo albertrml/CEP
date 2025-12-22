@@ -37,7 +37,10 @@ fun FavoriteItem(
 ) {
     Surface(
         modifier = modifier
-            .testTag(stringResource(R.string.favoriteItem_component_testTag)),
+            .testTag(stringResource(
+                R.string.favoriteItem_component_testTag,
+                place.toString()
+            )),
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onSurface,

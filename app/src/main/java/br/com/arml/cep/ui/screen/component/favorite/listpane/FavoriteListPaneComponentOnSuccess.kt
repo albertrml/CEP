@@ -46,7 +46,7 @@ fun FavoriteListPaneComponentOnSuccess(
             modifier = Modifier
                 .fillMaxWidth()
                 .testTag(stringResource(
-                    R.string.favoriteListPaneComponent_placeFilterComponent_testTag)
+                    R.string.favoriteListPaneComponentOnSuccess_placeFilterComponent_testTag)
                 ),
             filters = favoriteFilterOptions,
             selectedFilter = selectedFilter,
@@ -59,7 +59,7 @@ fun FavoriteListPaneComponentOnSuccess(
         FavoriteListComponent(
             modifier = Modifier
                 .testTag(stringResource(
-                    R.string.favoriteListPaneComponent_favoriteListComponent_testTag)
+                    R.string.favoriteListPaneComponentOnSuccess_favoriteListComponent_testTag)
                 ),
             places = places,
             onAddNote = onAddNote,

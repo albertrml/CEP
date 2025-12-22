@@ -53,7 +53,6 @@ fun SelectedPlaceFilterPreview(){
     PlaceFilterChip(
         labelFilter = PlaceFilterOption.ByCep,
         isSelected = true,
-        //selectedLabelFilter = PlaceFilterOption.ByCep,
         onSelected = {}
     )
 }
@@ -63,7 +62,6 @@ fun SelectedPlaceFilterPreview(){
 fun UnselectedPlaceFilterPreview(){
     PlaceFilterChip(
         labelFilter = PlaceFilterOption.ByCep,
-        //selectedLabelFilter = PlaceFilterOption.None,
         isSelected = false,
         onSelected = {}
     )

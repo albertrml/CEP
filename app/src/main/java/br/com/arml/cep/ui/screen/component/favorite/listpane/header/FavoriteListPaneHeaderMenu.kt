@@ -15,6 +15,10 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import br.com.arml.cep.R
+import br.com.arml.cep.R.string.favoriteListPaneHeaderMenu_exportButton_description
+import br.com.arml.cep.R.string.favoriteListPaneHeaderMenu_exportButton_testTag
+import br.com.arml.cep.R.string.favoriteListPaneHeaderMenu_importButton_description
+import br.com.arml.cep.R.string.favoriteListPaneHeaderMenu_importButton_testTag
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -26,9 +30,7 @@ fun FavoriteListPaneHeaderMenu(
     Row(
         modifier = modifier
             .testTag(
-                stringResource(
-                    R.string.favoriteListPaneHeaderMenu_component_testTag
-                )
+                stringResource(R.string.favoriteListPaneHeaderMenu_component_testTag)
             ),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
@@ -37,9 +39,7 @@ fun FavoriteListPaneHeaderMenu(
         IconButton(
             modifier = Modifier
                 .testTag(
-                    stringResource(
-                        R.string.favoriteListPaneHeaderMenu_exportButton_testTag
-                    )
+                    stringResource(favoriteListPaneHeaderMenu_exportButton_testTag)
                 ),
             onClick = onExportClick
         ) {
@@ -47,7 +47,7 @@ fun FavoriteListPaneHeaderMenu(
                 modifier = Modifier.wrapContentSize(),
                 painter = painterResource(R.drawable.ic_export),
                 contentDescription = stringResource(
-                    R.string.favoriteListPaneHeaderMenu_exportButton_description
+                    favoriteListPaneHeaderMenu_exportButton_description
                 ),
             )
         }
@@ -57,9 +57,7 @@ fun FavoriteListPaneHeaderMenu(
         IconButton(
             modifier = Modifier
                 .testTag(
-                    stringResource(
-                        R.string.favoriteListPaneHeaderMenu_importButton_testTag
-                    )
+                    stringResource(favoriteListPaneHeaderMenu_importButton_testTag)
                 ),
             onClick = onImportClick
         ) {
@@ -67,7 +65,7 @@ fun FavoriteListPaneHeaderMenu(
                 modifier = Modifier.wrapContentSize(),
                 painter = painterResource(R.drawable.ic_import),
                 contentDescription = stringResource(
-                    R.string.favoriteListPaneHeaderMenu_importButton_description
+                    favoriteListPaneHeaderMenu_importButton_description
                 )
             )
         }

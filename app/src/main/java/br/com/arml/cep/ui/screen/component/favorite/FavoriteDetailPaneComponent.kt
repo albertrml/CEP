@@ -56,7 +56,7 @@ fun FavoriteDetailPaneComponent(
         topBar = {
             Header(
                 logo = Icons.AutoMirrored.Filled.ArrowBack,
-                title = stringResource(R.string.favorite_details_title),
+                title = stringResource(R.string.favoriteDetailPaneComponent_header_label),
                 onClickLogo = onNavigateBackToList
             )
         }

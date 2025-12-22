@@ -20,9 +20,11 @@ class FavoriteItemTest {
     @get:Rule
     val composeTestRule: ComposeContentTestRule = createComposeRule()
 
+    private val expectedPlace = mockFavoritePlaces.first()
+
     private val ctx = InstrumentationRegistry.getInstrumentation().targetContext
     
-    private val favoriteItemComponent = ctx.getString(R.string.favoriteItem_component_testTag)
+    private val favoriteItemComponent = ctx.getString(R.string.favoriteItem_component_testTag, expectedPlace)
     private val favoriteItemActionBar = ctx.getString(R.string.favoriteItemActionBar_component_testTag)
     private val noteListComponent = ctx.getString(R.string.noteListComponent_component_testTag)
 
@@ -31,7 +33,7 @@ class FavoriteItemTest {
         composeTestRule.apply{
             setContent {
                 FavoriteItem(
-                    place = mockFavoritePlaces.first(),
+                    place = expectedPlace,
                     favoriteIcon = Icons.Default.Favorite,
                     colorFavoriteIcon = MaterialTheme.colorScheme.onSurface,
                     onFavoriteIconClick = {},

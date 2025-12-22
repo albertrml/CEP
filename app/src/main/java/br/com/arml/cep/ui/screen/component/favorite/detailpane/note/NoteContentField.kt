@@ -11,7 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.MAX_CONTENT_LENGTH
 import br.com.arml.cep.model.mock.mockNotes
-import br.com.arml.cep.ui.screen.component.common.field.AppTextField
+import br.com.arml.cep.ui.screen.component.common.field.CepTextField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -20,7 +20,7 @@ fun NoteContentField(
     content: String,
     onContentChange: (String) -> Unit
 ){
-    AppTextField(
+    CepTextField(
         modifier = modifier
             .testTag(stringResource(R.string.noteContentField_component_testTag)),
         nameField = stringResource(R.string.noteContentField_nameField_text),

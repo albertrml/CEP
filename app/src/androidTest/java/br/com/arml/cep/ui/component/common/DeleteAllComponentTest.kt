@@ -8,7 +8,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
+import br.com.arml.cep.ui.screen.component.common.dialog.DeleteAllComponent
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -39,8 +39,8 @@ class DeleteAllComponentTest {
             deleteAllComponentDivider = getString(R.string.deleteAllComponent_horizontalDivider_testTag)
             deleteAllComponentButton = getString(R.string.deleteAllComponent_button_testTag)
             logScreenDeleteAllLogAlert = getString(R.string.cepAlertdialog_component_testTag)
-            logScreenDeleteAllLogAlertTitle = getString(R.string.log_delete_all_log_title)
-            logScreenDeleteAllLogAlertMessage = getString(R.string.log_delete_all_log_alert)
+            logScreenDeleteAllLogAlertTitle = getString(R.string.cepAlertDialog_mockTitle_text)
+            logScreenDeleteAllLogAlertMessage = getString(R.string.cepAlertDialog_mockContent_text)
             logScreenDeleteAllLogAlertConfirmButton = getString(R.string.cepAlertdialog_confirmButton_text)
             logScreenDeleteAllLogAlertDismissButton = getString(R.string.cepAlertdialog_dismissButton_text)
         }
@@ -53,8 +53,8 @@ class DeleteAllComponentTest {
     fun showDeleteAllComponent(){
         composeTestRule.setContent {
             DeleteAllComponent(
-                deleteLogAlertTitleId = R.string.log_delete_all_log_title,
-                deleteLogAlertTextId = R.string.log_delete_all_log_alert,
+                deleteLogAlertTitleId = R.string.cepAlertDialog_mockTitle_text,
+                deleteLogAlertTextId = R.string.cepAlertDialog_mockContent_text,
                 onConfirmDeleteAllEntries = onConfirmDeleteAllEntries,
             )
         }

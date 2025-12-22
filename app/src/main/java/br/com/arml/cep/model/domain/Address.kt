@@ -35,14 +35,14 @@ data class Address (
 
 @Composable
 fun Address.mapOfFields() = mapOf(
-    R.string.display_zipcode_field to zipCode,
-    R.string.display_street_field to street,
-    R.string.display_complement_field to complement,
-    R.string.display_neighborhood_field to district,
-    R.string.display_city_field to city,
-    R.string.display_state_field to state,
-    R.string.display_uf_field to uf,
-    R.string.display_region_field to region,
-    R.string.display_country_field to country,
-    R.string.display_ddd_field to ddd
+    R.string.address_zipcodeField_label to zipCode,
+    R.string.address_streetField_label to street,
+    R.string.address_complementField_label to complement,
+    R.string.address_neighborhoodField_label to district,
+    R.string.address_cityField_label to city,
+    R.string.address_stateField_label to state,
+    R.string.address_ufField_label to uf,
+    R.string.address_regionField_label to region,
+    R.string.address_countryField_label to country,
+    R.string.address_dddField_label to ddd
 )

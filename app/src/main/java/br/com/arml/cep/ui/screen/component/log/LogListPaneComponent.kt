@@ -56,7 +56,7 @@ fun LogListPaneComponent(
             Header(
                 modifier = Modifier
                     .testTag(stringResource(R.string.logListPaneComponent_header_testTag)),
-                title = stringResource(R.string.log_title),
+                title = stringResource(R.string.logListPaneComponent_header_title),
                 logo = Icons.Default.History
             )
         }
@@ -105,12 +105,6 @@ fun LogListPaneComponent(
                     },*/
                     failureContent = { exception ->
                         LogListPaneOnFailure(
-                            modifier = Modifier
-                                .testTag(
-                                    stringResource(
-                                        R.string.logListPaneOnFailure_component_testTag
-                                    )
-                                ),
                             failureMsg = exception.message ?: FetchPlaceException().message,
                         )
                     }

@@ -65,7 +65,8 @@ fun FastScrollGrid(
     }
 
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(stringResource(R.string.fastScrollGrid_component_testTag)),
         contentAlignment = Alignment.TopCenter
     ) {
         content(staggeredGridState)

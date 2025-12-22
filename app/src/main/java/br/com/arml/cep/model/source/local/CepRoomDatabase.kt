@@ -7,21 +7,6 @@ import br.com.arml.cep.model.entity.LogEntity
 import br.com.arml.cep.model.entity.NoteEntity
 import br.com.arml.cep.model.entity.PlaceEntity
 
-
-/*@Database(
-    entities = [
-        PlaceEntry::class,
-        LogEntry::class
-    ],
-    version = 1,
-    exportSchema = true
-)
-abstract class CepRoomDatabase() : RoomDatabase() {
-    abstract fun placeDao(): PlaceLocalDataSource
-    abstract fun logDao(): LogLocalDataSource
-}*/
-
-
 @Database(
     entities = [
         FavoriteEntity::class,

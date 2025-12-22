@@ -70,6 +70,6 @@ fun AddressForms(
 fun AddressScreenPreview() {
     AddressForms(
         modifier = Modifier.padding(MaterialTheme.dimens.mediumPadding),
-        address = mockAddress
+        address = mockAddress(0)
     )
 }

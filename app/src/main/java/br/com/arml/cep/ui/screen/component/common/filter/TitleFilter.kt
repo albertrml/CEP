@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
 import br.com.arml.cep.model.domain.MIN_TITLE_LENGTH
-import br.com.arml.cep.ui.screen.component.common.field.AppTextField
+import br.com.arml.cep.ui.screen.component.common.field.CepTextField
 
 @Composable
 fun TitleFilter(
@@ -39,7 +39,7 @@ fun TitleFilter(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        AppTextField(
+        CepTextField(
             modifier = Modifier
                 .testTag(stringResource(R.string.titleFilter_titleField_testTag)),
             nameField = stringResource(R.string.titleFilter_titleField_label),

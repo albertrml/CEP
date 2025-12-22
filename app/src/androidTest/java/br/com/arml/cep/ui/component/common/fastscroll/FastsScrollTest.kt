@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
@@ -49,9 +48,7 @@ class FastsScrollTest {
 
     fun fastScrollContent(list: List<String> = items){
         composeTestRule.setContent {
-            FastScroll(
-                modifier = Modifier.testTag(fastScrollTag)
-            ){ scrollState ->
+            FastScroll { scrollState ->
                 Column(modifier = Modifier.verticalScroll(scrollState) ){
                     list.forEach { Text(text = it) }
                 }

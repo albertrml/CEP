@@ -5,7 +5,9 @@ import br.com.arml.cep.domain.LogUseCase
 import br.com.arml.cep.model.domain.Log
 import br.com.arml.cep.ui.common.BaseViewModel
 import br.com.arml.cep.ui.screen.log.LogEvent.OnDeleteAllLogs
+import br.com.arml.cep.ui.screen.log.LogEvent.OnDeleteAllLogsResponse
 import br.com.arml.cep.ui.screen.log.LogEvent.OnDeleteLog
+import br.com.arml.cep.ui.screen.log.LogEvent.OnDeleteLogResponse
 import br.com.arml.cep.ui.screen.log.LogEvent.OnFetchAllLogsResponse
 import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByCep
 import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByFinalDate
@@ -47,7 +49,7 @@ class LogViewModel @Inject constructor(
     private fun deleteAllLogs() {
         viewModelScope.launch {
             logUseCase.deleteAllLogs().collect { response ->
-                sendEventForEffect(LogEvent.OnDeleteAllLogsResponse(response))
+                sendEventForEffect(OnDeleteAllLogsResponse(response))
             }
         }
     }
@@ -55,7 +57,7 @@ class LogViewModel @Inject constructor(
     private fun deleteLog(log: Log) {
         viewModelScope.launch {
             logUseCase.deleteLog(log).collect { response ->
-                sendEventForEffect(LogEvent.OnDeleteLogResponse(response))
+                sendEventForEffect(OnDeleteLogResponse(response))
             }
         }
     }

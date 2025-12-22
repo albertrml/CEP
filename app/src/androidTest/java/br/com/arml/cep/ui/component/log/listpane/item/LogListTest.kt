@@ -73,7 +73,7 @@ class LogListTest {
     fun logList_shouldInvokeOnClickToDelete_whenDeleteIsClicked() {
         val logToDelete = mockLogEntries.first()
         val deleteButtonDescription = ctx.getString(
-            R.string.logElementContent_deleteButton_description,
+            R.string.logElement_deleteButton_description,
             logToDelete.cep.text,
             logToDelete.timestamp.toFormattedUTC()
         )

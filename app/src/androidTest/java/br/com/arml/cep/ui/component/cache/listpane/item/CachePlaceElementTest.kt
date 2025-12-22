@@ -31,7 +31,7 @@ class CachePlaceElementTest {
         expectedPlace.toString()
     )
     private val cachePlaceElementZipCodeText = ctx.getString(
-        R.string.place_zipcode_text,
+        R.string.cachePlaceElement_title_label,
         expectedPlace.address.zipCode
     )
     private val cachePlaceElementDeleteIconTag = ctx.getString(

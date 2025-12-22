@@ -55,7 +55,7 @@ fun CachePlaceElement(
             Text(
                 modifier = Modifier.weight(1f),
                 text = stringResource(
-                    R.string.place_zipcode_text,
+                    R.string.cachePlaceElement_title_label,
                     place.address.zipCode
                 ),
                 style = MaterialTheme.typography.titleMedium

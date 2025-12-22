@@ -17,11 +17,20 @@ import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.common.Reducer
 import br.com.arml.cep.ui.screen.favorite.FavoriteEffect.ShowSnackbar
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnAddNoteToFavoriteResponse
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelExport
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelFavoriteToUnwanted
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelImport
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmExportResponse
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmFavoriteToUnwantedResponse
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmImportResponse
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnDeleteNoteFromFavoriteResponse
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnExportFavorites
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnFetchFavoritesResponse
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnImportFavorites
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnNavigateBackToListPane
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnNavigateToDetailPane
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnSelectFavoriteToUnwanted
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnUpdateNoteFromFavoriteResponse
 
 class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
     override fun reduce(
@@ -30,9 +39,6 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
     ): Pair<FavoriteState, FavoriteEffect?> {
         return when(event){
             /** Events associated with making favorite as unwanted **/
-            /* Select favorite to remove and show warning. If confirm, change the favorite to
-               unwanted; otherwise, hide warning. Whether Success or Failure in changing operation,
-               a message is shown to user in the snackBar. */
             is OnSelectFavoriteToUnwanted -> {
                 val updatedState = previousState.copy(
                     isVisibleUnwantedWarning = true,
@@ -108,14 +114,15 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
 
             /** Events associated with Navigate to Detail Pane **/
             is OnNavigateToDetailPane -> {
+                val (address, note) = event
                 val updatedState = previousState.copy(
-                    selectedNoteToDetail = event.note,
-                    selectedAddressToDetail = event.address,
-                    selectedDataToDetail = event.address to event.note
+                    selectedAddressToDetail = address,
+                    selectedNoteToDetail = note,
+                    selectedDataToDetail = address to note
                 )
                 updatedState to null
             }
-            is FavoriteEvent.OnNavigateBackToListPane -> {
+            is OnNavigateBackToListPane -> {
                 val updatedState = previousState.copy(
                     selectedNoteToDetail = null,
                     selectedAddressToDetail = null,
@@ -126,7 +133,7 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
             /** End events associated with Navigate to Detail Pane **/
 
             /** Events associated with update note **/
-            is FavoriteEvent.OnUpdateNoteFromFavoriteResponse -> {
+            is OnUpdateNoteFromFavoriteResponse -> {
                 when(event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
@@ -140,7 +147,7 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
             /** End events associated with update note **/
 
             /** Events associated with Fetch and Filter Favorites **/
-            is FavoriteEvent.OnFetchFavoritesResponse -> {
+            is OnFetchFavoritesResponse -> {
                 when(val response = event.response){
                     is Response.Loading -> previousState to null
                     else -> previousState.copy(places = response) to null
@@ -151,13 +158,13 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
             /** End events associated with Fetch and Filter Favorites **/
 
             /** Events associated with Import Favorites **/
-            is FavoriteEvent.OnImportFavorites -> {
+            is OnImportFavorites -> {
                 previousState.copy(isVisibleImportAlert = true) to null
             }
-            is FavoriteEvent.OnCancelImport -> {
+            is OnCancelImport -> {
                 previousState.copy(isVisibleImportAlert = false) to null
             }
-            is FavoriteEvent.OnConfirmImportResponse -> {
+            is OnConfirmImportResponse -> {
                 when(val response = event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
@@ -180,28 +187,28 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
             /** End events associated with Import Favorites **/
 
             /** Events associated with Export Favorites **/
-            is FavoriteEvent.OnExportFavorites -> {
+            is OnExportFavorites -> {
                 previousState.copy(isVisibleExportAlert = true) to null
             }
-            is FavoriteEvent.OnCancelExport -> {
+            is OnCancelExport -> {
                 previousState.copy(isVisibleExportAlert = false) to null
             }
-            is FavoriteEvent.OnConfirmExportResponse -> {
-                when(event.response){
+            is OnConfirmExportResponse -> {
+                when(val response = event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
                         val updatedState = previousState.copy(
                             isVisibleExportAlert = false,
-                            exportedFavorites = event.response
+                            exportedFavorites = response
                         )
                         updatedState to ShowSnackbar(EXPORTING_FAVORITES_SUCCESS_MSG)
                     }
                     is Response.Failure -> {
                         val updatedState = previousState.copy(
                             isVisibleExportAlert = false,
-                            exportedFavorites = event.response
+                            exportedFavorites = response
                         )
-                        val msg = event.response.exception.message ?: EXPORTING_FAVORITES_FAILURE_MSG
+                        val msg = response.exception.message ?: EXPORTING_FAVORITES_FAILURE_MSG
                         updatedState to ShowSnackbar(msg)
                     }
                 }

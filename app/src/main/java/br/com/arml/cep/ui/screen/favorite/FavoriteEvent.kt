@@ -7,7 +7,7 @@ import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.common.Reducer
 
-sealed class FavoriteEvent: Reducer.ViewEvent {
+sealed class FavoriteEvent : Reducer.ViewEvent {
     /** Events associated with making favorite as unwanted **/
     data class OnSelectFavoriteToUnwanted(val place: Place) : FavoriteEvent()
     data object OnCancelFavoriteToUnwanted : FavoriteEvent()
@@ -17,7 +17,8 @@ sealed class FavoriteEvent: Reducer.ViewEvent {
 
     /** Events associated with Add Note to Favorite **/
     data class OnAddNoteToFavorite(val cep: Cep, val note: Note) : FavoriteEvent()
-    data class OnAddNoteToFavoriteResponse(val response: Response<Unit>, val zipcode: String) : FavoriteEvent()
+    data class OnAddNoteToFavoriteResponse(val response: Response<Unit>, val zipcode: String) :
+        FavoriteEvent()
     /** End events associated with Add Note to Favorite **/
 
     /** Events associated with Delete Note from Favorite **/
@@ -31,7 +32,7 @@ sealed class FavoriteEvent: Reducer.ViewEvent {
     /** End events associated with update note **/
 
     /** Events associated with Navigate between Pane **/
-    data class OnNavigateToDetailPane(val note: Note, val address: Address) : FavoriteEvent()
+    data class OnNavigateToDetailPane(val address: Address, val note: Note) : FavoriteEvent()
     data object OnNavigateBackToListPane : FavoriteEvent()
     /** End events associated with Navigate between Pane **/
 

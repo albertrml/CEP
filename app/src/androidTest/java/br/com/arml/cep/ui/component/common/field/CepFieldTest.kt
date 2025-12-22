@@ -10,7 +10,7 @@ import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.ui.screen.component.common.field.SearchCepField
+import br.com.arml.cep.ui.screen.component.common.field.CepSearchField
 import br.com.arml.cep.utils.hasEditableText
 import com.google.common.truth.Truth
 import org.junit.Before
@@ -32,10 +32,10 @@ class CepFieldTest {
         query = ""
         composeTestRule.apply {
             InstrumentationRegistry.getInstrumentation().targetContext.apply {
-                searchCepFieldTag = getString(R.string.searchCepField_component_testTag)
-                trailingIconDescription = getString(R.string.searchCepField_clearTrailingIcon)
+                searchCepFieldTag = getString(R.string.cepSearchField_component_testTag)
+                trailingIconDescription = getString(R.string.cepSearchField_clearTrailingIcon)
             }
-            setContent { SearchCepField(onQueryChange = { query = it }) }
+            setContent { CepSearchField(onQueryChange = { query = it }) }
         }
     }
 

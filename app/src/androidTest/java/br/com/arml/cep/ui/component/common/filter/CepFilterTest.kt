@@ -37,7 +37,7 @@ class CepFilterTest {
     fun setup(){
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
             cepFilterComposable = getString(R.string.cepFilter_component_testTag)
-            cepFilterField = getString(R.string.searchCepField_component_testTag)
+            cepFilterField = getString(R.string.cepSearchField_component_testTag)
             cepFilterButton = getString(R.string.cepFilter_filterButton_testTag)
         }
 

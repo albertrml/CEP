@@ -89,7 +89,7 @@ class LogListPaneOnSuccessTest {
         }
         val expectedLog = mockLogEntries.first()
         val deleteButtonDescription = ctx.getString(
-            R.string.logElementContent_deleteButton_description,
+            R.string.logElement_deleteButton_description,
             expectedLog.cep.text,
             expectedLog.timestamp.toFormattedUTC()
         )

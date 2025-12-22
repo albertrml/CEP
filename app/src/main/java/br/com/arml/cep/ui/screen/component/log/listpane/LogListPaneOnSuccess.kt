@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Log
 import br.com.arml.cep.model.utils.toFormattedUTCDate
-import br.com.arml.cep.ui.screen.component.common.DeleteAllComponent
+import br.com.arml.cep.ui.screen.component.common.dialog.DeleteAllComponent
 import br.com.arml.cep.ui.screen.component.log.listpane.item.LogList
 import br.com.arml.cep.ui.theme.dimens
 
@@ -31,8 +31,8 @@ fun LogListPaneOnSuccess(
     ) {
 
         DeleteAllComponent(
-            deleteLogAlertTitleId = R.string.log_delete_all_log_title,
-            deleteLogAlertTextId = R.string.log_delete_all_log_alert,
+            deleteLogAlertTitleId = R.string.logListPaneOnSuccess_deleteAllComponent_title,
+            deleteLogAlertTextId = R.string.logListPaneOnSuccess_deleteAllComponent_content,
             onConfirmDeleteAllEntries = onClickToDeleteAll
         )
         LogList(

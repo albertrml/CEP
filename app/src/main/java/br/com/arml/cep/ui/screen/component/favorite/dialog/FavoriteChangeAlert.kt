@@ -8,7 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.mock.mockFavoritePlaces
-import br.com.arml.cep.ui.screen.component.common.CepAlertDialog
+import br.com.arml.cep.ui.screen.component.common.dialog.CepAlertDialog
 
 @Composable
 fun FavoriteChangeAlert(

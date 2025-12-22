@@ -23,6 +23,19 @@ import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteChangeAlert
 import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteExport
 import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteImport
 import br.com.arml.cep.ui.screen.component.favorite.FavoriteListPaneComponent
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnAddNoteToFavorite
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelFavoriteToUnwanted
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmExport
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmFavoriteToUnwanted
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmImport
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnDeleteNoteFromFavorite
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnExportFavorites
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnFilterByCep
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnFilterByTitle
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnFilterNone
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnImportFavorites
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnNavigateToDetailPane
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnSelectFavoriteToUnwanted
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.exportBackupLauncher
 import br.com.arml.cep.ui.utils.getExportIntent
@@ -42,12 +55,12 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
     val launcherExportBackup = exportBackupLauncher(
         context = LocalContext.current,
         json = (state.exportedFavorites as? Response.Success<String>)?.result ?: "",
-        onExportRequest = { viewmodel.onEvent(FavoriteEvent.OnConfirmExport) }
+        onExportRequest = { viewmodel.onEvent(OnConfirmExport) }
     )
 
     val launcherImportBackup = importBackupLauncher(
         context = LocalContext.current,
-        onSuccess = { json -> viewmodel.onEvent(FavoriteEvent.OnConfirmImport(json)) }
+        onSuccess = { json -> viewmodel.onEvent(OnConfirmImport(json)) }
     )
 
     LaunchedEffect(Unit) {
@@ -58,7 +71,7 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
         }
     }
 
-    val marginScreen = Modifier
+    val marginScreen = modifier
         .fillMaxSize()
         .padding(horizontal = MaterialTheme.dimens.mediumMargin)
 
@@ -74,43 +87,37 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
                     modifier = marginScreen,
                     state = state,
                     snackbarMsg = snackBarMessage,
-                    onExportClick = { viewmodel.onEvent(FavoriteEvent.OnExportFavorites) },
-                    onImportClick = { viewmodel.onEvent(FavoriteEvent.OnImportFavorites) },
+                    onExportClick = { viewmodel.onEvent(OnExportFavorites) },
+                    onImportClick = { viewmodel.onEvent(OnImportFavorites) },
                     onCepFilter = { query ->
-                        viewmodel.onEvent(FavoriteEvent.OnFilterByCep(query))
+                        viewmodel.onEvent(OnFilterByCep(query))
                     },
                     onTitleFilter = { query ->
-                        viewmodel.onEvent(FavoriteEvent.OnFilterByTitle(query))
+                        viewmodel.onEvent(OnFilterByTitle(query))
                     },
-                    onNoneFilter = { viewmodel.onEvent(FavoriteEvent.OnFilterNone) },
+                    onNoneFilter = { viewmodel.onEvent(OnFilterNone) },
                     onFavoriteIconClick = { place ->
-                        viewmodel.onEvent(FavoriteEvent.OnSelectFavoriteToUnwanted(place))
+                        viewmodel.onEvent(OnSelectFavoriteToUnwanted(place))
                     },
                     onAddNote = { cep, note ->
-                        viewmodel.onEvent(FavoriteEvent.OnAddNoteToFavorite(cep, note))
+                        viewmodel.onEvent(OnAddNoteToFavorite(cep, note))
                     },
                     onDeleteNote = { noteWithCep ->
-                        viewmodel.onEvent(FavoriteEvent.OnDeleteNoteFromFavorite(noteWithCep))
+                        viewmodel.onEvent(OnDeleteNoteFromFavorite(noteWithCep))
                     },
                     onNavigateToDetails = { favorite ->
+                        val (address,note) = favorite
                         uiStateHolder.navigateToDetailPane {
-                            viewmodel.onEvent(
-                                FavoriteEvent.OnNavigateToDetailPane(
-                                    favorite.second,
-                                    favorite.first
-                                )
-                            )
+                            viewmodel.onEvent(OnNavigateToDetailPane(address, note))
                         }
                     }
                 )
                 FavoriteChangeAlert(
                     place = state.selectedFavoriteToUnwanted,
-                    onDismissRequest = {
-                        viewmodel.onEvent(FavoriteEvent.OnCancelFavoriteToUnwanted)
-                    },
+                    onDismissRequest = { viewmodel.onEvent(OnCancelFavoriteToUnwanted) },
                     onConfirmationRequest = {
                         state.selectedFavoriteToUnwanted?.let { place ->
-                            val event = FavoriteEvent.OnConfirmFavoriteToUnwanted(place)
+                            val event = OnConfirmFavoriteToUnwanted(place)
                             if (place.address == state.selectedDataToDetail?.first) {
                                 uiStateHolder.navigateBackToListPane { viewmodel.onEvent(event) }
                             } else { viewmodel.onEvent(event) }
@@ -154,7 +161,7 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
                             onCreateNote = { cep, note ->
                                 uiStateHolder.navigateBackToListPane {
                                     viewmodel.onEvent(
-                                        FavoriteEvent.OnAddNoteToFavorite(cep, note)
+                                        OnAddNoteToFavorite(cep, note)
                                     )
                                 }
                             }

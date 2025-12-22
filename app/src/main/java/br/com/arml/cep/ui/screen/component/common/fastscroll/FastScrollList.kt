@@ -62,7 +62,8 @@ fun FastScrollList(
     }
 
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .testTag(stringResource(R.string.fastScrollList_component_testTag)),
         contentAlignment = Alignment.TopCenter
     ) {
         content(listState)

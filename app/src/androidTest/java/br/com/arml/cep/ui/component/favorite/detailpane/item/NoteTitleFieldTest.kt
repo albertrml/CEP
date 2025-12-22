@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assert
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -15,6 +16,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.MAX_TITLE_LENGTH
+import br.com.arml.cep.model.domain.MIN_TITLE_LENGTH
 import br.com.arml.cep.ui.screen.component.favorite.detailpane.note.NoteTitleField
 import br.com.arml.cep.utils.hasEditableText
 import org.junit.Rule
@@ -32,6 +34,11 @@ class NoteTitleFieldTest {
     )
     private val noteTitleFieldLabel = ctx.getString(
         R.string.noteTitleField_nameField_text
+    )
+
+    private val errorMessage = ctx.getString(
+        R.string.noteTitleField_nameField_errorMsg,
+        MIN_TITLE_LENGTH, MAX_TITLE_LENGTH
     )
 
     @Test
@@ -88,6 +95,23 @@ class NoteTitleFieldTest {
 
             onNodeWithText(expectedInputSize)
                 .assertExists()
+        }
+    }
+
+    @Test
+    fun noteContentField_shouldShowsErrorMessage_whenInputSizeIsNotInValidRange(){
+        val invalidInput = LoremIpsum(100)
+            .values
+            .joinToString(" ")
+            .take(MIN_TITLE_LENGTH - 1)
+        composeTestRule.apply {
+            setContent {
+                NoteTitleField(
+                    title = invalidInput,
+                    onTitleChange = {}
+                )
+            }
+            onNodeWithText(errorMessage).assertIsDisplayed()
         }
     }
 }

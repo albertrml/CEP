@@ -57,7 +57,7 @@ fun HeaderPreview(){
     Header(
         modifier = Modifier.fillMaxSize(),
         logo = Icons.AutoMirrored.Filled.ArrowBack,
-        title = stringResource(R.string.header_titleText),
+        title = stringResource(R.string.header_title_label),
         onClickLogo = {},
         menu = {
             Row(
@@ -70,7 +70,7 @@ fun HeaderPreview(){
                     Icon(
                         modifier = Modifier.fillMaxSize(),
                         imageVector = Icons.Rounded.Favorite,
-                        contentDescription = "Menu"
+                        contentDescription = stringResource(R.string.header_mockMenu_description)
                     )
                 }
 
@@ -82,7 +82,7 @@ fun HeaderPreview(){
                     Icon(
                         modifier = Modifier.fillMaxSize(),
                         imageVector = Icons.Sharp.Home,
-                        contentDescription = "Menu"
+                        contentDescription = stringResource(R.string.header_mockMenu_description)
                     )
                 }
             }

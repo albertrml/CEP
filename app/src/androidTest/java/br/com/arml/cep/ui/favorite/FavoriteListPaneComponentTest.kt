@@ -46,10 +46,10 @@ class FavoriteListPaneComponentTest {
         R.string.favoriteListPaneOnSuccess_component_testTag
     )
     private val placeFilterComponent = ctx.getString(
-        R.string.favoriteListPaneComponent_placeFilterComponent_testTag
+        R.string.favoriteListPaneComponentOnSuccess_placeFilterComponent_testTag
     )
     private val favoriteListComponent = ctx.getString(
-        R.string.favoriteListPaneComponent_favoriteListComponent_testTag
+        R.string.favoriteListPaneComponentOnSuccess_favoriteListComponent_testTag
     )
 
     private val failureState = FavoriteState(
@@ -156,7 +156,7 @@ class FavoriteListPaneComponentTest {
     @Test
     fun favoriteListPaneComponent_shouldInvokesOnCepFilterCallback_whenCepFilterIsSelectedAndFilterButtonIsClicked(){
         val filterField = ctx.getString(
-            R.string.searchCepField_component_testTag
+            R.string.cepSearchField_component_testTag
         )
         val filterButton = ctx.getString(
             R.string.cepFilter_filterButton_testTag

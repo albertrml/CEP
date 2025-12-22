@@ -1,4 +1,4 @@
-package br.com.arml.cep.ui.screen.component.common
+package br.com.arml.cep.ui.screen.component.common.dialog
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
@@ -89,8 +89,8 @@ fun DeleteAllComponent(
 @Composable
 fun DeleteAllComponentPreview(){
     DeleteAllComponent(
-        deleteLogAlertTitleId = R.string.log_delete_all_log_title,
-        deleteLogAlertTextId = R.string.log_delete_all_log_alert,
+        deleteLogAlertTitleId = R.string.cepAlertDialog_mockTitle_text,
+        deleteLogAlertTextId = R.string.cepAlertDialog_mockContent_text,
         onConfirmDeleteAllEntries = {}
     )
 }

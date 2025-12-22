@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.CEP_LENGTH
 import br.com.arml.cep.model.domain.MIN_CEP_LENGTH_FOR_SEARCH
-import br.com.arml.cep.ui.screen.component.common.field.SearchCepField
+import br.com.arml.cep.ui.screen.component.common.field.CepSearchField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -38,7 +38,7 @@ fun CepFilter(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing)
     ) {
-        SearchCepField(onQueryChange = { zipcode = it })
+        CepSearchField(onQueryChange = { zipcode = it })
         Button(
             modifier = Modifier
                 .testTag(stringResource(R.string.cepFilter_filterButton_testTag)),

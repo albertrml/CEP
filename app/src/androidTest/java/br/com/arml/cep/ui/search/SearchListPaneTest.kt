@@ -23,7 +23,7 @@ class SearchListPaneTest {
     private val ctx = InstrumentationRegistry.getInstrumentation().targetContext
 
     private val headerTag = ctx.getString(R.string.header_component_testTag)
-    private val searchFieldTag = ctx.getString(R.string.searchCepField_component_testTag)
+    private val searchFieldTag = ctx.getString(R.string.cepSearchField_component_testTag)
     private val searchButtonTag = ctx.getString(R.string.searchListPane_searchButton_testTag)
 
     private val mockOnSearchCep: (String) -> Unit = mockk(relaxed = true)

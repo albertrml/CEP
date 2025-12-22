@@ -37,7 +37,7 @@ class HeaderTest {
     @Before
     fun setup(){
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
-            titleHeaderText = getString(R.string.header_titleText)
+            titleHeaderText = getString(R.string.header_title_label)
             iconHeaderTag = getString(R.string.headerContent_iconButton_description)
         }
     }

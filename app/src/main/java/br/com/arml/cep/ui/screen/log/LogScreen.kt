@@ -1,6 +1,5 @@
 package br.com.arml.cep.ui.screen.log
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import br.com.arml.cep.ui.screen.component.log.LogListPaneComponent
+import br.com.arml.cep.ui.screen.log.LogEvent.OnDeleteAllLogs
+import br.com.arml.cep.ui.screen.log.LogEvent.OnDeleteLog
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByCep
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByFinalDate
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByInitialDate
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByNone
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByRangeDate
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
@@ -21,11 +27,9 @@ fun LogScreen(modifier: Modifier = Modifier) {
     val viewModel = hiltViewModel<LogViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val marginScreen = Modifier
+    val marginScreen = modifier
         .fillMaxSize()
         .padding(horizontal = MaterialTheme.dimens.mediumMargin)
-
-    Log.d("LogScreen", "LogScreen: ${state.logs}")
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -38,32 +42,25 @@ fun LogScreen(modifier: Modifier = Modifier) {
     }
 
     Scaffold(
-        modifier = modifier,
+        modifier = marginScreen,
         snackbarHost = { SnackbarHost(uiStateHolder.snackbarHostState) }
     ) { innerPadding ->
         LogListPaneComponent(
-            modifier = marginScreen.padding(innerPadding),
+            modifier = Modifier.padding(innerPadding),
             entries = state.logs,
-            onFilterByCep = { query -> viewModel.onEvent(LogEvent.OnFilterByCep(query)) },
+            onFilterByCep = { query -> viewModel.onEvent(OnFilterByCep(query)) },
             onFilterByInitialDate = { from ->
-                viewModel.onEvent(LogEvent.OnFilterByInitialDate(from))
+                viewModel.onEvent(OnFilterByInitialDate(from))
             },
             onFilterByFinalDate = { until ->
-                viewModel.onEvent(LogEvent.OnFilterByFinalDate(until))
+                viewModel.onEvent(OnFilterByFinalDate(until))
             },
             onFilterByRangeDate = { from, until ->
-                viewModel.onEvent(
-                    LogEvent.OnFilterByRangeDate(from, until)
-                )
+                viewModel.onEvent(OnFilterByRangeDate(from, until))
             },
-            onFilterByNone = {
-                Log.d("LogScreen", "onFilterByNone: ${state.logs}")
-                viewModel.onEvent(LogEvent.OnFilterByNone)
-            },
-            onClickToDelete = { entry ->
-                viewModel.onEvent(LogEvent.OnDeleteLog(entry))
-            },
-            onClickToDeleteAll = { viewModel.onEvent(LogEvent.OnDeleteAllLogs) },
+            onFilterByNone = { viewModel.onEvent(OnFilterByNone) },
+            onClickToDelete = { entry -> viewModel.onEvent(OnDeleteLog(entry)) },
+            onClickToDeleteAll = { viewModel.onEvent(OnDeleteAllLogs) },
             onCopyToClipboard = { entry -> uiStateHolder.onCopyToClipboard(entry) }
         )
     }

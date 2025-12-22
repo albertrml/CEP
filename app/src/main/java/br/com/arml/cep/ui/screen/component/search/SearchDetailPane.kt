@@ -1,36 +1,27 @@
 package br.com.arml.cep.ui.screen.component.search
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.R.string.favoriteDetailPaneComponent_onSuccess_testTag
-import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.domain.Place
-import br.com.arml.cep.model.exception.CepException
+import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.mock.mockPlaces
-import br.com.arml.cep.ui.screen.component.common.address.AddressForms
 import br.com.arml.cep.ui.screen.component.common.header.Header
+import br.com.arml.cep.ui.screen.component.search.detailpane.SearchDetailPaneOnFailure
+import br.com.arml.cep.ui.screen.component.search.detailpane.SearchDetailPaneOnLoading
+import br.com.arml.cep.ui.screen.component.search.detailpane.SearchDetailPaneOnSuccess
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
 
@@ -47,7 +38,7 @@ fun SearchDetailPane(
         topBar = {
             Header(
                 logo = Icons.AutoMirrored.Filled.ArrowBack,
-                title = stringResource(R.string.display_address_title),
+                title = stringResource(R.string.searchDetailPane_header_label),
                 onClickLogo = onBackPress,
             )
         },
@@ -62,30 +53,19 @@ fun SearchDetailPane(
                     SearchDetailPaneOnSuccess(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = MaterialTheme.dimens.smallPadding)
-                            .testTag(
-                                stringResource(favoriteDetailPaneComponent_onSuccess_testTag)
-                            ),
+                            .padding(vertical = MaterialTheme.dimens.smallPadding),
                         place = place,
                         onFavoriteClick = onFavoriteClick
                     )
                 },
                 loadingContent = {
                     SearchDetailPaneOnLoading(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .testTag(
-                                stringResource(R.string.favoriteDetailPaneComponent_onLoading_testTag)
-                            )
+                        modifier = Modifier.fillMaxSize()
                     )
                 },
                 failureContent = { failure ->
                     SearchDetailPaneOnFailure(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .testTag(
-                                stringResource(R.string.favoriteDetailPaneComponent_onFailure_testTag)
-                            ),
+                        modifier = Modifier.fillMaxSize(),
                         failure = failure
                     )
                 }
@@ -95,79 +75,6 @@ fun SearchDetailPane(
 
 }
 
-@Composable
-fun SearchDetailPaneOnSuccess(
-    modifier: Modifier = Modifier,
-    place: Place,
-    onFavoriteClick: (Place) -> Unit
-) {
-
-    val (colorIcon, textButton) = when (place.isFavorite.value) {
-        true -> { Color.Red to stringResource(R.string.display_saved_entry) }
-        false -> { MaterialTheme.colorScheme.onPrimary to stringResource(R.string.display_not_save_entry) }
-    }
-
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Button(
-            modifier = Modifier
-                .align(Alignment.End)
-                .testTag(
-                    stringResource(
-                        R.string.favoriteDetailPaneComponent_saveButton_testTag
-                    )
-                ),
-            enabled = !place.isFavorite.value,
-            onClick = { onFavoriteClick(place) }
-        ) {
-            Icon(
-                imageVector = Icons.Filled.Favorite,
-                contentDescription = stringResource(R.string.display_favorite_button_description),
-                tint = colorIcon
-            )
-            Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallPadding))
-            Text(
-                text = textButton,
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-        AddressForms(address = place.address)
-    }
-}
-
-@Composable
-fun SearchDetailPaneOnLoading(
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .testTag(stringResource(R.string.favoriteDetailPaneComponent_circularProgressIndicator_testTag))
-        )
-    }
-}
-
-@Composable
-fun SearchDetailPaneOnFailure(
-    modifier: Modifier = Modifier,
-    failure: Exception
-) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            style = MaterialTheme.typography.titleLarge,
-            text = failure.message ?: CepException.NotFoundCepException().message
-        )
-    }
-}
 
 @Preview(
     name = "Smart Phone Portrait",

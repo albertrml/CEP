@@ -43,7 +43,7 @@ class CacheListPaneOnSuccessTest {
         R.string.cacheListPaneOnSuccess_cachePlaceList_testTag
     )
     private val searchFieldTag = ctx.getString(
-        R.string.searchCepField_component_testTag
+        R.string.cepSearchField_component_testTag
     )
     private val cepFilterButtonTag = ctx.getString(
         R.string.cepFilter_filterButton_testTag

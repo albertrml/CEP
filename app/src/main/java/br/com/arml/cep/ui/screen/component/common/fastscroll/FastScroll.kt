@@ -50,7 +50,10 @@ fun FastScroll(
     else
         stringResource(R.string.fastScroll_fabToStart_contentDescription)
 
-    Box(modifier = modifier) {
+    Box(
+        modifier = modifier
+            .testTag(stringResource(R.string.fastScroll_component_testTag))
+    ) {
         content(scrollState)
         if (showFab) {
             FloatingActionButton(

@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 
 @Composable
-fun AppTextField(
+fun CepTextField(
     modifier: Modifier = Modifier,
     nameField: String,
     text: String,
@@ -31,7 +31,7 @@ fun AppTextField(
     Column {
         OutlinedTextField(
             modifier = modifier
-                .testTag(stringResource(R.string.appTextField_component_testTag)),
+                .testTag(stringResource(R.string.cepTextField_component_testTag)),
             value = text,
             onValueChange = { newText ->
                 if (newText.length <= maxSize) {
@@ -67,7 +67,7 @@ fun AppTextField(
             Text(
                 modifier = Modifier
                     .align(Alignment.End)
-                    .testTag(stringResource(R.string.appTextField_inputCounter_testTag)),
+                    .testTag(stringResource(R.string.cepTextField_inputCounter_testTag)),
                 text = "${text.length}/$maxSize",
                 style = MaterialTheme.typography.labelLarge,
             )
@@ -77,8 +77,8 @@ fun AppTextField(
 
 @Preview(showBackground = true)
 @Composable
-fun AppTextFieldPreview(){
-    AppTextField(
+fun CepTextFieldPreview(){
+    CepTextField(
         nameField = "Name",
         text = "",
         onChangeText = { },

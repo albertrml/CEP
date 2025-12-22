@@ -25,7 +25,6 @@ import br.com.arml.cep.ui.screen.component.common.filter.DateFilter
 import br.com.arml.cep.ui.screen.component.common.filter.PeriodFilter
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.LogFilterOption
-import br.com.arml.cep.ui.utils.PlaceFilterOption
 import br.com.arml.cep.ui.utils.filterEnterTransition
 import br.com.arml.cep.ui.utils.filterExitTransition
 import br.com.arml.cep.ui.utils.logFilterOptions
@@ -57,7 +56,7 @@ fun LogFilterComponent(
             selectedFilter = selectedFilter,
             onSelectedFilter = {
                 onFilterChange(it)
-                if (it == PlaceFilterOption.None) {
+                if (it == LogFilterOption.None) {
                     onNoneFilter()
                 }
             }
