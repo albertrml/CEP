@@ -1,11 +1,7 @@
 package br.com.arml.cep.ui.screen.component.favorite.listpane
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.MaterialTheme
@@ -28,37 +24,27 @@ fun FavoriteListComponent(
     places: List<Place>,
     onFavoriteIconClick: (Place) -> Unit,
     onAddNote: (Cep, Note) -> Unit,
-    onDeleteNote: (Pair<Cep,Note>) -> Unit,
+    onDeleteNote: (Pair<Cep, Note>) -> Unit,
     onNavigateToDetail: (Pair<Address, Note>) -> Unit
 ) {
-    FastScrollGrid(
-        modifier = modifier,
-        staggeredGridState = rememberLazyStaggeredGridState()
-    ) { staggeredGridState ->
-        LazyVerticalStaggeredGrid(
-            state = staggeredGridState,
-            columns = StaggeredGridCells.Adaptive(minSize = MaterialTheme.dimens.minSize),
-            verticalItemSpacing = MaterialTheme.dimens.mediumSpacing,
-            horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
-        ){
-            items(places) { place ->
-                FavoriteItem(
-                    place = place,
-                    favoriteIcon = Icons.Default.Favorite,
-                    colorFavoriteIcon = Color.Red,
-                    onAddNote = onAddNote,
-                    onFavoriteIconClick = onFavoriteIconClick,
-                    onDeleteNote = onDeleteNote,
-                    onNavigateToDetail = onNavigateToDetail
-                )
-            }
+    FastScrollGrid(modifier = modifier) {
+        items(places) { place ->
+            FavoriteItem(
+                place = place,
+                favoriteIcon = Icons.Default.Favorite,
+                colorFavoriteIcon = Color.Red,
+                onAddNote = onAddNote,
+                onFavoriteIconClick = onFavoriteIconClick,
+                onDeleteNote = onDeleteNote,
+                onNavigateToDetail = onNavigateToDetail
+            )
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun FavoriteListComponentPreview(){
+fun FavoriteListComponentPreview() {
     FavoriteListComponent(
         modifier = Modifier.padding(MaterialTheme.dimens.smallPadding),
         places = mockFavoritePlaces,

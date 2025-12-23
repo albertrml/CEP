@@ -25,7 +25,7 @@ class CachePlaceListTest {
 
     private val ctx = InstrumentationRegistry.getInstrumentation().targetContext
     private val scrollButtonTag = ctx.getString(
-        R.string.fastScrollGrid_fabToEnd_contentDescription
+        R.string.fastScrollGrid_downButton_contentDescription
     )
 
     @Test

@@ -46,9 +46,9 @@ fun FastScroll(
         Icons.Filled.KeyboardArrowDown else Icons.Filled.KeyboardArrowUp
 
     val iconButtonDescription = if (canScrollForward)
-        stringResource(R.string.fastScroll_fabToEnd_contentDescription)
+        stringResource(R.string.fastScroll_downFab_contentDescription)
     else
-        stringResource(R.string.fastScroll_fabToStart_contentDescription)
+        stringResource(R.string.fastScroll_upFab_contentDescription)
 
     Box(
         modifier = modifier

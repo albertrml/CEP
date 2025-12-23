@@ -41,8 +41,8 @@ class FastsScrollTest {
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
             fastScrollTag = getString(R.string.fastScroll_component_testTag)
             fastScrollFab = getString(R.string.fastScroll_fab_testTag)
-            fastScrollFabToStart = getString(R.string.fastScroll_fabToStart_contentDescription)
-            fastScrollFabToEnd = getString(R.string.fastScroll_fabToEnd_contentDescription)
+            fastScrollFabToStart = getString(R.string.fastScroll_upFab_contentDescription)
+            fastScrollFabToEnd = getString(R.string.fastScroll_downFab_contentDescription)
         }
     }
 

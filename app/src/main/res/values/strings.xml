@@ -44,20 +44,22 @@
 
     <!-- Fast Scroll -->
     <string name="fastScroll_component_testTag">FastScrollComponent</string>
-    <string name="fastScroll_fabToEnd_contentDescription">Mover para o fim da lista</string>
-    <string name="fastScroll_fabToStart_contentDescription">Mover para o início da lista</string>
+    <string name="fastScroll_downFab_contentDescription">Mover para o fim da lista</string>
     <string name="fastScroll_fab_testTag">FastScrollFabTag</string>
+    <string name="fastScroll_upFab_contentDescription">Mover para o início da lista</string>
     <string name="fastScrollGrid_component_testTag">FastScrollGridComponent</string>
+    <string name="fastScrollGrid_downButton_contentDescription">Mover para o fim da lista</string>
+    <string name="fastScrollGrid_downButton_testTag">FastScrollGridDownFabTestTag</string>
     <string name="fastScrollGrid_downButton_text">Fim</string>
-    <string name="fastScrollGrid_fab_testTag">FastScrollGridFab</string>
-    <string name="fastScrollGrid_fabToEnd_contentDescription">FastScrollGridFabToEnd</string>
-    <string name="fastScrollGrid_fabToStart_contentDescription">FastScrollGridFabToStart</string>
+    <string name="fastScrollGrid_upButton_contentDescription">Mover para o início da lista</string>
+    <string name="fastScrollGrid_upButton_testTag">FastScrollGridUpFabTestTag</string>
     <string name="fastScrollGrid_upButton_text">Topo</string>
     <string name="fastScrollList_component_testTag">FastScrollListComponent</string>
+    <string name="fastScrollList_downButton_contentDescription">Mover para o fim da lista</string>
+    <string name="fastScrollList_downButton_testTag">FastScrollListDownFabTestTag</string>
     <string name="fastScrollList_downButton_text">Fim</string>
-    <string name="fastScrollList_fabToEnd_contentDescription">FastScrollListFabToEnd</string>
-    <string name="fastScrollList_fabToStart_contentDescription">FastScrollListFabToStart</string>
-    <string name="fastScrollList_fab_testTag">FastScrollListFab</string>
+    <string name="fastScrollList_upButton_contentDescription">Mover para o início da lista</string>
+    <string name="fastScrollList_upButton_testTag">FastScrollListUpFabTestTag</string>
     <string name="fastScrollList_upButton_text">Topo</string>
 
     <!-- Fields -->

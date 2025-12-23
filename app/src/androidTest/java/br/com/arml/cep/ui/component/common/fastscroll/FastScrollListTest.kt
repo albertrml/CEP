@@ -1,12 +1,10 @@
 package br.com.arml.cep.ui.component.common.fastscroll
 
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -25,76 +23,71 @@ class FastScrollListTest {
     val composeTestRule = createComposeRule()
 
     private lateinit var fastScrollListTag: String
-    private lateinit var fastScrollListFab: String
-    private lateinit var fastScrollListFabToStart: String
-    private lateinit var fastScrollListFabToEnd: String
+    private lateinit var fastScrollListUpButtonTag: String
+    private lateinit var fastScrollListDownButtonTag: String
 
-    private val items = List(100){ "Item $it" }
-    private val shortedList = List(20){ "Item $it" }
+    private val items = List(100) { "Item $it" }
+    private val shortedList = List(20) { "Item $it" }
     private val startItem = items.first()
     private val endItem = items.last()
 
     @Before
-    fun setup(){
+    fun setup() {
         InstrumentationRegistry.getInstrumentation().targetContext.apply {
             fastScrollListTag = getString(R.string.fastScrollList_component_testTag)
-            fastScrollListFab = getString(R.string.fastScrollList_fab_testTag)
-            fastScrollListFabToStart = getString(R.string.fastScrollList_fabToStart_contentDescription)
-            fastScrollListFabToEnd = getString(R.string.fastScrollList_fabToEnd_contentDescription)
+            fastScrollListUpButtonTag = getString(R.string.fastScrollList_upButton_testTag)
+            fastScrollListDownButtonTag = getString(R.string.fastScrollList_downButton_testTag)
         }
     }
 
     fun fastScrollListContent(list: List<String> = items) {
         composeTestRule.setContent {
-            FastScrollList { lazyListState ->
-                LazyColumn(state = lazyListState) {
-                    items(list){ item -> Text(item) }
-                }
-            }
+            FastScrollList { items(list) { item -> Text(item) } }
         }
     }
 
     @Test
-    fun fastScrollList_shouldNotShowsFab_whenAllItemIsOnScreen(){
+    fun fastScrollList_shouldNotShowsButtons_whenAllItemIsOnScreen() {
         fastScrollListContent(shortedList)
         composeTestRule.apply {
             onNodeWithTag(fastScrollListTag).assertExists()
-            onNodeWithTag(fastScrollListFab).assertIsNotDisplayed()
+            onNodeWithTag(fastScrollListDownButtonTag).assertIsNotDisplayed()
+            onNodeWithTag(fastScrollListUpButtonTag).assertIsNotDisplayed()
             shortedList.forEach { onNodeWithText(it).assertIsDisplayed() }
         }
     }
 
     @Test
-    fun fastScrollList_shouldShowsFab_whenNotAllItemIsOnScreen(){
+    fun fastScrollList_shouldShowsDownButton_whenAllItemIsNotOnScreen() {
         fastScrollListContent()
         composeTestRule.apply {
             onNodeWithTag(fastScrollListTag).assertExists()
-            onNodeWithTag(fastScrollListFab).assertIsDisplayed()
+            onNodeWithTag(fastScrollListDownButtonTag).assertIsDisplayed()
+            onNodeWithTag(fastScrollListUpButtonTag).assertIsNotDisplayed()
         }
     }
 
     @Test
-    fun fastScrollList_shouldShowLastItem_whenFabIsClicked(){
-        fastScrollListContent()
-        composeTestRule.apply{
-            onNodeWithContentDescription(fastScrollListFabToEnd)
-                .assertIsDisplayed()
-                .performClick()
-            waitForIdle()
-            onNodeWithText(endItem).assertIsDisplayed()
-        }
-    }
-
-    @Test
-    fun fastScrollList_shouldShowFirstItem_whenScreenShowsLastItemAndFabIsClicked(){
+    fun fastScrollList_shouldShowsLastItemAndUpButton_whenListIsAtStartAndDownButtonIsClicked() {
         fastScrollListContent()
         composeTestRule.apply {
-            onNodeWithContentDescription(fastScrollListFabToEnd).performClick()
+            onNodeWithTag(fastScrollListDownButtonTag).performClick()
             waitForIdle()
-            onNodeWithContentDescription(fastScrollListFabToStart)
-                .assertIsDisplayed()
-                .performClick()
+            onNodeWithText(endItem).assertIsDisplayed()
+            onNodeWithTag(fastScrollListUpButtonTag).assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun fastScrollList_shouldShowFirstItemAndDownButton_whenListIsAtTheEndAndUpButtonIsClicked() {
+        fastScrollListContent()
+        composeTestRule.apply {
+            onNodeWithTag(fastScrollListDownButtonTag).performClick()
             waitForIdle()
+            onNodeWithText(endItem).assertIsDisplayed()
+            onNodeWithTag(fastScrollListUpButtonTag).performClick()
+            waitForIdle()
+            onNodeWithTag(fastScrollListDownButtonTag).assertIsDisplayed()
             onNodeWithText(startItem).assertIsDisplayed()
         }
     }
