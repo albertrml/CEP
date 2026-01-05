@@ -15,8 +15,12 @@ import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByInitialDate
 import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByNone
 import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByRangeDate
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,16 +33,29 @@ class LogViewModel @Inject constructor(
     reducer = reducer
 ) {
 
+    private sealed class LogFilter {
+        data object None : LogFilter()
+        data class ByCep(val query: String) : LogFilter()
+        data class ByInitialDate(val initialDate: Long) : LogFilter()
+        data class ByFinalDate(val finalDate: Long) : LogFilter()
+        data class ByRangeDate(val initialDate: Long, val finalDate: Long) : LogFilter()
+    }
+
+    private val _filter = MutableStateFlow<LogFilter>(LogFilter.None)
+
     init { fetchAllLogs() }
 
     fun onEvent(event: LogEvent) {
         when (event) {
-            is OnFilterByNone -> filterByNone()
-            is OnFilterByCep -> filterByCep(event.query)
-            is OnFilterByInitialDate -> filterByInitialDate(event.initialDate)
-            is OnFilterByFinalDate -> filterByFinalDate(event.finalDate)
-            is OnFilterByRangeDate -> with(event) {
-                filterByRangeDate(initialDate, finalDate)
+            is OnFilterByNone -> _filter.update { LogFilter.None }
+            is OnFilterByCep -> _filter.update { LogFilter.ByCep(event.query) }
+            is OnFilterByInitialDate -> _filter.update { LogFilter.ByInitialDate(event.initialDate) }
+            is OnFilterByFinalDate -> _filter.update { LogFilter.ByFinalDate(event.finalDate) }
+            is OnFilterByRangeDate -> _filter.update {
+                LogFilter.ByRangeDate(
+                    initialDate = event.initialDate,
+                    finalDate = event.finalDate
+                )
             }
             is OnDeleteAllLogs -> deleteAllLogs()
             is OnDeleteLog -> deleteLog(event.log)
@@ -47,65 +64,35 @@ class LogViewModel @Inject constructor(
     }
 
     private fun deleteAllLogs() {
-        viewModelScope.launch {
-            logUseCase.deleteAllLogs().collect { response ->
-                sendEventForEffect(OnDeleteAllLogsResponse(response))
-            }
-        }
+        collectAction(
+            flow = logUseCase.deleteAllLogs(),
+            onResponse = { OnDeleteAllLogsResponse(it) }
+        )
     }
 
     private fun deleteLog(log: Log) {
-        viewModelScope.launch {
-            logUseCase.deleteLog(log).collect { response ->
-                sendEventForEffect(OnDeleteLogResponse(response))
-            }
-        }
+        collectAction(
+            flow = logUseCase.deleteLog(log),
+            onResponse = { OnDeleteLogResponse(it) }
+        )
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private fun fetchAllLogs() {
-        viewModelScope.launch {
-            logUseCase.fetchAllLogs().collectLatest { response ->
-                sendEvent(OnFetchAllLogsResponse(response))
+        _filter
+            .flatMapLatest { filter ->
+                with(logUseCase) {
+                    when (filter) {
+                        is LogFilter.None -> fetchAllLogs()
+                        is LogFilter.ByCep -> filterLogsByCep(filter.query)
+                        is LogFilter.ByFinalDate -> filterLogsByFinalDate(filter.finalDate)
+                        is LogFilter.ByInitialDate -> filterLogsByInitialDate(filter.initialDate)
+                        is LogFilter.ByRangeDate ->
+                            filterLogsByRangeDate(filter.initialDate, filter.finalDate)
+                    }
+                }
             }
-        }
-    }
-
-    private fun filterByCep(cep: String) {
-        viewModelScope.launch {
-            logUseCase.filterLogsByCep(cep).collectLatest { response ->
-                sendEvent(OnFetchAllLogsResponse(response))
-            }
-        }
-    }
-
-    private fun filterByFinalDate(finalDate: Long) {
-        viewModelScope.launch {
-            logUseCase.filterLogsByFinalDate(finalDate).collectLatest { response ->
-                sendEvent(OnFetchAllLogsResponse(response))
-            }
-        }
-    }
-
-    private fun filterByInitialDate(initialDate: Long) {
-        viewModelScope.launch {
-            logUseCase.filterLogsByInitialDate(initialDate).collectLatest { response ->
-                sendEvent(OnFetchAllLogsResponse(response))
-            }
-        }
-    }
-
-    private fun filterByNone() {
-        viewModelScope.launch {
-            logUseCase.fetchAllLogs().collectLatest { response ->
-                sendEvent(OnFetchAllLogsResponse(response))
-            }
-        }
-    }
-    private fun filterByRangeDate(initialDate: Long, finalDate: Long) {
-        viewModelScope.launch {
-            logUseCase.filterLogsByRangeDate(initialDate, finalDate).collectLatest { response ->
-                sendEvent(OnFetchAllLogsResponse(response))
-            }
-        }
+            .onEach { response -> sendEventForEffect(OnFetchAllLogsResponse(response)) }
+            .launchIn(viewModelScope)
     }
 }
