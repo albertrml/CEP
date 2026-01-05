@@ -3,7 +3,6 @@ package br.com.arml.cep.ui.screen.favorite
 import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.ADDING_NOTE_TO_FAVORITE_FAILURE_MSG
 import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.DELETING_NOTE_FROM_FAVORITE_FAILURE_MSG
 import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.EXPORTING_FAVORITES_FAILURE_MSG
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.EXPORTING_FAVORITES_SUCCESS_MSG
 import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.IMPORTING_FAVORITES_FAILURE_MSG
 import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.IMPORTING_FAVORITES_SUCCESS_MSG
 import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.UNWANTED_FAVORITE_SELECTED_NONE
@@ -15,6 +14,7 @@ import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables
 import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.getDeletingNoteFromFavoriteSuccessMessage
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.common.Reducer
+import br.com.arml.cep.ui.screen.favorite.FavoriteEffect.OnSuccessExportFavorites
 import br.com.arml.cep.ui.screen.favorite.FavoriteEffect.ShowSnackbar
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnAddNoteToFavoriteResponse
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelExport
@@ -197,17 +197,11 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
                 when(val response = event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
-                        val updatedState = previousState.copy(
-                            isVisibleExportAlert = false,
-                            exportedFavorites = response
-                        )
-                        updatedState to ShowSnackbar(EXPORTING_FAVORITES_SUCCESS_MSG)
+                        val updatedState = previousState.copy(isVisibleExportAlert = false)
+                        updatedState to OnSuccessExportFavorites(response.result)
                     }
                     is Response.Failure -> {
-                        val updatedState = previousState.copy(
-                            isVisibleExportAlert = false,
-                            exportedFavorites = response
-                        )
+                        val updatedState = previousState.copy(isVisibleExportAlert = false)
                         val msg = response.exception.message ?: EXPORTING_FAVORITES_FAILURE_MSG
                         updatedState to ShowSnackbar(msg)
                     }

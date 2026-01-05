@@ -16,13 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
 import br.com.arml.cep.ui.screen.component.favorite.FavoriteDetailPaneComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoriteListPaneComponent
 import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteChangeAlert
 import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteExport
 import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteImport
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteListPaneComponent
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnAddNoteToFavorite
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelFavoriteToUnwanted
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmExport
@@ -50,12 +49,13 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
     val viewmodel = hiltViewModel<FavoriteViewModel>()
     val state by viewmodel.state.collectAsStateWithLifecycle()
     var snackBarMessage by rememberSaveable { mutableStateOf<String?>(null) }
-    val uiStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
+    val paneScaffoldStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
+
+    var pendingExportJson by rememberSaveable { mutableStateOf("") }
 
     val launcherExportBackup = exportBackupLauncher(
         context = LocalContext.current,
-        json = (state.exportedFavorites as? Response.Success<String>)?.result ?: "",
-        onExportRequest = { viewmodel.onEvent(OnConfirmExport) }
+        json = pendingExportJson,
     )
 
     val launcherImportBackup = importBackupLauncher(
@@ -67,6 +67,10 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
         viewmodel.effect.collect { effect ->
             when(effect){
                 is FavoriteEffect.ShowSnackbar -> { snackBarMessage = effect.message }
+                is FavoriteEffect.OnSuccessExportFavorites -> {
+                    pendingExportJson = effect.message
+                    launcherExportBackup.launch(getExportIntent())
+                }
             }
         }
     }
@@ -77,7 +81,7 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
 
     NavigableListDetailPaneScaffold(
         modifier = modifier,
-        navigator = uiStateHolder.navigator,
+        navigator = paneScaffoldStateHolder.navigator,
         listPane = {
             AnimatedPane(
                 enterTransition = paneEnterTransition,
@@ -107,7 +111,7 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
                     },
                     onNavigateToDetails = { favorite ->
                         val (address,note) = favorite
-                        uiStateHolder.navigateToDetailPane {
+                        paneScaffoldStateHolder.navigateToDetailPane {
                             viewmodel.onEvent(OnNavigateToDetailPane(address, note))
                         }
                     }
@@ -119,7 +123,7 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
                         state.selectedFavoriteToUnwanted?.let { place ->
                             val event = OnConfirmFavoriteToUnwanted(place)
                             if (place.address == state.selectedDataToDetail?.first) {
-                                uiStateHolder.navigateBackToListPane { viewmodel.onEvent(event) }
+                                paneScaffoldStateHolder.navigateBackToListPane { viewmodel.onEvent(event) }
                             } else { viewmodel.onEvent(event) }
                         }
                     }
@@ -133,13 +137,13 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
                 FavoriteExport(
                     isVisibility = state.isVisibleExportAlert,
                     onDismissRequest = { viewmodel.onEvent(FavoriteEvent.OnCancelExport) },
-                    onConfirmationRequest = { launcherExportBackup.launch(getExportIntent()) }
+                    onConfirmationRequest = { viewmodel.onEvent(OnConfirmExport) }
                 )
             }
         },
 
         detailPane = {
-            uiStateHolder.ShowDetailPane {
+            paneScaffoldStateHolder.ShowDetailPane {
                 AnimatedPane(
                     enterTransition = paneEnterTransition,
                     exitTransition = paneExitTransition
@@ -149,17 +153,17 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
                             modifier = marginScreen,
                             favorite = favorite,
                             onNavigateBackToList = {
-                                uiStateHolder.navigateBackToListPane {
+                                paneScaffoldStateHolder.navigateBackToListPane {
                                     viewmodel.onEvent( FavoriteEvent.OnNavigateBackToListPane)
                                 }
                             },
                             onEditNote = { note ->
-                                uiStateHolder.navigateBackToListPane {
+                                paneScaffoldStateHolder.navigateBackToListPane {
                                     viewmodel.onEvent(FavoriteEvent.OnUpdateNoteFromFavorite(note))
                                 }
                             },
                             onCreateNote = { cep, note ->
-                                uiStateHolder.navigateBackToListPane {
+                                paneScaffoldStateHolder.navigateBackToListPane {
                                     viewmodel.onEvent(
                                         OnAddNoteToFavorite(cep, note)
                                     )

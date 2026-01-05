@@ -8,7 +8,6 @@ import br.com.arml.cep.ui.common.Reducer
 
 data class FavoriteState(
     /** Delete **/
-    // To remove a favorite, we need select a place to remove before to call the operation
     val selectedFavoriteToUnwanted: Place? = null,
     val isVisibleUnwantedWarning: Boolean = false,
 
@@ -21,7 +20,6 @@ data class FavoriteState(
     val places: Response<List<Place>> = Response.Loading,
 
     /** Import and Export **/
-    val exportedFavorites: Response<String> = Response.Loading,
     val importedFavorites: Response<Unit> = Response.Loading,
     val isVisibleImportAlert: Boolean = false,
     val isVisibleExportAlert: Boolean = false,

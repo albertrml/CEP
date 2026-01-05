@@ -1,42 +1,77 @@
 package br.com.arml.cep.ui.common
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import br.com.arml.cep.model.domain.Response
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<
-        State : Reducer.ViewState,
-        Event : Reducer.ViewEvent,
-        Effect : Reducer.ViewEffect
->(
-    initialState: State,
-    private val reducer: Reducer<State, Event, Effect>
-): ViewModel(){
+abstract class BaseViewModel<S: Reducer.ViewState, E: Reducer.ViewEvent, F: Reducer.ViewEffect>(
+    private val initialState: S,
+    private val reducer: Reducer<S, E, F>
+) : ViewModel() {
 
-    private val _state: MutableStateFlow<State> = MutableStateFlow(initialState)
+    private val _state: MutableStateFlow<S> = MutableStateFlow(initialState)
     val state = _state.asStateFlow()
 
-    private val _event: MutableSharedFlow<Event> = MutableSharedFlow()
-    val event = _event.asSharedFlow()
+    private val _event: MutableSharedFlow<E> = MutableSharedFlow()
 
-    private val _effect: Channel<Effect> = Channel(capacity = Channel.UNLIMITED)
+    private val _effect: Channel<F> = Channel()
     val effect = _effect.receiveAsFlow()
 
-    init { _state.tryEmit(initialState) }
-
-    fun sendEvent(event: Event){
-        val (newState, _ ) = reducer.reduce(_state.value, event)
-        _state.update { newState }
+    init {
+        subscribeEvents()
     }
 
-    fun sendEventForEffect(event: Event){
+    fun sendEvent(event: E) {
+        viewModelScope.launch { _event.emit(event) }
+    }
+
+    private fun sendEffect(effect: F) {
+        viewModelScope.launch { _effect.send(effect) }
+    }
+
+    private fun subscribeEvents() {
+        viewModelScope.launch {
+            _event.collect { event ->
+                val (newState, effect) = reducer.reduce(_state.value, event)
+                _state.value = newState
+                effect?.let { sendEffect(it) }
+            }
+        }
+    }
+
+    protected fun sendEventForEffect(event: E) {
         val (newState, effect) = reducer.reduce(_state.value, event)
-        _state.update { newState }
-        effect?.let { _effect.trySend(it) }
+        _state.value = newState
+        effect?.let { sendEffect(it) }
+    }
+
+    protected fun <T> collectAction(
+        flow: Flow<Response<T>>,
+        onResponse: (Response<T>) -> E
+    ) {
+        viewModelScope.launch {
+            flow.onEach { response ->
+                when (response) {
+                    is Response.Loading -> {
+                        sendEvent(onResponse(response))
+                    }
+                    is Response.Success,
+                    is Response.Failure -> {
+                        sendEventForEffect(onResponse(response))
+                        cancel()
+                    }
+                }
+            }.launchIn(this)
+        }
     }
 }

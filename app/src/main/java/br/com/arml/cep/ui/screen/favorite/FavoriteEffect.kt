@@ -4,4 +4,5 @@ import br.com.arml.cep.ui.common.Reducer
 
 sealed class FavoriteEffect: Reducer.ViewEffect {
     data class ShowSnackbar(val message: String) : FavoriteEffect()
+    data class OnSuccessExportFavorites(val message: String) : FavoriteEffect()
 }
