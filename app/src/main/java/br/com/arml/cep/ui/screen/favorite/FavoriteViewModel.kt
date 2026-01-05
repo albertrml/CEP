@@ -40,7 +40,7 @@ class FavoriteViewModel @Inject constructor(
 ) {
     private sealed class FavoriteFilter {
         data object None : FavoriteFilter()
-        data class ByCep(val cep: String) : FavoriteFilter()
+        data class ByCep(val zipcode: String) : FavoriteFilter()
         data class ByTitle(val title: String) : FavoriteFilter()
     }
 
@@ -105,7 +105,7 @@ class FavoriteViewModel @Inject constructor(
             .flatMapLatest { filter ->
                 when (filter) {
                     is FavoriteFilter.None -> favoriteUseCase.fetchFavorites()
-                    is FavoriteFilter.ByCep -> favoriteUseCase.filterByCep(filter.cep)
+                    is FavoriteFilter.ByCep -> favoriteUseCase.filterByCep(filter.zipcode)
                     is FavoriteFilter.ByTitle -> favoriteUseCase.filterByTitle(filter.title)
                 }
             }

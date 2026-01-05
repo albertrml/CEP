@@ -119,6 +119,7 @@
     <string name="cachePlaceElement_component_testTag">CachePlaceElementComponentTestTag %1$s</string>
     <string name="cachePlaceElement_deleteIcon_description">Botão para apagar o CEP %1$s do cache</string>
     <string name="cachePlaceElement_deleteIcon_testTag">CachePlaceElementDeleteIconTestTag %1$s</string>
+    <string name="cachePlaceElement_title_description">Ícone do CEP %1$s</string>
     <string name="cachePlaceElement_title_label">CEP: %1$s</string>
 
     <!-- Favorite List Pane component -->

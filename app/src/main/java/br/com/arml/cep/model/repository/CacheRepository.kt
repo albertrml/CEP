@@ -15,7 +15,7 @@ class CacheRepository @Inject constructor(
     /** Create **/
     fun insertPlace(place: Place) = asResponse { cacheDao.insertPlaceEntity(place.toEntity()) }
 
-    /** Reade **/
+    /** Read **/
     fun getPlacesByZipcode(query: String) = cacheDao
         .selectCachedPlaceEntitiesByZipcode(query)
         .toResponseFlow()

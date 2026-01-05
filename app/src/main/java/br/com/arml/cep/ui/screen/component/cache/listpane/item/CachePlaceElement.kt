@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -52,6 +53,13 @@ fun CachePlaceElement(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.mediumSpacing)
         ) {
+            Icon(
+                imageVector = Icons.Default.Place,
+                contentDescription = stringResource(
+                    R.string.cachePlaceElement_title_description,
+                    place.address.zipCode
+                )
+            )
             Text(
                 modifier = Modifier.weight(1f),
                 text = stringResource(
