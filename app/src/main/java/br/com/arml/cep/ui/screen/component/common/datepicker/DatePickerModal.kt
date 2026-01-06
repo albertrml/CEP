@@ -11,7 +11,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
-import br.com.arml.cep.model.utils.adjustDay
 
 @Composable
 fun DatePickerModal(
@@ -30,7 +29,7 @@ fun DatePickerModal(
                 modifier = Modifier
                     .testTag(stringResource(R.string.datePickerModal_confirmButton_testTag)),
                 onClick = {
-                    onDateSelected(datePickerState.selectedDateMillis?.adjustDay())
+                    onDateSelected(datePickerState.selectedDateMillis)
                 }
             ) {
                 Text(stringResource(R.string.datePickerModal_confirmButton_label))

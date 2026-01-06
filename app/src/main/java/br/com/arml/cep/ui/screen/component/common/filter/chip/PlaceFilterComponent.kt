@@ -46,9 +46,9 @@ fun PlaceFilterComponent(
             selectedFilter = selectedFilter,
             onSelectedFilter = {
                 onSelectedFilter(it)
-                if (it == PlaceFilterOption.None) {
+                /*if (it == PlaceFilterOption.None) {
                     onNoneFilter()
-                }
+                }*/
             }
         )
         AnimatedContent(
@@ -80,6 +80,7 @@ fun PlaceFilterComponent(
 
                 PlaceFilterOption.None -> {
                     keyboardController?.hide()
+                    onNoneFilter()
                 }
             }
         }

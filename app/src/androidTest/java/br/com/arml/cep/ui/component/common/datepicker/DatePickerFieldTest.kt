@@ -12,7 +12,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.model.utils.toFormattedBR
+import br.com.arml.cep.model.utils.toFormattedDate
 import br.com.arml.cep.ui.screen.component.common.datepicker.DatePickerField
 import io.mockk.every
 import io.mockk.mockk
@@ -39,7 +39,7 @@ class DatePickerFieldTest {
     private val dismissButtonDatePickerModalTag = ctx
         .getString(R.string.datePickerModal_dismissButton_testTag)
 
-    private val currentDate = currentTimeMillis().toFormattedBR()
+    private val currentDate = currentTimeMillis().toFormattedDate()
     private val formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy", Locale.getDefault())
 
     private val dateFormatted = Instant.ofEpochMilli(currentTimeMillis())

@@ -9,8 +9,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.model.utils.adjustDay
-import br.com.arml.cep.model.utils.toFormattedBR
+import br.com.arml.cep.model.utils.toFormattedDate
+import br.com.arml.cep.model.utils.toStartOfDay
 import br.com.arml.cep.ui.screen.component.common.filter.DateFilter
 import io.mockk.every
 import io.mockk.mockk
@@ -20,6 +20,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.time.Instant
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -41,9 +42,8 @@ class DateFilterTest {
     /*** Date Field ***/
     private val singleDateFilterDateField = ctx
         .getString(R.string.dateFilter_startDateField_testTag)
-    private val todayInMillis = System.currentTimeMillis().adjustDay()
-    private val today = todayInMillis.toFormattedBR()
-    private val formattedToday = Instant.ofEpochMilli(todayInMillis)
+    private val todayUTCMillis = System.currentTimeMillis()
+    private val formattedToday = Instant.ofEpochMilli(todayUTCMillis)
         .atZone(ZoneId.systemDefault())
         .format(formatter)
 
@@ -90,10 +90,13 @@ class DateFilterTest {
 
     @Test
     fun shouldDisplayTodayDate_whenTodayIsSelected_inDateField() {
+        val expectedToday = todayUTCMillis
+            .toStartOfDay(ZoneOffset.UTC)
+            .toFormattedDate()
         composeTestRule.apply {
             onNodeWithTag(singleDateFilterDateField).performClick()
             selectDateInPicker(formattedToday)
-            onNodeWithText(today).assertExists()
+            onNodeWithText(expectedToday).assertExists()
         }
     }
 
@@ -118,11 +121,12 @@ class DateFilterTest {
 
     @Test
     fun shouldFilter_whenDateIsSelectedAndFilterButtonIsClicked() {
+        val expectedTodayInMillis = todayUTCMillis.toStartOfDay(ZoneOffset.UTC)
         composeTestRule.apply {
             onNodeWithTag(singleDateFilterDateField).performClick()
             selectDateInPicker(formattedToday)
             onNodeWithTag(singleDateFilterButton).performClick()
-            verify { mockOnFilterByDate(todayInMillis) }
+            verify { mockOnFilterByDate(expectedTodayInMillis) }
         }
     }
 }

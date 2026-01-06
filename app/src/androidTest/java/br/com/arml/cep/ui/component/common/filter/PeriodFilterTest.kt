@@ -11,7 +11,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.model.utils.toFormattedBR
+import br.com.arml.cep.model.utils.toEndOfDay
+import br.com.arml.cep.model.utils.toFormattedDate
 import br.com.arml.cep.ui.screen.component.common.filter.PeriodFilter
 import io.mockk.every
 import io.mockk.mockk
@@ -21,7 +22,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -53,7 +54,7 @@ class PeriodFilterTest {
     @Before
     fun setUp() {
         composeTestRule.setContent {
-            PeriodFilter(onFilterByInitialDate = mockOnFilterByPeriod)
+            PeriodFilter(onFilterByRange = mockOnFilterByPeriod)
         }
 
         every { mockOnFilterByPeriod(any(),any()) } answers {
@@ -62,7 +63,7 @@ class PeriodFilterTest {
     }
 
     private fun mockDates(): Pair<Long, Long> {
-        val zone = ZoneId.systemDefault()
+        val zone = ZoneOffset.UTC
         val today = LocalDate.now(zone)
 
         val start = if(today.dayOfMonth == 14) 13 else 14
@@ -79,6 +80,7 @@ class PeriodFilterTest {
             .atStartOfDay(zone)
             .toInstant()
             .toEpochMilli()
+            .toEndOfDay()
 
         return startDate to endDate
     }
@@ -88,7 +90,7 @@ class PeriodFilterTest {
             .ofPattern("EEEE, MMMM d, yyyy", Locale.getDefault())
 
         return Instant.ofEpochMilli(timeInMillis)
-            .atZone(ZoneId.systemDefault())
+            .atZone(ZoneOffset.UTC)
             .format(formatter)
     }
 
@@ -117,7 +119,7 @@ class PeriodFilterTest {
     @Test
     fun periodFilter_shouldDisplayStartDate_whenStartDatIsSelected_inStartDateField() {
         val date = mockDates().first
-        val expectedDate = date.toFormattedBR()
+        val expectedDate = date.toFormattedDate()
         composeTestRule.apply {
             onNodeWithTag(periodFilterStartDateField)
                 .assert(hasText(periodFilterStartDateFieldLabel))
@@ -132,7 +134,7 @@ class PeriodFilterTest {
     @Test
     fun periodFilter_shouldDisplayEndDate_whenTodayIsSelected_inEndDateField() {
         val date = mockDates().second
-        val expectedDate = date.toFormattedBR()
+        val expectedDate = date.toFormattedDate()
         composeTestRule.apply {
             onNodeWithTag(periodFilterEndDateField)
                 .assert(hasText(periodFilterEndDateFieldLabel))

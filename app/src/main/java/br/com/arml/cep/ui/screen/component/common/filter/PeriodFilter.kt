@@ -18,13 +18,15 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
+import br.com.arml.cep.model.utils.toEndOfDay
+import br.com.arml.cep.model.utils.toStartOfDay
 import br.com.arml.cep.ui.screen.component.common.datepicker.DatePickerField
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun PeriodFilter(
     modifier: Modifier = Modifier,
-    onFilterByInitialDate: (Long, Long) -> Unit
+    onFilterByRange: (Long, Long) -> Unit
 ) {
     var initialDate by remember { mutableStateOf<Long?>(null) }
     var finalDate by remember { mutableStateOf<Long?>(null) }
@@ -48,7 +50,7 @@ fun PeriodFilter(
                 .testTag(stringResource(R.string.periodFilter_startDateField_testTag)),
             label = stringResource(R.string.periodFilter_startDateField_label),
             date = initialDate,
-            onSelectDate = { initialDate = it }
+            onSelectDate = { initialDate = it?.toStartOfDay() }
         )
         DatePickerField(
             modifier = Modifier
@@ -61,13 +63,13 @@ fun PeriodFilter(
                 }
             },
             date = finalDate,
-            onSelectDate = { finalDate = it }
+            onSelectDate = { finalDate = it?.toEndOfDay() }
         )
         Button(
             modifier = Modifier
                 .testTag(stringResource(R.string.periodFilter_filterButton_testTag)),
             enabled = isButtonActive,
-            onClick = { onFilterByInitialDate(initialDate!!, finalDate!!) },
+            onClick = { onFilterByRange(initialDate!!, finalDate!!) },
         ) {
             Text(text = stringResource(R.string.periodFilter_filterButton_label))
         }
@@ -82,7 +84,7 @@ fun PeriodFilterPreview() {
         contentAlignment = Alignment.Center
     ){
         PeriodFilter(
-            onFilterByInitialDate = { _, _ -> }
+            onFilterByRange = { _, _ -> }
         )
     }
 }

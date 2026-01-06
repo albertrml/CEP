@@ -24,9 +24,7 @@ class CachePlaceListTest {
     val composeTestRule: ComposeContentTestRule = createComposeRule()
 
     private val ctx = InstrumentationRegistry.getInstrumentation().targetContext
-    private val scrollButtonTag = ctx.getString(
-        R.string.fastScrollGrid_downButton_contentDescription
-    )
+    private val scrollButtonTag = ctx.getString(R.string.fastScrollGrid_downButton_testTag)
 
     @Test
     fun cachePlaceList_shouldDisplayAllPlaces(){

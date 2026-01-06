@@ -1,5 +1,6 @@
 package br.com.arml.cep.ui.screen.component.log.listpane.filter
 
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.togetherWith
@@ -20,6 +21,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
+import br.com.arml.cep.model.utils.toEndOfDay
+import br.com.arml.cep.model.utils.toStartOfDay
 import br.com.arml.cep.ui.screen.component.common.filter.CepFilter
 import br.com.arml.cep.ui.screen.component.common.filter.DateFilter
 import br.com.arml.cep.ui.screen.component.common.filter.PeriodFilter
@@ -28,8 +31,6 @@ import br.com.arml.cep.ui.utils.LogFilterOption
 import br.com.arml.cep.ui.utils.filterEnterTransition
 import br.com.arml.cep.ui.utils.filterExitTransition
 import br.com.arml.cep.ui.utils.logFilterOptions
-
-const val oneSecondForTomorrow = 86399000L
 
 @Composable
 fun LogFilterComponent(
@@ -56,9 +57,9 @@ fun LogFilterComponent(
             selectedFilter = selectedFilter,
             onSelectedFilter = {
                 onFilterChange(it)
-                if (it == LogFilterOption.None) {
+                /*if (it == LogFilterOption.None) {
                     onNoneFilter()
-                }
+                }*/
             }
         )
         AnimatedContent(
@@ -85,7 +86,7 @@ fun LogFilterComponent(
                         labelId = R.string.logFilterComponent_initialDate_label,
                         onFilterByDate = { start ->
                             keyboardController?.hide()
-                            onFilterByInitialDate(start)
+                            onFilterByInitialDate(start.toStartOfDay())
                         }
                     )
                 }
@@ -97,20 +98,24 @@ fun LogFilterComponent(
                         labelId = R.string.logFilterComponent_finalDate_label,
                         onFilterByDate = { end ->
                             keyboardController?.hide()
-                            onFilterByFinalDate(end + oneSecondForTomorrow)
+                            onFilterByFinalDate(end.toEndOfDay())
                         }
                     )
                 }
 
                 LogFilterOption.ByRangeDate -> {
                     PeriodFilter(
-                        onFilterByInitialDate = { start, end ->
+                        onFilterByRange = { start, end ->
                             keyboardController?.hide()
-                            onFilterByRangeDate(start, end + oneSecondForTomorrow)
+                            Log.d("LogFilterComponent", "onFilterByRangeDate: $start - $end")
+                            onFilterByRangeDate(start,end)
                         }
                     )
                 }
-                LogFilterOption.None -> { keyboardController?.hide() }
+                LogFilterOption.None -> {
+                    keyboardController?.hide()
+                    onNoneFilter()
+                }
             }
         }
     }
