@@ -13,7 +13,7 @@ import br.com.arml.cep.ui.screen.component.search.SearchListPane
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Rule
-import kotlin.test.Test
+import org.junit.Test
 
 class SearchListPaneTest {
 

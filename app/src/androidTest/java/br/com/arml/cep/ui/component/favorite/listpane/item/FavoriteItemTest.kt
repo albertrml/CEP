@@ -12,8 +12,8 @@ import br.com.arml.cep.R
 import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.screen.component.favorite.listpane.item.FavoriteItem
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 class FavoriteItemTest {

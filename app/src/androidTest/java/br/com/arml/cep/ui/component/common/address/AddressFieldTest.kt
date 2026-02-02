@@ -10,8 +10,8 @@ import br.com.arml.cep.R
 import br.com.arml.cep.ui.screen.component.common.address.AddressField
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 class AddressFieldTest {

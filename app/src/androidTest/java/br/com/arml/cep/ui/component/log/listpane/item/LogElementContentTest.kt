@@ -12,8 +12,8 @@ import br.com.arml.cep.model.mock.mockLogEntries
 import br.com.arml.cep.model.utils.toFormattedUTC
 import br.com.arml.cep.ui.screen.component.log.listpane.item.LogElementContent
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 class LogElementContentTest {

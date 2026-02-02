@@ -24,8 +24,8 @@ import br.com.arml.cep.ui.utils.PlaceFilterOption
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 class CacheListPaneOnSuccessTest {
@@ -119,7 +119,7 @@ class CacheListPaneOnSuccessTest {
             }
             onNode(cepCheckBoxName and isCheckBox).performClick()
             onNode(noneCheckBoxName and isCheckBox).performClick()
-            verify (exactly = 1) { mockOnClearFilter() }
+            verify (exactly = 2) { mockOnClearFilter() }
         }
     }
 

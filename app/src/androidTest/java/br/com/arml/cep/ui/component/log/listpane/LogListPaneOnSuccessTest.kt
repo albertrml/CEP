@@ -16,8 +16,8 @@ import br.com.arml.cep.ui.screen.component.log.listpane.LogListPaneOnSuccess
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 class LogListPaneOnSuccessTest {

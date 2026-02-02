@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.ksp)
@@ -28,7 +27,7 @@ android {
 
     sourceSets {
         getByName("androidTest") {
-            assets.srcDir(File(project.projectDir, "schemas"))
+            assets.directories.add("schemas")
         }
     }
 
@@ -47,14 +46,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlin {
-        jvmToolchain {
-            languageVersion.value(
-                JavaLanguageVersion.of(17)
-            )
-        }
-    }
-
     buildFeatures {
         compose = true
     }
@@ -64,7 +55,10 @@ android {
         resources.excludes.add("META-INF/LICENSE.md")
         resources.excludes.add("META-INF/LICENSE-notice.md")
     }
+}
 
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {

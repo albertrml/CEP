@@ -12,8 +12,8 @@ import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.mock.mockLogEntries
 import br.com.arml.cep.ui.screen.component.log.LogListPaneComponent
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.test.Test
 
 @RunWith(AndroidJUnit4::class)
 class LogListPaneComponentTest {
