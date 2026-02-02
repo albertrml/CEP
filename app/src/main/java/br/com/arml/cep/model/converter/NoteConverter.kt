@@ -17,7 +17,7 @@ object NoteConverter {
         return value?.let {
             val parts = it.split(DELIMITER, limit = 2)
             if (parts.size == 2) {
-                Note.build(parts[0], parts[1])
+                Note.build(title = parts[0], content = parts[1])
             } else {
                 throw NoteException.ConversionRoomNoteException(
                     value = value,

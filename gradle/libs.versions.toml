@@ -1,25 +1,28 @@
 [versions]
-activityCompose = "1.11.0"
-agp = "8.13.0"
+activityCompose = "1.12.1"
+agp = "8.13.2"
 androidHilt = "2.57.2"
-composeBom = "2025.10.00"
+composeBom = "2025.12.00"
 composeHilt = "1.3.0"
 coreKtx = "1.17.0"
 espressoCore = "3.7.0"
+googleTruth = "1.4.5"
 junit = "4.13.2"
 junitVersion = "1.3.0"
-kotlin = "2.2.20"
+kotlin = "2.2.21"
 kotlinKsp = "2.2.20-2.0.3"
 kotlinxCoroutines = "1.10.2"
-lifecycleRuntimeKtx = "2.9.4"
-loggingInterceptor = "5.2.1"
+kotlinxSerialization = "1.9.0"
+kotlinxSerializationPlugin = "2.2.21"
+lifecycleRuntimeKtx = "2.10.0"
+loggingInterceptor = "5.3.2"
 material3 = "1.4.0"
 materialIconsExtended = "1.7.8"
-mockk = "1.14.6"
+mockk = "1.14.7"
 moshi = "1.15.2"
 retrofit = "3.0.0"
-roomKtx = "2.8.2"
-uiTextGoogleFonts = "1.9.3"
+roomKtx = "2.8.4"
+uiTextGoogleFonts = "1.10.0"
 
 [libraries]
 # Adaptive Layout
@@ -38,6 +41,7 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 
 # Hilt
 android-hilt = { module = "com.google.dagger:hilt-android", version.ref = "androidHilt" }
@@ -73,11 +77,14 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 # Test
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "roomKtx" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+google-truth = { group = "com.google.truth", name = "truth", version.ref = "googleTruth" }
+jetbrains-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
-androidx-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -86,3 +93,4 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "kotlinKsp" }
 kotlin-hilt = { id = "com.google.dagger.hilt.android", version.ref = "androidHilt" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinxSerializationPlugin" }

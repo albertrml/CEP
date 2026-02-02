@@ -1,9 +1,12 @@
 package br.com.arml.cep.di
 
+import br.com.arml.cep.model.repository.CacheRepository
+import br.com.arml.cep.model.repository.FavoriteRepository
 import br.com.arml.cep.model.repository.LogRepository
-import br.com.arml.cep.model.repository.PlaceRepository
-import br.com.arml.cep.model.source.local.LogLocalDataSource
-import br.com.arml.cep.model.source.local.PlaceLocalDataSource
+import br.com.arml.cep.model.repository.SearchRepository
+import br.com.arml.cep.model.source.local.CacheDao
+import br.com.arml.cep.model.source.local.FavoriteDao
+import br.com.arml.cep.model.source.local.LogDao
 import br.com.arml.cep.model.source.remote.PlaceRemoteDataSource
 import dagger.Module
 import dagger.Provides
@@ -17,18 +20,33 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideCepRepository(
-        placeRemoteDataSource: PlaceRemoteDataSource,
-        placeLocalDataSource: PlaceLocalDataSource,
-        logLocalDataSource: LogLocalDataSource
-    ): PlaceRepository {
-        return PlaceRepository(placeRemoteDataSource, placeLocalDataSource, logLocalDataSource)
+    fun provideCacheRepository(cacheDao: CacheDao): CacheRepository {
+        return CacheRepository(cacheDao)
     }
 
     @Provides
     @Singleton
-    fun provideLogRepository(logLocalDataSource: LogLocalDataSource): LogRepository {
-        return LogRepository(logLocalDataSource)
+    fun provideFavoriteRepository(favoriteDao: FavoriteDao): FavoriteRepository {
+        return FavoriteRepository(favoriteDao)
     }
 
+    @Provides
+    @Singleton
+    fun provideLogsRepository(logDao: LogDao): LogRepository {
+        return LogRepository(logDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSearchRepository(
+        searchService: PlaceRemoteDataSource,
+        cacheDao: CacheDao,
+        logDao: LogDao
+    ) : SearchRepository {
+        return SearchRepository(
+            searchService = searchService,
+            cacheDao = cacheDao,
+            logDao = logDao
+        )
+    }
 }

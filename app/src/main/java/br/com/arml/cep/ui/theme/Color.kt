@@ -5,60 +5,93 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
+// PRIMARY — azul institucional forte
 val primaryLight = Color(0xFF1A237E)
 val onPrimaryLight = Color(0xFFFFFFFF)
-val primaryContainerLight = Color(0xFFBBCDFA)
+val primaryContainerLight = Color(0xFFD7E2FC)
 val onPrimaryContainerLight = Color(0xFF000D23)
+
+// SECONDARY — azul complementar (menos dominante)
 val secondaryLight = Color(0xFF01579B)
 val onSecondaryLight = Color(0xFFFFFFFF)
-val secondaryContainerLight = Color(0xFF64B5F6)
+val secondaryContainerLight = Color(0xFFAAD0F8)
 val onSecondaryContainerLight = Color(0xFF001945)
+
+// TERTIARY — amarelo Correios (destaque)
 val tertiaryLight = Color(0xFFB79104)
 val onTertiaryLight = Color(0xFFFFFFFF)
 val tertiaryContainerLight = Color(0xFFFBE186)
 val onTertiaryContainerLight = Color(0xFF221B00)
+
+// ERROR — Material padrão
 val errorLight = Color(0xFFBA1A1A)
 val onErrorLight = Color(0xFFFFFFFF)
 val errorContainerLight = Color(0xFFFFDAD6)
 val onErrorContainerLight = Color(0xFF410002)
-val surfaceLight = Color(0xFFFFFFFF)
-val onSurfaceLight = Color(0xFF100121)
-val surfaceVariantLight = Color(0xFFDAE3F9)
-val onSurfaceVariantLight = Color(0xFF010626)
-val surfaceContainerLowLight = Color(0xFF89CAFD)    // Card Background
-val surfaceContainerLight = Color(0xFFE6EEFD)      // Bottom Bar
+
+// SURFACE & BACKGROUND — claros e neutros
 val backgroundLight = Color(0xFFFFFFFF)
 val onBackgroundLight = Color(0xFF100121)
-val outlineLight = Color(0xFF010626)
-val outlineVariantLight = Color(0xFF010418)
+
+val surfaceLight = Color(0xFFFFFFFF)
+val onSurfaceLight = Color(0xFF1B1B1F)
+
+// VARIANTS — separação visual suave
+val surfaceVariantLight = Color(0xFFF3F6FB)
+val onSurfaceVariantLight = Color(0xFF44474F)
+
+// CONTAINERS — Material 3 correto
+val surfaceContainerLowLight = Color(0xFFEAF2FF)   // Cards
+val surfaceContainerLight = Color(0xFFE6EEFD)      // Bottom bar / sheets
+
+// OUTLINES — leves para daylight
+val outlineLight = Color(0xFF8A8FA3)
+val outlineVariantLight = Color(0xFFC2C6D4)
 
 
-val primaryDark = Color(0xFFB0C4FF)
-val onPrimaryDark = Color(0xFF001B3F)
-val primaryContainerDark = Color(0xFF2D4099)
-val onPrimaryContainerDark = Color(0xFFD9E2FF)
-val secondaryDark = Color(0xFF90CAF9)
-val onSecondaryDark = Color(0xFF002F62)
-val secondaryContainerDark = Color(0xFF00497B)
-val onSecondaryContainerDark = Color(0xFFCDE5FF)
-val tertiaryDark = Color(0xFFE0C970)
-val onTertiaryDark = Color(0xFF3A2E00)
-val tertiaryContainerDark = Color(0xFF544500)
-val onTertiaryContainerDark = Color(0xFFFDE089)
-val errorDark = Color(0xFFBA1A1A)
-val onErrorDark = Color(0xFFFFFFFF)
+// PRIMARY — azul institucional adaptado ao dark
+val primaryDark = Color(0xFFB6C4FF)
+val onPrimaryDark = Color(0xFF0E1A4B)
+val primaryContainerDark = Color(0xFF1A237E)
+val onPrimaryContainerDark = Color(0xFFDDE3FF)
+
+// SECONDARY — azul complementar
+val secondaryDark = Color(0xFF8CC9FF)
+val onSecondaryDark = Color(0xFF003354)
+val secondaryContainerDark = Color(0xFF014A7A)
+val onSecondaryContainerDark = Color(0xFFCFE6FF)
+
+// TERTIARY — amarelo Correios (controle de brilho)
+val tertiaryDark = Color(0xFFF0D35A)
+val onTertiaryDark = Color(0xFF3A2F00)
+val tertiaryContainerDark = Color(0xFF5E4B00)
+val onTertiaryContainerDark = Color(0xFFFFF0C2)
+
+// ERROR — padrão Material
+val errorDark = Color(0xFFFFB4AB)
+val onErrorDark = Color(0xFF690005)
 val errorContainerDark = Color(0xFF93000A)
 val onErrorContainerDark = Color(0xFFFFDAD6)
-val surfaceDark = Color(0xFF111318)
-val onSurfaceDark = Color(0xFFE2E2E9)
-val surfaceVariantDark = Color(0xFF43474E)
-val onSurfaceVariantDark = Color(0xFFC3C7CE)
-val surfaceContainerLowDark = Color(0xFF2D2D2D)    // Card Background
-val surfaceContainerDark = Color(0xFF1F1F1F)      // Bottom Bar
-val backgroundDark = Color(0xFF111318)
-val onBackgroundDark = Color(0xFFE2E2E9)
-val outlineDark = Color(0xFF8D9199)
-val outlineVariantDark = Color(0xFF43474E)
+
+// BACKGROUND & SURFACE — escuros azulados
+val backgroundDark = Color(0xFF0E1118)
+val onBackgroundDark = Color(0xFFE4E6EB)
+
+val surfaceDark = Color(0xFF0E1118)
+val onSurfaceDark = Color(0xFFE4E6EB)
+
+// VARIANTS — separação visual
+val surfaceVariantDark = Color(0xFF1E2433)
+val onSurfaceVariantDark = Color(0xFFC4C6D0)
+
+// CONTAINERS — elevação Material 3
+val surfaceContainerLowDark = Color(0xFF151A28)   // Cards
+val surfaceContainerDark = Color(0xFF1B2233)      // Bottom bar / sheets
+
+// OUTLINES — discretos
+val outlineDark = Color(0xFF8E91A3)
+val outlineVariantDark = Color(0xFF44485C)
+
 
 private val DarkColorScheme = darkColorScheme(
     primary = primaryDark,

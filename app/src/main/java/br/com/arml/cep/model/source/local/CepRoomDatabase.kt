@@ -1,37 +1,24 @@
 package br.com.arml.cep.model.source.local
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
-import br.com.arml.cep.model.entity.LogEntry
-import br.com.arml.cep.model.entity.PlaceEntry
-
-const val DATABASE_NAME = "cep_database"
+import br.com.arml.cep.model.entity.FavoriteEntity
+import br.com.arml.cep.model.entity.LogEntity
+import br.com.arml.cep.model.entity.NoteEntity
+import br.com.arml.cep.model.entity.PlaceEntity
 
 @Database(
-    entities = [ PlaceEntry::class, LogEntry::class ],
-    version = 1,
+    entities = [
+        FavoriteEntity::class,
+        LogEntity::class,
+        NoteEntity::class,
+        PlaceEntity::class
+    ],
+    version = 2,
     exportSchema = true
 )
 abstract class CepRoomDatabase() : RoomDatabase() {
-    abstract fun placeDao(): PlaceLocalDataSource
-    abstract fun logDao(): LogLocalDataSource
-
-    companion object{
-        @Volatile
-        private var INSTANCE: CepRoomDatabase? = null
-
-        fun getDatabase(ctx: Context): CepRoomDatabase {
-            return INSTANCE ?: synchronized(this){
-                val instance = Room.databaseBuilder(
-                    ctx.applicationContext,
-                    CepRoomDatabase::class.java,
-                    DATABASE_NAME
-                ).build()
-                INSTANCE = instance
-                return instance
-            }
-        }
-    }
+    abstract fun logDao(): LogDao
+    abstract fun cacheDao(): CacheDao
+    abstract fun favoriteDao(): FavoriteDao
 }

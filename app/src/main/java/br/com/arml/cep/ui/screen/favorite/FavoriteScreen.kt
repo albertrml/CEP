@@ -7,19 +7,34 @@ import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteChangeAlert
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteDetailsComponent
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteExport
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteExtraComponent
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteImport
-import br.com.arml.cep.ui.screen.component.favorite.FavoriteListComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoriteDetailPaneComponent
+import br.com.arml.cep.ui.screen.component.favorite.FavoriteListPaneComponent
+import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteChangeAlert
+import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteExport
+import br.com.arml.cep.ui.screen.component.favorite.dialog.FavoriteImport
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnAddNoteToFavorite
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelFavoriteToUnwanted
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmExport
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmFavoriteToUnwanted
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmImport
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnDeleteNoteFromFavorite
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnExportFavorites
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnFilterByCep
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnFilterByTitle
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnFilterNone
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnImportFavorites
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnNavigateToDetailPane
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnSelectFavoriteToUnwanted
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.exportBackupLauncher
 import br.com.arml.cep.ui.utils.getExportIntent
@@ -30,158 +45,129 @@ import br.com.arml.cep.ui.utils.paneExitTransition
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun FavoriteScreen(
-    modifier: Modifier = Modifier,
-) {
+fun FavoriteScreen(modifier: Modifier = Modifier) {
     val viewmodel = hiltViewModel<FavoriteViewModel>()
     val state by viewmodel.state.collectAsStateWithLifecycle()
-    val uiStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
+    var snackBarMessage by rememberSaveable { mutableStateOf<String?>(null) }
+    val paneScaffoldStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
+
+    var pendingExportJson by rememberSaveable { mutableStateOf("") }
 
     val launcherExportBackup = exportBackupLauncher(
         context = LocalContext.current,
-        json = (state.exportBackup as? Response.Success<String>)?.result ?: "",
-        onExportRequest = {
-            viewmodel.onEvent(FavoriteEvent.OnExportHide)
-        }
+        json = pendingExportJson,
     )
 
     val launcherImportBackup = importBackupLauncher(
         context = LocalContext.current,
-        onSuccess = { json ->
-            viewmodel.onEvent(FavoriteEvent.OnImportBackup(json))
-        }
+        onSuccess = { json -> viewmodel.onEvent(OnConfirmImport(json)) }
     )
 
-    val marginScreen = Modifier
+    LaunchedEffect(Unit) {
+        viewmodel.effect.collect { effect ->
+            when(effect){
+                is FavoriteEffect.ShowSnackbar -> { snackBarMessage = effect.message }
+                is FavoriteEffect.OnSuccessExportFavorites -> {
+                    pendingExportJson = effect.message
+                    launcherExportBackup.launch(getExportIntent())
+                }
+            }
+        }
+    }
+
+    val marginScreen = modifier
         .fillMaxSize()
         .padding(horizontal = MaterialTheme.dimens.mediumMargin)
 
     NavigableListDetailPaneScaffold(
         modifier = modifier,
-        navigator = uiStateHolder.navigator,
+        navigator = paneScaffoldStateHolder.navigator,
         listPane = {
             AnimatedPane(
                 enterTransition = paneEnterTransition,
                 exitTransition = paneExitTransition
             ) {
-                FavoriteListComponent(
+                FavoriteListPaneComponent(
                     modifier = marginScreen,
-                    fetchResponse = state.fetchEntries,
-                    onExportClick = {
-                        viewmodel.onEvent(FavoriteEvent.OnExportShow)
-                    },
-                    onImportClick = {
-                        viewmodel.onEvent(FavoriteEvent.OnImportShow)
-                    },
-                    onFavoriteIconClick = { place ->
-                        viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(place))
-                    },
+                    state = state,
+                    snackbarMsg = snackBarMessage,
+                    onExportClick = { viewmodel.onEvent(OnExportFavorites) },
+                    onImportClick = { viewmodel.onEvent(OnImportFavorites) },
                     onCepFilter = { query ->
-                        viewmodel.onEvent(FavoriteEvent.OnFilterByCep(query))
+                        viewmodel.onEvent(OnFilterByCep(query))
                     },
                     onTitleFilter = { query ->
-                        viewmodel.onEvent(FavoriteEvent.OnFilterByTitle(query))
+                        viewmodel.onEvent(OnFilterByTitle(query))
                     },
-                    onNoneFilter = {
-                        viewmodel.onEvent(FavoriteEvent.OnFilterNone)
+                    onNoneFilter = { viewmodel.onEvent(OnFilterNone) },
+                    onFavoriteIconClick = { place ->
+                        viewmodel.onEvent(OnSelectFavoriteToUnwanted(place))
                     },
-                    onNavigateToDetails = { entry ->
-                        uiStateHolder.navigateToDetailPane {
-                            viewmodel.onEvent(FavoriteEvent.OnSelectEntryToEdit(entry))
+                    onAddNote = { cep, note ->
+                        viewmodel.onEvent(OnAddNoteToFavorite(cep, note))
+                    },
+                    onDeleteNote = { noteWithCep ->
+                        viewmodel.onEvent(OnDeleteNoteFromFavorite(noteWithCep))
+                    },
+                    onNavigateToDetails = { favorite ->
+                        val (address,note) = favorite
+                        paneScaffoldStateHolder.navigateToDetailPane {
+                            viewmodel.onEvent(OnNavigateToDetailPane(address, note))
                         }
                     }
                 )
                 FavoriteChangeAlert(
-                    place = state.placeForUnwanted,
-                    onDismissRequest = {
-                        viewmodel.onEvent(FavoriteEvent.OnSelectEntryToUnwanted(null))
-                    },
+                    place = state.selectedFavoriteToUnwanted,
+                    onDismissRequest = { viewmodel.onEvent(OnCancelFavoriteToUnwanted) },
                     onConfirmationRequest = {
-                        state.placeForUnwanted?.let { place ->
-                            if (place == state.placeForEdit) {
-                                uiStateHolder.navigateBackToListPane {
-                                    viewmodel.onEvent(
-                                        FavoriteEvent.OnClickToUnwanted(place)
-                                    )
-                                }
-                            } else {
-                                viewmodel.onEvent(
-                                    FavoriteEvent.OnClickToUnwanted(place)
-                                )
-                            }
+                        state.selectedFavoriteToUnwanted?.let { place ->
+                            val event = OnConfirmFavoriteToUnwanted(place)
+                            if (place.address == state.selectedDataToDetail?.first) {
+                                paneScaffoldStateHolder.navigateBackToListPane { viewmodel.onEvent(event) }
+                            } else { viewmodel.onEvent(event) }
                         }
                     }
                 )
 
                 FavoriteImport(
-                    isVisibility = state.importAlert,
-                    onDismissRequest = {
-                        viewmodel.onEvent(FavoriteEvent.OnImportHide)
-                    },
-                    onConfirmationRequest = {
-                        launcherImportBackup.launch(getImportIntent())
-                    }
+                    isVisibility = state.isVisibleImportAlert,
+                    onDismissRequest = { viewmodel.onEvent(FavoriteEvent.OnCancelImport) },
+                    onConfirmationRequest = { launcherImportBackup.launch(getImportIntent()) }
                 )
                 FavoriteExport(
-                    isVisibility = state.exportAlert,
-                    onDismissRequest = {
-                        viewmodel.onEvent(FavoriteEvent.OnExportHide)
-                    },
-                    onConfirmationRequest = {
-                        viewmodel.onEvent(FavoriteEvent.OnExportFavorites)
-                        launcherExportBackup.launch(getExportIntent())
-                    }
+                    isVisibility = state.isVisibleExportAlert,
+                    onDismissRequest = { viewmodel.onEvent(FavoriteEvent.OnCancelExport) },
+                    onConfirmationRequest = { viewmodel.onEvent(OnConfirmExport) }
                 )
             }
         },
 
         detailPane = {
-            uiStateHolder.ShowDetailPane {
+            paneScaffoldStateHolder.ShowDetailPane {
                 AnimatedPane(
                     enterTransition = paneEnterTransition,
                     exitTransition = paneExitTransition
                 ) {
-                    state.placeForEdit?.let { placeEntry ->
-                        FavoriteDetailsComponent(
+                    state.selectedDataToDetail?.let { favorite ->
+                        FavoriteDetailPaneComponent(
                             modifier = marginScreen,
-                            placeEntry = placeEntry,
+                            favorite = favorite,
                             onNavigateBackToList = {
-                                uiStateHolder.navigateBackToListPane {
-                                    viewmodel.onEvent(
-                                        FavoriteEvent.OnSelectEntryToEdit(null)
-                                    )
+                                paneScaffoldStateHolder.navigateBackToListPane {
+                                    viewmodel.onEvent( FavoriteEvent.OnNavigateBackToListPane)
                                 }
                             },
-                            onNavigateToExtra = {
-                                uiStateHolder.navigateToExtraPane {
-                                    viewmodel.onEvent(
-                                        FavoriteEvent.OnSelectEntryToEdit(placeEntry)
-                                    )
-                                }
-                            }
-                        )
-                    }
-                }
-            }
-        },
-
-        extraPane = {
-            uiStateHolder.ShowExtraPane {
-                AnimatedPane(
-                    enterTransition = paneEnterTransition,
-                    exitTransition = paneExitTransition
-                ) {
-                    state.placeForEdit?.let { placeEntry ->
-                        FavoriteExtraComponent(
-                            modifier = marginScreen,
-                            placeEntry = placeEntry,
-                            onClickToUpdate = { entry ->
-                                uiStateHolder.navigateBackToDetailPane {
-                                    viewmodel.onEvent(FavoriteEvent.OnUpdateFavorite(entry))
+                            onEditNote = { note ->
+                                paneScaffoldStateHolder.navigateBackToListPane {
+                                    viewmodel.onEvent(FavoriteEvent.OnUpdateNoteFromFavorite(note))
                                 }
                             },
-                            onNavigateBackToDetails = {
-                                uiStateHolder.navigateBackToDetailPane {}
+                            onCreateNote = { cep, note ->
+                                paneScaffoldStateHolder.navigateBackToListPane {
+                                    viewmodel.onEvent(
+                                        OnAddNoteToFavorite(cep, note)
+                                    )
+                                }
                             }
                         )
                     }

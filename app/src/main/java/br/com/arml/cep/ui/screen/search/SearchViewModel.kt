@@ -1,66 +1,47 @@
 package br.com.arml.cep.ui.screen.search
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.arml.cep.domain.CepUseCase
-import br.com.arml.cep.model.domain.Favorite
-import br.com.arml.cep.model.domain.Note
-import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.domain.SearchUseCase
+import br.com.arml.cep.model.domain.Place
+import br.com.arml.cep.ui.common.BaseViewModel
+import br.com.arml.cep.ui.screen.search.SearchEvent.OnFavorite
+import br.com.arml.cep.ui.screen.search.SearchEvent.OnFavoriteResponse
+import br.com.arml.cep.ui.screen.search.SearchEvent.OnSearch
+import br.com.arml.cep.ui.screen.search.SearchEvent.OnSearchResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val useCase: CepUseCase
-) : ViewModel() {
-    private var _state = MutableStateFlow(SearchState())
-    val state = _state.asStateFlow()
-
+    private val useCase: SearchUseCase,
+    initialState: SearchState,
+    reducer: SearchReducer
+) : BaseViewModel<SearchState, SearchEvent, SearchEffect>(
+    initialState = initialState,
+    reducer = reducer
+) {
     fun onEvent(event: SearchEvent) {
         when (event) {
-            is SearchEvent.OnSearch -> searchCep(event.code)
-            is SearchEvent.OnFavorite -> favoriteCep(event.placeEntry)
-            is SearchEvent.OnClear -> cleanState()
+            is OnSearch -> searchCep(event.code)
+            is OnFavorite -> favoriteCep(event.place)
+            else -> sendEventForEffect(event)
         }
     }
 
-    private fun favoriteCep(entry: PlaceEntry) {
+    private fun favoriteCep(place: Place) {
         viewModelScope.launch {
-            if (entry.isFavorite.value) return@launch
-
-            val favoriteEntry = entry.copy(
-                isFavorite = Favorite(true),
-                note = Note.build(
-                    title = entry.cep.text,
-                    content = ""
-                )
-            )
-
-            useCase.favoriteEntry(favoriteEntry).collect { response ->
-                _state.update {
-                    if (response is Response.Success) {
-                        it.copy(insert = response,entry = Response.Success(favoriteEntry))
-                    } else
-                        it.copy(insert = response)
-                }
+            useCase.addToFavorite(place).collect { response ->
+                sendEventForEffect(OnFavoriteResponse(response, place.cep.text))
             }
         }
     }
 
-    private fun cleanState() {
-        _state.update { SearchState() }
-    }
-
     private fun searchCep(code: String) {
         viewModelScope.launch {
-            useCase.fetchEntry(code).collectLatest { response ->
-                _state.update { it.copy(entry = response) }
+            useCase.searchPlace(code).collectLatest { response ->
+                sendEvent(OnSearchResponse(response))
             }
         }
     }

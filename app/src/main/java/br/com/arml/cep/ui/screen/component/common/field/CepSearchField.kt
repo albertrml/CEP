@@ -1,0 +1,92 @@
+package br.com.arml.cep.ui.screen.component.common.field
+
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
+import br.com.arml.cep.R
+import br.com.arml.cep.model.domain.formattedCep
+import br.com.arml.cep.model.domain.updateCepField
+
+@Composable
+fun CepSearchField(
+    modifier: Modifier = Modifier,
+    onQueryChange: (String) -> Unit
+){
+    var cepFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(TextFieldValue(""))
+    }
+
+    OutlinedTextField(
+        modifier = modifier
+            .semantics { contentType = ContentType.PostalCode }
+            .testTag(stringResource(R.string.cepSearchField_component_testTag)),
+        value = cepFieldValue,
+        onValueChange = { newFieldValue ->
+            val digitsOnly = updateCepField(
+                oldValue = cepFieldValue.text,
+                newValue = newFieldValue.text
+            )
+            cepFieldValue = newFieldValue.copy(
+                text = formattedCep(digitsOnly),
+                selection = TextRange(formattedCep(digitsOnly).length)
+            )
+            onQueryChange(cepFieldValue.text)
+        },
+        label = {
+            Text(
+                text = stringResource(R.string.cepSearchField_label),
+                style = MaterialTheme.typography.labelLarge
+            )
+        },
+        placeholder = {
+            Text(
+                text = stringResource(R.string.cepSearchField_hint),
+                style = MaterialTheme.typography.labelLarge
+            )
+        },
+        trailingIcon = {
+            if(cepFieldValue.text.isNotEmpty()){
+                IconButton(
+                    onClick = {
+                        cepFieldValue = TextFieldValue("")
+                        onQueryChange(cepFieldValue.text)
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = stringResource(R.string.cepSearchField_clearTrailingIcon)
+                    )
+                }
+            }
+        },
+        textStyle = MaterialTheme.typography.bodyMedium,
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    )
+}
+
+@Preview (showBackground = true)
+@Composable
+fun CepSearchFieldPreview(){
+    CepSearchField(onQueryChange = {})
+}

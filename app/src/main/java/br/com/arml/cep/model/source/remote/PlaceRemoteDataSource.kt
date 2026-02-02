@@ -1,6 +1,6 @@
 package br.com.arml.cep.model.source.remote
 
-import br.com.arml.cep.model.dto.AddressDTO
+import br.com.arml.cep.model.entity.dto.AddressDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
 

@@ -9,6 +9,8 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import br.com.arml.cep.model.exception.BackupException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -17,16 +19,12 @@ import java.util.Locale
 @Composable
 fun exportBackupLauncher(
     context: Context,
-    json: String,
-    onExportRequest: () -> Unit
+    json: String
 ): ManagedActivityResultLauncher<Intent, ActivityResult> = rememberLauncherForActivityResult(
     ActivityResultContracts.StartActivityForResult()
 ) { result ->
     if (result.resultCode == Activity.RESULT_OK) {
-        result.data?.data?.let { uri ->
-            onExportRequest()
-            exportToUri(context, uri, json)
-        }
+        result.data?.data?.let { uri -> exportToUri(context, uri, json) }
     }
 }
 
@@ -56,13 +54,18 @@ fun getImportIntent(): Intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
 fun importBackupLauncher(
     context: Context,
     onSuccess: (json: String) -> Unit
-): ManagedActivityResultLauncher<Intent, ActivityResult> = rememberLauncherForActivityResult(
-    ActivityResultContracts.StartActivityForResult()
-) { result ->
-    if (result.resultCode == Activity.RESULT_OK) {
-        result.data?.data?.let { uri ->
-            val json = importFromUri(context, uri)
-            onSuccess(json)
+): ManagedActivityResultLauncher<Intent, ActivityResult> {
+    val currentOnSuccess by rememberUpdatedState(onSuccess)
+    val currentContext by rememberUpdatedState(context)
+
+    return rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                val json = importFromUri(currentContext, uri)
+                currentOnSuccess(json)
+            }
         }
     }
 }

@@ -1,169 +1,80 @@
 package br.com.arml.cep.ui.screen.component.search
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
+import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.model.exception.CepException
-import br.com.arml.cep.model.mock.mockPlaceEntries
-import br.com.arml.cep.ui.screen.component.common.Header
+import br.com.arml.cep.model.mock.mockPlaces
+import br.com.arml.cep.ui.screen.component.common.header.Header
+import br.com.arml.cep.ui.screen.component.search.detailpane.SearchDetailPaneOnFailure
+import br.com.arml.cep.ui.screen.component.search.detailpane.SearchDetailPaneOnLoading
+import br.com.arml.cep.ui.screen.component.search.detailpane.SearchDetailPaneOnSuccess
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
 
 @Composable
 fun SearchDetailPane(
     modifier: Modifier = Modifier,
-    response: Response<PlaceEntry>,
+    response: Response<Place>,
     onBackPress: () -> Unit,
-    onFavoriteClick: (PlaceEntry) -> Unit
+    onFavoriteClick: (Place) -> Unit
 ) {
-    Column(
+
+    Scaffold(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Header(
-            modifier = Modifier.testTag(
-                stringResource(R.string.testTag_searchScreen_detailPane_header)
-            ),
-            logo = Icons.AutoMirrored.Filled.ArrowBack,
-            title = stringResource(R.string.display_address_title),
-            onClickLogo = onBackPress
-        )
-
-        response.ShowResults(
-            successContent = { place ->
-                SearchDetailPaneOnSuccess(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag(
-                            stringResource(R.string.testTag_searchScreen_detailPane_onSuccess)
-                        ),
-                    place = place,
-                    onFavoriteClick = onFavoriteClick
-                )
-            },
-            loadingContent = {
-                SearchDetailPaneOnLoading(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .testTag(
-                            stringResource(R.string.testTag_searchScreen_detailPane_onLoading)
-                        )
-                )
-            },
-            failureContent = { failure ->
-                SearchDetailPaneOnFailure(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .testTag(
-                            stringResource(R.string.testTag_searchScreen_detailPane_onFailure)
-                        ),
-                    failure = failure
-                )
-            }
-        )
-    }
-}
-
-@Composable
-fun SearchDetailPaneOnSuccess(
-    modifier: Modifier = Modifier,
-    place: PlaceEntry,
-    onFavoriteClick: (PlaceEntry) -> Unit
-) {
-    Box(modifier = modifier) {
-        AddressForms(
-            modifier = Modifier.padding(
-                vertical = MaterialTheme.dimens.largeMargin
-            ),
-            address = place.address
-        )
-        Button(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .testTag(
-                    stringResource(R.string.testTag_searchScreen_detailPane_saveAddressButton)
-                ),
-            enabled = !place.isFavorite.value,
-            onClick = { onFavoriteClick(place) }
-        ) {
-            val (colorIcon, textButton) = when (place.isFavorite.value) {
-                true -> {
-                    Color.Red to
-                            stringResource(R.string.display_saved_entry)
-                }
-
-                false -> {
-                    MaterialTheme.colorScheme.onPrimary to
-                            stringResource(R.string.display_not_save_entry)
-                }
-            }
-            Icon(
-                imageVector = Icons.Filled.Favorite,
-                contentDescription = stringResource(R.string.display_favorite_button_description),
-                tint = colorIcon
+        topBar = {
+            Header(
+                logo = Icons.AutoMirrored.Filled.ArrowBack,
+                title = stringResource(R.string.searchDetailPane_header_label),
+                onClickLogo = onBackPress,
             )
-            Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallPadding))
-            Text(
-                text = textButton,
-                style = MaterialTheme.typography.titleMedium
+        },
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier.padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.smallSpacing),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            response.ShowResults(
+                successContent = { place ->
+                    SearchDetailPaneOnSuccess(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = MaterialTheme.dimens.smallPadding),
+                        place = place,
+                        onFavoriteClick = onFavoriteClick
+                    )
+                },
+                loadingContent = {
+                    SearchDetailPaneOnLoading(
+                        modifier = Modifier.fillMaxSize()
+                    )
+                },
+                failureContent = { failure ->
+                    SearchDetailPaneOnFailure(
+                        modifier = Modifier.fillMaxSize(),
+                        failure = failure
+                    )
+                }
             )
         }
     }
+
 }
 
-@Composable
-fun SearchDetailPaneOnLoading(
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier
-                .testTag(stringResource(R.string.testTag_searchScreen_detailPane_onLoading_circularProgressIndicator))
-        )
-    }
-}
-
-@Composable
-fun SearchDetailPaneOnFailure(
-    modifier: Modifier = Modifier,
-    failure: Exception
-) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            style = MaterialTheme.typography.titleLarge,
-            text = failure.message ?: CepException.NotFoundCepException().message
-        )
-    }
-}
 
 @Preview(
     name = "Smart Phone Portrait",
@@ -197,11 +108,26 @@ fun SearchDetailPaneOnFailure(
 )
 @Composable
 fun DisplayScreenPreview() {
+    val place = mockPlaces(1,false).first()
     SearchDetailPane(
         modifier = Modifier
             .fillMaxSize()
             .padding(MaterialTheme.dimens.mediumMargin),
-        response = Response.Success(mockPlaceEntries[0]),
+        response = Response.Success(place),
+        onBackPress = {},
+        onFavoriteClick = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DisplayScreenWithFavoritePreview() {
+    val place = mockPlaces(1,true).first()
+    SearchDetailPane(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(MaterialTheme.dimens.mediumMargin),
+        response = Response.Success(place),
         onBackPress = {},
         onFavoriteClick = {}
     )
