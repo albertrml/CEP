@@ -4,6 +4,7 @@ import android.content.ContentValues
 import androidx.room.OnConflictStrategy
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import br.com.arml.cep.model.utils.normalizeForDBSearch
 
 val MIGRATION_1_2 = object : Migration(1, 2) {
     override fun migrate(db: SupportSQLiteDatabase) {
@@ -22,20 +23,34 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 uf TEXT NOT NULL,
                 region TEXT NOT NULL,
                 country TEXT NOT NULL,
-                ddd TEXT NOT NULL
+                ddd TEXT NOT NULL,
+                street_search TEXT NOT NULL,
+                city_search TEXT NOT NULL
             )
         """.trimIndent()
         )
-        db.execSQL("""
-            CREATE INDEX IF NOT EXISTS index_places_street_district_city_state ON 
+        db.execSQL(
+            """
+            CREATE INDEX IF NOT EXISTS index_places_search ON 
             Places (
-                street, 
+                street_search, 
                 district, 
-                city, 
+                city_search, 
                 state
             )
         """.trimIndent()
         )
+        db.execSQL(
+            """
+                CREATE INDEX IF NOT EXISTS index_places_street_search ON Places(street_search)
+            """.trimIndent()
+        )
+        db.execSQL(
+            """
+                CREATE INDEX IF NOT EXISTS index_places_city_search ON Places(city_search)
+            """.trimIndent()
+        )
+
 
         /** Criação da tabela Logs **/
         db.execSQL(
@@ -100,62 +115,68 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_favorites_zipcode_place` ON `Favorites` (`zipcode_place`)")
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_favorites_id_note` ON `Favorites` (`id_note`)")
 
-        /** Migração dos dados da tabela place_table para a tabela Places **/
-        db.execSQL("""
-            INSERT INTO Places(
-                zipcode, 
-                street, 
-                complement, 
-                district, 
-                city, 
-                state, 
-                uf, 
-                region, 
-                country, 
-                ddd
-            )
-            SELECT 
-                address_zipCode, 
-                address_street, 
-                address_complement, 
-                address_district, 
-                address_city, 
-                address_state, 
-                address_uf, 
-                address_region, 
-                address_country, 
-                address_ddd 
-            FROM place_table
-        """.trimIndent())
-
-        /** Migração dos dados da tabela log_table para a tabela Logs **/
-        /*db.execSQL(
-            """
-            INSERT INTO Logs(zipcode_place, timestamp)
-            SELECT cep, timestamp FROM log_table
-            WHERE cep IN (SELECT zipcode FROM Places) AND timestamp IS NOT NULL
-        """.trimIndent()
-        )*/
-        db.execSQL(
-            """
-            INSERT INTO Logs(zipcode_place, timestamp)
-            SELECT p.address_zipCode, l.timestamp FROM place_table p
-            JOIN log_table l ON l.cep = p.cep
-        """.trimIndent()
-        )
-
-
-        /** Migração dos dados correspondentes da tabela place_table às tabelas Favorites e Notes **/
+        /** Migração dos dados em uma única transação atômica **/
         db.beginTransaction()
         try {
-            val cursor = db.query("""
+            /** Migração da tabela Places **/
+            val cursorPlaces = db.query("""SELECT * FROM place_table""".trimIndent())
+            cursorPlaces.use { c ->
+                if (c.moveToFirst()) {
+                    val cepIndex = c.getColumnIndex("address_zipCode")
+                    val streetIndex = c.getColumnIndex("address_street")
+                    val complementIndex = c.getColumnIndex("address_complement")
+                    val districtIndex = c.getColumnIndex("address_district")
+                    val cityIndex = c.getColumnIndex("address_city")
+                    val stateIndex = c.getColumnIndex("address_state")
+                    val ufIndex = c.getColumnIndex("address_uf")
+                    val regionIndex = c.getColumnIndex("address_region")
+                    val countryIndex = c.getColumnIndex("address_country")
+                    val dddIndex = c.getColumnIndex("address_ddd")
+
+                    do {
+                        val streetValue = c.getString(streetIndex)
+                        val cityValue = c.getString(cityIndex)
+                        val placeValues = ContentValues().apply {
+                            put("zipcode", c.getString(cepIndex))
+                            put("street", streetValue)
+                            put("complement", c.getString(complementIndex))
+                            put("district", c.getString(districtIndex))
+                            put("city", cityValue)
+                            put("state", c.getString(stateIndex))
+                            put("uf", c.getString(ufIndex))
+                            put("region", c.getString(regionIndex))
+                            put("country", c.getString(countryIndex))
+                            put("ddd", c.getString(dddIndex))
+                            put("street_search", streetValue.normalizeForDBSearch())
+                            put("city_search", cityValue.normalizeForDBSearch())
+                        }
+                        db.insert(
+                            "Places",
+                            OnConflictStrategy.IGNORE,
+                            placeValues
+                        )
+                    } while (c.moveToNext())
+                }
+            }
+
+            /** Migração dos dados da tabela log_table para a tabela Logs **/
+            db.execSQL(
+                """
+                INSERT INTO Logs(zipcode_place, timestamp)
+                SELECT p.address_zipCode, l.timestamp FROM place_table p
+                JOIN log_table l ON l.cep = p.address_zipCode
+            """.trimIndent()
+            )
+
+            /** Migração dos dados correspondentes da tabela place_table às tabelas Favorites e Notes **/
+            val cursorNotes = db.query(
+                """
                 SELECT address_zipCode, note FROM place_table 
                 WHERE favorite_status = 1 AND note IS NOT NULL
             """.trimIndent()
             )
-
-            cursor.use { c ->
-                if (c.moveToFirst()){
+            cursorNotes.use { c ->
+                if (c.moveToFirst()) {
                     val cepIndex = c.getColumnIndex("address_zipCode")
                     val noteIndex = c.getColumnIndex("note")
                     val delimiter = "||<NOTE_SEP>||"
@@ -163,8 +184,10 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                     do {
                         val cep = c.getString(cepIndex)
                         val note = c.getString(noteIndex)
-                        val title = note.substringBefore(delimiter)
-                        val content = note.substringAfter(delimiter)
+
+                        val parts = note.split(delimiter, limit = 2)
+                        val title = parts.getOrNull(0).orEmpty()
+                        val content = parts.getOrNull(1).orEmpty()
 
                         val notesValues = ContentValues().apply {
                             put("title", title)
@@ -177,17 +200,17 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                             notesValues
                         )
 
-                        if (idNote == -1L) continue
-
-                        val favoritesValues = ContentValues().apply{
-                            put("zipcode_place", cep)
-                            put("id_note", idNote)
+                        if (idNote != -1L) {
+                            val favoritesValues = ContentValues().apply {
+                                put("zipcode_place", cep)
+                                put("id_note", idNote)
+                            }
+                            db.insert(
+                                "Favorites",
+                                OnConflictStrategy.IGNORE,
+                                favoritesValues
+                            )
                         }
-                        db.insert(
-                            "Favorites",
-                            OnConflictStrategy.IGNORE,
-                            favoritesValues
-                        )
 
                     } while (c.moveToNext())
                 }
@@ -197,10 +220,8 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             db.endTransaction()
         }
 
-        /** Remoção da tabela log_table **/
-        db.execSQL("DROP TABLE log_table")
-
-        /** Remoção da tabela place_table **/
-        db.execSQL("DROP TABLE place_table")
+        /** Remoção das tabelas legadas **/
+        db.execSQL("DROP TABLE IF EXISTS log_table")
+        db.execSQL("DROP TABLE IF EXISTS place_table")
     }
 }

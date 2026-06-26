@@ -1,34 +1,38 @@
 package br.com.arml.cep.model.repository
 
 import androidx.compose.ui.util.fastFilterNotNull
+import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.asResponse
 import br.com.arml.cep.model.domain.mapSuccess
 import br.com.arml.cep.model.domain.toEntity
 import br.com.arml.cep.model.domain.toResponseFlow
-import br.com.arml.cep.model.entity.NoteEntity
 import br.com.arml.cep.model.entity.relation.PlaceWithNotes
 import br.com.arml.cep.model.entity.relation.toModel
 import br.com.arml.cep.model.entity.toModel
 import br.com.arml.cep.model.exception.BackupException
 import br.com.arml.cep.model.exception.CepDatabaseException
 import br.com.arml.cep.model.source.local.FavoriteDao
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.map
 
 class FavoriteRepository @Inject constructor(
     private val favoriteDao: FavoriteDao
 ) {
     /** Create **/
-    fun addToFavorite(zipcode: String, note: NoteEntity) = asResponse {
+    fun addToFavorite(zipcode: String, note: Note) = asResponse {
         with(favoriteDao){
             var quantity = countNotesEntitiesFromFavorite(zipcode) + 1
             var suggestedTitle = note.title
-            while (favoriteDao.doesTitleExist(suggestedTitle)){
+            while (doesTitleExist(suggestedTitle)){
                 suggestedTitle = "${note.title} (${quantity++})"
             }
 
-            val newNote = note.copy(title = suggestedTitle)
+            val newNote = Note.build(
+                id = note.id,
+                title = suggestedTitle,
+                content = note.content
+            ).toEntity()
             insertNoteEntityToFavorite(zipcode, newNote)
         }
     }
@@ -51,8 +55,8 @@ class FavoriteRepository @Inject constructor(
         .mapSuccess { entities -> entities.map { it.toModel() } }
 
     /** Update **/
-    fun updateNoteFromFavorite(note: NoteEntity) = asResponse {
-        favoriteDao.updateNote(note)
+    fun updateNoteFromFavorite(note: Note) = asResponse {
+        favoriteDao.updateNote(note.toEntity())
     }
 
     /** Delete **/
@@ -60,10 +64,10 @@ class FavoriteRepository @Inject constructor(
         favoriteDao.deleteFromFavorite(zipcode)
     }
 
-    fun deleteNoteFromFavorite(zipcode: String, note: NoteEntity) = asResponse {
+    fun deleteNoteFromFavorite(zipcode: String, note: Note) = asResponse {
         val count = favoriteDao.countNotesEntitiesFromFavorite(zipcode = zipcode)
         if (count <= 1) throw CepDatabaseException.IllegalNoteQuantity()
-        favoriteDao.deleteNote(note)
+        favoriteDao.deleteNote(note.toEntity())
         zipcode
     }
 

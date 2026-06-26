@@ -12,7 +12,7 @@ import br.com.arml.cep.R.string.searchDetailPaneOnFailure_component_testTag
 import br.com.arml.cep.model.exception.CepException
 
 @Composable
-fun SearchDetailPaneOnFailure(
+fun CepSearchDetailPaneOnFailure(
     modifier: Modifier = Modifier,
     failure: Exception
 ) {

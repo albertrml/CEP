@@ -101,7 +101,9 @@ class FavoriteDaoTest {
             .filter { it.notes.isNotEmpty() }
             .associate { it.place to it.notes }
 
-        val actualData = favoriteDao.selectFavoritesByTitle(query).first()
+        val actualData = favoriteDao.selectFavoritesByTitle(query).first().associate { item ->
+            item.place to item.notes
+        }
 
         assertThat(actualData.keys).isEqualTo(expectedData.keys)
         actualData.forEach { (place, notes) ->

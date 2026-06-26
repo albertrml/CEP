@@ -19,23 +19,42 @@ interface CacheDao {
     /** Read **/
     @Query(
         """
-        SELECT * FROM Places
-        WHERE 
-            zipcode NOT IN (SELECT DISTINCT zipcode_place FROM Favorites)
-            AND zipcode LIKE '%' || :query || '%'
-        ORDER BY zipcode ASC
+        SELECT p.* 
+        FROM Places p
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM Favorites f
+            WHERE f.zipcode_place = p.zipcode
+        )
+        AND p.zipcode LIKE '%' || :query || '%'
+        ORDER BY p.zipcode ASC
     """
     )
     fun selectCachedPlaceEntitiesByZipcode(query: String): Flow<List<PlaceEntity>>
 
     @Query(
         """
-            SELECT * FROM Places
-            WHERE zipcode NOT IN (SELECT DISTINCT zipcode_place FROM Favorites)
+            SELECT p.* 
+            FROM Places p
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM Favorites f
+                WHERE f.zipcode_place = p.zipcode
+            )
             AND zipcode = :zipcode
         """
     )
     suspend fun selectCachedPlaceEntityByZipcode(zipcode: String): PlaceEntity?
+
+    @Query(
+        """
+            SELECT p.* 
+            FROM Places p
+            WHERE zipcode = :zipcode
+        """
+    )
+    suspend fun selectPlaceEntityByZipcode(zipcode: String): PlaceEntity?
+
 
     @Transaction
     @Query(
@@ -45,6 +64,42 @@ interface CacheDao {
     """
     )
     suspend fun selectPlaceWithNotesByZipcode(zipcode: String): PlaceWithNotes?
+
+    @Transaction
+    @Query(
+        """
+        SELECT * FROM Places
+        WHERE uf = :uf 
+            AND city_search LIKE '%' || :city || '%' 
+            AND street_search LIKE '%' || :street || '%'
+        ORDER BY zipcode ASC
+    """
+    )
+    fun selectPlacesWithNotes(uf: String, city: String, street: String): Flow<List<PlaceWithNotes>>
+
+    @Transaction
+    @Query(
+        """
+        SELECT EXISTS (
+            SELECT 1 FROM Places
+            WHERE uf = :uf 
+                AND city_search LIKE '%' || :city || '%' 
+                AND street_search LIKE '%' || :street || '%'
+        )
+    """
+    )
+    suspend fun arePlacesExist(uf: String, city: String, street: String): Boolean
+
+    @Query(
+        """
+            SELECT EXISTS (
+                SELECT 1 FROM Places
+                WHERE zipcode = :zipcode
+            )
+        """
+    )
+    suspend fun isPlaceExist(zipcode: String): Boolean
+
 
     /** Update **/
     @Update

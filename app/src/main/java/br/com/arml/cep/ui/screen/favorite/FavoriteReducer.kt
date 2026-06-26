@@ -1,17 +1,6 @@
 package br.com.arml.cep.ui.screen.favorite
 
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.ADDING_NOTE_TO_FAVORITE_FAILURE_MSG
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.DELETING_NOTE_FROM_FAVORITE_FAILURE_MSG
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.EXPORTING_FAVORITES_FAILURE_MSG
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.IMPORTING_FAVORITES_FAILURE_MSG
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.IMPORTING_FAVORITES_SUCCESS_MSG
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.UNWANTED_FAVORITE_SELECTED_NONE
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.UPDATING_NOTE_FROM_FAVORITE_FAILURE_MSG
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.UPDATING_NOTE_FROM_FAVORITE_SUCCESS_MSG
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.getAddingNoteToFavoriteSuccessMessage
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.getChangingToUnwantedFailureMessage
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.getChangingToUnwantedSuccessMessage
-import br.com.arml.cep.application.EnvironmentVariables.FavoriteReducerVariables.getDeletingNoteFromFavoriteSuccessMessage
+import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.ui.common.Reducer
 import br.com.arml.cep.ui.screen.favorite.FavoriteEffect.OnSuccessExportFavorites
@@ -31,6 +20,7 @@ import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnNavigateBackToListPane
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnNavigateToDetailPane
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnSelectFavoriteToUnwanted
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnUpdateNoteFromFavoriteResponse
+import br.com.arml.cep.ui.utils.UiText
 
 class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
     override fun reduce(
@@ -55,26 +45,26 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
             }
             is OnConfirmFavoriteToUnwantedResponse -> {
                 val zipcode = previousState.selectedFavoriteToUnwanted?.cep?.text
-                    ?: return previousState to ShowSnackbar(UNWANTED_FAVORITE_SELECTED_NONE)
+                    ?: return previousState to ShowSnackbar(UiText.StringResource(R.string.favorite_unwanted_selected_none))
 
                 when (event.response) {
                     is Response.Loading ->
                         previousState to null
 
                     is Response.Success -> {
-                        val msg = getChangingToUnwantedSuccessMessage(zipcode)
+                        val effect = ShowSnackbar(UiText.StringResource(R.string.favorite_unfav_success, zipcode))
                         previousState.copy(
                             selectedFavoriteToUnwanted = null,
                             isVisibleUnwantedWarning = false
-                        ) to ShowSnackbar(msg)
+                        ) to effect
                     }
 
                     is Response.Failure -> {
-                        val msg = getChangingToUnwantedFailureMessage(zipcode)
+                        val effect = ShowSnackbar(UiText.StringResource(R.string.favorite_unfav_failure, zipcode))
                         previousState.copy(
                             selectedFavoriteToUnwanted = null,
                             isVisibleUnwantedWarning = false
-                        ) to ShowSnackbar(msg)
+                        ) to effect
                     }
                 }
             }
@@ -86,10 +76,10 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
                 val effect = when(response){
                     is Response.Loading -> null
                     is Response.Success -> {
-                        ShowSnackbar(getAddingNoteToFavoriteSuccessMessage(zipcode))
+                        ShowSnackbar(UiText.StringResource(R.string.favorite_add_note_success, zipcode))
                     }
                     is Response.Failure -> {
-                        ShowSnackbar(ADDING_NOTE_TO_FAVORITE_FAILURE_MSG)
+                        ShowSnackbar(UiText.StringResource(R.string.favorite_add_note_failure))
                     }
                 }
                 previousState to effect
@@ -102,11 +92,11 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
                         val zipcode = response.result
-                        val msg = getDeletingNoteFromFavoriteSuccessMessage(zipcode)
-                        previousState to ShowSnackbar(msg)
+                        val effect = ShowSnackbar(UiText.StringResource(R.string.favorite_delete_note_success, zipcode))
+                        previousState to effect
                     }
                     is Response.Failure -> {
-                        previousState to ShowSnackbar(DELETING_NOTE_FROM_FAVORITE_FAILURE_MSG)
+                        previousState to ShowSnackbar(UiText.StringResource(R.string.favorite_delete_note_failure))
                     }
                 }
             }
@@ -137,10 +127,10 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
                 when(event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
-                        previousState to ShowSnackbar(UPDATING_NOTE_FROM_FAVORITE_SUCCESS_MSG)
+                        previousState to ShowSnackbar(UiText.StringResource(R.string.favorite_update_note_success))
                     }
                     is Response.Failure -> {
-                        previousState to ShowSnackbar(UPDATING_NOTE_FROM_FAVORITE_FAILURE_MSG)
+                        previousState to ShowSnackbar(UiText.StringResource(R.string.favorite_update_note_failure))
                     }
                 }
             }
@@ -172,15 +162,18 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
                             isVisibleImportAlert = false,
                             importedFavorites = response
                         )
-                        updatedState to ShowSnackbar(IMPORTING_FAVORITES_SUCCESS_MSG)
+                        updatedState to ShowSnackbar(UiText.StringResource(R.string.favorite_import_success))
                     }
                     is Response.Failure -> {
                         val updatedState = previousState.copy(
                             isVisibleImportAlert = false,
                             importedFavorites = response
                         )
-                        val msg = response.exception.message ?: IMPORTING_FAVORITES_FAILURE_MSG
-                        updatedState to ShowSnackbar(msg)
+                        val effect = ShowSnackbar(
+                            response.exception.message?.let { UiText.DynamicString(it) }
+                                ?: UiText.StringResource(R.string.favorite_import_failure)
+                        )
+                        updatedState to effect
                     }
                 }
             }
@@ -202,8 +195,11 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
                     }
                     is Response.Failure -> {
                         val updatedState = previousState.copy(isVisibleExportAlert = false)
-                        val msg = response.exception.message ?: EXPORTING_FAVORITES_FAILURE_MSG
-                        updatedState to ShowSnackbar(msg)
+                        val effect = ShowSnackbar(
+                            response.exception.message?.let { UiText.DynamicString(it) }
+                                ?: UiText.StringResource(R.string.favorite_export_failure)
+                        )
+                        updatedState to effect
                     }
                 }
             }

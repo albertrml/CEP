@@ -3,7 +3,7 @@ package br.com.arml.cep.ui.log
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -53,31 +53,6 @@ class LogListPaneComponentTest {
             onNodeWithTag(logListPaneOnFailureTag).assertIsNotDisplayed()
         }
     }
-
-    /*@Test
-    fun logListPaneComponent_shouldDisplayLoadingComponents_whenEntriesIsLoading(){
-        val onLoading = Response.Loading
-        composeTestRule.apply {
-            setContent {
-                LogListPaneComponent(
-                    entries = onLoading,
-                    onFilterByCep = {},
-                    onFilterByInitialDate = {},
-                    onFilterByFinalDate = {},
-                    onFilterByRangeDate = { _, _ -> },
-                    onFilterByNone = {},
-                    onClickToDelete = {},
-                    onClickToDeleteAll = {},
-                    onCopyToClipboard = {}
-                )
-            }
-            onNodeWithTag(headerTag).assertIsDisplayed()
-            onNodeWithTag(filterTag).assertIsDisplayed()
-            onNodeWithTag(logListPaneOnSuccessTag).assertIsNotDisplayed()
-            onNodeWithTag(logListPaneOnLoadingTag).assertIsDisplayed()
-            onNodeWithTag(logListPaneOnFailureTag).assertIsNotDisplayed()
-        }
-    }*/
 
     @Test
     fun logListPaneComponent_shouldDisplayFailureComponents_whenEntriesIsFailure(){

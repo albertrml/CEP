@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -17,7 +17,7 @@ import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.exception.CepException
 import br.com.arml.cep.model.mock.mockPlaces
-import br.com.arml.cep.ui.screen.component.search.SearchDetailPane
+import br.com.arml.cep.ui.screen.component.search.CepSearchDetailPane
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Rule
@@ -52,7 +52,7 @@ class SearchDetailPaneTest {
     fun searchDetailPaneTest_shouldLoadingComponents_whenResponseIsLoading(){
         composeTestRule.apply{
             setContent {
-                SearchDetailPane(
+                CepSearchDetailPane(
                     response = Response.Loading,
                     onBackPress = mockOnBackPress,
                     onFavoriteClick = mockOnFavorite
@@ -73,7 +73,7 @@ class SearchDetailPaneTest {
         val expectedMsg = exception.message
         composeTestRule.apply{
             setContent {
-                SearchDetailPane(
+                CepSearchDetailPane(
                     response = Response.Failure(exception),
                     onBackPress = mockOnBackPress,
                     onFavoriteClick = mockOnFavorite
@@ -92,7 +92,7 @@ class SearchDetailPaneTest {
     fun searchDetailPaneTest_shouldSuccessComponents_whenResponseIsSuccess() {
         composeTestRule.apply {
             setContent {
-                SearchDetailPane(
+                CepSearchDetailPane(
                     response = Response.Success(mockPlaces(1, false).first()),
                     onBackPress = mockOnBackPress,
                     onFavoriteClick = mockOnFavorite
@@ -119,7 +119,7 @@ class SearchDetailPaneTest {
 
         composeTestRule.apply {
             setContent {
-                SearchDetailPane(
+                CepSearchDetailPane(
                     response = response,
                     onBackPress = mockOnBackPress,
                     onFavoriteClick = mockOnFavorite
@@ -142,7 +142,7 @@ class SearchDetailPaneTest {
         val place = mockPlaces(1, true).first()
         composeTestRule.apply {
             setContent {
-                SearchDetailPane(
+                CepSearchDetailPane(
                     response = Response.Success(place),
                     onBackPress = mockOnBackPress,
                     onFavoriteClick = mockOnFavorite
@@ -159,7 +159,7 @@ class SearchDetailPaneTest {
         val place = mockPlaces(1, false).first()
         composeTestRule.apply {
             setContent {
-                SearchDetailPane(
+                CepSearchDetailPane(
                     response = Response.Success(place),
                     onBackPress = mockOnBackPress,
                     onFavoriteClick = mockOnFavorite

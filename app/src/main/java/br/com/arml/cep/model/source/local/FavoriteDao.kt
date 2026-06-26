@@ -80,7 +80,7 @@ interface FavoriteDao {
             ORDER BY p.zipcode ASC, n.title ASC
         """
     )
-    fun selectFavoritesByTitle(query: String): Flow<Map<PlaceEntity, List<NoteEntity>>>
+    fun selectFavoritesByTitle(query: String): Flow<List<PlaceWithNotes>>
 
     // Search for all place registers that are favorite.
     @Transaction

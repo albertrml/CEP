@@ -1,3 +1,4 @@
+@file:Suppress("UNUSED_EXPRESSION")
 package br.com.arml.cep.domain
 
 import android.database.sqlite.SQLiteException
@@ -5,7 +6,6 @@ import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response.Failure
 import br.com.arml.cep.model.domain.Response.Loading
 import br.com.arml.cep.model.domain.Response.Success
-import br.com.arml.cep.model.domain.toEntity
 import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.model.mock.mockNotes
 import br.com.arml.cep.model.repository.FavoriteRepository
@@ -57,7 +57,7 @@ class FavoriteUseCaseTest {
 
         // Assert
         responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
-        coVerify { repository.addToFavorite(cep.text, note.toEntity()) }
+        coVerify { repository.addToFavorite(cep.text, note) }
     }
 
     @Test
@@ -76,7 +76,7 @@ class FavoriteUseCaseTest {
         responses.assertFlowFailure {
             assertThat(it).isInstanceOf(expectedException::class.java)
         }
-        coVerify { repository.addToFavorite(cep.text, note.toEntity()) }
+        coVerify { repository.addToFavorite(cep.text, note) }
     }
     // endregion
 
@@ -94,7 +94,9 @@ class FavoriteUseCaseTest {
 
         // Assert
         responses.assertFlowSuccess { assertThat(it).containsExactlyElementsIn(expectedPlaces) }
-        coVerify(exactly = 1) { repository.getFavoritesByTitle("") }
+        coVerify(exactly = 1) {
+            repository.getFavoritesByTitle("")
+        }
     }
 
     @Test
@@ -166,7 +168,7 @@ class FavoriteUseCaseTest {
 
         // Assert
         responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
-        coVerify(exactly = 1) { repository.updateNoteFromFavorite(note.toEntity()) }
+        coVerify(exactly = 1) { repository.updateNoteFromFavorite(note) }
     }
 
     @Test
@@ -185,7 +187,7 @@ class FavoriteUseCaseTest {
         responses.assertFlowFailure {
             assertThat(it).isInstanceOf(expectedException::class.java)
         }
-        coVerify(exactly = 1) { repository.updateNoteFromFavorite(note.toEntity()) }
+        coVerify(exactly = 1) { repository.updateNoteFromFavorite(note) }
     }
     // endregion
 
@@ -236,7 +238,7 @@ class FavoriteUseCaseTest {
 
         // Assert
         responses.assertFlowSuccess { assertThat(it).isEqualTo(zipcode) }
-        coVerify(exactly = 1) { repository.deleteNoteFromFavorite(zipcode, note.toEntity()) }
+        coVerify(exactly = 1) { repository.deleteNoteFromFavorite(zipcode, note) }
     }
 
     @Test
@@ -256,7 +258,7 @@ class FavoriteUseCaseTest {
         responses.assertFlowFailure {
             assertThat(it).isInstanceOf(expectedException::class.java)
         }
-        coVerify(exactly = 1) { repository.deleteNoteFromFavorite(zipcode, note.toEntity()) }
+        coVerify(exactly = 1) { repository.deleteNoteFromFavorite(zipcode, note) }
     }
     // endregion
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "9541e5cc15254fe661d18186ba4cd706",
+    "identityHash": "019d5aea7079ba2f8eb229133aca7af8",
     "entities": [
       {
         "tableName": "Favorites",
@@ -75,7 +75,7 @@
       },
       {
         "tableName": "Logs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `zipcode_place` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, FOREIGN KEY(`zipcode_place`) REFERENCES `Places`(`zipcode`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `zipcode_place` TEXT NOT NULL COLLATE NOCASE, `timestamp` INTEGER NOT NULL, FOREIGN KEY(`zipcode_place`) REFERENCES `Places`(`zipcode`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -179,7 +179,7 @@
       },
       {
         "tableName": "Places",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zipcode` TEXT NOT NULL, `street` TEXT NOT NULL, `complement` TEXT NOT NULL, `district` TEXT NOT NULL, `city` TEXT NOT NULL, `state` TEXT NOT NULL, `uf` TEXT NOT NULL, `region` TEXT NOT NULL, `country` TEXT NOT NULL, `ddd` TEXT NOT NULL, PRIMARY KEY(`zipcode`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zipcode` TEXT NOT NULL, `street` TEXT NOT NULL, `complement` TEXT NOT NULL, `district` TEXT NOT NULL, `city` TEXT NOT NULL, `state` TEXT NOT NULL, `uf` TEXT NOT NULL, `region` TEXT NOT NULL, `country` TEXT NOT NULL, `ddd` TEXT NOT NULL, `street_search` TEXT NOT NULL, `city_search` TEXT NOT NULL, PRIMARY KEY(`zipcode`))",
         "fields": [
           {
             "fieldPath": "zipcode",
@@ -240,6 +240,18 @@
             "columnName": "ddd",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "streetSearch",
+            "columnName": "street_search",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "citySearch",
+            "columnName": "city_search",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -250,23 +262,41 @@
         },
         "indices": [
           {
-            "name": "index_Places_street_district_city_state",
+            "name": "index_places_street_search",
             "unique": false,
             "columnNames": [
-              "street",
+              "street_search"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_street_search` ON `${TABLE_NAME}` (`street_search`)"
+          },
+          {
+            "name": "index_places_city_search",
+            "unique": false,
+            "columnNames": [
+              "city_search"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_city_search` ON `${TABLE_NAME}` (`city_search`)"
+          },
+          {
+            "name": "index_places_search",
+            "unique": false,
+            "columnNames": [
+              "street_search",
               "district",
-              "city",
+              "city_search",
               "state"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_Places_street_district_city_state` ON `${TABLE_NAME}` (`street`, `district`, `city`, `state`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_search` ON `${TABLE_NAME}` (`street_search`, `district`, `city_search`, `state`)"
           }
         ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9541e5cc15254fe661d18186ba4cd706')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '019d5aea7079ba2f8eb229133aca7af8')"
     ]
   }
 }

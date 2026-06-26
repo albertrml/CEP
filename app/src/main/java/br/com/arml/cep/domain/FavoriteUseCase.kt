@@ -5,10 +5,9 @@ import br.com.arml.cep.model.adapter.toJson
 import br.com.arml.cep.model.adapter.toPlaceList
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
+import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.domain.mapSuccess
-import br.com.arml.cep.model.domain.Place
-import br.com.arml.cep.model.domain.toEntity
 import br.com.arml.cep.model.qualifier.BackupMoshi
 import br.com.arml.cep.model.repository.FavoriteRepository
 import com.squareup.moshi.Moshi
@@ -22,7 +21,7 @@ class FavoriteUseCase @Inject constructor(
 ) {
     /** CREATE **/
     fun addNoteToFavorite(cep: Cep, note: Note) = favoriteRepository
-        .addToFavorite(cep.text, note.toEntity())
+        .addToFavorite(cep.text, note)
 
     /** READ **/
     fun fetchFavorites() = favoriteRepository.getFavoritesByTitle("")
@@ -33,14 +32,14 @@ class FavoriteUseCase @Inject constructor(
 
     /** UPDATE **/
     fun updateNote(note: Note) = favoriteRepository
-        .updateNoteFromFavorite(note.toEntity())
+        .updateNoteFromFavorite(note)
 
     /** DELETE **/
     fun removeFromFavorite(place: Place) = favoriteRepository
         .deleteFromFavorite(place.cep.text)
 
     fun deleteNote(cep: Cep, note: Note) = favoriteRepository
-        .deleteNoteFromFavorite(cep.text, note.toEntity())
+        .deleteNoteFromFavorite(cep.text, note)
 
     /** EXPORT **/
     fun exportFavorites() = favoriteRepository

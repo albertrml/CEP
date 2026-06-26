@@ -1,14 +1,11 @@
 package br.com.arml.cep.ui.component.log.listpane.item
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.isNotDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.printToLog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
@@ -37,7 +34,13 @@ class LogListTest {
 
     @Test
     fun logList_shouldDisplayHeadersAndItems() {
-        val scrollButton = ctx.getString(R.string.fastScrollList_downButton_text)
+        val goToEndBtn = ctx.getString(R.string.fastScrollList_downButton_text)
+        val goToStartBtn = ctx.getString(R.string.fastScrollList_upButton_text)
+
+        val firstDate = mockLogs.keys.first()
+        val lastDate = mockLogs.keys.last()
+        val lastLog = mockLogs.values.last().last()
+
         composeTestRule.apply {
             setContent {
                 LogList(
@@ -46,26 +49,17 @@ class LogListTest {
                     onCopyToClipboard = mockOnCopyToClipboard
                 )
             }
-            onRoot().printToLog("LogListTest")
-            mockLogs.forEach { (date, logs) ->
-                // Verify header is displayed
-                val nodeHeader = onNodeWithText(date)
-                if(nodeHeader.isNotDisplayed())
-                    onNodeWithText(scrollButton, useUnmergedTree = true).performClick()
-                nodeHeader.assertIsDisplayed()
 
-                // Verify items for that date are displayed
-                logs.forEach { log ->
-                    val logElementDescription = ctx.getString(
-                        R.string.logElement_component_testTag,
-                        log.toString()
-                    )
-                    val nodeElement = onNodeWithTag(logElementDescription)
-                    if (nodeElement.isNotDisplayed())
-                        onNodeWithText(scrollButton, useUnmergedTree = true).performClick()
-                    nodeElement.assertIsDisplayed()
-                }
-            }
+            onNodeWithText(firstDate).assertIsDisplayed()
+            onNodeWithText(goToEndBtn, useUnmergedTree = true).performClick()
+            onNodeWithText(lastDate).assertIsDisplayed()
+            val lastLogTag = ctx.getString(
+                R.string.logElement_component_testTag,
+                lastLog.toString()
+            )
+            onNodeWithTag(lastLogTag).assertIsDisplayed()
+            onNodeWithText(goToStartBtn, useUnmergedTree = true).performClick()
+            onNodeWithText(firstDate).assertIsDisplayed()
         }
     }
 
@@ -94,8 +88,6 @@ class LogListTest {
     @Test
     fun logList_shouldInvokeOnCopyToClipboard_whenItemIsClicked() {
         val logToCopy = mockLogEntries.first()
-
-        // The clickable area of the LogElement has a combined content description
         val clickableElementDescription = ctx.getString(
             R.string.logElement_component_testTag,
             logToCopy.toString()

@@ -35,7 +35,7 @@ fun LogScreen(modifier: Modifier = Modifier) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is LogEffect.ShowSnackbar -> {
-                    uiStateHolder.snackbarHostState.showSnackbar(effect.message)
+                    uiStateHolder.snackbarHostState.showSnackbar(effect.message.toString())
                 }
             }
         }

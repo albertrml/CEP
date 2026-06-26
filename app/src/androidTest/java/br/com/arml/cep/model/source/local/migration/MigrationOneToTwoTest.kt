@@ -19,12 +19,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.test.assertNotNull
 
 private const val TEST_DB = "migration-test"
 
 @RunWith(AndroidJUnit4::class)
 class MigrationOneToTwoTest {
-    lateinit var migratedDb: CepRoomDatabase
+    private var migratedDb: CepRoomDatabase? = null
     private val favoriteEntry = mockFavoritePlaces.first()
     private val unfavoriteEntry = mockUnfavoritePlaces.last()
     private val favoriteTimestamp = 1672531200L
@@ -66,7 +67,7 @@ class MigrationOneToTwoTest {
                     )
                 """.trimIndent()
             )
-
+            
             // Inserts the NON-FAVORITE record
             with(unfavoriteEntry) {
                 execSQL(
@@ -149,30 +150,38 @@ class MigrationOneToTwoTest {
             InstrumentationRegistry.getInstrumentation().targetContext,
             CepRoomDatabase::class.java,
             TEST_DB
-        ).addMigrations(MIGRATION_1_2).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
     }
 
     @After
     fun tearDown() {
-        migratedDb.clearAllTables()
-        migratedDb.close()
+        migratedDb?.apply {
+            clearAllTables()
+            close()
+        }
     }
 
     @Test
     fun tables_shouldContainOnlyExpectedTables_whenMigrateFromOneToTwoVersion(){
+        assertNotNull(migratedDb)
         val query = SimpleSQLiteQuery("SELECT name FROM sqlite_master WHERE type='table'")
         val expectedTables = listOf("Favorites", "Logs", "Notes", "Places")
-        val tables = migratedDb.query(query).use { cursor ->
-            val index = cursor.getColumnIndex("name")
-            generateSequence {
-                if (cursor.moveToNext()) cursor.getString(index) else null
-            }.toList()
+        val tables = migratedDb?.run {
+            query(query).use { cursor ->
+                val index = cursor.getColumnIndex("name")
+                generateSequence {
+                    if (cursor.moveToNext()) cursor.getString(index) else null
+                }.toList()
+            }
         }
         assertThat(tables).containsAtLeastElementsIn(expectedTables)
     }
 
     @Test
     fun zipcodeKey_shouldBeEqualAddressZipcode_whenMigrateFromOneToTwoVersion(){
+        assertNotNull(migratedDb)
         val expectedZipcode = listOf(
             favoriteEntry.address.zipCode,
             unfavoriteEntry.address.zipCode
@@ -184,57 +193,70 @@ class MigrationOneToTwoTest {
             LEFT JOIN Favorites f ON p.zipcode = f.zipcode_place
         """.trimIndent()
         )
-        migratedDb.query(query).use{ cursor ->
-            println("--- Joined ZipCode Results ---")
-            val placeZipIndex = 0
-            val logZipIndex = 1
-            val favZipIndex = 2
+        migratedDb?.run {
+            query(query).use { cursor ->
+                println("--- Joined ZipCode Results ---")
+                val placeZipIndex = 0
+                val logZipIndex = 1
+                val favZipIndex = 2
 
-            while(cursor.moveToNext()) {
-                val placeZip = cursor.getString(placeZipIndex)
-                val logZip = cursor.getString(logZipIndex)
-                val favZip = cursor.getString(favZipIndex)
+                while (cursor.moveToNext()) {
+                    val placeZip = cursor.getString(placeZipIndex)
+                    val logZip = cursor.getString(logZipIndex)
+                    val favZip = cursor.getString(favZipIndex)
 
-                println("Place: $placeZip, Log: $logZip, Favorite: $favZip")
+                    println("Place: $placeZip, Log: $logZip, Favorite: $favZip")
 
-                placeZip?.let { assertThat(it).isIn(expectedZipcode) }
-                logZip?.let { assertThat(it).isIn(expectedZipcode) }
-                favZip?.let { assertThat(it).isIn(expectedZipcode) }
+                    placeZip?.let { assertThat(it).isIn(expectedZipcode) }
+                    logZip?.let { assertThat(it).isIn(expectedZipcode) }
+                    favZip?.let { assertThat(it).isIn(expectedZipcode) }
+                }
+                println("------------------------------")
             }
-            println("------------------------------")
         }
     }
 
     @Test
     fun place_shouldContainOnlyNonFavoritePlace_whenQueriedForCachedPlaces() = runTest {
+        assertNotNull(migratedDb)
         val expectedPlace = unfavoriteEntry.toEntity()
         
-        val cachedPlaces = migratedDb.cacheDao().selectCachedPlaceEntitiesByZipcode("").first()
+        val cachedPlaces = migratedDb?.run {
+            cacheDao().selectCachedPlaceEntitiesByZipcode("").first()
+        }
 
         assertThat(cachedPlaces).hasSize(1)
-        assertThat(cachedPlaces.first()).isEqualTo(expectedPlace)
+        assertThat(cachedPlaces?.first()).isEqualTo(expectedPlace)
     }
 
     @Test
     fun logs_shouldContainAllMigratedLogs() = runTest {
+        assertNotNull(migratedDb)
         val favoriteZip = favoriteEntry.address.zipCode
         val unfavoriteZip = unfavoriteEntry.address.zipCode
 
-        val favoriteLog = migratedDb.logDao().selectLogEntitiesByZipcode(favoriteZip).first()
+        val favoriteLog = migratedDb?.run{
+            logDao().selectLogEntitiesByZipcode(favoriteZip).first()
+        }
         assertThat(favoriteLog).hasSize(1)
-        assertThat(favoriteLog.first().timestamp).isEqualTo(favoriteTimestamp)
+        assertThat(favoriteLog?.first()?.timestamp).isEqualTo(favoriteTimestamp)
 
-        val unfavoriteLog = migratedDb.logDao().selectLogEntitiesByZipcode(unfavoriteZip).first()
+        val unfavoriteLog = migratedDb?.run {
+            logDao().selectLogEntitiesByZipcode(unfavoriteZip).first()
+        }
         assertThat(unfavoriteLog).hasSize(1)
-        assertThat(unfavoriteLog.first().timestamp).isEqualTo(unfavoriteTimestamp)
+        assertThat(unfavoriteLog?.first()?.timestamp).isEqualTo(unfavoriteTimestamp)
     }
 
     @Test
     fun favorite_shouldBeMigratedWithItsNotes() = runTest {
+        assertNotNull(migratedDb)
         val expectedPlace = favoriteEntry.toEntity()
         val expectedNote = favoriteEntry.notes.first()
 
-        val favorite = migratedDb.favoriteDao().selectFavorite(expectedPlace.zipcode)
+        val favorite = migratedDb?.run {
+            favoriteDao().selectFavorite(expectedPlace.zipcode)
+        }
 
         assertThat(favorite).isNotNull()
         favorite?.let { placeWithNotes ->

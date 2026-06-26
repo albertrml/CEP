@@ -21,7 +21,7 @@ import br.com.arml.cep.ui.screen.cache.CacheEvent.OnFilterNone
 import br.com.arml.cep.ui.screen.cache.CacheEvent.OnNavigateToDetailPane
 import br.com.arml.cep.ui.screen.cache.CacheEvent.OnNavigateToListPane
 import br.com.arml.cep.ui.screen.component.cache.CacheListPaneComponent
-import br.com.arml.cep.ui.screen.component.search.SearchDetailPane
+import br.com.arml.cep.ui.screen.component.search.CepSearchDetailPane
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.paneEnterTransition
 import br.com.arml.cep.ui.utils.paneExitTransition
@@ -76,7 +76,7 @@ fun CacheScreen(
                     exitTransition = paneExitTransition
                 ) {
                     state.selectedPlace?.let { selectedPlace ->
-                        SearchDetailPane(
+                        CepSearchDetailPane(
                             modifier = marginScreen,
                             response = Response.Success(selectedPlace),
                             onBackPress = {

@@ -1,9 +1,10 @@
+@file:Suppress("UNUSED_EXPRESSION")
 package br.com.arml.cep.domain
 
+import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Response.Failure
 import br.com.arml.cep.model.domain.Response.Loading
 import br.com.arml.cep.model.domain.Response.Success
-import br.com.arml.cep.model.entity.NoteEntity
 import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.model.repository.CacheRepository
 import br.com.arml.cep.model.repository.FavoriteRepository
@@ -35,7 +36,7 @@ class CacheUseCaseTest {
         runTest {
             val place = mockUnfavoritePlaces.first()
             val zipcode = place.cep.text
-            val note = NoteEntity(title = zipcode, content = "")
+            val note = Note.build(title = zipcode, content = "")
             coEvery {
                 favoriteRepository.addToFavorite(any(), any())
             } returns flowOf(Loading, Success(Unit))
