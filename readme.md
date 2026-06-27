@@ -29,21 +29,19 @@ endereço (Rua, Cidade, UF), oferecendo suporte a favoritos e cache local para c
    - Importação e exportação dos favoritos
    - Temas dark e light e reformulação das cores e visuais
 
- - 3.0 (em andamento): 
-   - Restruturação da arquitetura para MVI apenas
-   - Normalização e migração do Room/SQLite para permitir
-     - Multiplas anotações por favoritos
-     - Manutenção simplificada
-     - Adição de filtros avançados
-     - Separação das responsabilidades por funcionalidades
-     - Os favoritos exportados da versão 2.0 não são suportados como fonte de importação, embora o 
-     esquema contido no banco de dados é migrado normalmente para o novo esquema desta versão.
-   - Implementação da busca por endereço completo a partir do endereço parcial (Rua, Cidade, UF)
-   - Refatoração de UI
-     - Mudanças em cores, fontes e layouts
-     - Os favoritos e cache são dispostos em **`FastScrollGrid`**
-     - O histórico de busca é exibido em **`FastScrollColumn`** em razão do **`stickyHeader`**, que 
-     garante a separação do histórico por datas.
+- 3.0 (em andamento):
+- **Restruturação da arquitetura**: Migração total para o padrão MVI, garantindo fluxo de dados unidirecional e estados de UI mais previsíveis.
+- **Migração estrutural do Banco de Dados (Room/SQLite)**:
+    - **Identidade Baseada em Endereço**: Transição da Chave Primária (PK) de `zipcode` para `id` (autoincremento). Isso garante que as anotações do usuário permaneçam vinculadas ao endereço físico, mesmo que o CEP da rua seja alterado ou reindexado por órgãos oficiais.
+    - **Gestão Inteligente de Cache**: Implementação de ciclo de vida para os dados (`created_at` e `ttl`). O app agora realiza limpeza automática de buscas não favoritadas após 30 dias, otimizando o armazenamento e priorizando o que é importante para o usuário.
+    - **Relacionamentos Complexos**: Suporte a múltiplas anotações por endereço favorito através de tabelas associativas.
+    - **Filtros Avançados**: Implementação de filtros por data, CEP, logradouro e etiquetas.
+    - **Compatibilidade**: Os favoritos da versão 2.0 são migrados automaticamente para o novo esquema via Room Migrations, garantindo a preservação dos dados.
+- **Busca Avançada**: Implementação da busca por endereço completo (Rua, Cidade, UF) integrada ao sistema de cache automático.
+- **Refatoração de UI e Componentização**:
+    - Mudanças em cores, fontes e layouts seguindo as diretrizes do Material 3.
+    - Uso de **`FastScrollGrid`** para favoritos e cache, melhorando a performance de rolagem em listas extensas.
+    - **Histórico Organizado**: Exibição em **`FastScrollColumn`** com uso de **`stickyHeader`**, agrupando o histórico de buscas cronologicamente por datas.
 
 
 A versão 2.0 encontra-se disponível na [Google Play](https://play.google.com/store/apps/details?id=br.com.arml.cep)
