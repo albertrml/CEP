@@ -1,6 +1,6 @@
 package br.com.arml.cep.domain
 
-import br.com.arml.cep.model.entity.NoteEntity
+import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.repository.CacheRepository
 import br.com.arml.cep.model.repository.FavoriteRepository
@@ -14,7 +14,7 @@ class CacheUseCase @Inject constructor(
         favoriteRepository
             .addToFavorite(
                 zipcode = this,
-                note = NoteEntity(title = this, content = "")
+                note = Note.build(title = this, content = "")
             )
     }
 

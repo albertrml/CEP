@@ -213,6 +213,14 @@
     <string name="searchListPane_searchButton_testTag">SearchScreenListPaneSearchButton</string>
     <string name="searchListPane_header_label">Busca</string>
 
+    <string name="cepSearchComponent_searchButton_testTag">SearchScreenListPaneSearchButton</string>
+    <string name="cepSearchComponent_searchButton_label">Pesquisar</string>
+
+    <string name="addressSearchComponent_uf_label">Estado (UF)</string>
+    <string name="addressSearchComponent_city_label">Cidade</string>
+    <string name="addressSearchComponent_street_label">Logradouro</string>
+    <string name="addressSearchComponent_searchButton_label">Pesquisar</string>
+
     <!-- Search Detail Pane Component -->
     <string name="searchDetailPane_header_label">Endereço</string>
     <string name="searchDetailPaneOnLoading_component_testTag">SearchDetailPaneOnLoadingComponentTestTag</string>
@@ -224,6 +232,8 @@
     <string name="searchDetailPaneOnSuccess_saveButton_favoriteLabel">Salvo</string>
     <string name="searchDetailPaneOnSuccess_saveButton_description">Salvar como favorito</string>
 
+
+
     <!-- Navigation -->
     <string name="navigation_cacheDestination_label">Cache</string>
     <string name="navigation_cacheDestination_description">Ceps em cache</string>
@@ -233,4 +243,37 @@
     <string name="navigation_logDestination_description">Histórico de pesquisa</string>
     <string name="navigation_searchDestination_label">Procurar</string>
     <string name="navigation_searchDestination_description">Procurar CEP</string>
+    <string name="searchTab_addressTab_label">Endereço</string>
+    <string name="searchTab_addressTab_description">Buscar por endereço</string>
+    <string name="searchTab_cepTab_label">CEP</string>
+    <string name="searchTab_cepTab_description">Buscar por CEP</string>
+
+    <!-- Feedback Messages -->
+    <string name="favorite_unwanted_selected_none">Nenhum favorito selecionado</string>
+    <string name="favorite_add_note_failure">Não foi possível adicionar nota ao CEP</string>
+    <string name="favorite_delete_note_failure">Não foi possível remover nota</string>
+    <string name="favorite_update_note_failure">Não foi possível atualizar nota</string>
+    <string name="favorite_update_note_success">Nota atualizada com sucesso</string>
+    <string name="favorite_import_success">Backup importado com sucesso</string>
+    <string name="favorite_import_failure">Não foi possível importar backup</string>
+    <string name="favorite_export_success">Backup exportado com sucesso</string>
+    <string name="favorite_export_failure">Não foi possível exportar backup</string>
+    <string name="favorite_unfav_success">O cep %1$s foi desfavoritado com sucesso</string>
+    <string name="favorite_unfav_failure">Não foi possível desfavoritar o cep %1$s</string>
+    <string name="favorite_add_note_success">Nota adicionada ao cep %1$s</string>
+    <string name="favorite_delete_note_success">Nota removida do cep %1$s</string>
+
+    <string name="search_add_favorite_failure">Não foi possível adicionar ao favorito</string>
+    <string name="search_add_favorite_success">CEP %1$s adicionado aos favoritos</string>
+
+    <string name="log_delete_all_success">Todos os logs foram deletados</string>
+    <string name="log_delete_all_failure">Não foi possível deletar todos os logs</string>
+
+    <string name="cache_delete_all_success">Todos registros em cache foram excluídos</string>
+    <string name="cache_delete_all_failure">Não foi possível excluir todos os registros em cache</string>
+    <string name="cache_delete_success">CEP %1$s removido do cache</string>
+    <string name="cache_delete_failure">Não foi possível remover o CEP %1$s do cache</string>
+    <string name="cache_add_favorite_success">CEP %1$s adicionado aos favoritos</string>
+    <string name="cache_add_favorite_failure">Não foi possível adicionar o CEP %1$s aos favoritos</string>
+
 </resources>

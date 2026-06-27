@@ -17,6 +17,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,12 +36,13 @@ import br.com.arml.cep.ui.screen.favorite.FavoriteState
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.PlaceFilterOption
 import br.com.arml.cep.ui.utils.ShowResults
+import br.com.arml.cep.ui.utils.UiText
 
 @Composable
 fun FavoriteListPaneComponent(
     modifier: Modifier = Modifier,
     state: FavoriteState,
-    snackbarMsg: String? = null,
+    snackbarMsg: UiText? = null,
     onImportClick: () -> Unit = {},
     onExportClick: () -> Unit = {},
     onCepFilter: (String) -> Unit = {},
@@ -53,14 +55,15 @@ fun FavoriteListPaneComponent(
 ) {
     val fetchResponse = state.places
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
     var selectedFilter by rememberSaveable(stateSaver = PlaceFilterOption.saver) {
         mutableStateOf(PlaceFilterOption.None)
     }
 
     LaunchedEffect(snackbarMsg) {
-        snackbarMsg?.let { message ->
+        snackbarMsg?.let { uiText ->
             snackbarHostState.showSnackbar(
-                message = message,
+                message = uiText.asString(context),
                 duration = SnackbarDuration.Short
             )
         }

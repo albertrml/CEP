@@ -27,7 +27,7 @@ import java.sql.Timestamp
 data class LogEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    @ColumnInfo(name = "zipcode_place")
+    @ColumnInfo(name = "zipcode_place", collate = ColumnInfo.NOCASE)
     val zipcodePlace: String,
     val timestamp: Long = System.currentTimeMillis(),
 )

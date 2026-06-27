@@ -19,14 +19,14 @@ import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.mock.mockPlaces
 import br.com.arml.cep.ui.screen.component.common.header.Header
-import br.com.arml.cep.ui.screen.component.search.detailpane.SearchDetailPaneOnFailure
-import br.com.arml.cep.ui.screen.component.search.detailpane.SearchDetailPaneOnLoading
-import br.com.arml.cep.ui.screen.component.search.detailpane.SearchDetailPaneOnSuccess
+import br.com.arml.cep.ui.screen.component.search.detailpane.CepSearchDetailPaneOnFailure
+import br.com.arml.cep.ui.screen.component.search.detailpane.CepSearchDetailPaneOnLoading
+import br.com.arml.cep.ui.screen.component.search.detailpane.CepSearchDetailPaneOnSuccess
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.ShowResults
 
 @Composable
-fun SearchDetailPane(
+fun CepSearchDetailPane(
     modifier: Modifier = Modifier,
     response: Response<Place>,
     onBackPress: () -> Unit,
@@ -50,7 +50,7 @@ fun SearchDetailPane(
         ) {
             response.ShowResults(
                 successContent = { place ->
-                    SearchDetailPaneOnSuccess(
+                    CepSearchDetailPaneOnSuccess(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = MaterialTheme.dimens.smallPadding),
@@ -59,12 +59,12 @@ fun SearchDetailPane(
                     )
                 },
                 loadingContent = {
-                    SearchDetailPaneOnLoading(
+                    CepSearchDetailPaneOnLoading(
                         modifier = Modifier.fillMaxSize()
                     )
                 },
                 failureContent = { failure ->
-                    SearchDetailPaneOnFailure(
+                    CepSearchDetailPaneOnFailure(
                         modifier = Modifier.fillMaxSize(),
                         failure = failure
                     )
@@ -109,7 +109,7 @@ fun SearchDetailPane(
 @Composable
 fun DisplayScreenPreview() {
     val place = mockPlaces(1,false).first()
-    SearchDetailPane(
+    CepSearchDetailPane(
         modifier = Modifier
             .fillMaxSize()
             .padding(MaterialTheme.dimens.mediumMargin),
@@ -123,7 +123,7 @@ fun DisplayScreenPreview() {
 @Composable
 fun DisplayScreenWithFavoritePreview() {
     val place = mockPlaces(1,true).first()
-    SearchDetailPane(
+    CepSearchDetailPane(
         modifier = Modifier
             .fillMaxSize()
             .padding(MaterialTheme.dimens.mediumMargin),

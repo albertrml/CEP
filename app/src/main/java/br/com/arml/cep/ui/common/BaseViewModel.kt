@@ -3,14 +3,11 @@ package br.com.arml.cep.ui.common
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.arml.cep.model.domain.Response
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -60,7 +57,7 @@ abstract class BaseViewModel<S: Reducer.ViewState, E: Reducer.ViewEvent, F: Redu
         onResponse: (Response<T>) -> E
     ) {
         viewModelScope.launch {
-            flow.onEach { response ->
+            flow.collect { response ->
                 when (response) {
                     is Response.Loading -> {
                         sendEvent(onResponse(response))
@@ -68,10 +65,9 @@ abstract class BaseViewModel<S: Reducer.ViewState, E: Reducer.ViewEvent, F: Redu
                     is Response.Success,
                     is Response.Failure -> {
                         sendEventForEffect(onResponse(response))
-                        cancel()
                     }
                 }
-            }.launchIn(this)
+            }
         }
     }
 }

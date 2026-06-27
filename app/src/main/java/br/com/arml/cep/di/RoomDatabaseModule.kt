@@ -28,7 +28,9 @@ object RoomDatabaseModule {
                 CepRoomDatabase::class.java,
                 DATABASE_NAME
             )
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(
+                MIGRATION_1_2
+            )
             .build()
     }
 

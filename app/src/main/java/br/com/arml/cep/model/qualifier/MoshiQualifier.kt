@@ -1,6 +1,6 @@
 package br.com.arml.cep.model.qualifier
 
-import jakarta.inject.Qualifier
+import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)

@@ -3,6 +3,7 @@ package br.com.arml.cep.model.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 
 @Entity(
     tableName = "Favorites",
@@ -20,11 +21,15 @@ import androidx.room.ForeignKey
             childColumns = ["id_note"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index("zipcode_place"),
+        Index("id_note")
     ]
 )
 data class FavoriteEntity(
-    @ColumnInfo(name = "zipcode_place", index = true)
+    @ColumnInfo(name = "zipcode_place")
     val zipcodePlace: String,
-    @ColumnInfo(name = "id_note", index = true)
+    @ColumnInfo(name = "id_note")
     val idNote: Long
 )

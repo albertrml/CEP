@@ -11,7 +11,7 @@ import br.com.arml.cep.R.string.searchDetailPaneOnLoading_component_testTag
 import br.com.arml.cep.R.string.searchDetailPaneOnLoading_loading_testTag
 
 @Composable
-fun SearchDetailPaneOnLoading(
+fun CepSearchDetailPaneOnLoading(
     modifier: Modifier = Modifier
 ) {
     Box(

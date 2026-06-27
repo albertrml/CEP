@@ -7,7 +7,7 @@ import br.com.arml.cep.model.domain.toEntity
 import br.com.arml.cep.model.domain.toResponseFlow
 import br.com.arml.cep.model.entity.toModel
 import br.com.arml.cep.model.source.local.CacheDao
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 class CacheRepository @Inject constructor(
     private val cacheDao: CacheDao

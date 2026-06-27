@@ -34,6 +34,9 @@ data class Dimens(
 
     // Size
     val minSize: Dp = 320.dp,
+    val smallIconSize: Dp = 32.dp,
+    val mediumIconSize: Dp = 48.dp,
+    val largeIconize: Dp = 64.dp,
 
     // Spacing
     val xSmallSpacing: Dp = 0.dp,

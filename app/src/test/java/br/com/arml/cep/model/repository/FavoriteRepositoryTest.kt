@@ -5,6 +5,7 @@ import br.com.arml.cep.model.domain.toEntity
 import br.com.arml.cep.model.entity.relation.toModel
 import br.com.arml.cep.model.exception.BackupException
 import br.com.arml.cep.model.exception.CepDatabaseException.IllegalNoteQuantity
+import br.com.arml.cep.model.mock.mockCep
 import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.model.mock.mockNotes
 import br.com.arml.cep.model.mock.mockPlaceWithNotes
@@ -35,9 +36,8 @@ class FavoriteRepositoryTest {
     // region Insert tests
     @Test
     fun `addToFavorite should Emit Success when dao call is successful`() = runTest {
-        val (place, notes) = mockPlaceWithNotes(1).first()
-        val note = notes.first()
-        val zipcode = place.zipcode
+        val note = mockNotes.first()
+        val zipcode = mockCep(1).toString()
         coEvery { favoriteDao.countNotesEntitiesFromFavorite(any()) } returns 0
         coEvery { favoriteDao.doesTitleExist(any()) } returns false
         coJustRun { favoriteDao.insertNoteEntityToFavorite(any(), any()) }
@@ -45,15 +45,15 @@ class FavoriteRepositoryTest {
         val responses = favoriteRepository.addToFavorite(zipcode, note).toList()
 
         responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
-        coVerify(exactly = 1) { favoriteDao.insertNoteEntityToFavorite(zipcode, note) }
+        coVerify(exactly = 1) { favoriteDao.insertNoteEntityToFavorite(zipcode, note.toEntity()) }
     }
 
     @Test
-    fun `addToFavorite should treat title conflict and emits  Success when title note already exists`() = runTest {
-        val (place, notes) = mockPlaceWithNotes(1).first()
-        val note = notes.first()
-        val zipcode = place.zipcode
-        val expectedNote = note.copy(title = "${note.title} (2)")
+    fun `addToFavorite should treat title conflict and emits Success when title note already exists`() = runTest {
+        val note = mockNotes.first()
+        val zipcode = mockCep(1).toString()
+        val noteEntity = note.toEntity()
+        val expectedNoteEntity = noteEntity.copy(title = "${noteEntity.title} (2)")
         with(favoriteDao) {
             coEvery { countNotesEntitiesFromFavorite(any()) } returns 1
             coEvery { doesTitleExist(any()) } returnsMany listOf(true, false)
@@ -64,15 +64,14 @@ class FavoriteRepositoryTest {
 
         responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
         coVerify(exactly = 1) {
-            favoriteDao.insertNoteEntityToFavorite(zipcode, expectedNote)
+            favoriteDao.insertNoteEntityToFavorite(zipcode, expectedNoteEntity)
         }
     }
 
     @Test
     fun `addToFavorite should Emit Failure when dao throws Exception`() = runTest {
-        val (place, notes) = mockPlaceWithNotes(1).first()
-        val note = notes.first()
-        val zipcode = place.zipcode
+        val note = mockNotes.first()
+        val zipcode = mockCep(1).toString()
         val expectedException = SQLiteException("Test DB Error")
         coEvery { favoriteDao.doesTitleExist(any()) } returns false
         coEvery { favoriteDao.countNotesEntitiesFromFavorite(any()) } returns 0
@@ -83,7 +82,7 @@ class FavoriteRepositoryTest {
         val responses = favoriteRepository.addToFavorite(zipcode, note).toList()
 
         responses.assertFlowFailure { assertThat(it).isInstanceOf(expectedException::class.java) }
-        coVerify(exactly = 1) { favoriteDao.insertNoteEntityToFavorite(zipcode, note) }
+        coVerify(exactly = 1) { favoriteDao.insertNoteEntityToFavorite(zipcode, note.toEntity()) }
     }
     // endregion
 
@@ -91,9 +90,8 @@ class FavoriteRepositoryTest {
     @Test
     fun `getFavoritesByTitle should Emit Success with places when dao returns a map`() = runTest {
         val data = mockPlaceWithNotes(5)
-        val mapData = data.associate { it.place to it.notes }
         val expected = data.map { it.toModel() }
-        coEvery { favoriteDao.selectFavoritesByTitle(any()) } returns flowOf(mapData)
+        coEvery { favoriteDao.selectFavoritesByTitle(any()) } returns flowOf(data)
 
         val responses = favoriteRepository.getFavoritesByTitle("").toList()
 
@@ -103,7 +101,7 @@ class FavoriteRepositoryTest {
 
     @Test
     fun`getFavoritesByTitle should Emit Success with empty list when dao returns an empty map`() = runTest {
-        coEvery { favoriteDao.selectFavoritesByTitle(any()) } returns flowOf(emptyMap())
+        coEvery { favoriteDao.selectFavoritesByTitle(any()) } returns flowOf(emptyList())
 
         val responses = favoriteRepository.getFavoritesByTitle("").toList()
 
@@ -159,25 +157,25 @@ class FavoriteRepositoryTest {
     // region Update tests
     @Test
     fun `updateNoteFromFavorite should Emit Success when dao call is successful`() = runTest {
-        val note = mockNotes.first().toEntity()
-        coJustRun { favoriteDao.updateNote(note) }
+        val note = mockNotes.first()
+        coJustRun { favoriteDao.updateNote(any()) }
 
         val responses = favoriteRepository.updateNoteFromFavorite(note).toList()
 
         responses.assertFlowSuccess { assertThat(it).isEqualTo(Unit) }
-        coVerify(exactly = 1) { favoriteDao.updateNote(note) }
+        coVerify(exactly = 1) { favoriteDao.updateNote(note.toEntity()) }
     }
 
     @Test
     fun `updateNoteFromFavorite should Emit Failure when dao throws Exception`() = runTest {
-        val note = mockNotes.first().toEntity()
+        val note = mockNotes.first()
         val expectedException = SQLiteException("Test DB Error")
         coEvery { favoriteDao.updateNote(any()) } throws expectedException
 
         val responses = favoriteRepository.updateNoteFromFavorite(note).toList()
 
         responses.assertFlowFailure { assertThat(it).isInstanceOf(expectedException::class.java) }
-        coVerify(exactly = 1) { favoriteDao.updateNote(note) }
+        coVerify(exactly = 1) { favoriteDao.updateNote(note.toEntity()) }
     }
     // endregion
 
@@ -207,36 +205,38 @@ class FavoriteRepositoryTest {
 
     @Test
     fun `deleteNoteFromFavorite should Emit Success when note count is greater than one`() = runTest {
-        val (place, notes) = mockPlaceWithNotes(1).first()
-        val expectedZipcode = place.zipcode
+        val note = mockNotes.first()
+        val zipcode = mockCep(1).toString()
         coEvery { favoriteDao.countNotesEntitiesFromFavorite(any()) } returns 2
         coJustRun { favoriteDao.deleteNote(any()) }
 
-        val responses = favoriteRepository.deleteNoteFromFavorite(place.zipcode, notes.first()).toList()
+        val responses = favoriteRepository.deleteNoteFromFavorite(zipcode, note).toList()
 
-        responses.assertFlowSuccess { assertThat(it).isEqualTo(expectedZipcode) }
-        coVerify(exactly = 1) { favoriteDao.deleteNote(notes.first()) }
+        responses.assertFlowSuccess { assertThat(it).isEqualTo(zipcode) }
+        coVerify(exactly = 1) { favoriteDao.deleteNote(note.toEntity()) }
     }
 
     @Test
     fun `deleteNoteFromFavorite should Emit Failure when dao throws Exception`() = runTest {
-        val (place, notes) = mockPlaceWithNotes(1).first()
+        val note = mockNotes.first()
+        val zipcode = mockCep(1).toString()
         val expectedException = SQLiteException("Test DB Error")
         coEvery { favoriteDao.countNotesEntitiesFromFavorite(any()) } returns 2
         coEvery { favoriteDao.deleteNote(any()) } throws expectedException
 
-        val responses = favoriteRepository.deleteNoteFromFavorite(place.zipcode, notes.first()).toList()
+        val responses = favoriteRepository.deleteNoteFromFavorite(zipcode, note).toList()
 
         responses.assertFlowFailure { assertThat(it).isInstanceOf(expectedException::class.java) }
-        coVerify(exactly = 1) { favoriteDao.deleteNote(notes.first()) }
+        coVerify(exactly = 1) { favoriteDao.deleteNote(note.toEntity()) }
     }
 
     @Test
     fun `deleteNoteFromFavorite should Emit Failure when there is only one note`() = runTest {
-        val (place, notes) = mockPlaceWithNotes(1).first()
+        val note = mockNotes.first()
+        val zipcode = mockCep(1).toString()
         coEvery { favoriteDao.countNotesEntitiesFromFavorite(any()) } returns 1
 
-        val responses = favoriteRepository.deleteNoteFromFavorite(place.zipcode, notes.first()).toList()
+        val responses = favoriteRepository.deleteNoteFromFavorite(zipcode, note).toList()
 
         responses.assertFlowFailure { assertThat(it).isInstanceOf(IllegalNoteQuantity::class.java) }
         coVerify(exactly = 0) { favoriteDao.deleteNote(any()) } // Important: verify delete is never called

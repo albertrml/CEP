@@ -3,7 +3,7 @@ package br.com.arml.cep.ui.favorite
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasContentDescription
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
@@ -23,6 +23,7 @@ import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.screen.component.favorite.FavoriteListPaneComponent
 import br.com.arml.cep.ui.screen.favorite.FavoriteState
 import br.com.arml.cep.ui.utils.PlaceFilterOption
+import br.com.arml.cep.ui.utils.UiText
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Rule
@@ -105,7 +106,7 @@ class FavoriteListPaneComponentTest {
 
     @Test
     fun favoriteListPaneComponent_shouldDisplaySnackbar_whenSnackbarMsgIsReceived(){
-        val expectedSnackbarMsg = "Message"
+        val expectedSnackbarMsg = UiText.DynamicString("Message")
         componentTest.apply{
             setContent {
                 FavoriteListPaneComponent(
@@ -113,7 +114,7 @@ class FavoriteListPaneComponentTest {
                     snackbarMsg = expectedSnackbarMsg
                 )
             }
-            onNodeWithText(expectedSnackbarMsg).assertIsDisplayed()
+            onNodeWithText(expectedSnackbarMsg.value, useUnmergedTree = true).assertIsDisplayed()
         }
     }
 

@@ -1,8 +1,9 @@
+@file:Suppress("UNUSED_EXPRESSION")
 package br.com.arml.cep.domain
 
+import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.NoteEntity
 import br.com.arml.cep.model.exception.CepException
 import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.model.repository.FavoriteRepository
@@ -98,12 +99,17 @@ class SearchUseCaseTest {
     }
     // endregion
 
+    // region searchPlaces tests
+
+
+    // endregion
+
     // region addToFavorite tests
     @Test
     fun `addToFavorite should emit Success`() = runTest {
         val place = mockUnfavoritePlaces.first()
         val zipcode = place.cep.text
-        val note = NoteEntity(title = zipcode, content = "")
+        val note = Note.build(title = zipcode, content = "")
         mockAddFavoriteSuccess()
 
         val responses = searchUseCase.addToFavorite(place).toList()

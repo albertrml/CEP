@@ -2,7 +2,7 @@ package br.com.arml.cep.ui.search
 
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextClearance
@@ -10,6 +10,7 @@ import androidx.compose.ui.test.performTextInput
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.ui.screen.component.search.SearchListPane
+import br.com.arml.cep.ui.screen.component.search.listpane.SearchTab
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Rule
@@ -32,7 +33,10 @@ class SearchListPaneTest {
     fun searchListPaneTest_shouldDisplayHeader_whenSearchListPaneIsCalled(){
         composeTestRule.apply {
             setContent {
-                SearchListPane(onSearchCep = mockOnSearchCep)
+                SearchListPane(
+                    onSearchCep = mockOnSearchCep,
+                    selectedTab = SearchTab.CEP
+                )
             }
             onNodeWithTag(headerTag).assertExists()
             onNodeWithTag(searchFieldTag).assertExists()
@@ -48,7 +52,10 @@ class SearchListPaneTest {
         )
         composeTestRule.apply {
             setContent {
-                SearchListPane(onSearchCep = mockOnSearchCep)
+                SearchListPane(
+                    onSearchCep = mockOnSearchCep,
+                    selectedTab = SearchTab.CEP
+                )
             }
             invalidQueries.forEach { query ->
                 onNodeWithTag(searchFieldTag).performTextInput(query)
@@ -64,7 +71,10 @@ class SearchListPaneTest {
         val expectedQuery = "12345-678"
         composeTestRule.apply {
             setContent {
-                SearchListPane(onSearchCep = mockOnSearchCep)
+                SearchListPane(
+                    onSearchCep = mockOnSearchCep,
+                    selectedTab = SearchTab.CEP
+                )
             }
             onNodeWithTag(searchFieldTag).performTextInput(query)
             onNodeWithTag(searchButtonTag).assertIsEnabled().performClick()

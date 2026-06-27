@@ -1,11 +1,6 @@
 package br.com.arml.cep.ui.screen.cache
 
-import br.com.arml.cep.application.EnvironmentVariables.CacheReducerVariables.DELETE_ALL_CACHE_FAILURE_MSG
-import br.com.arml.cep.application.EnvironmentVariables.CacheReducerVariables.DELETE_ALL_CACHE_SUCCESS_MSG
-import br.com.arml.cep.application.EnvironmentVariables.CacheReducerVariables.getAddingFavoriteFailureMessage
-import br.com.arml.cep.application.EnvironmentVariables.CacheReducerVariables.getAddingFavoriteSuccessMessage
-import br.com.arml.cep.application.EnvironmentVariables.CacheReducerVariables.getDeletingCacheFailureMessage
-import br.com.arml.cep.application.EnvironmentVariables.CacheReducerVariables.getDeletingCacheSuccessMessage
+import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Response.Failure
 import br.com.arml.cep.model.domain.Response.Loading
 import br.com.arml.cep.model.domain.Response.Success
@@ -17,6 +12,7 @@ import br.com.arml.cep.ui.screen.cache.CacheEvent.OnDeleteResponse
 import br.com.arml.cep.ui.screen.cache.CacheEvent.OnFetchCacheResponse
 import br.com.arml.cep.ui.screen.cache.CacheEvent.OnNavigateToDetailPane
 import br.com.arml.cep.ui.screen.cache.CacheEvent.OnNavigateToListPane
+import br.com.arml.cep.ui.utils.UiText
 
 class CacheReducer: Reducer<CacheState, CacheEvent, CacheEffect> {
     override fun reduce(
@@ -28,8 +24,8 @@ class CacheReducer: Reducer<CacheState, CacheEvent, CacheEffect> {
                 val (response, zipcode) = event
                 val effect = when(response){
                     is Loading -> null
-                    is Success -> ShowSnackbar(getAddingFavoriteSuccessMessage(zipcode))
-                    is Failure -> ShowSnackbar(getAddingFavoriteFailureMessage(zipcode))
+                    is Success -> ShowSnackbar(UiText.StringResource(R.string.cache_add_favorite_success, zipcode))
+                    is Failure -> ShowSnackbar(UiText.StringResource(R.string.cache_add_favorite_failure))
                 }
                 previousState to effect
             }
@@ -37,8 +33,8 @@ class CacheReducer: Reducer<CacheState, CacheEvent, CacheEffect> {
             is OnDeleteAllResponse -> {
                 val effect = when(event.response){
                     is Loading -> null
-                    is Success -> ShowSnackbar(DELETE_ALL_CACHE_SUCCESS_MSG)
-                    is Failure -> ShowSnackbar(DELETE_ALL_CACHE_FAILURE_MSG)
+                    is Success -> ShowSnackbar(UiText.StringResource(R.string.cache_delete_all_success))
+                    is Failure -> ShowSnackbar(UiText.StringResource(R.string.cache_delete_all_failure))
                 }
                 previousState to effect
             }
@@ -47,8 +43,8 @@ class CacheReducer: Reducer<CacheState, CacheEvent, CacheEffect> {
                 val (response, zipcode) = event
                 val effect = when(response) {
                     is Loading -> null
-                    is Success -> ShowSnackbar(getDeletingCacheSuccessMessage(zipcode))
-                    is Failure -> ShowSnackbar(getDeletingCacheFailureMessage(zipcode))
+                    is Success -> ShowSnackbar(UiText.StringResource(R.string.cache_delete_success, zipcode))
+                    is Failure -> ShowSnackbar(UiText.StringResource(R.string.cache_delete_failure))
                 }
                 previousState to effect
             }

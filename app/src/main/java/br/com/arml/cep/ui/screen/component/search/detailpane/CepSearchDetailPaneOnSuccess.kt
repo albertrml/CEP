@@ -26,7 +26,7 @@ import br.com.arml.cep.ui.screen.component.common.address.AddressForms
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
-fun SearchDetailPaneOnSuccess(
+fun CepSearchDetailPaneOnSuccess(
     modifier: Modifier = Modifier,
     place: Place,
     onFavoriteClick: (Place) -> Unit

@@ -5,7 +5,7 @@ import java.sql.Timestamp
 
 const val BASE_TIMESTAMP = 1749100000000L
 
-val mockLogEntries = List<Log>(15){ i ->
+val mockLogEntries = List<Log>(14){ i ->
     Log(
         cep = mockCep(i),
         timestamp = getMockDate(i)

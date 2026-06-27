@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -36,6 +37,7 @@ import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnImportFavorites
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnNavigateToDetailPane
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnSelectFavoriteToUnwanted
 import br.com.arml.cep.ui.theme.dimens
+import br.com.arml.cep.ui.utils.UiText
 import br.com.arml.cep.ui.utils.exportBackupLauncher
 import br.com.arml.cep.ui.utils.getExportIntent
 import br.com.arml.cep.ui.utils.getImportIntent
@@ -48,7 +50,7 @@ import br.com.arml.cep.ui.utils.paneExitTransition
 fun FavoriteScreen(modifier: Modifier = Modifier) {
     val viewmodel = hiltViewModel<FavoriteViewModel>()
     val state by viewmodel.state.collectAsStateWithLifecycle()
-    var snackBarMessage by rememberSaveable { mutableStateOf<String?>(null) }
+    var snackBarMessage by remember { mutableStateOf<UiText?>(null) }
     val paneScaffoldStateHolder = rememberNavigableListDetailPaneScaffoldStateHolder()
 
     var pendingExportJson by rememberSaveable { mutableStateOf("") }
