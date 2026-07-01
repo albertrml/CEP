@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import br.com.arml.cep.model.entity.LogEntity
+import br.com.arml.cep.model.entity.relation.PlaceWithLog
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,16 +17,20 @@ interface LogDao {
 
     /** Read **/
     // Search for logs which match the query in the zipcode_place column
+    @Transaction
     @Query(
         """
-        SELECT * FROM logs
-        WHERE zipcode_place LIKE '%'||:query||'%'
-        ORDER BY timestamp DESC
+        SELECT l.* 
+        FROM logs l
+        JOIN Places p ON l.id_place = p.id
+        WHERE p.zipcode LIKE '%'||:query||'%'
+        ORDER BY l.timestamp DESC
     """
     )
-    fun selectLogEntitiesByZipcode(query: String = ""): Flow<List<LogEntity>>
+    fun selectLogEntitiesByZipcode(query: String = ""): Flow<List<PlaceWithLog>>
 
     // Search for logs which are in the given period of time
+    @Transaction
     @Query(
         """
         SELECT * FROM logs
@@ -35,7 +41,7 @@ interface LogDao {
     fun selectLogEntitiesByPeriod(
         start: Long = 0L,
         end: Long = System.currentTimeMillis()
-    ): Flow<List<LogEntity>>
+    ): Flow<List<PlaceWithLog>>
 
     /** Delete **/
     @Delete

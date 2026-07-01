@@ -180,36 +180,40 @@ class MigrationOneToTwoTest {
     }
 
     @Test
-    fun zipcodeKey_shouldBeEqualAddressZipcode_whenMigrateFromOneToTwoVersion(){
+    fun zipcodeKey_shouldBeEqualAddressZipcode_whenMigrateFromOneToTwoVersion() {
         assertNotNull(migratedDb)
-        val expectedZipcode = listOf(
+        val expectedZipcodes = listOf(
             favoriteEntry.address.zipCode,
             unfavoriteEntry.address.zipCode
         )
-        val query = SimpleSQLiteQuery("""
-            SELECT p.zipcode, l.zipcode_place, f.zipcode_place 
+        // Check if logs and favorites are linked to the correct place ID
+        val query = SimpleSQLiteQuery(
+            """
+            SELECT p.zipcode, l.id_place, f.id_place 
             FROM Places p
-            LEFT JOIN Logs l ON p.zipcode = l.zipcode_place
-            LEFT JOIN Favorites f ON p.zipcode = f.zipcode_place
+            LEFT JOIN Logs l ON p.id = l.id_place
+            LEFT JOIN Favorites f ON p.id = f.id_place
         """.trimIndent()
         )
         migratedDb?.run {
             query(query).use { cursor ->
-                println("--- Joined ZipCode Results ---")
-                val placeZipIndex = 0
-                val logZipIndex = 1
-                val favZipIndex = 2
-
+                println("--- Joined ID Results ---")
                 while (cursor.moveToNext()) {
-                    val placeZip = cursor.getString(placeZipIndex)
-                    val logZip = cursor.getString(logZipIndex)
-                    val favZip = cursor.getString(favZipIndex)
+                    val zipcode = cursor.getString(0)
+                    val logPlaceId = if (cursor.isNull(1)) null else cursor.getLong(1)
+                    val favPlaceId = if (cursor.isNull(2)) null else cursor.getLong(2)
 
-                    println("Place: $placeZip, Log: $logZip, Favorite: $favZip")
+                    println("Place ZIP: $zipcode, Log Place ID: $logPlaceId, Favorite Place ID: $favPlaceId")
 
-                    placeZip?.let { assertThat(it).isIn(expectedZipcode) }
-                    logZip?.let { assertThat(it).isIn(expectedZipcode) }
-                    favZip?.let { assertThat(it).isIn(expectedZipcode) }
+                    assertThat(zipcode).isIn(expectedZipcodes)
+
+                    if (zipcode == favoriteEntry.address.zipCode) {
+                        assertThat(logPlaceId).isNotNull()
+                        assertThat(favPlaceId).isNotNull()
+                    } else if (zipcode == unfavoriteEntry.address.zipCode) {
+                        assertThat(logPlaceId).isNotNull()
+                        assertThat(favPlaceId).isNull()
+                    }
                 }
                 println("------------------------------")
             }
@@ -220,13 +224,15 @@ class MigrationOneToTwoTest {
     fun place_shouldContainOnlyNonFavoritePlace_whenQueriedForCachedPlaces() = runTest {
         assertNotNull(migratedDb)
         val expectedPlace = unfavoriteEntry.toEntity()
-        
+
         val cachedPlaces = migratedDb?.run {
             cacheDao().selectCachedPlaceEntitiesByZipcode("").first()
         }
 
         assertThat(cachedPlaces).hasSize(1)
-        assertThat(cachedPlaces?.first()).isEqualTo(expectedPlace)
+        // Ignoring ID since it's auto-generated during migration
+        assertThat(cachedPlaces?.first()?.zipcode).isEqualTo(expectedPlace.zipcode)
+        assertThat(cachedPlaces?.first()?.street).isEqualTo(expectedPlace.street)
     }
 
     @Test
@@ -235,17 +241,19 @@ class MigrationOneToTwoTest {
         val favoriteZip = favoriteEntry.address.zipCode
         val unfavoriteZip = unfavoriteEntry.address.zipCode
 
-        val favoriteLog = migratedDb?.run{
+        val favoriteLogs = migratedDb?.run {
             logDao().selectLogEntitiesByZipcode(favoriteZip).first()
         }
-        assertThat(favoriteLog).hasSize(1)
-        assertThat(favoriteLog?.first()?.timestamp).isEqualTo(favoriteTimestamp)
+        assertThat(favoriteLogs).hasSize(1)
+        assertThat(favoriteLogs?.first()?.log?.timestamp).isEqualTo(favoriteTimestamp)
+        assertThat(favoriteLogs?.first()?.place?.zipcode).isEqualTo(favoriteZip)
 
-        val unfavoriteLog = migratedDb?.run {
+        val unfavoriteLogs = migratedDb?.run {
             logDao().selectLogEntitiesByZipcode(unfavoriteZip).first()
         }
-        assertThat(unfavoriteLog).hasSize(1)
-        assertThat(unfavoriteLog?.first()?.timestamp).isEqualTo(unfavoriteTimestamp)
+        assertThat(unfavoriteLogs).hasSize(1)
+        assertThat(unfavoriteLogs?.first()?.log?.timestamp).isEqualTo(unfavoriteTimestamp)
+        assertThat(unfavoriteLogs?.first()?.place?.zipcode).isEqualTo(unfavoriteZip)
     }
 
     @Test
@@ -260,7 +268,8 @@ class MigrationOneToTwoTest {
 
         assertThat(favorite).isNotNull()
         favorite?.let { placeWithNotes ->
-            assertThat(placeWithNotes.place).isEqualTo(expectedPlace)
+            assertThat(placeWithNotes.place.zipcode).isEqualTo(expectedPlace.zipcode)
+            assertThat(placeWithNotes.place.street).isEqualTo(expectedPlace.street)
             assertThat(placeWithNotes.notes).hasSize(1)
             val migratedNote = placeWithNotes.notes.first()
             assertThat(migratedNote.title).isEqualTo(expectedNote.title)

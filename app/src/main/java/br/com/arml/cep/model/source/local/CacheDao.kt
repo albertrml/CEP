@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 interface CacheDao {
     /** Create **/
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertPlaceEntity(entry: PlaceEntity)
+    suspend fun insertPlaceEntity(entry: PlaceEntity): Long
 
     /** Read **/
     @Query(
@@ -24,7 +24,7 @@ interface CacheDao {
         WHERE NOT EXISTS (
             SELECT 1
             FROM Favorites f
-            WHERE f.zipcode_place = p.zipcode
+            WHERE f.id_place = p.id
         )
         AND p.zipcode LIKE '%' || :query || '%'
         ORDER BY p.zipcode ASC
@@ -39,7 +39,7 @@ interface CacheDao {
             WHERE NOT EXISTS (
                 SELECT 1
                 FROM Favorites f
-                WHERE f.zipcode_place = p.zipcode
+                WHERE f.id_place = p.id
             )
             AND zipcode = :zipcode
         """
@@ -110,7 +110,7 @@ interface CacheDao {
         """
         DELETE FROM Places
         WHERE zipcode = :zipcode
-        AND zipcode NOT IN (SELECT DISTINCT zipcode_place FROM Favorites)
+        AND id NOT IN (SELECT DISTINCT id_place FROM Favorites)
     """
     )
     suspend fun deleteCachedPlaceEntity(zipcode: String)
@@ -118,7 +118,7 @@ interface CacheDao {
     @Query(
         value = """
             DELETE FROM Places
-            WHERE zipcode NOT IN (SELECT DISTINCT zipcode_place FROM Favorites)
+            WHERE id NOT IN (SELECT DISTINCT id_place FROM Favorites)
         """
     )
     suspend fun deleteAllCachedPlaceEntities()

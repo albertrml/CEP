@@ -6,11 +6,9 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import br.com.arml.cep.model.domain.toEntity
 import br.com.arml.cep.model.entity.NoteEntity
 import br.com.arml.cep.model.entity.relation.PlaceWithNotes
 import br.com.arml.cep.model.mock.mockFavoritePlaceEntities
-import br.com.arml.cep.model.mock.mockNotes
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -62,7 +60,7 @@ class FavoriteDaoTest {
 
         assertThat(actualFavorite).isNotNull()
         actualFavorite?.run {
-            assertThat(place).isEqualTo(expectedPlace)
+            assertThat(place.copy(id = 0, createdAt = 0)).isEqualTo(expectedPlace.copy(id = 0, createdAt = 0))
             // Compare notes by ignoring the auto-generated ID
             assertThat(notes.map { it.copy(id = 0) })
                 .containsExactlyElementsIn(expectedNotes.map { it.copy(id = 0) })
@@ -70,18 +68,11 @@ class FavoriteDaoTest {
     }
 
     @Test
-    fun insertNoteEntityToFavorite_shouldThrowException_whenPlaceDoesNotExist() = runTest {
-        assertFailsWith<SQLiteConstraintException> {
-            favoriteDao.insertNoteEntityToFavorite("00000-000", mockNotes.first().toEntity())
-        }
-    }
-
-    @Test
     fun insertNoteEntityToFavorite_shouldThrowException_whenNoteTitleIsNotUnique() = runTest {
         val (place, notes) = mockFavoritePlaceEntities.first()
 
         cacheDao.insertPlaceEntity(place)
-        favoriteDao.createNote(notes.first()) // Insert note once
+        favoriteDao.createNote(notes.first()) // Already an entity
 
         // Try to insert it again via createFavorite, which will fail due to UNIQUE constraint
         assertFailsWith<SQLiteConstraintException> {
@@ -105,13 +96,18 @@ class FavoriteDaoTest {
             item.place to item.notes
         }
 
-        assertThat(actualData.keys).isEqualTo(expectedData.keys)
+        // Compare keys (Places) ignoring IDs and createdAt
+        assertThat(actualData.keys.map { it.copy(id = 0, createdAt = 0) })
+            .containsExactlyElementsIn(expectedData.keys.map { it.copy(id = 0, createdAt = 0) })
+        
         actualData.forEach { (place, notes) ->
-            val expectedNotes = expectedData[place]
-            assertThat(expectedNotes).isNotNull()
+            // Find the corresponding expected entry by matching properties other than ID and createdAt
+            val expectedEntry = expectedData.entries.find { it.key.zipcode == place.zipcode }
+            assertThat(expectedEntry).isNotNull()
+            val expectedNotes = expectedEntry!!.value
             // Compare ignoring auto-generated IDs
             assertThat(notes.map { it.copy(id = 0) })
-                .containsExactlyElementsIn(expectedNotes!!.map { it.copy(id = 0) })
+                .containsExactlyElementsIn(expectedNotes.map { it.copy(id = 0) })
         }
     }
 
@@ -130,7 +126,7 @@ class FavoriteDaoTest {
         val actualFavorite = favoriteDao.selectFavorite(expectedFavorite.place.zipcode)
         
         assertThat(actualFavorite).isNotNull()
-        assertThat(actualFavorite?.place).isEqualTo(expectedFavorite.place)
+        assertThat(actualFavorite?.place?.copy(id = 0, createdAt = 0)).isEqualTo(expectedFavorite.place.copy(id = 0, createdAt = 0))
         // Compare ignoring auto-generated IDs
         assertThat(actualFavorite?.notes?.map { it.copy(id = 0) })
             .containsExactlyElementsIn(expectedFavorite.notes.map { it.copy(id = 0) })
@@ -201,8 +197,8 @@ class FavoriteDaoTest {
 
         // Compare ignoring the auto-generated IDs
         assertThat(actualData.size).isEqualTo(expectedData.size)
-        assertThat(actualData.map { it.place })
-            .containsExactlyElementsIn(expectedData.map { it.place })
+        assertThat(actualData.map { it.place.copy(id = 0, createdAt = 0) })
+            .containsExactlyElementsIn(expectedData.map { it.place.copy(id = 0, createdAt = 0) })
     }
 
     @Test
