@@ -54,18 +54,22 @@ class SearchRepository @Inject constructor(
                 city.normalizeForAPISearch(),
                 street.normalizeForAPISearch()
             )
-            cepList.forEach { cep -> logAccess(cep) }
+            cepList.forEach { logAccess(it) }
         }
         .toResponseFlow()
 
 
     suspend fun logAccess(cep: Cep) {
         tryWriteCepDatabase {
-            val logEntity = LogEntity(
-                zipcodePlace = cep.text,
-                timestamp = System.currentTimeMillis()
-            )
-            logDao.insertLogEntity(logEntity)
+            val placeEntity = cacheDao.selectCachedPlaceEntityByZipcode(cep.text)
+            placeEntity?.let {
+                val logEntity = LogEntity(
+                    placeId = it.id,
+                    timestamp = System.currentTimeMillis()
+                )
+
+                logDao.insertLogEntity(logEntity)
+            }
         }
     }
 

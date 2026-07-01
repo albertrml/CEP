@@ -2,16 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "019d5aea7079ba2f8eb229133aca7af8",
+    "identityHash": "1b5339317b9493cdee73febefa4d1042",
     "entities": [
       {
         "tableName": "Favorites",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zipcode_place` TEXT NOT NULL, `id_note` INTEGER NOT NULL, PRIMARY KEY(`zipcode_place`, `id_note`), FOREIGN KEY(`zipcode_place`) REFERENCES `Places`(`zipcode`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_note`) REFERENCES `Notes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_place` INTEGER NOT NULL, `id_note` INTEGER NOT NULL, PRIMARY KEY(`id_place`, `id_note`), FOREIGN KEY(`id_place`) REFERENCES `Places`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_note`) REFERENCES `Notes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
-            "fieldPath": "zipcodePlace",
-            "columnName": "zipcode_place",
-            "affinity": "TEXT",
+            "fieldPath": "placeId",
+            "columnName": "id_place",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -24,19 +24,19 @@
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "zipcode_place",
+            "id_place",
             "id_note"
           ]
         },
         "indices": [
           {
-            "name": "index_Favorites_zipcode_place",
+            "name": "index_Favorites_id_place",
             "unique": false,
             "columnNames": [
-              "zipcode_place"
+              "id_place"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_Favorites_zipcode_place` ON `${TABLE_NAME}` (`zipcode_place`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Favorites_id_place` ON `${TABLE_NAME}` (`id_place`)"
           },
           {
             "name": "index_Favorites_id_note",
@@ -54,10 +54,10 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "zipcode_place"
+              "id_place"
             ],
             "referencedColumns": [
-              "zipcode"
+              "id"
             ]
           },
           {
@@ -75,7 +75,7 @@
       },
       {
         "tableName": "Logs",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `zipcode_place` TEXT NOT NULL COLLATE NOCASE, `timestamp` INTEGER NOT NULL, FOREIGN KEY(`zipcode_place`) REFERENCES `Places`(`zipcode`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id_place` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, FOREIGN KEY(`id_place`) REFERENCES `Places`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -84,9 +84,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "zipcodePlace",
-            "columnName": "zipcode_place",
-            "affinity": "TEXT",
+            "fieldPath": "placeId",
+            "columnName": "id_place",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -104,13 +104,13 @@
         },
         "indices": [
           {
-            "name": "index_Logs_zipcode_place",
+            "name": "index_Logs_id_place",
             "unique": false,
             "columnNames": [
-              "zipcode_place"
+              "id_place"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_Logs_zipcode_place` ON `${TABLE_NAME}` (`zipcode_place`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Logs_id_place` ON `${TABLE_NAME}` (`id_place`)"
           },
           {
             "name": "index_Logs_timestamp",
@@ -128,10 +128,10 @@
             "onDelete": "CASCADE",
             "onUpdate": "NO ACTION",
             "columns": [
-              "zipcode_place"
+              "id_place"
             ],
             "referencedColumns": [
-              "zipcode"
+              "id"
             ]
           }
         ]
@@ -179,8 +179,14 @@
       },
       {
         "tableName": "Places",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`zipcode` TEXT NOT NULL, `street` TEXT NOT NULL, `complement` TEXT NOT NULL, `district` TEXT NOT NULL, `city` TEXT NOT NULL, `state` TEXT NOT NULL, `uf` TEXT NOT NULL, `region` TEXT NOT NULL, `country` TEXT NOT NULL, `ddd` TEXT NOT NULL, `street_search` TEXT NOT NULL, `city_search` TEXT NOT NULL, PRIMARY KEY(`zipcode`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `zipcode` TEXT NOT NULL, `street` TEXT NOT NULL, `complement` TEXT NOT NULL, `district` TEXT NOT NULL, `city` TEXT NOT NULL, `state` TEXT NOT NULL, `uf` TEXT NOT NULL, `region` TEXT NOT NULL, `country` TEXT NOT NULL, `ddd` TEXT NOT NULL, `created_at` INTEGER NOT NULL, `street_search` TEXT NOT NULL, `city_search` TEXT NOT NULL)",
         "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "zipcode",
             "columnName": "zipcode",
@@ -242,6 +248,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "streetSearch",
             "columnName": "street_search",
             "affinity": "TEXT",
@@ -255,12 +267,21 @@
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
-            "zipcode"
+            "id"
           ]
         },
         "indices": [
+          {
+            "name": "index_places_zipcode",
+            "unique": true,
+            "columnNames": [
+              "zipcode"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_places_zipcode` ON `${TABLE_NAME}` (`zipcode`)"
+          },
           {
             "name": "index_places_street_search",
             "unique": false,
@@ -296,7 +317,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '019d5aea7079ba2f8eb229133aca7af8')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1b5339317b9493cdee73febefa4d1042')"
     ]
   }
 }

@@ -14,7 +14,8 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             """
             CREATE TABLE IF NOT EXISTS 
             Places(
-                zipcode TEXT NOT NULL PRIMARY KEY,
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                zipcode TEXT NOT NULL,
                 street TEXT NOT NULL,
                 complement TEXT NOT NULL,
                 district TEXT NOT NULL,
@@ -24,6 +25,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 region TEXT NOT NULL,
                 country TEXT NOT NULL,
                 ddd TEXT NOT NULL,
+                created_at INTEGER NOT NULL,
                 street_search TEXT NOT NULL,
                 city_search TEXT NOT NULL
             )
@@ -38,6 +40,10 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                 city_search, 
                 state
             )
+        """.trimIndent()
+        )
+        db.execSQL("""
+            CREATE UNIQUE INDEX IF NOT EXISTS index_places_zipcode ON Places(zipcode)
         """.trimIndent()
         )
         db.execSQL(
@@ -58,9 +64,9 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             CREATE TABLE IF NOT EXISTS
             Logs(
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                zipcode_place TEXT NOT NULL,
+                id_place INTEGER NOT NULL,
                 timestamp INTEGER NOT NULL,
-                FOREIGN KEY(zipcode_place) REFERENCES Places(zipcode) 
+                FOREIGN KEY(id_place) REFERENCES Places(id) 
                     ON DELETE CASCADE
                     ON UPDATE NO ACTION 
             )
@@ -68,7 +74,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         )
         db.execSQL(
             """
-            CREATE INDEX IF NOT EXISTS index_logs_zipcode_place ON Logs(zipcode_place)
+            CREATE INDEX IF NOT EXISTS index_logs_id_place ON Logs(id_place)
         """.trimIndent()
         )
         db.execSQL(
@@ -100,19 +106,19 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             """
             CREATE TABLE IF NOT EXISTS
             Favorites(
-                zipcode_place TEXT NOT NULL,
+                id_place INTEGER NOT NULL,
                 id_note INTEGER NOT NULL,
-                FOREIGN KEY(zipcode_place) REFERENCES Places(zipcode)
+                FOREIGN KEY(id_place) REFERENCES Places(id)
                     ON DELETE CASCADE
                     ON UPDATE NO ACTION,
                 FOREIGN KEY(id_note) REFERENCES Notes(id)
                     ON DELETE CASCADE
                     ON UPDATE NO ACTION,
-                PRIMARY KEY(zipcode_place, id_note)
+                PRIMARY KEY(id_place, id_note)
             )
         """.trimIndent()
         )
-        db.execSQL("CREATE INDEX IF NOT EXISTS `index_favorites_zipcode_place` ON `Favorites` (`zipcode_place`)")
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_favorites_id_place` ON `Favorites` (`id_place`)")
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_favorites_id_note` ON `Favorites` (`id_note`)")
 
         /** Migração dos dados em uma única transação atômica **/
@@ -132,6 +138,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                     val regionIndex = c.getColumnIndex("address_region")
                     val countryIndex = c.getColumnIndex("address_country")
                     val dddIndex = c.getColumnIndex("address_ddd")
+                    val currentTime = System.currentTimeMillis()
 
                     do {
                         val streetValue = c.getString(streetIndex)
@@ -147,6 +154,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                             put("region", c.getString(regionIndex))
                             put("country", c.getString(countryIndex))
                             put("ddd", c.getString(dddIndex))
+                            put("created_at", currentTime)
                             put("street_search", streetValue.normalizeForDBSearch())
                             put("city_search", cityValue.normalizeForDBSearch())
                         }
@@ -162,9 +170,10 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
             /** Migração dos dados da tabela log_table para a tabela Logs **/
             db.execSQL(
                 """
-                INSERT INTO Logs(zipcode_place, timestamp)
-                SELECT p.address_zipCode, l.timestamp FROM place_table p
-                JOIN log_table l ON l.cep = p.address_zipCode
+                INSERT INTO Logs(id_place, timestamp)
+                SELECT p_new.id, l.timestamp 
+                FROM log_table l
+                JOIN Places p_new ON p_new.zipcode = l.cep
             """.trimIndent()
             )
 
@@ -201,15 +210,25 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
                         )
 
                         if (idNote != -1L) {
-                            val favoritesValues = ContentValues().apply {
-                                put("zipcode_place", cep)
-                                put("id_note", idNote)
-                            }
-                            db.insert(
-                                "Favorites",
-                                OnConflictStrategy.IGNORE,
-                                favoritesValues
+                            // Busca o ID numérico do lugar na nova tabela Places
+                            val cursorId = db.query(
+                                "SELECT id FROM Places WHERE zipcode = ?",
+                                arrayOf(cep)
                             )
+                            cursorId.use { cId ->
+                                if (cId.moveToFirst()) {
+                                    val idPlace = cId.getLong(0)
+                                    val favoritesValues = ContentValues().apply {
+                                        put("id_place", idPlace)
+                                        put("id_note", idNote)
+                                    }
+                                    db.insert(
+                                        "Favorites",
+                                        OnConflictStrategy.IGNORE,
+                                        favoritesValues
+                                    )
+                                }
+                            }
                         }
 
                     } while (c.moveToNext())

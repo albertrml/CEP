@@ -7,12 +7,12 @@ import androidx.room.Index
 
 @Entity(
     tableName = "Favorites",
-    primaryKeys = ["zipcode_place", "id_note"],
+    primaryKeys = ["id_place", "id_note"],
     foreignKeys = [
         ForeignKey(
             entity = PlaceEntity::class,
-            parentColumns = ["zipcode"],
-            childColumns = ["zipcode_place"],
+            parentColumns = ["id"],
+            childColumns = ["id_place"],
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
@@ -23,13 +23,13 @@ import androidx.room.Index
         )
     ],
     indices = [
-        Index("zipcode_place"),
+        Index("id_place"),
         Index("id_note")
     ]
 )
 data class FavoriteEntity(
-    @ColumnInfo(name = "zipcode_place")
-    val zipcodePlace: String,
+    @ColumnInfo(name = "id_place")
+    val placeId: Long,
     @ColumnInfo(name = "id_note")
     val idNote: Long
 )
