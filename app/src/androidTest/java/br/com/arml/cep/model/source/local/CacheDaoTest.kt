@@ -141,6 +141,27 @@ class CacheDaoTest {
     }
 
     @Test
+    fun autoCleanCache_shouldDeleteOldEntries() = runTest {
+        val timeCutoff = System.currentTimeMillis() - 30L * 24 * 60 * 60 * 1000
+        val timeCutoffAgo = System.currentTimeMillis() - 31L * 24 * 60 * 60 * 1000
+        val last = mockUnfavoritePlaceEntities.lastIndex
+        mockUnfavoritePlaceEntities.forEachIndexed { index, placeWithNotes ->
+            val timestamp = if (index == last) System.currentTimeMillis() else timeCutoffAgo
+            placeWithNotes.place
+                .copy(createdAt = timestamp)
+                .also { cacheDao.insertPlaceEntity(it) }
+        }
+
+
+        val placeEntitiesBefore = cacheDao.selectCachedPlaceEntitiesByZipcode("").first()
+        cacheDao.autoCleanCache(timeCutoff)
+        val placeEntitiesAfter = cacheDao.selectCachedPlaceEntitiesByZipcode("").first()
+
+        assertThat(placeEntitiesBefore).hasSize(mockUnfavoritePlaceEntities.size)
+        assertThat(placeEntitiesAfter).hasSize(1)
+    }
+
+    @Test
     fun update_shouldUpdatePlaceEntityNonFavoritePlaceCorrectly() = runTest {
         val oldPlace = mockUnfavoritePlaceEntities.first().place
         val id = cacheDao.insertPlaceEntity(oldPlace)

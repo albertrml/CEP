@@ -29,4 +29,8 @@ class CacheRepository @Inject constructor(
         cacheDao.deleteCachedPlaceEntity(place.cep.text)
     }
     fun deleteAllUnwanted() = asResponse { cacheDao.deleteAllCachedPlaceEntities() }
+
+    fun autoCleanCache(timeCutoff: Long) = asResponse {
+        cacheDao.autoCleanCache(timeCutoff)
+    }
 }

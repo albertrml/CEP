@@ -122,4 +122,13 @@ interface CacheDao {
         """
     )
     suspend fun deleteAllCachedPlaceEntities()
+
+    @Query(
+        """
+            DELETE FROM Places
+            WHERE id NOT IN (SELECT DISTINCT id_place FROM Favorites)
+            AND created_at < :timeCutoff
+        """
+    )
+    suspend fun autoCleanCache(timeCutoff: Long)
 }
