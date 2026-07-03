@@ -140,12 +140,14 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
 
             /** Events associated with Fetch and Filter Favorites **/
             is OnFetchFavoritesResponse -> {
+                /* Solução atual (Com flickering de loading na troca de filtros) */
+                //previousState.copy(places = event.response) to null
+
+                /* Solução anterior (Para evitar flickering de loading na troca de filtros)*/
                 when(val response = event.response){
                     is Response.Loading -> previousState to null
                     else -> previousState.copy(places = response) to null
                 }
-                /*val updatedState = previousState.copy(places = event.response)
-                updatedState to null*/
             }
             /** End events associated with Fetch and Filter Favorites **/
 

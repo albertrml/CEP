@@ -87,14 +87,15 @@ interface FavoriteDao {
     suspend fun selectFavorite(zipcode: String): PlaceWithNotes?
 
     // Search for favorite places that have a note with the given title.
+    @Transaction
     @Query(
         value = """
-            SELECT p.*, n.*
+            SELECT DISTINCT p.*
             FROM Places p
             JOIN Favorites f ON p.id = f.id_place
             JOIN Notes n ON f.id_note = n.id
             WHERE n.title LIKE '%' || :query || '%'
-            ORDER BY p.zipcode ASC, n.title ASC
+            ORDER BY p.zipcode ASC
         """
     )
     fun selectFavoritesByTitle(query: String): Flow<List<PlaceWithNotes>>
