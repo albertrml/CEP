@@ -77,6 +77,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.google.errorprone.annotations)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
@@ -119,7 +120,6 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockk)
-    testImplementation(libs.google.errorprone.annotations)
 
     // Android Test Dependencies
     androidTestImplementation(libs.androidx.espresso.core)

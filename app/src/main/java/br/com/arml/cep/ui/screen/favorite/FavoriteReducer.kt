@@ -9,8 +9,10 @@ import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnAddNoteToFavoriteRespo
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelExport
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelFavoriteToUnwanted
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnCancelImport
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmExport
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmExportResponse
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmFavoriteToUnwantedResponse
+import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmImport
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnConfirmImportResponse
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnDeleteNoteFromFavoriteResponse
 import br.com.arml.cep.ui.screen.favorite.FavoriteEvent.OnExportFavorites
@@ -154,6 +156,9 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
             is OnCancelImport -> {
                 previousState.copy(isVisibleImportAlert = false) to null
             }
+            is OnConfirmImport -> {
+                previousState.copy(isVisibleImportAlert = false) to null
+            }
             is OnConfirmImportResponse -> {
                 when(val response = event.response){
                     is Response.Loading -> previousState to null
@@ -186,15 +191,22 @@ class FavoriteReducer: Reducer<FavoriteState, FavoriteEvent, FavoriteEffect> {
             is OnCancelExport -> {
                 previousState.copy(isVisibleExportAlert = false) to null
             }
+            is OnConfirmExport -> {
+                previousState.copy(isVisibleExportAlert = false) to null
+            }
             is OnConfirmExportResponse -> {
                 when(val response = event.response){
                     is Response.Loading -> previousState to null
                     is Response.Success -> {
-                        val updatedState = previousState.copy(isVisibleExportAlert = false)
+                        val updatedState = previousState.copy(
+                            isVisibleExportAlert = false,
+                        )
                         updatedState to OnSuccessExportFavorites(response.result)
                     }
                     is Response.Failure -> {
-                        val updatedState = previousState.copy(isVisibleExportAlert = false)
+                        val updatedState = previousState.copy(
+                            isVisibleExportAlert = false
+                        )
                         val effect = ShowSnackbar(
                             response.exception.message?.let { UiText.DynamicString(it) }
                                 ?: UiText.StringResource(R.string.favorite_export_failure)

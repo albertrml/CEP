@@ -9,7 +9,7 @@ import br.com.arml.cep.model.repository.FavoriteRepository
 import br.com.arml.cep.model.source.local.FavoriteDao
 import br.com.arml.cep.utils.assertFlowFailure
 import br.com.arml.cep.utils.assertFlowSuccess
-import br.com.arml.cep.utils.mockFlowAnswer
+import br.com.arml.cep.utils.mockAnswer
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coVerify
 import io.mockk.every
@@ -36,7 +36,7 @@ class ExportFavoritesTest {
     private fun mockFavoriteExport(
         data: List<PlaceWithNotes> = emptyList(),
         exception: Exception? = null
-    ) = mockFlowAnswer(
+    ) = mockAnswer(
         { mockFavoriteDao.exportFavorites() },
         data,
         exception
@@ -51,14 +51,14 @@ class ExportFavoritesTest {
     @Test
     fun `exportFavorites should emits Success with data when dao returns a list`() = runTest {
         val data = mockPlaceWithNotes(5)
-        val expected = data.map { it.toModel() }
+        val expectedPlaces = data.map { it.toModel() }
 
         mockFavoriteExport(data)
 
         val responses = repository.exportFavorites().toList()
 
-        responses.assertFlowSuccess {
-            assertThat(it).isEqualTo(expected)
+        responses.assertFlowSuccess { actualPlaces ->
+            assertThat(actualPlaces).isEqualTo(expectedPlaces)
         }
         coVerify(exactly = 1) { mockFavoriteDao.exportFavorites() }
     }

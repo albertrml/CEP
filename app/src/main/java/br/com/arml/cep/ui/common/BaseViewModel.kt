@@ -1,5 +1,6 @@
 package br.com.arml.cep.ui.common
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.arml.cep.model.domain.Response
@@ -33,7 +34,10 @@ abstract class BaseViewModel<S: Reducer.ViewState, E: Reducer.ViewEvent, F: Redu
     }
 
     private fun sendEffect(effect: F) {
-        viewModelScope.launch { _effect.send(effect) }
+        viewModelScope.launch {
+            Log.d("BaseViewModel", "sendEffect: $effect")
+            _effect.send(effect)
+        }
     }
 
     private fun subscribeEvents() {

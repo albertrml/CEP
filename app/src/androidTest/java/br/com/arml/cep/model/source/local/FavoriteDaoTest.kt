@@ -193,7 +193,7 @@ class FavoriteDaoTest {
         val expectedData = mockFavoritePlaceEntities
         populateDatabase(expectedData)
 
-        val actualData = favoriteDao.exportFavorites().first()
+        val actualData = favoriteDao.exportFavorites()
 
         // Compare ignoring the auto-generated IDs
         assertThat(actualData.size).isEqualTo(expectedData.size)
@@ -203,7 +203,7 @@ class FavoriteDaoTest {
 
     @Test
     fun exportFavorites_shouldReturnEmptyList_whenDatabaseIsEmpty() = runTest {
-        val result = favoriteDao.exportFavorites().first()
+        val result = favoriteDao.exportFavorites()
         assertThat(result).isEmpty()
     }
     // endregion

@@ -66,15 +66,14 @@ class FavoriteRepository @Inject constructor(
     }
 
     /** Export **/
-    fun exportFavorites() = favoriteDao
-        .exportFavorites()
-        .toResponseFlow()
-        .mapSuccess { entities ->
-            entities.map { placeWithNotes ->
+    fun exportFavorites() = asResponse {
+        favoriteDao
+            .exportFavorites()
+            .map { placeWithNotes ->
                 val notes = placeWithNotes.notes.map { it.toModel() }
                 placeWithNotes.place.toModel(notes = notes)
             }
-        }
+    }
 
     /** Import **/
     fun importFavorites(favorites: List<Place>) = asResponse {

@@ -143,5 +143,5 @@ interface FavoriteDao {
         SELECT DISTINCT p.* FROM places p
         JOIN favorites f ON p.id = f.id_place
     """)
-    fun exportFavorites(): Flow<List<PlaceWithNotes>>
+    suspend fun exportFavorites(): List<PlaceWithNotes>
 }

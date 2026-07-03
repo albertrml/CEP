@@ -1,5 +1,6 @@
 package br.com.arml.cep.ui.screen.favorite
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +45,7 @@ import br.com.arml.cep.ui.utils.getImportIntent
 import br.com.arml.cep.ui.utils.importBackupLauncher
 import br.com.arml.cep.ui.utils.paneEnterTransition
 import br.com.arml.cep.ui.utils.paneExitTransition
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -66,7 +68,8 @@ fun FavoriteScreen(modifier: Modifier = Modifier) {
     )
 
     LaunchedEffect(Unit) {
-        viewmodel.effect.collect { effect ->
+        viewmodel.effect.collectLatest { effect ->
+            Log.d("FavoriteScreen", "LaunchedEffect: $effect")
             when(effect){
                 is FavoriteEffect.ShowSnackbar -> { snackBarMessage = effect.message }
                 is FavoriteEffect.OnSuccessExportFavorites -> {
