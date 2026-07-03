@@ -16,6 +16,11 @@ import br.com.arml.cep.model.utils.normalizeForDBSearch
     tableName = "Places",
     indices = [
         Index(
+            name = "index_places_zipcode",
+            value = ["zipcode"],
+            unique = true
+        ),
+        Index(
             name = "index_places_street_search",
             value = ["street_search"]
         ),
@@ -35,7 +40,8 @@ import br.com.arml.cep.model.utils.normalizeForDBSearch
     ]
 )
 data class PlaceEntity(
-    @PrimaryKey()
+    @PrimaryKey(autoGenerate = true, )
+    val id: Long = 0,
     val zipcode: String,
     val street: String,
     val complement: String,
@@ -46,6 +52,8 @@ data class PlaceEntity(
     val region: String,
     val country: String = DEFAULT_COUNTRY,
     val ddd: String,
+    @ColumnInfo(name = "created_at")
+    val createdAt: Long = System.currentTimeMillis(),
 
     @ColumnInfo(name = "street_search")
     val streetSearch: String = street.normalizeForDBSearch(),
@@ -73,3 +81,15 @@ fun PlaceEntity.toModel(notes: List<Note> = emptyList()): Place {
         notes = notes
     )
 }
+
+fun PlaceEntity.isContentEquals(other: PlaceEntity) =
+            zipcode == other.zipcode
+            && street == other.street
+            && complement == other.complement
+            && district == other.district
+            && city == other.city
+            && state == other.state
+            && uf == other.uf
+            && region == other.region
+            && country == other.country
+            && ddd == other.ddd

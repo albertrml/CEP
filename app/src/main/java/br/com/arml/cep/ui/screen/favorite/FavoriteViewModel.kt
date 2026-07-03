@@ -1,6 +1,5 @@
 package br.com.arml.cep.ui.screen.favorite
 
-import androidx.lifecycle.viewModelScope
 import br.com.arml.cep.domain.FavoriteUseCase
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
@@ -24,8 +23,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -101,6 +98,21 @@ class FavoriteViewModel @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun fetchFavorites() {
+        collectAction(
+            flow = _filter.flatMapLatest { filter ->
+                when (filter) {
+                    is FavoriteFilter.None -> favoriteUseCase.fetchFavorites()
+                    is FavoriteFilter.ByCep -> favoriteUseCase.filterByCep(filter.zipcode)
+                    is FavoriteFilter.ByTitle -> favoriteUseCase.filterByTitle(filter.title)
+                }
+            },
+            onResponse = { response -> OnFetchFavoritesResponse(response) }
+        )
+    }
+
+    /* Solução anterior (Abordagem manual com onEach)
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun fetchFavorites() {
         _filter
             .flatMapLatest { filter ->
                 when (filter) {
@@ -112,6 +124,7 @@ class FavoriteViewModel @Inject constructor(
             .onEach { response -> sendEventForEffect(OnFetchFavoritesResponse(response)) }
             .launchIn(viewModelScope)
     }
+    */
 
     private fun importFavorites(json: String) {
         collectAction(

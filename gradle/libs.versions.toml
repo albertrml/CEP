@@ -2,8 +2,8 @@
 activityCompose = "1.13.0"
 agp = "9.2.1"
 androidHilt = "2.60"
-composeBom = "2026.06.00"
-composeHilt = "1.3.0"
+composeBom = "2026.06.01"
+composeHilt = "1.4.0"
 coreKtx = "1.19.0"
 espressoCore = "3.7.0"
 googleTruth = "1.4.5"
@@ -23,7 +23,10 @@ mockk = "1.14.11"
 moshi = "1.15.2"
 retrofit = "3.0.0"
 roomKtx = "2.8.4"
-uiTextGoogleFonts = "1.11.3"
+uiTextGoogleFonts = "1.11.4"
+workRuntimeKtx = "2.11.2"
+errorProneAnnotations = "2.50.0"
+hiltCommon = "1.4.0"
 
 [libraries]
 # Adaptive Layout
@@ -81,11 +84,18 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "roomKtx" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+google-errorprone-annotations = { group = "com.google.errorprone", name = "error_prone_annotations", version.ref = "errorProneAnnotations" }
 google-truth = { group = "com.google.truth", name = "truth", version.ref = "googleTruth" }
 jetbrains-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockk" }
+
+# Workmanager
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
+androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
+androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "composeHilt" }
+androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "composeHilt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

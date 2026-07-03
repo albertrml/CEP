@@ -7,6 +7,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import br.com.arml.cep.model.entity.LogEntity
 import br.com.arml.cep.model.entity.PlaceEntity
+import br.com.arml.cep.model.entity.relation.PlaceWithLog
+import br.com.arml.cep.model.mock.mockPlacesWithLog
 import br.com.arml.cep.model.mock.mockUnfavoritePlaceEntities
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.first
@@ -37,51 +39,72 @@ class LogDaoTest {
         db.close()
     }
 
-    private suspend fun populateDatabase(places: List<PlaceEntity>, logsPerPlace: Int): List<LogEntity> {
-        val allLogs = mutableListOf<LogEntity>()
+    private suspend fun populateDatabase(
+        places: List<PlaceEntity>,
+        logsPerPlace: Int
+    ): List<PlaceWithLog> {
+        val result = mutableListOf<PlaceWithLog>()
+
         places.forEach { place ->
-            cacheDao.insertPlaceEntity(place)
+            val placeId = cacheDao.insertPlaceEntity(place)
+
             repeat(logsPerPlace) {
-                val log = LogEntity(zipcodePlace = place.zipcode, timestamp = System.nanoTime())
-                val id = logDao.insertLogEntity(log)
-                allLogs.add(log.copy(id = id))
+                val log = LogEntity(
+                    placeId = placeId,
+                    timestamp = System.currentTimeMillis()
+                )
+
+                val logId = logDao.insertLogEntity(log)
+
+                val placeWithLog = PlaceWithLog(
+                    place = place.copy(id = placeId),
+                    log = log.copy(id = logId)
+                )
+
+                result.add(placeWithLog)
             }
+
         }
-        return allLogs
+
+        return result
     }
 
     /** CREATE **/
     @Test
     fun insertLogEntity_shouldSaveLog_whenPlaceExists() = runTest {
-        val place = mockUnfavoritePlaceEntities.first().place
-        cacheDao.insertPlaceEntity(place)
-        val expectedLog = LogEntity(zipcodePlace = place.zipcode, timestamp = System.currentTimeMillis())
+        val (initialLog, place) = mockPlacesWithLog(1).first()
 
-        logDao.insertLogEntity(expectedLog)
-        val actualLogs = logDao.selectLogEntitiesByZipcode("").first().map { it.copy(id = 0L) }
+        val placeId = cacheDao.insertPlaceEntity(place)
+        val expectedLog = initialLog.copy(placeId = placeId)
+        val logId = logDao.insertLogEntity(expectedLog)
 
-        assertThat(actualLogs).hasSize(1)
-        assertThat(actualLogs.first()).isEqualTo(expectedLog)
+        val actualPlaceWithLogs = logDao.selectLogEntitiesByZipcode("").first()
+        assertThat(actualPlaceWithLogs).hasSize(1)
+
+        val actual = actualPlaceWithLogs.first()
+
+        assertThat(actual.place.copy(id = 0, createdAt = 0)).isEqualTo(place.copy(id = 0, createdAt = 0))
+        assertThat(actual.log).isEqualTo(expectedLog.copy(id = logId))
     }
 
     @Test
     fun insertLogEntity_shouldThrowException_whenPlaceDoesNotExist() = runTest {
-        val logWithInvalidZipcode = LogEntity(zipcodePlace = "99999-999", timestamp = 0L)
-
+        val logWithInvalidZipcode = LogEntity(placeId = 9999999, timestamp = 0L)
         assertFailsWith<SQLiteConstraintException> { logDao.insertLogEntity(logWithInvalidZipcode) }
     }
+
 
     /** READ **/
     @Test
     fun selectLogEntitiesByZipcode_shouldReturnFilteredLogs() = runTest {
         val places = mockUnfavoritePlaceEntities.map { it.place }
-        val storedLogs = populateDatabase(places, 2).sortedBy { it.timestamp }
-        val query = places.first().zipcode.take(3)
-        val expectedLogs = storedLogs.filter { it.zipcodePlace.contains(query) }
+        val query = places.first().zipcode.substring(0, 5)
+        val database = populateDatabase(places, 2)
+        val expectedLogs = database.filter { it.place.zipcode.contains(query) }
 
-        val actualLogs = logDao.selectLogEntitiesByZipcode(query).first().sortedBy { it.timestamp }
+        val actualLogs = logDao.selectLogEntitiesByZipcode(query).first()
 
-        assertThat(actualLogs).containsExactlyElementsIn(expectedLogs).inOrder()
+        assertThat(actualLogs).containsExactlyElementsIn(expectedLogs)
     }
 
     @Test
@@ -94,27 +117,29 @@ class LogDaoTest {
     @Test
     fun selectLogEntitiesByPeriod_shouldReturnLogsWithinPeriod() = runTest {
         val place = mockUnfavoritePlaceEntities.first().place
-        cacheDao.insertPlaceEntity(place)
+        val id = cacheDao.insertPlaceEntity(place)
         val timestamps = listOf(100L, 200L, 300L, 400L)
         timestamps.forEach {
-            logDao.insertLogEntity(LogEntity(zipcodePlace = place.zipcode, timestamp = it))
+            logDao.insertLogEntity(LogEntity(placeId = id, timestamp = it))
         }
 
-        val actualLogs = logDao.selectLogEntitiesByPeriod(start = 150L, end = 350L)
+        val actualLogs = logDao
+            .selectLogEntitiesByPeriod(start = 150L, end = 350L)
             .first()
-            .sortedBy { it.timestamp }
+            .map { it.log.timestamp }
+            .sorted()
 
         assertThat(actualLogs).hasSize(2)
-        assertThat(actualLogs.map { it.timestamp }).containsExactly(200L, 300L).inOrder()
+        assertThat(actualLogs).containsExactly(200L, 300L).inOrder()
     }
 
     @Test
     fun selectLogEntitiesByPeriod_shouldReturnEmptyList_whenNoLogsMatchPeriod() = runTest {
         val place = mockUnfavoritePlaceEntities.first().place
-        cacheDao.insertPlaceEntity(place)
+        val id = cacheDao.insertPlaceEntity(place)
         val timestamps = listOf(100L, 200L, 300L, 400L)
         timestamps.forEach {
-            logDao.insertLogEntity(LogEntity(zipcodePlace = place.zipcode, timestamp = it))
+            logDao.insertLogEntity(LogEntity(placeId = id, timestamp = it))
         }
 
         val result = logDao.selectLogEntitiesByPeriod(start = 0L, end = 90L).first()
@@ -129,7 +154,7 @@ class LogDaoTest {
         val allLogs = populateDatabase(places, 2)
         val logToDelete = allLogs.first()
 
-        logDao.deleteLogEntity(logToDelete)
+        logDao.deleteLogEntity(logToDelete.log)
         val logsAfterDelete = logDao.selectLogEntitiesByZipcode("").first()
 
         assertThat(logsAfterDelete).hasSize(allLogs.size - 1)

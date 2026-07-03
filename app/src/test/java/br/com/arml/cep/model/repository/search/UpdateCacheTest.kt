@@ -6,6 +6,7 @@ import android.util.Log
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.entity.PlaceEntity
 import br.com.arml.cep.model.entity.dto.AddressDTO
+import br.com.arml.cep.model.entity.isContentEquals
 import br.com.arml.cep.model.exception.CepDatabaseException.DatabaseCorruptException
 import br.com.arml.cep.model.exception.CepDatabaseException.DiskFullException
 import br.com.arml.cep.model.exception.CepDatabaseException.UnknownDatabaseException
@@ -19,6 +20,7 @@ import br.com.arml.cep.model.source.local.CacheDao
 import br.com.arml.cep.model.source.local.LogDao
 import br.com.arml.cep.model.source.remote.PlaceRemoteDataSource
 import br.com.arml.cep.utils.mockAnswer
+import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
@@ -53,8 +55,9 @@ class UpdateCacheTest {
 
     private fun mockCacheInsert(
         placeEntity: PlaceEntity,
+        id: Long = 0L,
         exception: Exception? = null,
-    ) = mockAnswer({ cacheDao.insertPlaceEntity(placeEntity) }, Unit, exception)
+    ) = mockAnswer({ cacheDao.insertPlaceEntity(placeEntity) }, id, exception)
 
     private fun mockAPIFetchByCep(
         zipcode: String,
@@ -87,13 +90,17 @@ class UpdateCacheTest {
 
             mockCacheSearch(query, false)
             mockAPIFetchByCep(query, expectedAddressDTO)
-            mockCacheInsert(expectedPlaceEntity)
+            coEvery { cacheDao.insertPlaceEntity(any()) } returns 1L
 
             repository.updateCache(expectedCep)
 
             coVerify(exactly = 1) { cacheDao.isPlaceExist(query) }
             coVerify(exactly = 1) { service.getAddressByCep(query) }
-            coVerify(exactly = 1) { cacheDao.insertPlaceEntity(expectedPlaceEntity) }
+            coVerify(exactly = 1) {
+                cacheDao.insertPlaceEntity(
+                    match { it.isContentEquals(expectedPlaceEntity) }
+                )
+            }
         }
 
     @Test
@@ -185,7 +192,7 @@ class UpdateCacheTest {
 
             mockCacheSearch(query, false)
             mockAPIFetchByCep(query, expectedAddressDTO)
-            mockCacheInsert(expectedPlaceEntity, exception = expectedException)
+            coEvery { cacheDao.insertPlaceEntity(any()) } throws expectedException
 
             assertThrows(expectedException.javaClass) {
                 runBlocking { repository.updateCache(expectedCep) }
@@ -193,7 +200,7 @@ class UpdateCacheTest {
 
             coVerify(exactly = 1) { cacheDao.isPlaceExist(query) }
             coVerify(exactly = 1) { service.getAddressByCep(query) }
-            coVerify(exactly = 1) { cacheDao.insertPlaceEntity(expectedPlaceEntity) }
+            coVerify(exactly = 1) { cacheDao.insertPlaceEntity(any()) }
         }
 
     /*
@@ -212,18 +219,22 @@ class UpdateCacheTest {
             val expectedCepList = mockAddressesDTO.map { Cep.build(it.cep!!) }
 
             mockAPIFetchByAddress(uf, city, street, mockAddressesDTO)
-            mockAddressesDTO.forEach {
-                mockCacheSearch(it.cep!!, false)
-                mockCacheInsert(it.toPlaceEntity())
+            mockAddressesDTO.forEachIndexed { index, dTO ->
+                mockCacheSearch(dTO.cep!!, false)
+                coEvery { cacheDao.insertPlaceEntity(any()) } returns (index + 1).toLong()
             }
 
             val actualCepList = repository.updateCache(uf, city, street)
 
             assertEquals(expectedCepList, actualCepList)
             coVerify(exactly = 1) { service.getAddresses(uf, city, street) }
-            mockAddressesDTO.forEach {
-                coVerify(exactly = 1) { cacheDao.isPlaceExist(it.cep!!) }
-                coVerify(exactly = 1) { cacheDao.insertPlaceEntity(it.toPlaceEntity()) }
+            mockAddressesDTO.forEach { addressDTO ->
+                coVerify(exactly = 1) { cacheDao.isPlaceExist(addressDTO.cep!!) }
+                coVerify(exactly = 1) {
+                    cacheDao.insertPlaceEntity(
+                        match { it.isContentEquals(addressDTO.toPlaceEntity()) }
+                    )
+                }
             }
         }
 
@@ -239,7 +250,7 @@ class UpdateCacheTest {
             mockAddressesDTO.forEachIndexed { index, dTO ->
                 if (index % 2 == 0) {
                     mockCacheSearch(dTO.cep!!, false)
-                    mockCacheInsert(dTO.toPlaceEntity())
+                    coEvery { cacheDao.insertPlaceEntity(any()) } returns (index + 1).toLong()
                 } else {
                     mockCacheSearch(dTO.cep!!, true)
                 }
@@ -252,7 +263,11 @@ class UpdateCacheTest {
             mockAddressesDTO.forEachIndexed { index, dTO ->
                 val count = if (index % 2 == 0) 1 else 0
                 coVerify(exactly = 1) { cacheDao.isPlaceExist(dTO.cep!!) }
-                coVerify(exactly = count) { cacheDao.insertPlaceEntity(dTO.toPlaceEntity()) }
+                coVerify(exactly = count) {
+                    cacheDao.insertPlaceEntity(
+                        match { it.isContentEquals(dTO.toPlaceEntity()) }
+                    )
+                }
             }
         }
 
@@ -319,13 +334,12 @@ class UpdateCacheTest {
         val city = mockCity
         val street = mockStreet
         val expectedZipcode = mockAddressesDTO.first().cep!!
-        val expectedPlaceEntity = mockAddressesDTO.first().toPlaceEntity()
         val exceptionThrown = SQLiteFullException()
         val expectedException = DiskFullException()
 
         mockAPIFetchByAddress(uf, city, street, mockAddressesDTO)
         mockCacheSearch(expectedZipcode, false)
-        mockCacheInsert(expectedPlaceEntity, exception = exceptionThrown)
+        coEvery { cacheDao.insertPlaceEntity(any()) } throws exceptionThrown
 
         assertThrows(expectedException.javaClass){
             runBlocking{ repository.updateCache(uf, city, street) }
@@ -333,6 +347,6 @@ class UpdateCacheTest {
 
         coVerify(exactly = 1) { service.getAddresses(uf, city, street) }
         coVerify(exactly = 1) { cacheDao.isPlaceExist(expectedZipcode) }
-        coVerify(exactly = 1) { cacheDao.insertPlaceEntity(expectedPlaceEntity) }
+        coVerify(exactly = 1) { cacheDao.insertPlaceEntity(any()) }
     }
 }

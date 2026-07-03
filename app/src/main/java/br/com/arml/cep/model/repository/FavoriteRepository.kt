@@ -14,7 +14,6 @@ import br.com.arml.cep.model.exception.BackupException
 import br.com.arml.cep.model.exception.CepDatabaseException
 import br.com.arml.cep.model.source.local.FavoriteDao
 import javax.inject.Inject
-import kotlinx.coroutines.flow.map
 
 class FavoriteRepository @Inject constructor(
     private val favoriteDao: FavoriteDao
@@ -41,11 +40,6 @@ class FavoriteRepository @Inject constructor(
     /** Read **/
     fun getFavoritesByTitle(title: String = "") = favoriteDao
         .selectFavoritesByTitle(title)
-        .map{ map ->
-            map.map { (place, notes) ->
-                PlaceWithNotes(place, notes)
-            }
-        }
         .toResponseFlow()
         .mapSuccess { entities -> entities.map { it.toModel() } }
 
@@ -72,15 +66,14 @@ class FavoriteRepository @Inject constructor(
     }
 
     /** Export **/
-    fun exportFavorites() = favoriteDao
-        .exportFavorites()
-        .toResponseFlow()
-        .mapSuccess { entities ->
-            entities.map { placeWithNotes ->
+    fun exportFavorites() = asResponse {
+        favoriteDao
+            .exportFavorites()
+            .map { placeWithNotes ->
                 val notes = placeWithNotes.notes.map { it.toModel() }
                 placeWithNotes.place.toModel(notes = notes)
             }
-        }
+    }
 
     /** Import **/
     fun importFavorites(favorites: List<Place>) = asResponse {

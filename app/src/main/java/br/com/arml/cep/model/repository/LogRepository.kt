@@ -6,7 +6,7 @@ import br.com.arml.cep.model.domain.asResponse
 import br.com.arml.cep.model.domain.mapSuccess
 import br.com.arml.cep.model.domain.toResponseFlow
 import br.com.arml.cep.model.entity.LogEntity
-import br.com.arml.cep.model.entity.toModel
+import br.com.arml.cep.model.entity.relation.toModel
 import br.com.arml.cep.model.source.local.LogDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

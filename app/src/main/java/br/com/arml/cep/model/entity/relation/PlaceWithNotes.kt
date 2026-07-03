@@ -23,7 +23,7 @@ data class PlaceWithNotes (
      */
     @Relation(
         entity = NoteEntity::class, // destino da relação (a tabela note).
-        parentColumn = "zipcode",   // chave da tabela place.
+        parentColumn = "id",        // chave da tabela place.
         entityColumn = "id",        // chave da tabela note.
         /*
             SELECT *
@@ -40,7 +40,7 @@ data class PlaceWithNotes (
         */
         associateBy = Junction(
             value = FavoriteEntity::class,
-            parentColumn = "zipcode_place",
+            parentColumn = "id_place",
             entityColumn = "id_note"
         )
     )
