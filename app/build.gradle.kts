@@ -19,8 +19,8 @@ android {
         applicationId = "br.com.arml.cep"
         minSdk = 26
         targetSdk = 37
-        versionCode = 6
-        versionName = "2.0"
+        versionCode = 7
+        versionName = "3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -114,21 +114,26 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
 
+    // Shared Test Dependencies
+    val sharedTestLibs = listOf(
+        libs.google.truth,
+        libs.mockk,
+        libs.androidx.ui.test.junit
+    )
+    sharedTestLibs.forEach {
+        testImplementation(it)
+        androidTestImplementation(it)
+    }
+
     // Test Dependencies
-    testImplementation(libs.androidx.ui.test.junit)
-    testImplementation(libs.google.truth)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockk)
 
     // Android Test Dependencies
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.google.truth)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.ui.test.junit)
     androidTestImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.jetbrains.kotlin.test)
-    androidTestImplementation(libs.mockk)
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
