@@ -1,14 +1,11 @@
 package br.com.arml.cep.ui.screen.cache
 
+import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.domain.Response.Loading
-import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.ui.utils.PlaceFilterOption
+import br.com.arml.cep.ui.common.Reducer
 
 data class CacheState(
-    val fetchEntries: Response<List<PlaceEntry>> = Loading,
-    val filterOperation: PlaceFilterOption = PlaceFilterOption.None,
-    val deleteEntry: Response<Unit> = Loading,
-    val placeForDetails: PlaceEntry? = null,
-    val placeUpdate: PlaceEntry? = null
-)
+    val selectedPlace: Place? = null,
+    val places: Response<List<Place>> = Loading
+) : Reducer.ViewState

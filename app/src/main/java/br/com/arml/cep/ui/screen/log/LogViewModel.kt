@@ -1,109 +1,98 @@
 package br.com.arml.cep.ui.screen.log
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.arml.cep.domain.LogUseCase
-import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.entity.LogEntry
-import br.com.arml.cep.ui.utils.LogFilterOption
+import br.com.arml.cep.model.domain.Log
+import br.com.arml.cep.ui.common.BaseViewModel
+import br.com.arml.cep.ui.screen.log.LogEvent.OnDeleteAllLogs
+import br.com.arml.cep.ui.screen.log.LogEvent.OnDeleteAllLogsResponse
+import br.com.arml.cep.ui.screen.log.LogEvent.OnDeleteLog
+import br.com.arml.cep.ui.screen.log.LogEvent.OnDeleteLogResponse
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFetchAllLogsResponse
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByCep
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByFinalDate
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByInitialDate
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByNone
+import br.com.arml.cep.ui.screen.log.LogEvent.OnFilterByRangeDate
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LogViewModel @Inject constructor(
-    private val logUseCase: LogUseCase
-) : ViewModel() {
-    private val _state = MutableStateFlow(LogState())
-    val state = _state.asStateFlow()
-    private var fetchEntriesJob: Job? = null
+    private val logUseCase: LogUseCase,
+    reducer: LogReducer,
+    state: LogState
+) : BaseViewModel<LogState, LogEvent, LogEffect>(
+    initialState = state,
+    reducer = reducer
+) {
+
+    private sealed class LogFilter {
+        data object None : LogFilter()
+        data class ByCep(val query: String) : LogFilter()
+        data class ByInitialDate(val initialDate: Long) : LogFilter()
+        data class ByFinalDate(val finalDate: Long) : LogFilter()
+        data class ByRangeDate(val initialDate: Long, val finalDate: Long) : LogFilter()
+    }
+
+    private val _filter = MutableStateFlow<LogFilter>(LogFilter.None)
 
     init { fetchAllLogs() }
 
     fun onEvent(event: LogEvent) {
         when (event) {
-            is LogEvent.OnFetchAllLogs -> fetchAllLogs()
-            is LogEvent.OnFilterByCep -> filterByCep(event.query)
-            is LogEvent.OnFilterByInitialDate -> filterByInitialDate(event.initialDate)
-            is LogEvent.OnFilterByFinalDate -> filterByFinalDate(event.finalDate)
-            is LogEvent.OnFilterByRangeDate -> filterByRangeDate(event.initialDate, event.finalDate)
-            is LogEvent.OnFilterByNone -> filterByNone()
-            is LogEvent.OnDeleteAllEntries -> deleteAllLogs()
-            is LogEvent.OnDeleteEntry -> deleteLog(event.entry)
-        }
-    }
-
-    private fun launchFetchEntriesFlow(
-        flow: Flow<Response<List<LogEntry>>>,
-        operation: LogFilterOption
-    ) {
-        fetchEntriesJob?.cancel()
-        fetchEntriesJob = viewModelScope.launch {
-            flow.collectLatest { response ->
-                _state.update {
-                    it.copy(
-                        filterOperation = operation,
-                        fetchEntries = response
-                    )
-                }
+            is OnFilterByNone -> _filter.update { LogFilter.None }
+            is OnFilterByCep -> _filter.update { LogFilter.ByCep(event.query) }
+            is OnFilterByInitialDate -> _filter.update { LogFilter.ByInitialDate(event.initialDate) }
+            is OnFilterByFinalDate -> _filter.update { LogFilter.ByFinalDate(event.finalDate) }
+            is OnFilterByRangeDate -> _filter.update {
+                LogFilter.ByRangeDate(
+                    initialDate = event.initialDate,
+                    finalDate = event.finalDate
+                )
             }
+            is OnDeleteAllLogs -> deleteAllLogs()
+            is OnDeleteLog -> deleteLog(event.log)
+            else -> sendEventForEffect(event)
         }
-    }
-
-    private fun fetchAllLogs() {
-        launchFetchEntriesFlow(logUseCase.fetchAllLogs(), LogFilterOption.None)
-    }
-
-    private fun filterByNone() {
-        if (state.value.filterOperation !is LogFilterOption.None) {
-            launchFetchEntriesFlow(logUseCase.fetchAllLogs(), LogFilterOption.None)
-        }
-    }
-
-    private fun filterByCep(query: String) {
-        launchFetchEntriesFlow(logUseCase.filterLogsByCep(query), LogFilterOption.ByCep)
-    }
-
-    private fun filterByInitialDate(initialDate: Long) {
-        launchFetchEntriesFlow(
-            logUseCase.filterLogsByInitialDate(initialDate),
-            LogFilterOption.ByInitialDate
-        )
-    }
-
-    private fun filterByFinalDate(finalDate: Long) {
-        launchFetchEntriesFlow(
-            logUseCase.filterLogsByFinalDate(finalDate),
-            LogFilterOption.ByFinalDate
-        )
-    }
-
-    private fun filterByRangeDate(initialDate: Long, finalDate: Long) {
-        launchFetchEntriesFlow(
-            logUseCase.filterLogsByRangeDate(initialDate, finalDate),
-            LogFilterOption.ByRangeDate
-        )
     }
 
     private fun deleteAllLogs() {
-        viewModelScope.launch {
-            logUseCase.deleteAllLogs().collect { response ->
-                _state.update { it.copy(deleteLog = response) }
-            }
-        }
+        collectAction(
+            flow = logUseCase.deleteAllLogs(),
+            onResponse = { OnDeleteAllLogsResponse(it) }
+        )
     }
 
-    private fun deleteLog(entry: LogEntry) {
-        viewModelScope.launch {
-            logUseCase.deleteLog(entry).collect { response ->
-                _state.update { it.copy(deleteLog = response) }
+    private fun deleteLog(log: Log) {
+        collectAction(
+            flow = logUseCase.deleteLog(log),
+            onResponse = { OnDeleteLogResponse(it) }
+        )
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun fetchAllLogs() {
+        _filter
+            .flatMapLatest { filter ->
+                with(logUseCase) {
+                    when (filter) {
+                        is LogFilter.None -> fetchAllLogs()
+                        is LogFilter.ByCep -> filterLogsByCep(filter.query)
+                        is LogFilter.ByFinalDate -> filterLogsByFinalDate(filter.finalDate)
+                        is LogFilter.ByInitialDate -> filterLogsByInitialDate(filter.initialDate)
+                        is LogFilter.ByRangeDate ->
+                            filterLogsByRangeDate(filter.initialDate, filter.finalDate)
+                    }
+                }
             }
-        }
+            .onEach { response -> sendEventForEffect(OnFetchAllLogsResponse(response)) }
+            .launchIn(viewModelScope)
     }
 }

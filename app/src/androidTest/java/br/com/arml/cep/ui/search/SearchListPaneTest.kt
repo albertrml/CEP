@@ -1,21 +1,18 @@
 package br.com.arml.cep.ui.search
 
-import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
-import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.ui.screen.component.search.SearchListPane
-import io.mockk.every
+import br.com.arml.cep.ui.screen.component.search.listpane.SearchTab
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -24,105 +21,64 @@ class SearchListPaneTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    /*** Header ***/
-    private lateinit var searchListPaneHeader: String
-    private lateinit var searchListPaneIconHeader: String
-    private lateinit var searchListPaneTitleHeader: String
+    private val ctx = InstrumentationRegistry.getInstrumentation().targetContext
 
-    /*** CEP Field and Search Button ***/
-    private lateinit var searchListPaneCepField: String
-    private lateinit var searchListPaneSearchButton: String
-    private val mockOnSearchCep: (String) -> Unit = mockk()
+    private val headerTag = ctx.getString(R.string.header_component_testTag)
+    private val searchFieldTag = ctx.getString(R.string.cepSearchField_component_testTag)
+    private val searchButtonTag = ctx.getString(R.string.searchListPane_searchButton_testTag)
 
-    /*** Queries ***/
-    private lateinit var validQuery: String
-    private lateinit var validQueryWithNonDigit: String
-    private lateinit var invalidQuery: String
+    private val mockOnSearchCep: (String) -> Unit = mockk(relaxed = true)
 
-    @Before
-    fun setUp(){
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        context.apply {
-            searchListPaneHeader = getString(R.string.testTag_searchScreen_listPane_header)
-            searchListPaneIconHeader = getString(R.string.testTag_header_icon)
-            searchListPaneTitleHeader = getString(R.string.testTag_header_title)
-            searchListPaneCepField = getString(R.string.testTag_searchScreen_listPane_cepField)
-            searchListPaneSearchButton = getString(R.string.testTag_searchScreen_listPane_searchButton)
-        }
-        validQuery = "12345678"
-        validQueryWithNonDigit = "a1@2;3*4/5a6w7Q8"
-        invalidQuery = "a1@2;3*4/5a6w7Q"
-        every { mockOnSearchCep(any()) } answers {
-            println("mockOnSearchCep CALLED")
-        }
-    }
-
-    private fun setDisplayScreenContent() {
-        composeTestRule.setContent { SearchListPane(onSearchCep = mockOnSearchCep) }
-    }
-
-    /*** Header ***/
     @Test
-    fun shouldShowTitleAndIconOnHeader_whenSearchScreenListPaneIsCalled(){
-        setDisplayScreenContent()
+    fun searchListPaneTest_shouldDisplayHeader_whenSearchListPaneIsCalled(){
         composeTestRule.apply {
-            onNodeWithTag(searchListPaneHeader).assertExists()
-            onNodeWithTag(searchListPaneTitleHeader).assertExists()
-            onNodeWithTag(searchListPaneIconHeader).assertExists()
+            setContent {
+                SearchListPane(
+                    onSearchCep = mockOnSearchCep,
+                    selectedTab = SearchTab.CEP
+                )
+            }
+            onNodeWithTag(headerTag).assertExists()
+            onNodeWithTag(searchFieldTag).assertExists()
+            onNodeWithTag(searchButtonTag).assertExists()
         }
     }
 
-    /*** CEP Field and Search Button ***/
     @Test
-    fun shouldDisplayCEPAsHint_whenCEPFieldIsBlank(){
-        setDisplayScreenContent()
+    fun searchListPaneTest_shouldUnableSearchButton_whenQueryIsInvalid(){
+        val invalidQueries = listOf(
+            "1234567",
+            "a1s2d3f4g5h6"
+        )
         composeTestRule.apply {
-            onNodeWithTag(searchListPaneCepField).assertExists()
-            onNodeWithTag(searchListPaneCepField).assert(hasText("CEP"))
+            setContent {
+                SearchListPane(
+                    onSearchCep = mockOnSearchCep,
+                    selectedTab = SearchTab.CEP
+                )
+            }
+            invalidQueries.forEach { query ->
+                onNodeWithTag(searchFieldTag).performTextInput(query)
+                onNodeWithTag(searchButtonTag).assertIsNotEnabled()
+                onNodeWithTag(searchFieldTag).performTextClearance()
+            }
         }
     }
 
     @Test
-    fun shouldPerformSearch_whenInputInCepFieldIsValid(){
-        setDisplayScreenContent()
-        composeTestRule.onNodeWithTag(searchListPaneCepField).apply{
-            assertExists()
-            performTextInput(validQuery)
-            assert(hasText(Cep.build(validQuery).toFormattedCep()))
-            performClick()
-        }
-    }
-
-    @Test
-    fun shouldPerformSearch_whenFilteredInputIsValid_inCepField(){
-        val filteredQuery = validQueryWithNonDigit.filter { it.isDigit() }
-        setDisplayScreenContent()
-        composeTestRule.onNodeWithTag(searchListPaneCepField).apply{
-            assertExists()
-            performTextInput(validQueryWithNonDigit)
-            assert(
-                matcher = hasText(
-                    text = Cep.build(filteredQuery).toFormattedCep())
-            )
-        }
-        composeTestRule.onNodeWithTag(searchListPaneSearchButton).apply{
-            assertExists()
-            assertIsEnabled()
-            performClick()
-        }
-        verify { mockOnSearchCep(filteredQuery) }
-    }
-
-    @Test
-    fun shouldNotPerformSearch_whenFilteredInputIsInvalid_inCepField(){
-        setDisplayScreenContent()
-        composeTestRule.onNodeWithTag(searchListPaneCepField).apply {
-            assertExists()
-            performTextInput(invalidQuery)
-        }
-        composeTestRule.onNodeWithTag(searchListPaneSearchButton).apply {
-            assertExists()
-            assertIsNotEnabled()
+    fun searchListPaneTest_shouldInvokesOnSearchCepCallback_whenSearchButtonIsEnabledAndClicked(){
+        val query = "12345678"
+        val expectedQuery = "12345-678"
+        composeTestRule.apply {
+            setContent {
+                SearchListPane(
+                    onSearchCep = mockOnSearchCep,
+                    selectedTab = SearchTab.CEP
+                )
+            }
+            onNodeWithTag(searchFieldTag).performTextInput(query)
+            onNodeWithTag(searchButtonTag).assertIsEnabled().performClick()
+            verify(exactly = 1) { mockOnSearchCep(expectedQuery) }
         }
     }
 }

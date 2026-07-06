@@ -1,9 +1,11 @@
 package br.com.arml.cep.ui.screen.search
 
-import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
+import br.com.arml.cep.ui.common.Reducer
 
 data class SearchState(
-    val entry: Response<PlaceEntry> = Response.Loading,
-    val insert: Response<Unit> = Response.Loading
-)
+    val cepSearchResponse: Response<Place> = Response.Loading,
+    val addressSearchResponse: Response<List<Place>> = Response.Loading,
+    val selectedPlace: Place? = null
+): Reducer.ViewState

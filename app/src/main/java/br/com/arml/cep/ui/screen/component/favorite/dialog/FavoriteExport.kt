@@ -1,0 +1,42 @@
+package br.com.arml.cep.ui.screen.component.favorite.dialog
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import br.com.arml.cep.R
+import br.com.arml.cep.ui.screen.component.common.dialog.CepAlertDialog
+
+@Composable
+fun FavoriteExport(
+    modifier: Modifier = Modifier,
+    isVisibility: Boolean,
+    onConfirmationRequest: () -> Unit = {},
+    onDismissRequest: () -> Unit = {}
+) {
+    CepAlertDialog(
+        modifier = modifier
+            .testTag(stringResource(R.string.favoriteExport_component_testTag)),
+        dialogTitle = stringResource(R.string.favoriteExport_title_text),
+        dialogText = stringResource(R.string.favoriteExport_message_text),
+        isVisibility = isVisibility,
+        onDismissRequest = onDismissRequest,
+        onConfirmationRequest = onConfirmationRequest,
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FavoriteExportPreview() {
+    var isVisibility by rememberSaveable { mutableStateOf(true) }
+    FavoriteExport(
+        isVisibility = isVisibility,
+        onDismissRequest = { isVisibility = false },
+        onConfirmationRequest = {}
+    )
+}

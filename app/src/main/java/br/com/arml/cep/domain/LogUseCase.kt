@@ -1,18 +1,24 @@
 package br.com.arml.cep.domain
 
-import br.com.arml.cep.model.entity.LogEntry
+import br.com.arml.cep.model.domain.Log
+import br.com.arml.cep.model.domain.toEntity
 import br.com.arml.cep.model.repository.LogRepository
 import javax.inject.Inject
 
 class LogUseCase @Inject constructor(
     private val repository: LogRepository
 ) {
-    fun fetchAllLogs() = repository.getAllLogs()
-    fun filterLogsByCep(query: String) = repository.filterLogsByCep(query)
-    fun filterLogsByInitialDate(initialDate: Long) = repository.filterLogsByInitialDate(initialDate)
-    fun filterLogsByFinalDate(finalDate: Long) = repository.filterLogsByFinalDate(finalDate)
-    fun filterLogsByRangeDate(initialDate: Long, finalDate: Long) =
-        repository.filterLogsByRangeDate(initialDate, finalDate)
+    /** Read **/
+    fun fetchAllLogs() = repository.fetchLogByZipcode("")
+    fun filterLogsByCep(query: String) = repository.fetchLogByZipcode(query)
+    fun filterLogsByInitialDate(initialDate: Long) = repository
+        .fetchLogByPeriod(startDate = initialDate)
+    fun filterLogsByFinalDate(finalDate: Long) = repository
+        .fetchLogByPeriod(endDate = finalDate)
+    fun filterLogsByRangeDate(initialDate: Long, finalDate: Long) = repository
+        .fetchLogByPeriod(initialDate, finalDate)
+
+    /** Delete **/
+    fun deleteLog(entry: Log) = repository.deleteLog(entry.toEntity())
     fun deleteAllLogs() = repository.deleteAllLogs()
-    fun deleteLog(entry: LogEntry) = repository.deleteLog(entry)
 }

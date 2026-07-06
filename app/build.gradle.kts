@@ -1,38 +1,34 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.ksp)
     alias(libs.plugins.kotlin.hilt)
+    alias(libs.plugins.kotlinx.serialization)
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 android {
     namespace = "br.com.arml.cep"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "br.com.arml.cep"
-        minSdk = 24
-        targetSdk = 36
-        versionCode = 6
-        versionName = "2.0"
+        minSdk = 26
+        targetSdk = 37
+        versionCode = 7
+        versionName = "3.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        defaultConfig {
-            // ...
-            javaCompileOptions {
-                annotationProcessorOptions {
-                    arguments["room.schemaLocation"] = "$projectDir/schemas"
-                }
-            }
-        }
-
     }
 
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
+    sourceSets {
+        getByName("androidTest") {
+            assets.directories.add("schemas")
+        }
     }
 
     buildTypes {
@@ -46,16 +42,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlin {
-        jvmToolchain {
-            languageVersion.value(
-                JavaLanguageVersion.of(11)
-            )
-        }
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -69,6 +57,10 @@ android {
     }
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
     // Adaptive Layout
     implementation(libs.androidx.compose.adaptive)
@@ -78,9 +70,14 @@ dependencies {
 
     // Core
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.google.errorprone.annotations)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
@@ -90,6 +87,9 @@ dependencies {
     implementation(libs.android.hilt)
     implementation(libs.androidx.compose.hilt)
     ksp(libs.android.hilt.compiler)
+
+    // Kotlinx Serialization
+    implementation(libs.kotlinx.serialization.json)
 
     // Jetpack Compose
     implementation(libs.androidx.activity.compose)
@@ -114,17 +114,26 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
 
+    // Shared Test Dependencies
+    val sharedTestLibs = listOf(
+        libs.google.truth,
+        libs.mockk,
+        libs.androidx.ui.test.junit
+    )
+    sharedTestLibs.forEach {
+        testImplementation(it)
+        androidTestImplementation(it)
+    }
+
     // Test Dependencies
-    testImplementation(libs.androidx.ui.test.junit)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.mockk)
 
     // Android Test Dependencies
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.ui.test.junit)
-    androidTestImplementation(libs.mockk)
+    androidTestImplementation(libs.androidx.room.testing)
+    androidTestImplementation(libs.jetbrains.kotlin.test)
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(platform(libs.androidx.compose.bom))
 

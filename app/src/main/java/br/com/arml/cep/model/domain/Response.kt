@@ -33,3 +33,17 @@ fun <T> Flow<T>.toResponseFlow(): Flow<Response<T>> {
             emit(Response.Failure(exception))
         }
 }
+
+/**
+ * Transforms the data within a `Flow<Response.Success<T>>` while passing through
+ * other states like `Loading` or `Failure` untouched.
+ */
+fun <T, R> Flow<Response<T>>.mapSuccess(transform: (T) -> R): Flow<Response<R>> {
+    return this.map { response ->
+        when (response) {
+            is Response.Success -> Response.Success(transform(response.result))
+            is Response.Failure -> response
+            is Response.Loading -> response
+        }
+    }
+}

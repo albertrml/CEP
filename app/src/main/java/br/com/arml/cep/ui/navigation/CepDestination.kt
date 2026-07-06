@@ -17,24 +17,24 @@ sealed class CepDestination(
     @field:StringRes val contentDescription: Int
 ) {
     data object SearchDestination : CepDestination(
-        label = R.string.destination_search,
+        label = R.string.navigation_searchDestination_label,
         icon = Icons.Default.Search,
-        contentDescription = R.string.destination_search_description
+        contentDescription = R.string.navigation_searchDestination_description
     )
     data object HistoryDestination : CepDestination(
-        label = R.string.destination_history,
+        label = R.string.navigation_logDestination_label,
         icon = Icons.Default.History,
-        contentDescription = R.string.destination_history_description
+        contentDescription = R.string.navigation_logDestination_description
     )
     data object FavoriteDestination : CepDestination(
-        label = R.string.destination_favorite,
+        label = R.string.navigation_favoriteDestination_label,
         icon = Icons.Default.Favorite,
-        contentDescription = R.string.destination_favorite_description
+        contentDescription = R.string.navigation_favoriteDestination_description
     )
     data object CacheDestination : CepDestination(
-        label = R.string.destination_cache,
+        label = R.string.navigation_cacheDestination_label,
         icon = Icons.Default.Storage,
-        contentDescription = R.string.destination_favorite_description
+        contentDescription = R.string.navigation_cacheDestination_description
     )
 
     companion object {

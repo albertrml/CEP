@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.toClipEntry
 import br.com.arml.cep.R
-import br.com.arml.cep.model.entity.LogEntry
+import br.com.arml.cep.model.domain.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -22,7 +22,7 @@ data class LogScreenUiStateHolder(
     private val clipboardManager: Clipboard,
     private val context: Context
 ){
-    fun onCopyToClipboard(entry: LogEntry){
+    fun onCopyToClipboard(entry: Log){
         scope.launch {
             val clippedCep: String = entry.cep.text
             val clipData = ClipData.newPlainText("cep",clippedCep)
@@ -30,8 +30,8 @@ data class LogScreenUiStateHolder(
 
             snackbarHostState.showSnackbar(
                 message = context.getString(
-                    R.string.log_list_clipboard_msg,
-                    entry.cep.toFormattedCep()
+                    R.string.logScreenUiStateHolder_clipboard_msg,
+                    clippedCep
                 ),
                 duration = SnackbarDuration.Short
             )

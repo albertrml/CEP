@@ -1,23 +1,27 @@
 package br.com.arml.cep.domain
 
-import br.com.arml.cep.model.domain.toResponseFlow
-import br.com.arml.cep.model.entity.PlaceEntry
-import br.com.arml.cep.model.repository.PlaceRepository
+import br.com.arml.cep.model.domain.Note
+import br.com.arml.cep.model.domain.Place
+import br.com.arml.cep.model.repository.CacheRepository
+import br.com.arml.cep.model.repository.FavoriteRepository
 import javax.inject.Inject
 
 class CacheUseCase @Inject constructor(
-    private val repository: PlaceRepository
+    private val cacheRepository: CacheRepository,
+    private val favoriteRepository: FavoriteRepository
 ) {
-    fun deleteAll() = repository.deleteAllUnwantedPlaces()
-    fun deleteEntry(entry: PlaceEntry) = repository.deletePlace(entry)
+    fun addToFavorite(place: Place) = with(place.cep.text) {
+        favoriteRepository
+            .addToFavorite(
+                zipcode = this,
+                note = Note.build(title = this, content = "")
+            )
+    }
 
-    fun fetchCache() = repository
-        .getUnwantedPlaces()
-        .toResponseFlow()
+    fun clearCache() = cacheRepository.deleteAllUnwanted()
 
-    fun filterByCep(query: String) = repository
-        .getUnwantedPlacesByCepAndUnwanted(query)
-        .toResponseFlow()
+    fun removePlaceFromCache(place: Place) = cacheRepository.deletePlace(place)
 
-    fun updateEntry(entry: PlaceEntry) = repository.updatePlace(entry)
+    fun findCachedPlacesByCep(query: String = "") = cacheRepository
+        .getPlacesByZipcode(query = query)
 }

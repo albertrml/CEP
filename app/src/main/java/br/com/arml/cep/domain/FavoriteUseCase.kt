@@ -1,40 +1,58 @@
 package br.com.arml.cep.domain
 
+import androidx.compose.ui.util.fastFilterNotNull
 import br.com.arml.cep.model.adapter.toJson
 import br.com.arml.cep.model.adapter.toPlaceList
+import br.com.arml.cep.model.domain.Cep
+import br.com.arml.cep.model.domain.Note
+import br.com.arml.cep.model.domain.Place
 import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.domain.toResponseFlow
-import br.com.arml.cep.model.entity.PlaceEntry
+import br.com.arml.cep.model.domain.mapSuccess
 import br.com.arml.cep.model.qualifier.BackupMoshi
-import br.com.arml.cep.model.repository.PlaceRepository
+import br.com.arml.cep.model.repository.FavoriteRepository
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class FavoriteUseCase @Inject constructor(
-    private val favoriteRepository: PlaceRepository,
-    @param:BackupMoshi private val moshi: Moshi
+    @param:BackupMoshi private val moshi: Moshi,
+    private val favoriteRepository: FavoriteRepository
 ) {
-    fun fetchFavorites() = favoriteRepository.getFavoritePlaces().toResponseFlow()
-    fun update(entry: PlaceEntry) = favoriteRepository.updatePlace(entry)
-    fun filterByCep(query: String) =
-        favoriteRepository.filterPlacesByCepAndFavorite(query).toResponseFlow()
+    /** CREATE **/
+    fun addNoteToFavorite(cep: Cep, note: Note) = favoriteRepository
+        .addToFavorite(cep.text, note)
 
-    fun filterByTitle(query: String) = favoriteRepository.getFavoritePlaces().map { response ->
-        response.filter { placeEntry -> placeEntry.note!!.title.contains(query) }
-    }.toResponseFlow()
+    /** READ **/
+    fun fetchFavorites() = favoriteRepository.getFavoritesByTitle("")
 
-    fun exportFavorite() = favoriteRepository.getFavoritePlaces().map { favoritesPlaces ->
-        favoritesPlaces.toJson(moshi)
-    }.toResponseFlow()
+    fun filterByCep(query: String) = favoriteRepository.getFavoritesByZipcode(query)
 
-    fun importFavorite(json: String): Flow<Response<Unit>> =
-        try {
-            val places = json.toPlaceList(moshi)
-            favoriteRepository.importFavoritePlaces(places)
-        } catch (exception: Exception) {
-            flowOf(Response.Failure(exception))
-        }
+    fun filterByTitle(query: String) = favoriteRepository.getFavoritesByTitle(query)
+
+    /** UPDATE **/
+    fun updateNote(note: Note) = favoriteRepository
+        .updateNoteFromFavorite(note)
+
+    /** DELETE **/
+    fun removeFromFavorite(place: Place) = favoriteRepository
+        .deleteFromFavorite(place.cep.text)
+
+    fun deleteNote(cep: Cep, note: Note) = favoriteRepository
+        .deleteNoteFromFavorite(cep.text, note)
+
+    /** EXPORT **/
+    fun exportFavorites() = favoriteRepository
+        .exportFavorites()
+        .mapSuccess { places -> places.fastFilterNotNull().toJson(moshi) }
+
+
+    /** IMPORT **/
+    fun importFavorites(jsonBackup: String): Flow<Response<Unit>> = try {
+        val favorites = jsonBackup.toPlaceList(moshi)
+        favoriteRepository.importFavorites(favorites)
+    } catch (exception: Exception) {
+        flowOf(Response.Failure(exception))
+    }
+
 }

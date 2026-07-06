@@ -1,14 +1,21 @@
 package br.com.arml.cep.ui.screen.component.search
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -19,62 +26,81 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import br.com.arml.cep.R
-import br.com.arml.cep.model.domain.Cep
-import br.com.arml.cep.ui.screen.component.common.Header
+import br.com.arml.cep.ui.screen.component.common.header.Header
+import br.com.arml.cep.ui.screen.component.search.listpane.SearchComponent
+import br.com.arml.cep.ui.screen.component.search.listpane.SearchTab
+import br.com.arml.cep.ui.screen.component.search.listpane.SearchTabSaver
+import br.com.arml.cep.ui.screen.component.search.listpane.SearchTabValues
 import br.com.arml.cep.ui.theme.dimens
 
 @Composable
 fun SearchListPane(
     modifier: Modifier = Modifier,
-    onSearchCep: (String) -> Unit = {}
+    selectedTab: SearchTab,
+    onChangeTab: (SearchTab) -> Unit = {},
+    onSearchCep: (String) -> Unit = {},
+    onSearchAddress: (String, String, String) -> Unit = { _, _, _ -> }
 ) {
-    var query by rememberSaveable { mutableStateOf("") }
-    val isActive by remember { derivedStateOf { Cep.isValid(query) } }
-    val keyboardController = LocalSoftwareKeyboardController.current
+    val selectedTabIndex by remember(selectedTab) {
+        derivedStateOf{ SearchTabValues.indexOf(selectedTab) }
+    }
 
-    Column(
+    val modifierSearchComponent = if(
+        LocalConfiguration.current.smallestScreenWidthDp >= 600
+    ) Modifier.width(488.dp) else Modifier.fillMaxWidth()
+
+    Scaffold(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Header(
-            modifier = Modifier
-                .testTag(
-                    stringResource(R.string.testTag_searchScreen_listPane_header)
-                ),
-            title = stringResource(R.string.search_title),
-            logo = Icons.Default.Search
-        )
-        Column(
-            modifier = Modifier.weight(1f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            SearchCepField(
-                modifier = Modifier
-                    .testTag(
-                        stringResource(R.string.testTag_searchScreen_listPane_cepField)
-                    ),
-                onQueryChange = { query = it }
+        topBar = {
+            Header(
+                title = stringResource(R.string.searchListPane_header_label),
+                logo = Icons.Default.Search
             )
-            Spacer(modifier = Modifier.padding(MaterialTheme.dimens.smallSpacing))
-            Button(
-                modifier = Modifier
-                    .testTag(stringResource(
-                        R.string.testTag_searchScreen_listPane_searchButton)
-                    ),
-                onClick = {
-                    keyboardController?.hide()
-                    onSearchCep(query)
-                },
-                enabled = isActive
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
+            Column(
+                modifier = modifierSearchComponent
+                    .padding(MaterialTheme.dimens.mediumSpacing)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(text = stringResource(R.string.search_button_label))
+                PrimaryTabRow(
+                    selectedTabIndex = selectedTabIndex,
+                ) {
+                    SearchTabValues.forEachIndexed { index, tab ->
+                        Tab(
+                            selected = tab == selectedTab,
+                            onClick = { onChangeTab(SearchTabValues[index]) },
+                            text = {
+                                Text(
+                                    text = stringResource(tab.label),
+                                    style = MaterialTheme.typography.labelLarge
+                                )
+                            }
+                        )
+                    }
+                }
+                Spacer(
+                    modifier = Modifier.padding(MaterialTheme.dimens.mediumSpacing)
+                )
+                SearchComponent(
+                    modifier = Modifier.width(488.dp),
+                    selectedTab = selectedTab,
+                    onSearchCep = onSearchCep,
+                    onSearchAddress = onSearchAddress
+                )
             }
         }
     }
@@ -112,5 +138,13 @@ fun SearchListPane(
 )
 @Composable
 fun SearchScreenPreview() {
-    SearchListPane(modifier = Modifier.fillMaxSize())
+    var selectedTab by rememberSaveable(stateSaver = SearchTabSaver) {
+        mutableStateOf(SearchTab.CEP)
+    }
+    SearchListPane(
+        modifier = Modifier.fillMaxSize(),
+        selectedTab = selectedTab,
+        onChangeTab = { selectedTab = it },
+        onSearchCep = {}
+    )
 }

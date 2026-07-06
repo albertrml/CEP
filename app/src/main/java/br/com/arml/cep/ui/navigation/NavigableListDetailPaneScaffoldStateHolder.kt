@@ -31,12 +31,9 @@ open class NavigableListDetailPaneScaffoldStateHolder(
     fun navigateBackToListPane(onEvent: () -> Unit) {
         onEvent()
         scope.launch {
-            navigator.currentDestination?.let {
-                if (it.pane == ListDetailPaneScaffoldRole.Extra){
-                    navigator.navigateBack()
-                }
-            }
-            navigator.navigateBack()
+            while (navigator.canNavigateBack())
+                navigator.navigateBack()
+            navigator.navigateTo(ListDetailPaneScaffoldRole.List)
         }
     }
 

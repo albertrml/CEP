@@ -1,30 +1,35 @@
 package br.com.arml.cep.model.repository
 
+import br.com.arml.cep.model.domain.Log
 import br.com.arml.cep.model.domain.Response
 import br.com.arml.cep.model.domain.asResponse
+import br.com.arml.cep.model.domain.mapSuccess
 import br.com.arml.cep.model.domain.toResponseFlow
-import br.com.arml.cep.model.entity.LogEntry
-import br.com.arml.cep.model.source.local.LogLocalDataSource
+import br.com.arml.cep.model.entity.LogEntity
+import br.com.arml.cep.model.entity.relation.toModel
+import br.com.arml.cep.model.source.local.LogDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class LogRepository @Inject constructor(
-    private val logLocalDataSource: LogLocalDataSource
+    private val logDao: LogDao
 ) {
-    fun getAllLogs(): Flow<Response<List<LogEntry>>> = logLocalDataSource.readAll().toResponseFlow()
+    /** Read **/
+    fun fetchLogByZipcode(query: String): Flow<Response<List<Log>>> = logDao
+        .selectLogEntitiesByZipcode(query)
+        .toResponseFlow()
+        .mapSuccess { entities -> entities.map { it.toModel() } }
 
-    fun filterLogsByCep(query: String) = logLocalDataSource.filterByCep(query).toResponseFlow()
+    fun fetchLogByPeriod(
+        startDate: Long = 0L,
+        endDate: Long = System.currentTimeMillis()
+    ): Flow<Response<List<Log>>> = logDao
+        .selectLogEntitiesByPeriod(startDate, endDate)
+        .toResponseFlow()
+        .mapSuccess { entities -> entities.map { it.toModel() } }
 
-    fun filterLogsByInitialDate(initialDate: Long) =
-        logLocalDataSource.filterByInitialTimestamp(initialDate).toResponseFlow()
+    /** Delete **/
+    fun deleteLog(entry: LogEntity) = asResponse { logDao.deleteLogEntity(entry) }
 
-    fun filterLogsByFinalDate(finalDate: Long) =
-        logLocalDataSource.filterByFinalTimestamp(finalDate).toResponseFlow()
-
-    fun filterLogsByRangeDate(initialDate: Long, finalDate: Long) =
-        logLocalDataSource.filterByTimestamp(initialDate, finalDate).toResponseFlow()
-
-    fun deleteAllLogs() = asResponse { logLocalDataSource.deleteAll() }
-
-    fun deleteLog(entry: LogEntry) = asResponse { logLocalDataSource.delete(entry) }
+    fun deleteAllLogs() = asResponse { logDao.deleteAllLogEntities() }
 }

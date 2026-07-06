@@ -1,6 +1,8 @@
 package br.com.arml.cep.model.domain
 
-import br.com.arml.cep.model.dto.AddressDTO
+import androidx.compose.runtime.Composable
+import br.com.arml.cep.R
+import br.com.arml.cep.model.entity.dto.AddressDTO
 
 const val DEFAULT_COUNTRY = "Brasil"
 
@@ -31,3 +33,16 @@ data class Address (
     }
 }
 
+@Composable
+fun Address.mapOfFields() = mapOf(
+    R.string.address_zipcodeField_label to zipCode,
+    R.string.address_streetField_label to street,
+    R.string.address_complementField_label to complement,
+    R.string.address_neighborhoodField_label to district,
+    R.string.address_cityField_label to city,
+    R.string.address_stateField_label to state,
+    R.string.address_ufField_label to uf,
+    R.string.address_regionField_label to region,
+    R.string.address_countryField_label to country,
+    R.string.address_dddField_label to ddd
+)
