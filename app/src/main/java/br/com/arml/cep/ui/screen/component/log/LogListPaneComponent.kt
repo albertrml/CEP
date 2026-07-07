@@ -21,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Log
-import br.com.arml.cep.model.domain.Response
+import br.com.arml.core.response.Response
 import br.com.arml.cep.model.exception.UnknownException.FetchPlaceException
 import br.com.arml.cep.model.mock.mockLogEntries
 import br.com.arml.cep.ui.screen.component.common.header.Header
@@ -30,7 +30,7 @@ import br.com.arml.cep.ui.screen.component.log.listpane.LogListPaneOnSuccess
 import br.com.arml.cep.ui.screen.component.log.listpane.filter.LogFilterComponent
 import br.com.arml.cep.ui.theme.dimens
 import br.com.arml.cep.ui.utils.LogFilterOption
-import br.com.arml.cep.ui.utils.ShowResults
+import br.com.arml.core.response.ui.ShowResults
 
 
 @Composable

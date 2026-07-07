@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import br.com.arml.cep.model.domain.Response
+import br.com.arml.core.response.Response
 import br.com.arml.cep.ui.navigation.rememberNavigableListDetailPaneScaffoldStateHolder
 import br.com.arml.cep.ui.screen.component.search.AddressSearchDetailPane
 import br.com.arml.cep.ui.screen.component.search.CepSearchDetailPane

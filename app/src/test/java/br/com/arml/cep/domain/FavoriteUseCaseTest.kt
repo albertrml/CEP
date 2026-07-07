@@ -3,9 +3,9 @@ package br.com.arml.cep.domain
 
 import android.database.sqlite.SQLiteException
 import br.com.arml.cep.model.domain.Place
-import br.com.arml.cep.model.domain.Response.Failure
-import br.com.arml.cep.model.domain.Response.Loading
-import br.com.arml.cep.model.domain.Response.Success
+import br.com.arml.core.response.Response.Failure
+import br.com.arml.core.response.Response.Loading
+import br.com.arml.core.response.Response.Success
 import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.model.mock.mockNotes
 import br.com.arml.cep.model.repository.FavoriteRepository

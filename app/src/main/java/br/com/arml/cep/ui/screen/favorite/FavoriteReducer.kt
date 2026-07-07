@@ -1,7 +1,7 @@
 package br.com.arml.cep.ui.screen.favorite
 
 import br.com.arml.cep.R
-import br.com.arml.cep.model.domain.Response
+import br.com.arml.core.response.Response
 import br.com.arml.cep.ui.common.Reducer
 import br.com.arml.cep.ui.screen.favorite.FavoriteEffect.OnSuccessExportFavorites
 import br.com.arml.cep.ui.screen.favorite.FavoriteEffect.ShowSnackbar

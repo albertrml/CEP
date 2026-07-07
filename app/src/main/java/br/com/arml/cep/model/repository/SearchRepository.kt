@@ -2,9 +2,9 @@ package br.com.arml.cep.model.repository
 
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Place
-import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.domain.asResponse
-import br.com.arml.cep.model.domain.toResponseFlow
+import br.com.arml.core.response.Response
+import br.com.arml.core.response.asResponse
+import br.com.arml.core.response.toResponseFlow
 import br.com.arml.cep.model.entity.LogEntity
 import br.com.arml.cep.model.entity.relation.toModel
 import br.com.arml.cep.model.exception.CepException

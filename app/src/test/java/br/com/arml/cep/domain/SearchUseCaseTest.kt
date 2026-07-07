@@ -3,7 +3,7 @@ package br.com.arml.cep.domain
 
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
-import br.com.arml.cep.model.domain.Response
+import br.com.arml.core.response.Response
 import br.com.arml.cep.model.exception.CepException
 import br.com.arml.cep.model.mock.mockUnfavoritePlaces
 import br.com.arml.cep.model.repository.FavoriteRepository

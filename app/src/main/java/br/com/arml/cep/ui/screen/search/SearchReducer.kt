@@ -1,9 +1,7 @@
 package br.com.arml.cep.ui.screen.search
 
 import br.com.arml.cep.R
-import br.com.arml.cep.model.domain.Response.Failure
-import br.com.arml.cep.model.domain.Response.Loading
-import br.com.arml.cep.model.domain.Response.Success
+import br.com.arml.core.response.Response.*
 import br.com.arml.cep.ui.common.Reducer
 import br.com.arml.cep.ui.screen.search.SearchEffect.ShowSnackbar
 import br.com.arml.cep.ui.screen.search.SearchEvent.OnAddressSearchResponse

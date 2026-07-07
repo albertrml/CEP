@@ -14,7 +14,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import br.com.arml.cep.R
 import br.com.arml.cep.model.domain.Place
-import br.com.arml.cep.model.domain.Response
+import br.com.arml.core.response.Response
 import br.com.arml.cep.model.exception.CepException
 import br.com.arml.cep.model.mock.mockPlaces
 import br.com.arml.cep.ui.screen.component.search.CepSearchDetailPane

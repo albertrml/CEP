@@ -6,8 +6,8 @@ import br.com.arml.cep.model.adapter.toPlaceList
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
-import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.domain.mapSuccess
+import br.com.arml.core.response.Response
+import br.com.arml.core.response.mapSuccess
 import br.com.arml.cep.model.qualifier.BackupMoshi
 import br.com.arml.cep.model.repository.FavoriteRepository
 import com.squareup.moshi.Moshi

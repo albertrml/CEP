@@ -1,7 +1,7 @@
 package br.com.arml.cep.worker
 
 import androidx.work.ListenableWorker.Result
-import br.com.arml.cep.model.domain.Response
+import br.com.arml.core.response.Response
 import br.com.arml.cep.model.repository.CacheRepository
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every

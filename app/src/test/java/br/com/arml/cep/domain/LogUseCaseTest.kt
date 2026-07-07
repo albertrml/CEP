@@ -1,7 +1,7 @@
 package br.com.arml.cep.domain
 
 import br.com.arml.cep.model.domain.Log
-import br.com.arml.cep.model.domain.Response
+import br.com.arml.core.response.Response
 import br.com.arml.cep.model.mock.BASE_TIMESTAMP
 import br.com.arml.cep.model.mock.getMockDate
 import br.com.arml.cep.model.mock.mockLogEntries

@@ -3,7 +3,7 @@ package br.com.arml.cep.ui.common
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import br.com.arml.cep.model.domain.Response
+import br.com.arml.core.response.Response
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

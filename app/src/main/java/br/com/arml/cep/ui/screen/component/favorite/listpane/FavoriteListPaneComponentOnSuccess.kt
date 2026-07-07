@@ -14,7 +14,7 @@ import br.com.arml.cep.model.domain.Address
 import br.com.arml.cep.model.domain.Cep
 import br.com.arml.cep.model.domain.Note
 import br.com.arml.cep.model.domain.Place
-import br.com.arml.cep.model.domain.Response
+import br.com.arml.core.response.Response
 import br.com.arml.cep.model.mock.mockFavoritePlaces
 import br.com.arml.cep.ui.screen.component.common.filter.chip.PlaceFilterComponent
 import br.com.arml.cep.ui.screen.component.favorite.FavoriteListPaneComponent

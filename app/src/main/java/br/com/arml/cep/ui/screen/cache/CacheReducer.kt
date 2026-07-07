@@ -1,9 +1,6 @@
 package br.com.arml.cep.ui.screen.cache
 
 import br.com.arml.cep.R
-import br.com.arml.cep.model.domain.Response.Failure
-import br.com.arml.cep.model.domain.Response.Loading
-import br.com.arml.cep.model.domain.Response.Success
 import br.com.arml.cep.ui.common.Reducer
 import br.com.arml.cep.ui.screen.cache.CacheEffect.ShowSnackbar
 import br.com.arml.cep.ui.screen.cache.CacheEvent.OnAddToFavoriteResponse
@@ -13,6 +10,9 @@ import br.com.arml.cep.ui.screen.cache.CacheEvent.OnFetchCacheResponse
 import br.com.arml.cep.ui.screen.cache.CacheEvent.OnNavigateToDetailPane
 import br.com.arml.cep.ui.screen.cache.CacheEvent.OnNavigateToListPane
 import br.com.arml.cep.ui.utils.UiText
+import br.com.arml.core.response.Response.Failure
+import br.com.arml.core.response.Response.Loading
+import br.com.arml.core.response.Response.Success
 
 class CacheReducer: Reducer<CacheState, CacheEvent, CacheEffect> {
     override fun reduce(

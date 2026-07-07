@@ -1,8 +1,8 @@
 package br.com.arml.cep.utils
 
-import br.com.arml.cep.model.domain.Response
-import br.com.arml.cep.model.domain.Response.Loading
-import br.com.arml.cep.model.domain.Response.Success
+import br.com.arml.core.response.Response
+import br.com.arml.core.response.Response.Loading
+import br.com.arml.core.response.Response.Success
 import io.mockk.coEvery
 import io.mockk.every
 import kotlinx.coroutines.flow.Flow
